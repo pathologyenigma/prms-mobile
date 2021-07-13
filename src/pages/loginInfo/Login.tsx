@@ -7,6 +7,7 @@ import TextInputComponent from './components/TextInputComponent'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import * as actions from '../../action/loginAction'
 import { IStoreState } from '../../reducer'
+import LoginInputComponent from './components/LoginInputComponent'
 
 type IProps = GenProps<'LoginScreen'> & {
   email: string,
@@ -18,24 +19,14 @@ type IProps = GenProps<'LoginScreen'> & {
 }
 
 interface IState {
-  selectTabs: number,
-  emailWarning: boolean,
-  selectAreaCode: string,
-  switchModalVisible: boolean,
-  betaCode: string,
-  betaMode: boolean,
+  loginType: number,
 }
 
 class LoginScreen extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
-      selectTabs: 0,
-      emailWarning: false,
-      selectAreaCode: '+86',
-      switchModalVisible: false,
-      betaCode: '',
-      betaMode: false,
+      loginType: 0, // 0 : 一键登录 1: 账号密码登录 2: 验证码登录
     }
   }
 
@@ -44,10 +35,74 @@ class LoginScreen extends Component<IProps, IState> {
     reset_reducer()
   }
 
+  renderOneClickLogin() {
+    return (
+      <View>
+        <Image
+          source={require('../../assets/czzlogo.png')}
+        />
+        <LoginInputComponent
+          title="请输入手机号码"
+        />
+      </View>
+    )
+  }
+
+  renderPasswordLogin() {
+    return (
+      <View>
+        <TextInputComponent
+          title={Localization.get('email')}
+          cellStyle={[{ marginTop: 20, marginHorizontal: 30 }, emailWarning && { borderBottomColor: '#FF4B4B' }]}
+          warning={emailWarning}
+          inputProps={{
+            value: email,
+            placeholder: Localization.get('email'),
+            keyboardType: Platform.OS === 'ios' ? 'ascii-capable' : 'email-address',
+            onChangeText: (value) => {
+              update_kv('email', value)
+            },
+          }}
+        />
+      </View>
+    )
+  }
+
+  renderVerifyCodeLogin() {
+    return (
+      <View>
+
+      </View>
+    )
+  }
+
+  renderPrivicy() {
+    return (
+      <Text>
+        进入即代表您已同意《用户协议》及《隐私政策》
+      </Text>
+    )
+  }
+
   render() {
+    const { loginType } = this.props
+    if (loginType === 0) {
+      return this.renderOneClickLogin()
+    }
     return (
       <View style={styles.container}>
-        登录页面
+        {
+          loginType === 0 ? (
+            this.renderOneClickLogin()
+          ) : (
+            loginType === 1 ? (
+              this.renderPasswordLogin()
+            ) : (
+              this.renderVerifyCodeLogin()
+            )
+          )
+        }
+        {this.renderPrivicy()}
       </View >
     )
   }
@@ -56,8 +111,10 @@ class LoginScreen extends Component<IProps, IState> {
 const mapStateToProps = (state: IStoreState) => {
   return {
     email: state.loginInfo.email,
+    phone: state.loginInfo.phone,
     password: state.loginInfo.password,
-    number: state.loginInfo.number,
+    verifyCode: state.loginInfo.verifyCode,
+    loginType: state.loginInfo.loginType,
   }
 }
 

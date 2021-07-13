@@ -1,7 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, CardStyleInterpolators, TransitionPresets } from '@react-navigation/stack'
 import React, { Component } from 'react'
-import SystemHelper from '../../utils/system'
 import RouterStacks from './stack'
 
 const Stack = createStackNavigator()
@@ -24,7 +23,7 @@ export default class Router extends Component {
               backgroundColor: 'transparent'
             },
             gestureResponseDistance: {
-              horizontal: SystemHelper.width,
+              // horizontal: SystemHelper.width,
             },
           }}>
           {

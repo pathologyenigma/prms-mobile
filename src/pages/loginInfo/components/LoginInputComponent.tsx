@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { View, Text, TextInput, StyleProp, ViewStyle, TextStyle, StyleSheet } from 'react-native'
+import { View, Text, TextInput, StyleProp, ViewStyle, TextStyle, StyleSheet, Image } from 'react-native'
 import { TextInputProps } from '@ant-design/react-native/lib/textarea-item'
 
 const styles = StyleSheet.create({
@@ -9,6 +9,10 @@ const styles = StyleSheet.create({
     marginTop: 30,
     flexDirection: 'row',
     flex: 1,
+  },
+  downImg: {
+    width: 29,
+    height: 16
   },
   textTitle: {
     color: '#323338',
@@ -47,7 +51,7 @@ type TProps = {
   onFocus?: () => void
 }
 
-export default class TextInputComponent extends PureComponent<TProps> {
+export default class LoginInputComponent extends PureComponent<TProps> {
   render() {
     const {
       title, defaultValue = '', cellStyle, onBlur, onFocus,
@@ -55,25 +59,27 @@ export default class TextInputComponent extends PureComponent<TProps> {
     } = this.props
     return (
       <View style={[styles.container, cellStyle]}>
-        <View style={{ flex: 1, }}>
-          <Text style={[styles.textTitle, titleStyle]}>
-            {title}
-          </Text>
-          <TextInput
-            defaultValue={defaultValue}
-            underlineColorAndroid="transparent"
-            returnKeyType="done"
-            autoCorrect={false}
-            autoCapitalize="none"
-            style={[styles.input, inputStyle]}
-            clearButtonMode="while-editing"
-            onBlur={onBlur}
-            onFocus={onFocus}
-            {...inputProps}
-          />
-        </View>
-        <View style={[styles.line, warning && { backgroundColor: '#FF4B4B' }]} />
+        <Text style={[styles.textTitle, titleStyle]}>
+          {title}
+        </Text>
+        <Image
+          style={styles.downImg}
+          source={require('../../../assets/gray_down.png')}
+        />
+        <TextInput
+          defaultValue={defaultValue}
+          underlineColorAndroid="transparent"
+          returnKeyType="done"
+          autoCorrect={false}
+          autoCapitalize="none"
+          style={[styles.input, inputStyle]}
+          clearButtonMode="while-editing"
+          onBlur={onBlur}
+          onFocus={onFocus}
+          {...inputProps}
+        />
       </View>
+      </View >
     )
   }
 }

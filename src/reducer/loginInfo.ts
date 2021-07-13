@@ -1,16 +1,18 @@
 const initState = {
   email: '',
+  phone: '',
   password: '',
-  number: '',
-  info_tips: 'none',
+  verifyCode: '',
+  loginType: 0,
 }
 type TLoginInfoActionType = 'loginInfo/reset_reducer' | 'loginInfo/update_kv'
 
 export interface ILoginInfoState {
   email: string,
+  phone: string,
   password: string,
-  number: string,
-  info_tips: string,
+  verifyCode: string,
+  loginType: number
 }
 
 export interface ILoginInfoAction {
@@ -25,7 +27,6 @@ const loginInfo = (state = initState, action: ILoginInfoAction) => {
     case 'loginInfo/reset_reducer':
       nextState = {
         ...initState,
-        info_tips: state.info_tips,
       }
       break
     case 'loginInfo/update_kv':
