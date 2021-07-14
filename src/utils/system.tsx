@@ -1,7 +1,6 @@
 import { NativeModules } from 'react-native'
 const { SystemModule } = NativeModules
 
-// TODO 此处需要在原生代码中加入对应模块,暂未加入
 class SystemHelper {
   /**
    * 状态栏的高度

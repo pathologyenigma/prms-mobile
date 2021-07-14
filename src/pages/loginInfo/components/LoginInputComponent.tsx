@@ -4,15 +4,19 @@ import { TextInputProps } from '@ant-design/react-native/lib/textarea-item'
 
 const styles = StyleSheet.create({
   container: {
-    height: 58,
-    marginHorizontal: 30,
-    marginTop: 30,
+    height: 35,
+    marginHorizontal: 21,
     flexDirection: 'row',
     flex: 1,
+    borderBottomColor: '#DDDDDD',
+    borderBottomWidth: 1,
+    alignItems: 'center',
   },
   downImg: {
-    width: 29,
-    height: 16
+    width: 15,
+    height: 8,
+    marginLeft: 8,
+    marginRight: 18
   },
   textTitle: {
     color: '#323338',
@@ -26,7 +30,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontSize: 16,
     color: '#333333',
-    marginTop: 15,
+    flex: 1
   },
   line: {
     width: '100%',
@@ -72,6 +76,7 @@ export default class LoginInputComponent extends PureComponent<TProps> {
           returnKeyType="done"
           autoCorrect={false}
           autoCapitalize="none"
+          keyboardType="number-pad"
           style={[styles.input, inputStyle]}
           clearButtonMode="while-editing"
           onBlur={onBlur}
@@ -79,7 +84,6 @@ export default class LoginInputComponent extends PureComponent<TProps> {
           {...inputProps}
         />
       </View>
-      </View >
     )
   }
 }

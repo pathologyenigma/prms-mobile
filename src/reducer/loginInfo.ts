@@ -3,7 +3,7 @@ const initState = {
   phone: '',
   password: '',
   verifyCode: '',
-  loginType: 0,
+  loginType: 1,
 }
 type TLoginInfoActionType = 'loginInfo/reset_reducer' | 'loginInfo/update_kv'
 
