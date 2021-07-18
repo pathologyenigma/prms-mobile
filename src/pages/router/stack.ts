@@ -3,9 +3,11 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import { Component, PureComponent, ClassAttributes, Key } from 'react'
 import { ConnectedComponent } from 'react-redux'
 import LoginScreen from '../loginInfo/Login'
+import ForgetPassword from '../loginInfo/ForgetPassword'
 
 type TRouterParams = {
-  LoginScreen: undefined
+  LoginScreen: any,
+  ForgetPassword: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -19,10 +21,9 @@ export default class RouterStacks {
    */
 
   public static readonly stacks: {
-    [key: string]: typeof Component
-    | ConnectedComponent<typeof Component, Pick<Component, never>>
-    | ConnectedComponent<typeof Component, Pick<any, any>>
+    [key: string]: any
   } = {
       LoginScreen,
+      ForgetPassword,
     }
 }

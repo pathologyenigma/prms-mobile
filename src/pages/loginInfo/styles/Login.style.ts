@@ -117,5 +117,81 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingRight: 21,
-  }
+  },
+  verifyCodeLoginView: {
+    flex: 1,
+  },
+  thirdLoginView: {
+
+  },
+  thirdLoginTitle: {
+    alignSelf: 'center',
+    color: '#666666',
+    fontSize: 14
+  },
+  thirdLoginBtn: {
+    marginTop: 19,
+    marginBottom: 38,
+    flexDirection: 'row',
+    marginHorizontal: 100,
+    justifyContent: 'space-between',
+  },
+  registerTipView: {
+    paddingHorizontal: 50,
+    minHeight: 200,
+  },
+  registerTipTitle: {
+    flex: 1,
+    paddingHorizontal: 50,
+    color: '#333333',
+    fontSize: 15,
+    fontWeight: 'bold',
+    lineHeight: 24,
+  },
+  registerTipBtnView: {
+    flexDirection: 'row',
+    height: 40,
+    paddingHorizontal: 18,
+    justifyContent: 'space-between',
+  },
+  registerTipLeftBtn: {
+    height: 40,
+    width: 130,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: greenColor,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  accountTitle: {
+    color: greenColor,
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  registerTipRightBtn: {
+    width: 100,
+    marginLeft: 15,
+    height: 40,
+    borderRadius: 8
+  },
+  privacyModal: {
+    height: 185,
+    width: SystemHelper.width,
+  },
+  privacyModalTitle: {
+    color: '#333333',
+    fontSize: 17,
+    fontWeight: '300',
+    paddingTop: 2,
+    marginLeft: 22,
+  },
+  privacyModalTitleView: {
+    flexDirection: 'row',
+    marginLeft: 30,
+    marginTop: 21,
+  },
+  agreeBtn: {
+    marginLeft: 21,
+    width: SystemHelper.width - 165,
+  },
 })

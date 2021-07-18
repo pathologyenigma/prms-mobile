@@ -68,7 +68,7 @@ export default class LoginInputComponent extends PureComponent<TProps> {
         </Text>
         <Image
           style={styles.downImg}
-          source={require('../../../assets/gray_down.png')}
+          source={require('../../assets/gray_down.png')}
         />
         <TextInput
           defaultValue={defaultValue}
