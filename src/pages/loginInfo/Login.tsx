@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, StatusBar } from 'react-native'
 import styles from './styles/Login.style'
-import { GenProps } from '../router/stack'
+import { GenProps } from '../../navigator/router/stack'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import * as actions from '../../action/loginAction'
@@ -152,7 +152,8 @@ class LoginScreen extends Component<IProps, IState> {
         <NextTouchableOpacity
           style={[styles.loginBtn, { marginTop: 108 }]}
           onPress={() => {
-            RootLoading.info('登录')
+            // RootLoading.info('登录')
+            navigation.push('ChooseRole')
           }}
         >
           <Text style={styles.loginText}>登录</Text>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter } from 'react-native'
 import styles from './styles/ForgetPassword.style'
-import { GenProps } from '../router/stack'
+import { GenProps } from '../../navigator/router/stack'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import * as actions from '../../action/loginAction'

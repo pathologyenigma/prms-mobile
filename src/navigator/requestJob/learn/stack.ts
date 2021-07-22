@@ -2,12 +2,16 @@ import { RouteProp } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { Component, PureComponent, ClassAttributes, Key } from 'react'
 import { ConnectedComponent } from 'react-redux'
-import LoginScreen from '../loginInfo/Login'
-import ForgetPassword from '../loginInfo/ForgetPassword'
+import LoginScreen from '../../../pages/loginInfo/Login'
+import ForgetPassword from '../../../pages/loginInfo/ForgetPassword'
+import ChooseRole from '../../../pages/loginInfo/ChooseRole'
+import Learn from '../../../pages/requestJob/learn/Learn'
 
 type TRouterParams = {
+  Learn: any,
   LoginScreen: any,
-  ForgetPassword: any
+  ForgetPassword: any,
+  ChooseRole: any,
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -25,5 +29,7 @@ export default class RouterStacks {
   } = {
       LoginScreen,
       ForgetPassword,
+      ChooseRole,
+      Learn,
     }
 }
