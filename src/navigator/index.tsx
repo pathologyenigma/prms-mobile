@@ -1,115 +1,63 @@
-import React from 'react'
+import React, { Component } from 'react'
 import {
-  Image, NativeModules, View, AsyncStorage, InteractionManager,
+  Image, NativeModules, View, Text, AsyncStorage, InteractionManager, TextBase,
 } from 'react-native'
-import { createSwitchNavigator, createBottomTabNavigator } from 'react-navigation'
+import { createSwitchNavigator } from 'react-navigation'
+import { createStackNavigator, CardStyleInterpolators, TransitionPresets } from '@react-navigation/stack'
 import * as http from '../utils/http'
-import requestJobsJobs from './requestJob/jobs'
-import requestJobsFind from './requestJob/find'
-import requestJobsLearn from './requestJob/learn'
-import requestJobsNews from './requestJob/news'
-import requestJobsMine from './requestJob/mine'
-import { greenColor } from '../utils/constant'
+import { connect } from 'react-redux'
 import SystemHelper from '../utils/system'
+import RequestJobRouterStacks from '../navigator/requestJob/stack'
+import RequestLoginStacks from '../navigator/loginPages/stack'
+import RootLoading from '../utils/rootLoading'
 
 const SplashScreen = NativeModules.SplashManager
-
-function getTabbarTitle(routeName: string) {
-  if (routeName === 'requestJobsJobs') {
-    return '职位'
-  }
-  if (routeName === 'requestJobsFind') {
-    return '发现'
-  }
-  if (routeName === 'requestJobsLearn') {
-    return '学习'
-  }
-  if (routeName === 'requestJobsNews') {
-    return '消息'
-  }
-  if (routeName === 'requestJobsMine') {
-    return '我的'
-  }
-  return 'Test'
-}
-
-const requestJobTabs = createBottomTabNavigator({
-  requestJobsJobs,
-  requestJobsFind,
-  requestJobsLearn,
-  requestJobsNews,
-  requestJobsMine
-}, {
-  navigationOptions: ({ navigation }: any) => {
-    const { routeName } = navigation.state
-    console.log('routeName1: ', routeName)
-    let tabBarVisible = true
-    if (navigation.state.index > 0) {
-      tabBarVisible = false
-    }
-    return {
-      tabBarVisible,
-      tabBarLabel: getTabbarTitle(routeName),
-      tabBarIcon: ({ focused }: any) => {
-        let iconName
-        if (routeName === 'Jobs') {
-          iconName = focused ? require('../assets/requestJobs/zhiwei-selected.png') : require('../assets/requestJobs/zhiwei.png')
-        } else if (routeName === 'Find') {
-          iconName = focused ? require('../assets/requestJobs/faxian-selected.png') : require('../assets/requestJobs/faxian.png')
-        } else if (routeName === 'Learn') {
-          iconName = focused ? require('../assets/requestJobs/xuexi-selected.png') : require('../assets/requestJobs/xuexi.png')
-        } else if (routeName === 'News') {
-          iconName = focused ? require('../assets/requestJobs/xiaoxi-selected.png') : require('../assets/requestJobs/xiaoxi.png')
-        } else if (routeName === 'Mine') {
-          iconName = focused ? require('../assets/requestJobs/wode-selected.png') : require('../assets/requestJobs/wode.png')
-        }
-        return <Image resizeMode="contain" style={{ width: 25, height: 25 }} source={iconName} />
-      },
-      tabBarOnPress: (tab: any) => {
-        const tabKey = tab.navigation.state.key
-        tab.navigation.navigate(tabKey)
-      },
-    }
-  },
-  tabBarOptions: {
-    showIcon: true,
-    activeTintColor: greenColor,
-    inactiveTintColor: '#888888',
-    allowFontScaling: false,
-  },
-})
 
 const styles = {
   navbar: {
     backgroundColor: '#3574FA',
-    height: SystemHelper.safeTop
-  },
-  headerTitle: {
-    fontSize: 18,
-    backgroundColor: 'transparent',
-    textAlign: 'center',
-    color: '#FFFFFF',
-  },
-  balance: {
-    fontSize: 30,
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    backgroundColor: 'transparent',
-    textAlign: 'center',
-    marginTop: 5,
-  },
-  type: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    backgroundColor: 'transparent',
-    textAlign: 'center',
-  },
-  scan: {
-    width: 24,
-    height: 24,
-    marginRight: 10,
-  },
+    height: SystemHelper.safeTop,
+  }
+}
+
+const Stack = createStackNavigator()
+
+function RenderLoginContainer() {
+  const { stacks } = RequestLoginStacks
+  return (
+    <Stack.Navigator
+      headerMode="none"
+    >
+      {
+        Object.keys(stacks).map(stack => (
+          <Stack.Screen
+            key={stack}
+            name={stack}
+            component={stacks[stack]}
+          />
+        ))
+      }
+    </Stack.Navigator>
+  )
+}
+
+function RenderRequestJobTabs() {
+  const { stacks } = RequestJobRouterStacks
+  return (
+    <Stack.Navigator
+      headerMode="none"
+    >
+      {
+        Object.keys(stacks).map(stack => (
+          <Stack.Screen
+            key={stack}
+            name={stack}
+            component={stacks[stack]}
+          />
+        ))
+      }
+    </Stack.Navigator>
+  )
 }
 
 class Dummy extends React.Component {
@@ -124,26 +72,33 @@ class Dummy extends React.Component {
     console.log('判断是否有登录: ', navigation)
     // TODO: 判断是否登录
     // todo: 判断需要跳转到的模块
-    InteractionManager.runAfterInteractions(() => {
-      navigation.navigate('requestJobTabs')
-    })
+    navigation.navigate('RenderRequestJobTabs')
+    // RootLoading.loading('正在加载中...')
+    // setTimeout(() => {
+    //   RootLoading.hide()
+    //   navigation.navigate('RenderRequestJobTabs')
+    // }, 1000);
   }
 
   render() {
-    return (
-      <View style={{ flex: 1, backgroundColor: '#F5F5F6' }}>
-        <View style={styles.navbar} />
-      </View>
-    )
+    return null
   }
 }
 
-export default createSwitchNavigator(
+const Router = createSwitchNavigator(
   {
     Dummy,
-    requestJobTabs,
+    RenderLoginContainer,
+    RenderRequestJobTabs,
   },
   {
     initialRouteName: 'Dummy',
   },
 )
+
+const mapStateToProps = (state: any) => {
+  return {
+
+  }
+}
+export default connect(mapStateToProps)(Router)

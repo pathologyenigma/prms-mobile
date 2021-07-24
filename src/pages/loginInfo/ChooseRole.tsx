@@ -48,7 +48,11 @@ class ChooseRole extends Component<IProps, IState> {
     return (
       <NextTouchableOpacity style={styles.cellView}
         onPress={() => {
-          RootLoading.info('我要求职')
+          // RootLoading.info('我要求职')
+          const { navigation } = this.props
+          // 此处将状态全局存储起来后,再回到导航首页进行判断身份跳转
+          navigation.navigate('Dummy')
+          // navigation.navigate('RenderRequestJobTabs')
         }}
       >
         <Image

@@ -18,7 +18,7 @@ export default class RootLoading {
   public static success = (content?: string, duration?: number, onClose?: () => void, mask?: boolean) => {
     Toast.removeAll()
     Toast.success(
-      content || Localization.get('success'),
+      content || Localization.get('load_success'),
       duration || 1,
       onClose || undefined,
       mask || true
