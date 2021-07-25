@@ -13,6 +13,9 @@ import AlertContentModal from '../components/AlertContentModal'
 import WhiteContentModal from '../components/WhiteContentModal'
 import GradientButton from '../components/GradientButton'
 import SystemHelper from '../../utils/system'
+import { CommonActions } from '@react-navigation/native'
+import AsyncStorage from '@react-native-community/async-storage'
+import { Login_type } from '../../utils/constant'
 
 type IProps = GenProps<'LoginScreen'> & {
   email: string,
@@ -209,8 +212,17 @@ class LoginScreen extends Component<IProps, IState> {
           <NextTouchableOpacity
             style={styles.passwordLogin}
             onPress={() => {
-              this.setState({ loginType: 1 })
-              RootLoading.info('账号密码登录')
+              // this.setState({ loginType: 1 })
+              // RootLoading.info('账号密码登录')
+              AsyncStorage.setItem(Login_type, '1', (error) => {
+                console.log('1111111111: ', error)
+                if (!error) {
+                  const { navigation } = this.props
+                  // navigation.navigate('Dummy')
+                } else {
+                  RootLoading.fail('请重试或联系客服')
+                }
+              })
             }}
           >
             <Text style={styles.passwordLoginText}>账号密码登录</Text>

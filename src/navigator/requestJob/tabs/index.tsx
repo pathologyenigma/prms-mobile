@@ -1,4 +1,3 @@
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import React, { Component } from 'react'
 import { Image } from 'react-native'
 import { connect } from 'react-redux'
@@ -10,7 +9,6 @@ import Mine from '../../../pages/requestJob/mine/Mine'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { greenColor } from '../../../utils/constant'
 
-// const Tab = createMaterialBottomTabNavigator()
 const Tab = createBottomTabNavigator()
 
 interface ITabs {

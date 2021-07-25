@@ -1,2 +1,6 @@
+export const Login_type = 'Login_type'
+export const Login_Account = 'Login_Account'
+export const Login_Password = 'Login_Password'
 export const greenColor = '#54D693'
 export const gradienRightGreenColor = '#81E3AE'
+export const gradienViewRightGreenColor = '#5BE7AA'

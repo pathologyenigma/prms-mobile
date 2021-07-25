@@ -6,16 +6,63 @@ import GradientButton from '../../components/GradientButton'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import styles from './styles/Jobs.style'
 import LinearGradient from 'react-native-linear-gradient'
-import { gradienRightGreenColor, greenColor } from '../../../utils/constant'
+import { gradienViewRightGreenColor, greenColor } from '../../../utils/constant'
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
+import { Carousel } from '@ant-design/react-native'
 
-export default class Jobs extends Component {
+type IProps = {
+  navigation: any,
+}
+
+type IState = {
+  viderSource: [],
+  listDataSource: [],
+  refreshState: RefreshState.HeaderRefreshing,
+  selectCondition: number
+}
+
+export default class Jobs extends Component<IProps, IState> {
   constructor(props: any) {
     super(props)
+    console.log('props: ', props)
     this.state = {
       viderSource: [],
-      listDataSource: [],
-      refreshState: RefreshState.HeaderRefreshing,
+      listDataSource: [{
+        id: 1,
+        name: '项目经理',
+        company: '深圳市酷魅科技有限公司',
+        financing: '融资未公开',
+        staffAmount: '1-49人',
+        experience: '3-4年',
+        education: '大专及以上',
+        location: '深圳·宝安区',
+        salary: '15K-30K',
+        interviewer: '李女士·产品线HRBP'
+      }, {
+        id: 2,
+        name: '项目经理',
+        company: '深圳市酷魅科技有限公司',
+        financing: '融资未公开',
+        staffAmount: '1-49人',
+        experience: '3-4年',
+        education: '大专及以上',
+        location: '深圳·宝安区',
+        salary: '15K-30K',
+        interviewer: '陈先生·技术总监'
+      }, {
+        id: 3,
+        name: '项目经理',
+        company: '深圳市酷魅科技有限公司',
+        financing: '融资未公开',
+        staffAmount: '1-49人',
+        experience: '3-4年',
+        education: '大专及以上',
+        location: '深圳·宝安区',
+        salary: '15K-30K',
+        interviewer: '陈先生·技术总监'
+      }],
+      refreshState: RefreshState.Idle,
+      selectCondition: 1, // 1:推荐; 2: 最新; 3:附近
     }
   }
 
@@ -30,11 +77,12 @@ export default class Jobs extends Component {
   renderNavBar() {
     const start = { x: 0, y: 0.5 }
     const end = { x: 1, y: 0.5 }
+    const { navigation } = this.props
     return (
       <LinearGradient
         start={start}
         end={end}
-        colors={[greenColor, gradienRightGreenColor]}
+        colors={[greenColor, gradienViewRightGreenColor]}
         style={styles.naviBar}
       >
         {/* <Text style={[styles.text, textStyle]}>
@@ -51,7 +99,10 @@ export default class Jobs extends Component {
             ref={'barScrollView'}
             style={styles.naviBarScrollview}
           >
-            <Text style={styles.naviBarText}>
+            <Text style={[styles.naviBarText, {
+              fontSize: 20,
+              fontWeight: '400'
+            }]}>
               项目经理
             </Text>
             <Text style={styles.naviBarText}>
@@ -61,14 +112,27 @@ export default class Jobs extends Component {
               APP设计师
             </Text>
           </ScrollView>
-          <Image
-            style={styles.naviBarIcon}
-            source={require('../../../assets/requestJobs/add.png')}
-          />
-          <Image
-            style={[styles.naviBarIcon, { marginLeft: 13 }]}
-            source={require('../../../assets/requestJobs/search.png')}
-          />
+          <NextTouchableOpacity
+            style={{ marginLeft: 40, marginRight: 10 }}
+            onPress={() => {
+
+            }}
+          >
+            <Image
+              style={styles.naviBarIcon}
+              source={require('../../../assets/requestJobs/add.png')}
+            />
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            onPress={() => {
+              navigation.navigate('RenderRequestJobTabs')
+            }}
+          >
+            <Image
+              style={styles.naviBarIcon}
+              source={require('../../../assets/requestJobs/search.png')}
+            />
+          </NextTouchableOpacity>
         </View>
       </LinearGradient>
     )
@@ -82,14 +146,228 @@ export default class Jobs extends Component {
 
   }
 
-  renderVideo() {
-    return null
+  renderVideoTag() {
+    const start = { x: 0, y: 0.5 }
+    const end = { x: 1, y: 0.5 }
+    return (
+      <View style={styles.videoTagContainer}>
+        <LinearGradient
+          start={start}
+          end={end}
+          colors={['#FF5A00', '#FF8C05']}
+          style={styles.videoTagView}
+        >
+          <Image
+            style={styles.videoTable}
+            source={require('../../../assets/requestJobs/video-table.png')}
+          />
+          <Text style={styles.videoTagTitle}>
+            直播
+          </Text>
+        </LinearGradient>
+        <Text style={styles.videoAccount}>280人</Text>
+      </View>
+    )
   }
 
-  renderItem() {
+  renderVideo() {
     return (
-      <View>
-        <Text>职位列表</Text>
+      <View style={styles.videoView}>
+        <View style={styles.videoHeaderView}>
+          <Text style={styles.videoTitle}>视频招聘</Text>
+          <Text style={styles.videoDetail}>查看更多</Text>
+          <Image
+            style={styles.videoRightImg}
+            source={require('../../../assets/requestJobs/next-gray.png')}
+          />
+        </View>
+        <View style={styles.videoTopView}>
+          <NextTouchableOpacity
+            style={styles.videoBtn}
+          >
+            {this.renderVideoTag()}
+            <Text style={styles.videoText}>在招职场系列直播</Text>
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            style={styles.videoBtn}
+          >
+            {this.renderVideoTag()}
+            <Text style={styles.videoText}>在招职场系列直播</Text>
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            style={styles.videoBtn}
+          >
+            {this.renderVideoTag()}
+            <Text style={styles.videoText}>在招职场系列直播</Text>
+          </NextTouchableOpacity>
+        </View>
+      </View >
+    )
+  }
+
+  renderItem(item: any) {
+    const { navigation } = this.props
+    return (
+      <NextTouchableOpacity
+        style={styles.cellView}
+        onPress={() => {
+
+        }}
+      >
+        <View style={styles.cellTitleView}>
+          <Text style={styles.cellTitle}>
+            {item.name}
+          </Text>
+          <Text style={styles.cellSalary}>
+            {item.salary}
+          </Text>
+        </View>
+        <View style={styles.cellCompanyView}>
+          <Text style={styles.cellCompany}>
+            {item.company}
+          </Text>
+          <Text style={styles.cellCompany}>
+            {item.financing}
+          </Text>
+          <Text style={styles.cellCompany}>
+            {item.staffAmount}
+          </Text>
+        </View>
+        <View style={styles.cellJobView}>
+          <Text style={styles.cellExperience}>
+            {item.experience}
+          </Text>
+          <Text style={styles.cellExperience}>
+            {item.education}
+          </Text>
+          <Text style={styles.cellExperience}>
+            {item.location}
+          </Text>
+        </View>
+        <View style={styles.interviewerView}>
+          <View style={styles.interviewerIcon} />
+          <Text style={styles.cellInterviewer}>
+            {item.interviewer}
+          </Text>
+        </View>
+      </NextTouchableOpacity>
+    )
+  }
+
+  // id: 1,
+  // name: '项目经理',
+  // company: '深圳市酷魅科技有限公司',
+  // financing: '融资未公开',
+  // staffAmount: '1-49人',
+  // experience: '3-4年',
+  // education: '大专及以上',
+  // location: '深圳·宝安区',
+  // salary: '15K-30K',
+  // interviewer: '李女士·产品线HRBP'
+
+  renderCondition() {
+    const { selectCondition } = this.state
+    return (
+      <View style={styles.conditionView}>
+        <View style={styles.conditionLeftView}>
+          <NextTouchableOpacity
+            style={styles.conditionLeftBtn}
+            onPress={() => {
+              this.setState({ selectCondition: 1 })
+            }}
+          >
+            <Text
+              style={[styles.conditionLeftText, selectCondition === 1 && {
+                color: greenColor, fontWeight: '500'
+              }]}
+            >推荐</Text>
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            style={styles.conditionLeftBtn}
+            onPress={() => {
+              this.setState({ selectCondition: 2 })
+            }}
+          >
+            <Text
+              style={[styles.conditionLeftText, selectCondition === 2 && {
+                color: greenColor, fontWeight: '500'
+              }]}
+            >最新</Text>
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            style={styles.conditionLeftBtn}
+            onPress={() => {
+              this.setState({ selectCondition: 3 })
+            }}
+          >
+            <Text
+              style={[styles.conditionLeftText, selectCondition === 3 && {
+                color: greenColor, fontWeight: '500'
+              }]}
+            >附近</Text>
+          </NextTouchableOpacity>
+        </View>
+        {/* right-bootom-triangle@2x.png */}
+        <View style={styles.conditionRightView}>
+          <NextTouchableOpacity style={styles.conditionRightBtn}>
+            <Text style={styles.conditionRightText}>
+              地点
+            </Text>
+            <Image
+              style={styles.rightBottomImg}
+              source={require('../../../assets/requestJobs/right-bootom-triangle.png')}
+            />
+          </NextTouchableOpacity>
+          <NextTouchableOpacity style={[styles.conditionRightBtn, { marginLeft: 9 }]}>
+            <Text style={styles.conditionRightText}>
+              筛选
+            </Text>
+            <Image
+              style={styles.rightBottomImg}
+              source={require('../../../assets/requestJobs/right-bootom-triangle.png')}
+            />
+          </NextTouchableOpacity>
+        </View>
+      </View>
+    )
+  }
+
+  renderAd() {
+    return (
+      <Carousel
+        autoplay
+        autoplayInterval={3000}
+        infinite={true}
+        dotStyle={styles.dots}
+        dotActiveStyle={styles.activeDots}
+        style={styles.carousel}
+        styles={{ pagination: styles.pageController }}
+      >
+        <NextTouchableOpacity
+          style={styles.adBtn}
+        >
+          <Text style={styles.adText}>这是广告 1</Text>
+        </NextTouchableOpacity>
+        <NextTouchableOpacity
+          style={styles.adBtn}
+        >
+          <Text style={styles.adText}>这是广告 2</Text>
+        </NextTouchableOpacity>
+        <NextTouchableOpacity
+          style={styles.adBtn}
+        >
+          <Text style={styles.adText}>这是广告 3</Text>
+        </NextTouchableOpacity>
+      </Carousel>
+    )
+  }
+
+  renderHeader = () => {
+    return (
+      <View style={styles.listHeaderView}>
+        {this.renderCondition()}
+        {this.renderAd()}
+        {this.renderVideo()}
       </View>
     )
   }
@@ -103,7 +381,8 @@ export default class Jobs extends Component {
         refreshState={refreshState}
         automaticallyAdjustContentInsets={false}
         data={listDataSource}
-        renderItem={({ item }: any) => this.renderItem(item, listDs)}
+        ListHeaderComponent={this.renderHeader}
+        renderItem={({ item }: any) => this.renderItem(item)}
         onFooterRefresh={() => this.handleEndReached}
         keyExtractor={(item: any) => item.id.toString()}
         footerRefreshingText="加载更多"
@@ -114,15 +393,13 @@ export default class Jobs extends Component {
 
   render() {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={styles.container}>
         <StatusBar
           translucent={true}
           barStyle="light-content"
           animated />
         {this.renderNavBar()}
         {this.renderList()}
-        <ScrollView>
-        </ScrollView>
       </SafeAreaView>
     )
   }
