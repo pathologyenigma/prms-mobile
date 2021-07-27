@@ -16,7 +16,6 @@ export default StyleSheet.create({
     position: 'absolute',
     left: 0,
     top: -SystemHelper.safeTop,
-    backgroundColor: 'red',
     zIndex: 100
   },
   naviBar: {

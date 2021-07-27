@@ -5,7 +5,7 @@ interface IButton {
   onPress?: () => void
   style?: StyleProp<ViewStyle>
   delay?: number
-  children?: JSX.Element[] | JSX.Element
+  children?: any
   target?: any
   disabled?: boolean
   playSound?: boolean

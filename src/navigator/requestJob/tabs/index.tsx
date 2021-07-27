@@ -34,7 +34,7 @@ export default class Tabs extends Component<ITabs> {
         }}
       >
         <Tab.Screen
-          name="Jobs"
+          name="职位"
           component={Jobs}
           options={{
             tabBarBadge: undefined,
@@ -44,7 +44,7 @@ export default class Tabs extends Component<ITabs> {
           }}
         />
         <Tab.Screen
-          name="Find"
+          name="发现"
           component={Find}
           options={{
             tabBarBadge: undefined,
@@ -54,7 +54,7 @@ export default class Tabs extends Component<ITabs> {
           }}
         />
         <Tab.Screen
-          name="Learn"
+          name="学习"
           component={Learn}
           options={{
             tabBarBadge: undefined,
@@ -64,7 +64,7 @@ export default class Tabs extends Component<ITabs> {
           }}
         />
         <Tab.Screen
-          name="News"
+          name="消息"
           component={News}
           options={{
             tabBarBadge: 10,
@@ -74,7 +74,7 @@ export default class Tabs extends Component<ITabs> {
           }}
         />
         <Tab.Screen
-          name="Mine"
+          name="我的"
           component={Mine}
           options={{
             tabBarBadge: undefined,

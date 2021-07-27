@@ -15,7 +15,7 @@ type IProps = {
 }
 
 type IState = {
-  viderSource: [],
+  videoSource: [],
   listDataSource: [],
   refreshState: RefreshState.HeaderRefreshing,
   selectCondition: number
@@ -26,7 +26,7 @@ export default class Jobs extends Component<IProps, IState> {
     super(props)
     console.log('props: ', props)
     this.state = {
-      viderSource: [],
+      videoSource: [],
       listDataSource: [{
         id: 1,
         name: '项目经理',
