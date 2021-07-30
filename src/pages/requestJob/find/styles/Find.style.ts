@@ -10,7 +10,7 @@ export default StyleSheet.create({
   },
   tabsView: {
     flexDirection: 'row',
-    height: 30,
+    height: 38,
     backgroundColor: '#fff',
     paddingHorizontal: 11,
   },

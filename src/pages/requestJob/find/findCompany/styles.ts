@@ -6,10 +6,10 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FDFDFD',
-    paddingHorizontal: 11,
   },
   listView: {
     flex: 1,
+    paddingHorizontal: 11,
   },
   contentStyle: {
   },
@@ -33,7 +33,6 @@ export default StyleSheet.create({
   carousel: {
     width: SystemHelper.width - 22,
     height: 110,
-    marginTop: 7
   },
   dots: {
     width: 5,

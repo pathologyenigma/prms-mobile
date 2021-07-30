@@ -7,6 +7,7 @@ import styles from './styles/Find.style'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import LinearGradient from 'react-native-linear-gradient'
 import FindCompany from './findCompany'
+import Jobfair from './jobfair'
 
 type TProps = GenProps<'Find'>
 
@@ -116,8 +117,7 @@ export default class Find extends Component<TProps, IState> {
             }}
           >
             <FindCompany route={route} navigation={navigation} />
-            {/* <DiamondsList navigation={navigation} subscription={subscription} subscribeEnd={subscribeEnd} />
-            <FishList navigation={navigation} /> */}
+            <Jobfair route={route} navigation={navigation} />
           </Tabs>
         </View>
       </View>
