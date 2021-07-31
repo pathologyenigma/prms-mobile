@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet, StyleProp, ViewStyle, TextStyle, ImageSourcePropType } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { gradienRightGreenColor, greenColor } from '../../../utils/constant'
 import NextTouchableOpacity from '../NextTouchableOpacity'
@@ -22,7 +22,16 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class GradientButton extends PureComponent {
+interface IButton {
+  onPress?: () => void
+  containerStyle?: StyleProp<ViewStyle>
+  textStyle?: StyleProp<TextStyle>
+  target?: any
+  text: string
+  disabled?: boolean
+}
+
+export default class GradientButton extends PureComponent<IButton> {
   renderInner(disabled, textStyle, text) {
     if (disabled) {
       return (
@@ -51,8 +60,7 @@ export default class GradientButton extends PureComponent {
 
   render() {
     const {
-      text, containerStyle, textStyle, onPress,
-      disabled,
+      text, containerStyle, textStyle, onPress, disabled,
     } = this.props
     return (
       <NextTouchableOpacity

@@ -12,6 +12,7 @@ import Tabs from './tabs/index'
 
 type TRouterParams = {
   Find: any,
+  Learn: any,
   LoginScreen: any,
   ForgetPassword: any,
   ChooseRole: any,
