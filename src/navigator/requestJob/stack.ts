@@ -16,6 +16,7 @@ type TRouterParams = {
   LoginScreen: any,
   ForgetPassword: any,
   ChooseRole: any,
+  News: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
