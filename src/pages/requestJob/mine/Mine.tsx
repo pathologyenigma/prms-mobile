@@ -1,14 +1,268 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView } from 'react-native'
+import { SafeAreaView, StatusBar, ImageBackground, Image, ScrollView, View, Text, ImageSourcePropType } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import styles from './styles/Mine.style'
+import RootLoading from '../../../utils/rootLoading'
 
-export default class Jobs extends Component {
+type IProps = {
+  navigation: any,
+}
+
+type IState = {
+
+}
+
+export default class Mine extends Component<IProps, IState> {
+  constructor(props: any) {
+    super(props)
+    console.log('props: ', props)
+    this.state = {
+
+    }
+  }
+
+  componentDidMount() {
+    this.loadData()
+  }
+
+  loadData() {
+
+  }
+
+  renderIconView() {
+    const start = { x: 0, y: 0.5 }
+    const end = { x: 1, y: 0.5 }
+    return (
+      <View style={styles.iconView}>
+        <View style={styles.avatar}>
+          <Image
+            style={styles.gender}
+            source={require('../../../assets/requestJobs/women-icon.png')}
+          />
+        </View>
+        <View style={styles.nameView}>
+          <Text style={styles.nameTitle}>
+            李小冉
+          </Text>
+          <Text style={styles.detailInfo}>
+            工作4年/27岁/本科
+          </Text>
+        </View>
+        <LinearGradient
+          start={start}
+          end={end}
+          colors={['#2A2420', '#443A35', '#2F2925']}
+          style={styles.onlineJianliView}
+        >
+          <View style={styles.onlineJianliTop}>
+            <Text style={styles.onlineJianli}>在线简历</Text>
+            <Image
+              style={styles.yellowRight}
+              source={require('../../../assets/requestJobs/chakan.png')}
+            />
+          </View>
+          <Text style={styles.onlineText}>完善度90%</Text>
+        </LinearGradient>
+      </View>
+    )
+  }
+
+  renderDetailInfo() {
+    return (
+      <View style={styles.detailInfoView}>
+        <View style={styles.detailInfoItem}>
+          <Text style={styles.detailInfoValue}>5</Text>
+          <Text style={styles.detailInfoTag}>面试</Text>
+        </View>
+        <View style={styles.detailInfoItem}>
+          <Text style={styles.detailInfoValue}>105</Text>
+          <Text style={styles.detailInfoTag}>投递</Text>
+        </View>
+        <View style={styles.detailInfoItem}>
+          <Text style={styles.detailInfoValue}>1333</Text>
+          <Text style={styles.detailInfoTag}>浏览</Text>
+        </View>
+        <View style={styles.detailInfoItem}>
+          <Text style={styles.detailInfoValue}>4</Text>
+          <Text style={styles.detailInfoTag}>收藏</Text>
+        </View>
+        <View style={styles.detailInfoItem}>
+          <Text style={styles.detailInfoValue}>1</Text>
+          <Text style={styles.detailInfoTag}>关注</Text>
+        </View>
+      </View>
+    )
+  }
+
+  renderNavBar() {
+    return (
+      <ImageBackground
+        style={styles.topImage}
+        resizeMode="cover"
+        source={require('../../../assets/requestJobs/me-beijing.png')}
+      >
+        <NextTouchableOpacity
+          style={styles.scanBtn}
+        >
+          <Image
+            style={styles.scanImage}
+            source={require('../../../assets/requestJobs/saoyisao.png')}
+          />
+        </NextTouchableOpacity>
+        {this.renderIconView()}
+        {this.renderDetailInfo()}
+      </ImageBackground>
+    )
+  }
+
+  renderJianliView() {
+    return (
+      <View style={styles.jianliView}>
+        <View style={styles.jianliItem}>
+          <Image
+            style={styles.jianliIcon}
+            source={require('../../../assets/requestJobs/jianlishuaxin.png')}
+          />
+          <Text style={styles.jianliTag}>简历刷新</Text>
+        </View>
+        <View style={styles.jianliItem}>
+          <Image
+            style={styles.jianliIcon}
+            source={require('../../../assets/requestJobs/jianlizhiding.png')}
+          />
+          <Text style={styles.jianliTag}>简历置顶</Text>
+        </View>
+        <View style={styles.jianliItem}>
+          <Image
+            style={styles.jianliIcon}
+            source={require('../../../assets/requestJobs/jianliyouhua.png')}
+          />
+          <Text style={styles.jianliTag}>简历优化</Text>
+        </View>
+        <View style={styles.jianliItem}>
+          <Image
+            style={styles.jianliIcon}
+            source={require('../../../assets/requestJobs/jianlimoban.png')}
+          />
+          <Text style={styles.jianliTag}>简历模板</Text>
+        </View>
+        <View style={styles.jianliItem}>
+          <Image
+            style={styles.jianliIcon}
+            source={require('../../../assets/requestJobs/zhiweizhixun.png')}
+          />
+          <Text style={styles.jianliTag}>职位咨询</Text>
+        </View>
+      </View>
+    )
+  }
+
+  renderAdImage() {
+    return (
+      <View style={styles.adImage} />
+    )
+  }
+
+  renderMyStudy() {
+    return (
+      <View style={styles.myStudyContainer}>
+        <View style={styles.myStudyView}>
+          <Text style={styles.myStudy}>我的学习</Text>
+          <View style={styles.moreTextView}>
+            <Text style={styles.moreText}>更多</Text>
+            <Image
+              style={styles.rightArrow}
+              source={require('../../../assets/requestJobs/next-gray.png')}
+            />
+          </View>
+        </View>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={styles.studyView}>
+          <NextTouchableOpacity style={styles.studyItem} />
+          <NextTouchableOpacity style={styles.studyItem} />
+          <NextTouchableOpacity style={styles.studyItem} />
+        </ScrollView>
+      </View>
+    )
+  }
+
+  renderOtherCell(
+    icon: ImageSourcePropType,
+    title: string,
+    onPress: () => void
+  ) {
+    return (
+      <NextTouchableOpacity style={styles.cellItem}
+        onPress={() => {
+          if (onPress) {
+            onPress()
+          }
+        }}
+      >
+        <View style={styles.titleView}>
+          <Image
+            resizeMode="contain"
+            style={styles.leftArrow}
+            source={icon}
+          />
+          <Text style={styles.otherTitle}>{title}</Text>
+        </View>
+        <Image
+          style={styles.rightArrow}
+          source={require('../../../assets/requestJobs/next-gray.png')}
+        />
+      </NextTouchableOpacity>
+    )
+  }
+
+  renderOther() {
+    const imageSource = [
+      require('../../../assets/requestJobs/jianli.png'),
+      require('../../../assets/requestJobs/privacy.png'),
+      require('../../../assets/requestJobs/wallet.png'),
+      require('../../../assets/requestJobs/change-role.png'),
+      require('../../../assets/requestJobs/feedback.png'),
+      require('../../../assets/requestJobs/about.png'),
+      require('../../../assets/requestJobs/setting.png'),
+    ]
+    const titleArray = ['附件简历', '隐私设置', '我的钱包', '切换身份', '反馈与帮助', '关于', '设置']
+    return (
+      <View>
+        {titleArray.map((item, index) => {
+          {
+            return (
+              this.renderOtherCell(
+                imageSource[index],
+                titleArray[index],
+                () => {
+                  RootLoading.info('敬请期待')
+                }
+              )
+            )
+          }
+        })}
+      </View>
+    )
+  }
+
   render() {
     return (
-      <ScrollView>
-        <Text>
-          页面标题
-        </Text>
-      </ScrollView>
+      <SafeAreaView style={styles.container}>
+        <StatusBar
+          translucent={true}
+          barStyle="light-content"
+          animated />
+        <ScrollView>
+          {this.renderNavBar()}
+          {this.renderJianliView()}
+          {this.renderAdImage()}
+          {this.renderMyStudy()}
+          {this.renderOther()}
+        </ScrollView>
+      </SafeAreaView>
     )
   }
 }
