@@ -181,6 +181,7 @@ export default StyleSheet.create({
   myStudyView: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingRight: 11,
     justifyContent: 'space-between',
   },
   myStudy: {

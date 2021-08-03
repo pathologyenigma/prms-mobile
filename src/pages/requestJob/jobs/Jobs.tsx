@@ -9,6 +9,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { gradienViewRightGreenColor, greenColor } from '../../../utils/constant'
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { Carousel } from '@ant-design/react-native'
+import NavBar, { EButtonType } from '../../components/NavBar'
 
 type IProps = {
   navigation: any,
@@ -115,7 +116,7 @@ export default class Jobs extends Component<IProps, IState> {
           <NextTouchableOpacity
             style={{ marginLeft: 40, marginRight: 10 }}
             onPress={() => {
-
+              navigation.push('JobExpectations')
             }}
           >
             <Image
@@ -393,14 +394,16 @@ export default class Jobs extends Component<IProps, IState> {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.container}>
         <StatusBar
-          translucent={true}
-          barStyle="light-content"
-          animated />
+          translucent
+          backgroundColor="transparent"
+          animated
+          barStyle={'light-content'}
+        />
         {this.renderNavBar()}
         {this.renderList()}
-      </SafeAreaView>
+      </ScrollView>
     )
   }
 }

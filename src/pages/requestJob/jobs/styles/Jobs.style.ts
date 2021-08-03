@@ -19,10 +19,10 @@ export default StyleSheet.create({
     zIndex: 100
   },
   naviBar: {
-    height: SystemHelper.safeTop + 44,
+    height: SystemHelper.safeTop + 61,
     width: '100%',
-    paddingTop: 35,
     paddingHorizontal: 11,
+    paddingTop: SystemHelper.safeTop + 29,
   },
   naviBarContainer: {
     width: '100%',

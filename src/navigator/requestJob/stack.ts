@@ -9,6 +9,7 @@ import LoginScreen from '../../pages/loginInfo/Login'
 import ForgetPassword from '../../pages/loginInfo/ForgetPassword'
 import ChooseRole from '../../pages/loginInfo/ChooseRole'
 import Tabs from './tabs/index'
+import JobExpectations from '../../pages/requestJob/jobs/JobExpectations'
 
 type TRouterParams = {
   Find: any,
@@ -16,7 +17,8 @@ type TRouterParams = {
   LoginScreen: any,
   ForgetPassword: any,
   ChooseRole: any,
-  News: any
+  News: any,
+  JobExpectations: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -41,5 +43,6 @@ export default class RouterStacks {
       LoginScreen,
       ForgetPassword,
       ChooseRole,
+      JobExpectations,
     }
 }
