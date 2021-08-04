@@ -10,6 +10,8 @@ import ForgetPassword from '../../pages/loginInfo/ForgetPassword'
 import ChooseRole from '../../pages/loginInfo/ChooseRole'
 import Tabs from './tabs/index'
 import JobExpectations from '../../pages/requestJob/jobs/JobExpectations'
+import JobExpectDetail from '../../pages/requestJob/jobs/JobExpectDetail'
+import JobSelectZhiwei from '../../pages/requestJob/jobs/JobSelectZhiwei'
 
 type TRouterParams = {
   Find: any,
@@ -18,7 +20,9 @@ type TRouterParams = {
   ForgetPassword: any,
   ChooseRole: any,
   News: any,
-  JobExpectations: any
+  JobExpectations: any,
+  JobExpectDetail: any,
+  JobSelectZhiwei: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -44,5 +48,7 @@ export default class RouterStacks {
       ForgetPassword,
       ChooseRole,
       JobExpectations,
+      JobExpectDetail,
+      JobSelectZhiwei
     }
 }

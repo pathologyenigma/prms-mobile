@@ -55,8 +55,8 @@ export default StyleSheet.create({
     zIndex: 1,
     lineHeight: 44,
     bottom: 0,
-    fontSize: 20,
-    
-    color: '#323338',
+    fontSize: 18,
+    fontWeight: '400',
+    color: '#333333',
   },
 })

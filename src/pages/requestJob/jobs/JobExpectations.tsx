@@ -86,7 +86,9 @@ class JobExpectations extends Component<IProps, IState> {
         </View>
         <NextTouchableOpacity style={styles.editBtn}
           onPress={() => {
-            RootLoading.info('进入编辑页面')
+            // RootLoading.info('进入编辑页面')
+            const { navigation } = this.props
+            navigation.push('JobExpectDetail')
           }}
         >
           <Image
