@@ -7,47 +7,23 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
-  scrollview: {
-    flex: 1,
-  },
-  listView: {
-    flex: 1,
-    paddingTop: 30,
-  },
   saveBtn: {
     color: greenColor,
     fontSize: 15
   },
-  cellView: {
-    marginLeft: 11,
-    paddingLeft: 35,
-    marginBottom: 45,
-    borderLeftWidth: 5,
-    borderLeftColor: '#fff'
-  },
-  cellText: {
-    color: '#666666',
-    fontSize: 15,
-    fontWeight: 'bold'
-  },
   contentView: {
     flex: 1,
   },
-  backBtn: {
-    width: SystemHelper.width * 0.165,
-  },
   detailView: {
-    position: 'absolute',
-    left: 0,
-    top: SystemHelper.safeTop + 100,
+    flex: 1,
     width: SystemHelper.width,
-    height: SystemHelper.height - SystemHelper.safeTop - 100,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    flexDirection: 'row'
+    backgroundColor: '#fff',
+    flexDirection:'row',
+    justifyContent: 'space-between'
   },
   detailSecondView: {
     backgroundColor: '#fff',
-    width: SystemHelper.width * 0.331,
+    width: SystemHelper.width * 0.5,
     paddingTop: 25,
   },
   detailSecondBtn: {
@@ -55,14 +31,14 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderLeftWidth: 5,
-    borderLeftColor: '#fff'
+    borderLeftColor: '#EEEEEE'
   },
   detailSecondText: {
     color: '#666666'
   },
   detailThirdView: {
     backgroundColor: '#EEEEEE',
-    width: SystemHelper.width * 0.504,
+    width: SystemHelper.width * 0.5,
     paddingTop: 25,
   },
   detailThirdBtn: {

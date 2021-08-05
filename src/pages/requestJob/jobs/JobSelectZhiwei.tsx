@@ -2,16 +2,9 @@ import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter } from 'react-native'
 import styles from './styles/JobSelectZhiwei.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
-import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
-import * as actions from '../../../action/loginAction'
-import { IStoreState } from '../../../reducer'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import RootLoading from '../../../utils/rootLoading'
-import AlertContentModal from '../../components/AlertContentModal'
-import WhiteContentModal from '../../components/WhiteContentModal'
-import GradientButton from '../../components/GradientButton'
-import SystemHelper from '../../../utils/system'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import SearchTextinput from '../../components/SearchTextinput'
 // @ts-ignore
@@ -32,7 +25,7 @@ interface IState {
   selectItemThird: any
 }
 
-class JobSelectZhiwei extends Component<IProps, IState> {
+export default class JobSelectZhiwei extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
@@ -188,7 +181,8 @@ class JobSelectZhiwei extends Component<IProps, IState> {
   }
 
   renderNavBar() {
-    const { navigation } = this.props
+    const { navigation, route: { params: { selectJobTypeCallback } } } = this.props
+    const { selectItemThird } = this.state
     return (
       <NavBar
         statusBarTheme="dark-content"
@@ -209,7 +203,12 @@ class JobSelectZhiwei extends Component<IProps, IState> {
           value: '保存',
           style: styles.saveBtn,
           act: () => {
-            RootLoading.info('保存成功')
+            if (!selectItemThird || !selectItemThird.title) {
+              RootLoading.info('请选择职位')
+            } else if (selectJobTypeCallback) {
+              selectJobTypeCallback(selectItemThird)
+              navigation.goBack()
+            }
           }
         }}
       />
@@ -241,7 +240,7 @@ class JobSelectZhiwei extends Component<IProps, IState> {
     return (
       <NextTouchableOpacity
         style={[styles.cellView, selectItem.id === item.id && {
-          borderColor: greenColor
+          borderLeftColor: greenColor
         }]}
         onPress={() => {
           this.setState({
@@ -251,13 +250,13 @@ class JobSelectZhiwei extends Component<IProps, IState> {
           })
         }}
       >
-        <Text style={styles.cellText}>{item.title}</Text>
+        <Text style={[styles.cellText, selectItem.id === item.id && { color: greenColor }]}>{item.title}</Text>
       </NextTouchableOpacity>
     )
   }
 
   renderDetailView() {
-    const { selectItem, selectItemSecond } = this.state
+    const { selectItem, selectItemSecond, selectItemThird } = this.state
     console.log('selectItem: ', selectItem)
     return (
       <View
@@ -275,7 +274,11 @@ class JobSelectZhiwei extends Component<IProps, IState> {
           {selectItem.sublist.map((e: any, index: number) => {
             return (
               <NextTouchableOpacity
-                style={styles.detailSecondBtn}
+                style={[styles.detailSecondBtn,
+                selectItemSecond.id === e.id && {
+                  borderLeftColor: greenColor
+                }
+                ]}
                 key={index.toString()}
                 onPress={() => {
                   this.setState({
@@ -283,7 +286,7 @@ class JobSelectZhiwei extends Component<IProps, IState> {
                   })
                 }}
               >
-                <Text style={styles.detailSecondText}>{e.title}</Text>
+                <Text style={[styles.detailSecondText, selectItemSecond.id === e.id && { color: greenColor }]}>{e.title}</Text>
               </NextTouchableOpacity>
             )
           })}
@@ -292,7 +295,7 @@ class JobSelectZhiwei extends Component<IProps, IState> {
           {selectItemSecond.sublist.map((e: any, index: number) => {
             return (
               <NextTouchableOpacity
-                style={styles.detailSecondBtn}
+                style={styles.detailThirdBtn}
                 key={index.toString()}
                 onPress={() => {
                   this.setState({
@@ -301,6 +304,12 @@ class JobSelectZhiwei extends Component<IProps, IState> {
                 }}
               >
                 <Text style={styles.detailSecondText}>{e.title}</Text>
+                {selectItemThird.id === e.id ? (
+                  <Image
+                    style={styles.selectTag}
+                    source={require('../../../assets/requestJobs/green-check.png')}
+                  />
+                ) : null}
               </NextTouchableOpacity>
             )
           })}
@@ -338,22 +347,3 @@ class JobSelectZhiwei extends Component<IProps, IState> {
     )
   }
 }
-
-const mapStateToProps = (state: IStoreState) => {
-  return {
-    email: state.loginInfo.email,
-    phone: state.loginInfo.phone,
-    password: state.loginInfo.password,
-    verifyCode: state.loginInfo.verifyCode,
-  }
-}
-
-const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
-  return bindActionCreators({
-    reset_reducer: actions.reset_reducer,
-    update_kv: actions.update_kv,
-    loginMobile: actions.loginMobile,
-  }, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(JobSelectZhiwei)

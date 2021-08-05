@@ -72,7 +72,11 @@ class JobExpectDetail extends Component<IProps, IState> {
           style={styles.cellTextView}
           onPress={() => {
             const { navigation } = this.props
-            navigation.push('JobSelectZhiwei')
+            navigation.push('JobSelectZhiwei', {
+              selectJobTypeCallback: (e: any) => {
+                RootLoading.info(e && e.title)
+              }
+            })
           }}
         >
           <Text style={styles.cellText}>
@@ -94,7 +98,12 @@ class JobExpectDetail extends Component<IProps, IState> {
         <NextTouchableOpacity
           style={styles.cellTextView}
           onPress={() => {
-
+            const { navigation } = this.props
+            navigation.push('JobSelectIndustry', {
+              selectJobIndustryCallback: (e: any) => {
+                RootLoading.info(e && e.title)
+              }
+            })
           }}
         >
           <Text style={styles.cellText}>
@@ -164,7 +173,7 @@ class JobExpectDetail extends Component<IProps, IState> {
           }}
         >
           <Text style={styles.cellText}>
-             工作性质
+            工作性质
           </Text>
           <Image
             style={styles.nextImage}

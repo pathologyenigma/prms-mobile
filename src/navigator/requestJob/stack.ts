@@ -12,7 +12,7 @@ import Tabs from './tabs/index'
 import JobExpectations from '../../pages/requestJob/jobs/JobExpectations'
 import JobExpectDetail from '../../pages/requestJob/jobs/JobExpectDetail'
 import JobSelectZhiwei from '../../pages/requestJob/jobs/JobSelectZhiwei'
-
+import JobSelectIndustry from '../../pages/requestJob/jobs/JobSelectIndustry'
 type TRouterParams = {
   Find: any,
   Learn: any,
@@ -22,7 +22,8 @@ type TRouterParams = {
   News: any,
   JobExpectations: any,
   JobExpectDetail: any,
-  JobSelectZhiwei: any
+  JobSelectZhiwei: { selectJobTypeCallback: (selectJobType: any) => void }
+  JobSelectIndustry: { selectJobIndustryCallback: (selectJobIndustry: any) => void }
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -49,6 +50,7 @@ export default class RouterStacks {
       ChooseRole,
       JobExpectations,
       JobExpectDetail,
-      JobSelectZhiwei
+      JobSelectZhiwei,
+      JobSelectIndustry
     }
 }
