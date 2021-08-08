@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 8,
     overflow: 'hidden',
+    width: 200,
   },
   linear: {
     flex: 1,
@@ -25,6 +26,7 @@ const styles = StyleSheet.create({
 interface IButton {
   onPress?: () => void
   containerStyle?: StyleProp<ViewStyle>
+  linearStyle?: StyleProp<ViewStyle>
   textStyle?: StyleProp<TextStyle>
   target?: any
   text: string
@@ -32,7 +34,7 @@ interface IButton {
 }
 
 export default class GradientButton extends PureComponent<IButton> {
-  renderInner(disabled, textStyle, text) {
+  renderInner(disabled, textStyle, text, linearStyle) {
     if (disabled) {
       return (
         <View style={styles.linear}>
@@ -49,7 +51,7 @@ export default class GradientButton extends PureComponent<IButton> {
         start={start}
         end={end}
         colors={[greenColor, gradienRightGreenColor]}
-        style={styles.linear}
+        style={[styles.linear, linearStyle]}
       >
         <Text style={[styles.text, textStyle]}>
           {text}
@@ -60,7 +62,7 @@ export default class GradientButton extends PureComponent<IButton> {
 
   render() {
     const {
-      text, containerStyle, textStyle, onPress, disabled,
+      text, containerStyle, textStyle, onPress, disabled, linearStyle
     } = this.props
     return (
       <NextTouchableOpacity
@@ -68,7 +70,7 @@ export default class GradientButton extends PureComponent<IButton> {
         onPress={onPress}
         style={[styles.container, containerStyle]}
       >
-        {this.renderInner(disabled, textStyle, text)}
+        {this.renderInner(disabled, textStyle, text, linearStyle)}
       </NextTouchableOpacity>
     )
   }

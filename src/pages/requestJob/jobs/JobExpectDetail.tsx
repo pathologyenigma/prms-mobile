@@ -26,13 +26,16 @@ interface IState {
   password: string
   verifyCode: string
   countTime: number
+  selectJobIndustry: []
+  selectJobType: string
 }
 
 class JobExpectDetail extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
-
+      selectJobIndustry: [],
+      selectJobType: ''
     }
   }
 
@@ -66,6 +69,7 @@ class JobExpectDetail extends Component<IProps, IState> {
   }
 
   renderQiWangGangWei() {
+    const { selectJobType } = this.state
     return (
       <View style={styles.cellView}>
         <NextTouchableOpacity
@@ -74,7 +78,7 @@ class JobExpectDetail extends Component<IProps, IState> {
             const { navigation } = this.props
             navigation.push('JobSelectZhiwei', {
               selectJobTypeCallback: (e: any) => {
-                RootLoading.info(e && e.title)
+                this.setState({ selectJobType: e.title })
               }
             })
           }}
@@ -87,12 +91,21 @@ class JobExpectDetail extends Component<IProps, IState> {
             source={require('../../../assets/requestJobs/next-gray.png')}
           />
         </NextTouchableOpacity>
-        <Text style={styles.cellViewDetail}>如: 销售经理</Text>
+        <Text style={styles.cellViewDetail}>{selectJobType || ' 如: 销售经理'}</Text>
       </View>
     )
   }
 
   renderQiWangHangYe() {
+    const { selectJobIndustry = [] } = this.state
+    let selectJobIndustryText = ''
+    selectJobIndustry.forEach((e: any, index: number) => {
+      if (index === 0) {
+        selectJobIndustryText = `${e.title}`
+      } else {
+        selectJobIndustryText = `${selectJobIndustryText}、${e.title}`
+      }
+    })
     return (
       <View style={styles.cellView}>
         <NextTouchableOpacity
@@ -101,7 +114,8 @@ class JobExpectDetail extends Component<IProps, IState> {
             const { navigation } = this.props
             navigation.push('JobSelectIndustry', {
               selectJobIndustryCallback: (e: any) => {
-                RootLoading.info(e && e.title)
+                console.log('eeeee: ', e)
+                this.setState({ selectJobIndustry: e })
               }
             })
           }}
@@ -114,7 +128,7 @@ class JobExpectDetail extends Component<IProps, IState> {
             source={require('../../../assets/requestJobs/next-gray.png')}
           />
         </NextTouchableOpacity>
-        <Text style={styles.cellViewDetail}>如: 互联网</Text>
+        <Text style={styles.cellViewDetail}>{selectJobIndustryText || '如: 互联网'}</Text>
       </View>
     )
   }
@@ -125,7 +139,13 @@ class JobExpectDetail extends Component<IProps, IState> {
         <NextTouchableOpacity
           style={styles.cellTextView}
           onPress={() => {
-
+            const { navigation } = this.props
+            navigation.push('JobSelectCity', {
+              selectJobCityCallback: (e: any) => {
+                console.log('eeeee: ', e)
+                RootLoading.info(e.title || e)
+              }
+            })
           }}
         >
           <Text style={styles.cellText}>

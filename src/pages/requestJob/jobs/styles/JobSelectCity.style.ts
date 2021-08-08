@@ -23,8 +23,8 @@ export default StyleSheet.create({
     marginTop: 4,
   },
   detailSecondView: {
-    backgroundColor: '#FAFAFA',
-    width: SystemHelper.width * 0.5,
+    backgroundColor: '#FFF',
+    width: SystemHelper.width * 0.275,
     paddingTop: 25,
   },
   detailSecondBtn: {
@@ -32,14 +32,14 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderLeftWidth: 5,
-    borderLeftColor: '#EEEEEE'
+    borderLeftColor: '#FFF'
   },
   detailSecondText: {
     color: '#666666'
   },
   detailThirdView: {
-    backgroundColor: '#EEEEEE',
-    width: SystemHelper.width * 0.5,
+    backgroundColor: '#F8F8F8',
+    width: SystemHelper.width * 0.725,
     paddingTop: 25,
   },
   detailThirdBtn: {
@@ -47,13 +47,13 @@ export default StyleSheet.create({
     marginBottom: 45,
     alignItems: 'center',
     borderLeftWidth: 5,
-    borderLeftColor: '#EEEEEE',
+    borderLeftColor: '#F8F8F8',
     flexDirection: 'row'
   },
   selectTag: {
     width: 15,
     height: 11,
-    marginLeft: 11
+    marginRight: 24
   },
   selectedText: {
     color: '#888888',
@@ -85,5 +85,37 @@ export default StyleSheet.create({
     marginLeft: 6,
     height: 9,
     width: 9
+  },
+  footerView: {
+    flexDirection: 'row',
+    height: SystemHelper.safeBottom + 51,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 21,
+  },
+  resetBtn: {
+    width: SystemHelper.width * 0.28,
+    height: 34,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F0F0F0',
+    borderRadius: 4
+  },
+  resetText: {
+    color: '#666',
+    fontSize: 13,
+  },
+  confirmBtn: {
+    marginLeft: 9,
+    flex: 1,
+    height: 34,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F0F0F0',
+    borderRadius: 4
+  },
+  linearStyle: {
+    flex: 1,
+    width: SystemHelper.width * 0.72 - 51,
   }
 })

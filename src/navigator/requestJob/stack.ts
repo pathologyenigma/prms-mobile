@@ -13,6 +13,8 @@ import JobExpectations from '../../pages/requestJob/jobs/JobExpectations'
 import JobExpectDetail from '../../pages/requestJob/jobs/JobExpectDetail'
 import JobSelectZhiwei from '../../pages/requestJob/jobs/JobSelectZhiwei'
 import JobSelectIndustry from '../../pages/requestJob/jobs/JobSelectIndustry'
+import JobSelectCity from '../../pages/requestJob/jobs/JobSelectCity'
+
 type TRouterParams = {
   Find: any,
   Learn: any,
@@ -24,6 +26,7 @@ type TRouterParams = {
   JobExpectDetail: any,
   JobSelectZhiwei: { selectJobTypeCallback: (selectJobType: any) => void }
   JobSelectIndustry: { selectJobIndustryCallback: (selectJobIndustry: any) => void }
+  JobSelectCity: { selectJobCityCallback: (selectJobIndustry: any) => void }
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -51,6 +54,7 @@ export default class RouterStacks {
       JobExpectations,
       JobExpectDetail,
       JobSelectZhiwei,
-      JobSelectIndustry
+      JobSelectIndustry,
+      JobSelectCity
     }
 }

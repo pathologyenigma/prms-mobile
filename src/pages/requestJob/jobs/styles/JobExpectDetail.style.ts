@@ -30,7 +30,7 @@ export default StyleSheet.create({
   cellText: {
     color: '#333333',
     fontSize: 15,
-    fontWeight: '400'
+    fontWeight: 'bold'
   },
   nextImage: {
     width: 7,

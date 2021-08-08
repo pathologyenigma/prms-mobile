@@ -394,7 +394,7 @@ export default class Jobs extends Component<IProps, IState> {
 
   render() {
     return (
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <StatusBar
           translucent
           backgroundColor="transparent"
@@ -403,7 +403,7 @@ export default class Jobs extends Component<IProps, IState> {
         />
         {this.renderNavBar()}
         {this.renderList()}
-      </ScrollView>
+      </View>
     )
   }
 }

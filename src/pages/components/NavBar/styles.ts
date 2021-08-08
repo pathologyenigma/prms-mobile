@@ -56,7 +56,7 @@ export default StyleSheet.create({
     lineHeight: 44,
     bottom: 0,
     fontSize: 18,
-    fontWeight: '400',
+    fontWeight: 'bold',
     color: '#333333',
   },
 })

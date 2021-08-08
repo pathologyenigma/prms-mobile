@@ -22,7 +22,7 @@ interface IState {
   showJobDetailType: boolean,
   selectItem: any
   selectItemSecond: any
-  selectIndustry: any
+  selectedIndustry: any
 }
 
 export default class JobSelectIndustry extends Component<IProps, IState> {
@@ -35,7 +35,7 @@ export default class JobSelectIndustry extends Component<IProps, IState> {
       showJobDetailType: false,
       selectItem: [],
       selectItemSecond: undefined,
-      selectIndustry: []
+      selectedIndustry: []
     }
   }
 
@@ -69,15 +69,15 @@ export default class JobSelectIndustry extends Component<IProps, IState> {
         sublist: [
           {
             id: 0,
-            title: '电子商务',
+            title: '在线医疗',
           },
           {
             id: 1,
-            title: '在线教育',
+            title: '新媒体',
           },
           {
             id: 2,
-            title: '人工智能',
+            title: '云计算',
           },
         ]
       },
@@ -87,15 +87,15 @@ export default class JobSelectIndustry extends Component<IProps, IState> {
         sublist: [
           {
             id: 0,
-            title: '电子商务',
+            title: '区块链',
           },
           {
             id: 1,
-            title: '在线教育',
+            title: '大数据',
           },
           {
             id: 2,
-            title: '人工智能',
+            title: '信息安全',
           },
         ]
       },
@@ -103,6 +103,7 @@ export default class JobSelectIndustry extends Component<IProps, IState> {
     setTimeout(() => {
       this.setState({
         refreshState: RefreshState.Idle,
+        dataSource,
         selectItem: dataSource[0],
         selectItemSecond: dataSource[0].sublist,
       })
@@ -111,7 +112,7 @@ export default class JobSelectIndustry extends Component<IProps, IState> {
 
   renderNavBar() {
     const { navigation, route: { params: { selectJobIndustryCallback } } } = this.props
-    const { selectItemSecond } = this.state
+    const { selectedIndustry } = this.state
     return (
       <NavBar
         statusBarTheme="dark-content"
@@ -132,10 +133,10 @@ export default class JobSelectIndustry extends Component<IProps, IState> {
           value: '保存',
           style: styles.saveBtn,
           act: () => {
-            if (!selectItemSecond || !selectItemSecond.title) {
+            if (!selectedIndustry || selectedIndustry.length === 0) {
               RootLoading.info('请选择职位')
             } else if (selectJobIndustryCallback) {
-              selectJobIndustryCallback(selectItemSecond)
+              selectJobIndustryCallback(selectedIndustry)
               navigation.goBack()
             }
           }
@@ -143,9 +144,10 @@ export default class JobSelectIndustry extends Component<IProps, IState> {
       />
     )
   }
-  // close-green
+
   renderSearch() {
-    const { selectIndustry } = this.state
+    const { selectedIndustry = [] } = this.state
+    console.log('selectedIndustry: ', selectedIndustry)
     return (
       <View>
         <SearchTextinput
@@ -158,22 +160,34 @@ export default class JobSelectIndustry extends Component<IProps, IState> {
             this.setState({ searchValue: value })
           }}
         />
-        <Text style={styles.selectedText}>已选</Text>
-        <ScrollView style={styles.selectIndustryView}>
-          {selectIndustry.map((e: any, index: number) => {
-            <NextTouchableOpacity
-              key={index.toString()}
-              style={styles.selectIndustryBtn}
-            >
-              <Text style={styles.selectIndustryText}>{e.title}</Text>
-              <Image
-                style={styles.deleteImage}
-                source={require('../../../assets/requestJobs/close-green.png')}
-              />
-            </NextTouchableOpacity>
+        <Text style={styles.selectedText}>{`已选（${selectedIndustry.length}/3）`}</Text>
+        <ScrollView
+          style={styles.selectIndustryView}
+          horizontal={true}
+        >
+          {selectedIndustry.map((e: any, index: number) => {
+            return (
+              <NextTouchableOpacity
+                key={index.toString()}
+                style={styles.selectIndustryBtn}
+                onPress={() => {
+                  const nextSelectedIndustry: any = []
+                  selectedIndustry.forEach((item: any) => {
+                    item.title !== e.title && nextSelectedIndustry.push(item)
+                  })
+                  this.setState({ selectedIndustry: nextSelectedIndustry })
+                }}
+              >
+                <Text style={styles.selectIndustryText}>{e.title}</Text>
+                <Image
+                  style={styles.deleteImage}
+                  source={require('../../../assets/requestJobs/close-green.png')}
+                />
+              </NextTouchableOpacity>
+            )
           })}
         </ScrollView>
-      </View>
+      </View >
     )
   }
 
@@ -182,49 +196,58 @@ export default class JobSelectIndustry extends Component<IProps, IState> {
   }
 
   renderDetailView() {
-    const { selectItem, selectItemSecond } = this.state
+    const { selectItem, selectItemSecond, dataSource, selectedIndustry } = this.state
     if (!selectItem || selectItem.length === 0) {
       return null
     }
-    console.log('selectItem: ', selectItem)
-    console.log('selectItemSecond: ', selectItemSecond)
     return (
       <View
         style={styles.detailView}
       >
         <ScrollView style={styles.detailSecondView}>
-          {selectItem.sublist.map((e: any, index: number) => {
+          {dataSource.map((e: any, index: number) => {
             return (
               <NextTouchableOpacity
                 style={[styles.detailSecondBtn,
                 selectItem.id === e.id && {
-                  borderLeftColor: greenColor
+                  borderLeftColor: greenColor,
                 }
                 ]}
                 key={index.toString()}
                 onPress={() => {
                   this.setState({
-                    selectItemSecond: e,
+                    selectItem: e,
+                    selectItemSecond: e.sublist,
                   })
                 }}
               >
-                <Text style={[styles.detailSecondText, selectItem.id === e.id && { color: greenColor }]}>{e.title}</Text>
+                <Text style={[styles.detailSecondText, selectItem.id === e.id && { color: greenColor, fontWeight: 'bold' }]}>{e.title}</Text>
               </NextTouchableOpacity>
             )
           })}
         </ScrollView>
         <ScrollView style={styles.detailThirdView}>
           {selectItemSecond.map((e: any, index: number) => {
+            const isSelected = selectedIndustry.filter((item: any) => item.title === e.title).length > 0
             return (
               <NextTouchableOpacity
                 style={styles.detailThirdBtn}
                 key={index.toString()}
                 onPress={() => {
-
+                  if (!isSelected) {
+                    if (selectedIndustry.length > 2) {
+                      RootLoading.info('您最多可选 3 个行业类别')
+                    } else {
+                      selectedIndustry.push(e)
+                      this.setState({ selectedIndustry })
+                    }
+                  }
                 }}
               >
-                <Text style={styles.detailSecondText}>{e.title}</Text>
-                {selectItemSecond.id === e.id ? (
+                <Text style={
+                  [styles.detailSecondText, isSelected && { color: greenColor, fontWeight: 'bold' }]
+                }>{e.title}</Text>
+                {isSelected ? (
                   <Image
                     style={styles.selectTag}
                     source={require('../../../assets/requestJobs/green-check.png')}
