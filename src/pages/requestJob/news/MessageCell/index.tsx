@@ -52,6 +52,7 @@ export default class MessageCell extends PureComponent<ICell> {
     return (
       <NextTouchableOpacity
         style={styles.cell}
+        activeOpacity={1}
         onPress={() => {
           if (onPress) {
             onPress()

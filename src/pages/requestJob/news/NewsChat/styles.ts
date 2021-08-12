@@ -9,7 +9,6 @@ export default StyleSheet.create({
   },
   listView: {
     flex: 1,
-    paddingHorizontal: 11,
   },
   contentStyle: {
   },
@@ -81,5 +80,16 @@ export default StyleSheet.create({
     color: '#FEFEFE',
     fontSize: 14,
     fontWeight: 'bold'
+  },
+  setTop: {
+    height: 80,
+    width: 75,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#5A9BFB',
+  },
+  hideBtnText: {
+    color: '#FFFEFE',
+    fontSize: 14
   }
 })

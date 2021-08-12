@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import { StyleProp, TouchableOpacity, ViewStyle } from 'react-native'
 
 interface IButton {
+  activeOpacity?: number
   onPress?: () => void
   style?: StyleProp<ViewStyle>
   delay?: number
@@ -32,10 +33,10 @@ export default class NextTouchableOpacity extends PureComponent<IButton> {
   }
 
   render() {
-    const { onPress, children, delay, disabled } = this.props
+    const { onPress, children, delay, disabled, activeOpacity } = this.props
     return (
       <TouchableOpacity
-        activeOpacity={0.9}
+        activeOpacity={activeOpacity || 0.9}
         disabled={disabled}
         {...this.props}
         onPress={(e) => {

@@ -10,21 +10,25 @@ import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
 import MessageCell from '../MessageCell'
 import LinearGradient from 'react-native-linear-gradient'
 import SearchTextinput from '../../../components/SearchTextinput'
+import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 
 type TProps = GenProps<'News'>
 
 interface IState {
   refreshState: RefreshState,
+  refreshing: boolean,
   dataSource: [],
   searchStr: string
   selectType: number, // 0: 全部, 1: 招呼 2: 沟通中
 }
 
 export default class NewsChat extends Component<TProps, IState> {
+  private openKey: any = undefined
   constructor(props: TProps) {
     super(props)
     this.state = {
       refreshState: RefreshState.HeaderRefreshing,
+      refreshing: true,
       selectType: 0,
       searchStr: '',
       dataSource: [{
@@ -51,6 +55,7 @@ export default class NewsChat extends Component<TProps, IState> {
   handleRefresh() {
     this.setState({
       refreshState: RefreshState.HeaderRefreshing,
+      refreshing: true,
     }, () => {
       this.loadData()
     })
@@ -64,19 +69,126 @@ export default class NewsChat extends Component<TProps, IState> {
     RootLoading.loading()
     setTimeout(() => {
       RootLoading.hide()
-      this.setState({ refreshState: RefreshState.Idle })
+      this.setState({
+        refreshState: RefreshState.Idle,
+        refreshing: false,
+      })
     }, 1000);
   }
 
-  renderItem(item: any) {
+  renderHiddenItem(item, rowMap) {
     return (
-      <MessageCell
-        cellItem={item}
-        onPress={() => {
-          RootLoading.info('click company')
-        }}
-      />
+      <View style={{
+        alignItems: 'center',
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        backgroundColor: '#f5f5f6',
+      }}>
+        <NextTouchableOpacity
+          style={{
+            zIndex: 200,
+            height: 73,
+            top: 0,
+            bottom: 0,
+            width: 75,
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'absolute',
+            backgroundColor: '#F93C33',
+          }}
+          onPress={() => {
+            if (this.openKey) {
+              rowMap[this.openKey].closeRow()
+            }
+
+          }}
+        >
+          <Text>置顶</Text>
+        </NextTouchableOpacity>
+        <NextTouchableOpacity
+          style={{
+            zIndex: 200,
+            height: 73,
+            top: 0,
+            bottom: 0,
+            width: 75,
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'absolute',
+            backgroundColor: '#F93C33',
+          }}
+          onPress={() => {
+            if (this.openKey) {
+              rowMap[this.openKey].closeRow()
+            }
+
+          }}
+        >
+          <Text>删除</Text>
+        </NextTouchableOpacity>
+      </View>
     )
+  }
+
+  renderItem(item: any, rowMap: any, dataSource: any) {
+    return (
+      <SwipeRow
+        key={item.item.id.toString()}
+        rightOpenValue={-150}
+        recalculateHiddenLayout
+        closeOnRowPress
+        disableRightSwipe
+      >
+        <View style={{
+          alignItems: 'center',
+          flex: 1,
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          backgroundColor: '#f5f5f6',
+        }}>
+          <NextTouchableOpacity
+            style={styles.setTop}
+            onPress={() => {
+              if (this.openKey) {
+                rowMap[this.openKey].closeRow()
+              }
+              RootLoading.info('消息置顶')
+            }}
+          >
+            <Text style={styles.hideBtnText}>置顶</Text>
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            style={[styles.setTop, {
+              backgroundColor: '#FF7777',
+            }]}
+            onPress={() => {
+              if (this.openKey) {
+                rowMap[this.openKey].closeRow()
+              }
+              RootLoading.info('消息删除')
+            }}
+          >
+            <Text style={styles.hideBtnText}>删除</Text>
+          </NextTouchableOpacity>
+        </View>
+        <MessageCell
+          cellItem={item.item}
+          onPress={() => {
+            RootLoading.info('click message')
+          }}
+        />
+      </SwipeRow >
+    )
+
+    // return (
+    //   <MessageCell
+    //     cellItem={item}
+    //     onPress={() => {
+    //       RootLoading.info('click company')
+    //     }}
+    //   />
+    // )
   }
 
   renderHeaderView() {
@@ -169,14 +281,49 @@ export default class NewsChat extends Component<TProps, IState> {
     )
   }
 
+  renderEmptyListImage() {
+    return (
+      <Text>
+        没有更多了
+      </Text>
+    )
+  }
+
   render() {
-    const { refreshState, dataSource, } = this.state
+    const { refreshState, dataSource, refreshing } = this.state
     return (
       <View style={styles.container} >
         {this.renderMessageTips()}
         {this.renderSearch()}
         {this.renderHeaderView()}
-        <RefreshListView
+
+        <SwipeListView
+          contentContainerStyle={styles.contentStyle}
+          useFlatList
+          keyExtractor={item => item.id.toString()}
+          refreshing={refreshing}
+          onRefresh={() => this.handleRefresh()}
+          initialNumToRender={10}
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="always"
+          style={styles.listView}
+          onRowClose={() => { this.openKey = undefined }}
+          onRowOpen={(e) => { this.openKey = e }}
+          automaticallyAdjustContentInsets={false}
+          data={dataSource}
+          // renderHiddenItem={(item, rowMap) => {
+          //   this.renderHiddenItem(item, rowMap)
+          // }}
+          // listViewRef={(e) => { this.flatList = e }}
+          removeClippedSubviews={false}
+          showsVerticalScrollIndicator
+          previewOpenValue={0.3}
+          ListEmptyComponent={() => this.renderEmptyListImage()}
+          renderItem={(item, rowMap) => this.renderItem(item, rowMap, dataSource)}
+        // ItemSeparatorComponent={() => this.renderSeparatorLine()}
+        />
+
+        {/* <RefreshListView
           style={styles.listView}
           // ListHeaderComponent={this.renderHeaderView()}
           contentContainerStyle={styles.contentStyle}
@@ -189,7 +336,7 @@ export default class NewsChat extends Component<TProps, IState> {
           keyExtractor={item => item.id.toString()}
           footerRefreshingText="加载更多"
           footerNoMoreDataText="没有更多了"
-        />
+        /> */}
       </View >
     )
   }

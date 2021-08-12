@@ -9,7 +9,8 @@ export default StyleSheet.create({
     borderBottomColor: '#F0F0F0',
     borderBottomWidth: 1,
     alignItems: 'center',
-    height: 90
+    height: 80,
+    paddingHorizontal: 11,
   },
   nameText: {
     lineHeight: 17,
@@ -55,11 +56,13 @@ export default StyleSheet.create({
   timeText: {
     color: '#AAAAAA',
     fontSize: 12,
-    fontWeight: '300'
+    fontWeight: '300',
+    paddingHorizontal: 3
   },
   messageText: {
     color: '#AAAAAA',
     fontSize: 12,
     marginTop: 14,
+    width: SystemHelper.width - 90
   },
 })

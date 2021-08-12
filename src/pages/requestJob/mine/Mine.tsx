@@ -195,7 +195,9 @@ export default class Mine extends Component<IProps, IState> {
     onPress: () => void
   ) {
     return (
-      <NextTouchableOpacity style={styles.cellItem}
+      <NextTouchableOpacity
+        style={styles.cellItem}
+        key={title.toString()}
         onPress={() => {
           if (onPress) {
             onPress()
@@ -223,12 +225,13 @@ export default class Mine extends Component<IProps, IState> {
       require('../../../assets/requestJobs/jianli.png'),
       require('../../../assets/requestJobs/privacy.png'),
       require('../../../assets/requestJobs/wallet.png'),
+      require('../../../assets/requestJobs/wodeguanzhu.png'),
       require('../../../assets/requestJobs/change-role.png'),
       require('../../../assets/requestJobs/feedback.png'),
       require('../../../assets/requestJobs/about.png'),
       require('../../../assets/requestJobs/setting.png'),
     ]
-    const titleArray = ['附件简历', '隐私设置', '我的钱包', '切换身份', '反馈与帮助', '关于', '设置']
+    const titleArray = ['附件简历', '隐私设置', '我的钱包', '我的关注', '切换身份', '反馈与帮助', '关于', '设置']
     return (
       <View>
         {titleArray.map((item, index) => {
