@@ -13,6 +13,7 @@ import WhiteContentModal from '../../components/WhiteContentModal'
 import GradientButton from '../../components/GradientButton'
 import SystemHelper from '../../../utils/system'
 import NavBar, { EButtonType } from '../../components/NavBar'
+import { greenColor } from '../../../utils/constant'
 
 type IProps = GenProps<'JobExpectDetail'> & {
   email: string,
@@ -28,6 +29,8 @@ interface IState {
   countTime: number
   selectJobIndustry: []
   selectJobType: string
+  selectJobNatureVisible: boolean
+  selectJobNature: string
 }
 
 class JobExpectDetail extends Component<IProps, IState> {
@@ -35,7 +38,9 @@ class JobExpectDetail extends Component<IProps, IState> {
     super(props)
     this.state = {
       selectJobIndustry: [],
-      selectJobType: ''
+      selectJobType: '',
+      selectJobNatureVisible: false,
+      selectJobNature: '',
     }
   }
 
@@ -184,12 +189,13 @@ class JobExpectDetail extends Component<IProps, IState> {
   }
 
   renderGongZuoXingZhi() {
+    const { selectJobNature } = this.state
     return (
       <View style={styles.cellView}>
         <NextTouchableOpacity
           style={styles.cellTextView}
           onPress={() => {
-
+            this.setState({ selectJobNatureVisible: true })
           }}
         >
           <Text style={styles.cellText}>
@@ -200,12 +206,74 @@ class JobExpectDetail extends Component<IProps, IState> {
             source={require('../../../assets/requestJobs/next-gray.png')}
           />
         </NextTouchableOpacity>
-        <Text style={styles.cellViewDetail}>全职、兼职、实习</Text>
+        <Text style={styles.cellViewDetail}>{selectJobNature || '全职、兼职、实习'}</Text>
+      </View>
+    )
+  }
+
+  renderJobNatureContent() {
+    const { selectJobNature } = this.state
+    return (
+      <View style={styles.modalContentView}>
+        <Text style={styles.jobNatureTitle}>工作性质</Text>
+        <NextTouchableOpacity
+          style={styles.rightBtn}
+          disabled={!selectJobNature}
+          onPress={() => {
+            this.setState({ selectJobNatureVisible: false })
+          }}
+        >
+          <Text style={[styles.rightText, !selectJobNature && { color: '#666' }]}>
+            确定
+          </Text>
+        </NextTouchableOpacity>
+        <View style={styles.jobNatureView}>
+          <NextTouchableOpacity
+            style={[styles.jobNatureBtn,
+            selectJobNature === '全职' && { backgroundColor: '#E2FFF0', }
+            ]}
+            onPress={() => {
+              this.setState({ selectJobNature: '全职' })
+            }}
+          >
+            <Text style={[styles.jobNatureText,
+            selectJobNature === '全职' && { color: greenColor, fontWeight: 'bold' }]}>
+              全职
+            </Text>
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            style={[styles.jobNatureBtn,
+            selectJobNature === '兼职' && { backgroundColor: '#E2FFF0', }
+            ]}
+            onPress={() => {
+              this.setState({ selectJobNature: '兼职' })
+            }}
+          >
+            <Text style={[styles.jobNatureText,
+            selectJobNature === '兼职' && { color: greenColor, fontWeight: 'bold' }]}>
+              兼职
+            </Text>
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            style={[styles.jobNatureBtn,
+            selectJobNature === '实习' && { backgroundColor: '#E2FFF0', }
+            ]}
+            onPress={() => {
+              this.setState({ selectJobNature: '实习' })
+            }}
+          >
+            <Text style={[styles.jobNatureText,
+            selectJobNature === '实习' && { color: greenColor, fontWeight: 'bold' }]}>
+              实习
+            </Text>
+          </NextTouchableOpacity>
+        </View>
       </View>
     )
   }
 
   render() {
+    const { selectJobNatureVisible } = this.state
     return (
       <View style={styles.container}>
         {this.renderNavBar()}
@@ -219,6 +287,14 @@ class JobExpectDetail extends Component<IProps, IState> {
           {this.renderQiWangSalary()}
           {this.renderGongZuoXingZhi()}
         </ScrollView>
+        <WhiteContentModal
+          visible={selectJobNatureVisible}
+          showCloseBtn={false}
+          modalStyle={{ justifyContent: 'flex-end' }}
+          contextStyle={styles.contextStyle}
+        >
+          {this.renderJobNatureContent()}
+        </WhiteContentModal>
       </View>
     )
   }

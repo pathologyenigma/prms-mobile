@@ -13,6 +13,7 @@ import WhiteContentModal from '../../components/WhiteContentModal'
 import GradientButton from '../../components/GradientButton'
 import SystemHelper from '../../../utils/system'
 import NavBar, { EButtonType } from '../../components/NavBar'
+import JobStatusModal from './JobStatusModal'
 
 type IProps = GenProps<'JobExpectations'> & {
   email: string,
@@ -26,13 +27,30 @@ interface IState {
   password: string
   verifyCode: string
   countTime: number
+  jobStatusModal: boolean
+  currentStatus: string,
+  currentTime: string,
+  statusArray: any,
+  timeArray: any
 }
 
 class JobExpectations extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
-
+      jobStatusModal: false,
+      currentStatus: '',
+      currentTime: '',
+      statusArray: [
+        { label: '离职找工作', value: 'resignFind' },
+        { label: '在职找工作', value: 'onlineFind' },
+        { label: '在职看机会', value: 'onlineChance' }
+      ],
+      timeArray: [
+        { label: '随时入职', value: ' anytime' },
+        { label: '一周内入职', value: 'one_weekend' },
+        { label: '两周内入职', value: 'couple_weekend' }
+      ]
     }
   }
 
@@ -101,19 +119,34 @@ class JobExpectations extends Component<IProps, IState> {
   }
 
   renderJobStatus() {
+    const {
+      currentStatus,
+      currentTime,
+      statusArray,
+      timeArray,
+    } = this.state
+    const showStatus = statusArray.filter((e: any) => e.value === currentStatus)[0]
+    const showTime = timeArray.filter((e: any) => e.value === currentTime)[0]
     return (
-      <View style={styles.jobStatus}>
+      <NextTouchableOpacity
+        onPress={() => {
+          this.setState({ jobStatusModal: true })
+        }}
+        style={styles.jobStatus}>
         <Text style={styles.jobStatusTitle}>
           求职状态
         </Text>
         <View style={styles.jobStatusNext}>
-          <Text style={styles.jobStatusNextStatus}>正在找工作</Text>
+          <Text style={styles.jobStatusNextStatus}>
+            {showStatus ? showStatus.label : '请选择求职状态'}
+            {showTime ? `、${showTime.label}` : ''}
+          </Text>
           <Image
             style={styles.nextImage}
             source={require('../../../assets/requestJobs/next-gray.png')}
           />
         </View>
-      </View>
+      </NextTouchableOpacity>
     )
   }
 
@@ -132,7 +165,7 @@ class JobExpectations extends Component<IProps, IState> {
   }
 
   render() {
-    const { phone } = this.state
+    const { jobStatusModal, currentStatus, currentTime, statusArray, timeArray } = this.state
     return (
       <View style={styles.container}>
         {this.renderNavBar()}
@@ -145,6 +178,23 @@ class JobExpectations extends Component<IProps, IState> {
           {this.renderJobStatus()}
           {this.renderFinish()}
         </ScrollView>
+        <JobStatusModal
+          visible={jobStatusModal}
+          statusArray={statusArray}
+          timeArray={timeArray}
+          currentStatus={currentStatus}
+          currentTime={currentTime}
+          leftPress={() => {
+            this.setState({ jobStatusModal: false })
+          }}
+          rightPress={(selectStatus, selectTime) => {
+            this.setState({
+              currentStatus: selectStatus,
+              currentTime: selectTime,
+              jobStatusModal: false,
+            })
+          }}
+        />
       </View>
     )
   }

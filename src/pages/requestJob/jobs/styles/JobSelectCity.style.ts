@@ -117,5 +117,15 @@ export default StyleSheet.create({
   linearStyle: {
     flex: 1,
     width: SystemHelper.width * 0.72 - 51,
-  }
+  },
+  detailQuyuView: {
+    backgroundColor: '#F8F8F8',
+    width: SystemHelper.width * 0.36,
+    paddingTop: 25,
+  },
+  detailZhenView: {
+    backgroundColor: '#F0F0F0',
+    width: SystemHelper.width * 0.365,
+    paddingTop: 25,
+  },
 })
