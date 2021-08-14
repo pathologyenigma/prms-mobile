@@ -82,6 +82,7 @@ export default StyleSheet.create({
     fontWeight: '400'
   },
   gradientButton: {
+    width: 90,
     height: 20,
     borderRadius: 4,
   },

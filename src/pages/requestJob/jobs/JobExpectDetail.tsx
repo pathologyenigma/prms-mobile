@@ -31,6 +31,7 @@ interface IState {
   selectJobType: string
   selectJobNatureVisible: boolean
   selectJobNature: string
+  selectJobSalary: string
 }
 
 class JobExpectDetail extends Component<IProps, IState> {
@@ -167,12 +168,19 @@ class JobExpectDetail extends Component<IProps, IState> {
   }
 
   renderQiWangSalary() {
+    const { navigation } = this.props
+    const { selectJobSalary } = this.state
     return (
       <View style={styles.cellView}>
         <NextTouchableOpacity
           style={styles.cellTextView}
           onPress={() => {
-
+            navigation.push('JobSelectSalary', {
+              selectJobSalaryCallback: (e: any) => {
+                console.log('JobSelectSalary: ', e)
+                this.setState({ selectJobSalary: e.label })
+              }
+            })
           }}
         >
           <Text style={styles.cellText}>
@@ -183,7 +191,7 @@ class JobExpectDetail extends Component<IProps, IState> {
             source={require('../../../assets/requestJobs/next-gray.png')}
           />
         </NextTouchableOpacity>
-        <Text style={styles.cellViewDetail}>如:  15K-20K</Text>
+        <Text style={styles.cellViewDetail}>{selectJobSalary ? selectJobSalary : '如:  15K-20K'}</Text>
       </View>
     )
   }

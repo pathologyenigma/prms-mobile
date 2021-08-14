@@ -81,7 +81,7 @@ export default class Find extends Component<TProps, IState> {
           style={styles.searchBtn}
           onPress={() => {
             const { navigation } = this.props
-            navigation.goBack()
+            navigation.push('Search')
           }}
         >
           <Image
