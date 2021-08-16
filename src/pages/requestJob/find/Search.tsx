@@ -128,13 +128,16 @@ export default class Search extends Component<IProps, IState> {
 
   renderItem(item: any) {
     const { selectItem, dataSource } = this.state
+    const { navigation } = this.props
     return (
       <NextTouchableOpacity
         style={[styles.tagBtn,
           // selectItem && selectItem.id === item.id && { backgroundColor: '#E2FFF0', }
         ]}
         onPress={() => {
-          this.setState({ searchValue: item.label })
+          this.setState({ searchValue: item.label }, () => {
+            navigation.push('SearchResult')
+          })
         }}
       >
         <Text

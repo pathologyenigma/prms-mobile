@@ -5,30 +5,13 @@ import styles from './styles'
 
 interface ICell {
   onPress?: () => void
-  style?: StyleProp<ViewStyle>
+  cellStyle?: StyleProp<ViewStyle>
   target?: any
   source?: ImageSourcePropType
   cellItem: any
 }
 
-export default class companyCell extends PureComponent<ICell> {
-  private press(onPress: any, delay = 300, e: object) {
-    let { target = 'self' } = this.props
-    if (target === 'self') {
-      target = this
-    } else {
-      target = global
-    }
-    if (target.didPress) {
-      return
-    }
-    target.didPress = true
-    onPress(e)
-    setTimeout(() => {
-      target.didPress = false
-    }, delay)
-  }
-
+export default class CompanyCell extends PureComponent<ICell> {
   renderBasicInfo() {
     const { cellItem } = this.props
     return (
@@ -85,11 +68,11 @@ export default class companyCell extends PureComponent<ICell> {
     for (let i = 0; i < 5; i++) {
       if (i < Number(cellItem.score)) {
         scoreView.push((
-          <Image style={styles.star} source={require('../../../../assets/requestJobs/star.png')} resizeMode="center" />
+          <Image key={i.toString()} style={styles.star} source={require('../../../../assets/requestJobs/star.png')} resizeMode="center" />
         ))
       } else {
         scoreView.push((
-          <Image style={styles.star} source={require('../../../../assets/requestJobs/star-gray.png')} resizeMode="center" />
+          <Image key={i.toString()} style={styles.star} source={require('../../../../assets/requestJobs/star-gray.png')} resizeMode="center" />
         ))
       }
     }
@@ -103,10 +86,10 @@ export default class companyCell extends PureComponent<ICell> {
   }
 
   render() {
-    const { onPress, cellItem } = this.props
+    const { onPress, cellStyle } = this.props
     return (
       <NextTouchableOpacity
-        style={styles.cell}
+        style={[styles.cell, cellStyle]}
         onPress={() => {
           if (onPress) {
             onPress()

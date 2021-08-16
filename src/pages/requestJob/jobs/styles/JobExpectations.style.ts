@@ -85,11 +85,11 @@ export default StyleSheet.create({
     elevation: 3,
     shadowRadius: 5,
     shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 1 },
     minHeight: 60,
     backgroundColor: '#fff',
     borderRadius: 8,
     marginTop: 10,
-    shadowOffset: { width: 0, height: 1 },
     paddingHorizontal: 15,
     flexDirection: 'row',
     justifyContent: 'space-between'

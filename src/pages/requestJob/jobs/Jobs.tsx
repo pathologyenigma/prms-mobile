@@ -10,9 +10,11 @@ import { gradienViewRightGreenColor, greenColor } from '../../../utils/constant'
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { Carousel } from '@ant-design/react-native'
 import NavBar, { EButtonType } from '../../components/NavBar'
+import JobCell from '../../components/JobCell'
+import { GenProps } from '../../../navigator/requestJob/stack'
 
-type IProps = {
-  navigation: any,
+type IProps = GenProps<'Jobs'> & {
+
 }
 
 type IState = {
@@ -209,49 +211,12 @@ export default class Jobs extends Component<IProps, IState> {
   renderItem(item: any) {
     const { navigation } = this.props
     return (
-      <NextTouchableOpacity
-        style={styles.cellView}
+      <JobCell
+        cellItem={item}
         onPress={() => {
-
+          RootLoading.info('敬请期待')
         }}
-      >
-        <View style={styles.cellTitleView}>
-          <Text style={styles.cellTitle}>
-            {item.name}
-          </Text>
-          <Text style={styles.cellSalary}>
-            {item.salary}
-          </Text>
-        </View>
-        <View style={styles.cellCompanyView}>
-          <Text style={styles.cellCompany}>
-            {item.company}
-          </Text>
-          <Text style={styles.cellCompany}>
-            {item.financing}
-          </Text>
-          <Text style={styles.cellCompany}>
-            {item.staffAmount}
-          </Text>
-        </View>
-        <View style={styles.cellJobView}>
-          <Text style={styles.cellExperience}>
-            {item.experience}
-          </Text>
-          <Text style={styles.cellExperience}>
-            {item.education}
-          </Text>
-          <Text style={styles.cellExperience}>
-            {item.location}
-          </Text>
-        </View>
-        <View style={styles.interviewerView}>
-          <View style={styles.interviewerIcon} />
-          <Text style={styles.cellInterviewer}>
-            {item.interviewer}
-          </Text>
-        </View>
-      </NextTouchableOpacity>
+      />
     )
   }
 
@@ -268,6 +233,7 @@ export default class Jobs extends Component<IProps, IState> {
 
   renderCondition() {
     const { selectCondition } = this.state
+    const { navigation } = this.props
     return (
       <View style={styles.conditionView}>
         <View style={styles.conditionLeftView}>
@@ -308,7 +274,6 @@ export default class Jobs extends Component<IProps, IState> {
             >附近</Text>
           </NextTouchableOpacity>
         </View>
-        {/* right-bootom-triangle@2x.png */}
         <View style={styles.conditionRightView}>
           <NextTouchableOpacity style={styles.conditionRightBtn}>
             <Text style={styles.conditionRightText}>
@@ -319,7 +284,18 @@ export default class Jobs extends Component<IProps, IState> {
               source={require('../../../assets/requestJobs/right-bootom-triangle.png')}
             />
           </NextTouchableOpacity>
-          <NextTouchableOpacity style={[styles.conditionRightBtn, { marginLeft: 9 }]}>
+          <NextTouchableOpacity
+            style={[styles.conditionRightBtn, { marginLeft: 9 }]}
+            onPress={() => {
+              const { navigation } = this.props
+              navigation.push('FilterView', {
+                filterMode: 0,
+                filterResultCallback: ((result) => {
+                  console.log('111111111: ', result)
+                })
+              })
+            }}
+          >
             <Text style={styles.conditionRightText}>
               筛选
             </Text>
