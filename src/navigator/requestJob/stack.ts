@@ -18,6 +18,7 @@ import JobSelectSalary from '../../pages/requestJob/jobs/JobSelectSalary'
 import Search from '../../pages/requestJob/find/Search'
 import SearchResult from '../../pages/requestJob/find/SearchResult'
 import FilterView from '../../pages/requestJob/publicView/FilterView'
+import JobDetail from '../../pages/requestJob/publicView/JobDetail'
 
 type TRouterParams = {
   Find: any,
@@ -36,6 +37,7 @@ type TRouterParams = {
   Search: any
   SearchResult: any
   FilterView: { filterMode: number, filterResultCallback: (res: any) => void }
+  JobDetail: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -68,6 +70,7 @@ export default class RouterStacks {
       JobSelectSalary,
       Search,
       SearchResult,
-      FilterView
+      FilterView,
+      JobDetail
     }
 }

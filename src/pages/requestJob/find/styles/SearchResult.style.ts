@@ -97,20 +97,6 @@ export default StyleSheet.create({
     color: '#666666',
     fontSize: 15
   },
-  tagBtn: {
-    height: 35,
-    width: (SystemHelper.width - 64) / 3,
-    backgroundColor: '#F7F7F7',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 4,
-    marginRight: 6,
-    marginTop: 14,
-    paddingHorizontal: 2
-  },
-  tagText: {
-    color: '#666666'
-  },
   searchHeader: {
     height: 40,
     flexDirection: 'row',
@@ -132,5 +118,27 @@ export default StyleSheet.create({
   deleteHistoryIcon: {
     width: 16,
     height: 17
+  },
+  moreJobsBtn: {
+    marginTop: 1,
+    height: 41,
+    flex: 1,
+    marginHorizontal: 21,
+    borderWidth: 1,
+    borderColor: '#57DE9E',
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row'
+  },
+  moreJobsText: {
+    color: '#57DE9E',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  moreJobsImage: {
+    marginLeft: 9,
+    width: 8,
+    height: 13
   }
 })

@@ -19,11 +19,39 @@ export default StyleSheet.create({
     backgroundColor: greenColor,
     borderRadius: 4,
   },
-  company: {
+  titleView: {
     marginTop: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  company: {
     color: '#333',
     fontSize: 15,
     fontWeight: 'bold'
+  },
+  linear: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 2,
+    height: 13,
+    paddingHorizontal: 3,
+    marginLeft: 11
+  },
+  text: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  isBestEmployer: {
+    paddingHorizontal: 2,
+    borderWidth: 1,
+    borderColor: '#E5B531',
+    borderRadius: 2,
+    color: '#E5B531',
+    fontSize: 8,
+    height: 13,
+    lineHeight: 13,
+    marginLeft: 7
   },
   companyTagView: {
     flexDirection: 'row',
@@ -61,7 +89,7 @@ export default StyleSheet.create({
   },
   basicInfoView: {
     flexDirection: 'row',
-    width: SystemHelper.width - 89,
+    width: SystemHelper.width - 65,
     overflow: 'hidden',
     marginTop: 10,
   },

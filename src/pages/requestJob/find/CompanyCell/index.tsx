@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 'react-native'
 import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
 import styles from './styles'
+import LinearGradient from 'react-native-linear-gradient'
 
 interface ICell {
   onPress?: () => void
@@ -45,11 +46,28 @@ export default class CompanyCell extends PureComponent<ICell> {
 
   renderDetail() {
     const { cellItem } = this.props
+    const start = { x: 0, y: 0.5 }
+    const end = { x: 1, y: 0.5 }
     return (
       <View>
-        <Text style={styles.company}>
-          {cellItem.company}
-        </Text>
+        <View style={styles.titleView}>
+          <Text style={styles.company}>
+            {cellItem.company}
+          </Text>
+          {cellItem.isOfficial ? (
+            <LinearGradient
+              start={start}
+              end={end}
+              colors={['#63A6FB', '#2562FD']}
+              style={styles.linear}
+            >
+              <Text style={styles.text}>
+                官方
+              </Text>
+            </LinearGradient>
+          ) : null}
+          {cellItem.isBestEmployer ? (<Text style={styles.isBestEmployer}>最佳雇主</Text>) : null}
+        </View>
         <View style={styles.companyTagView}>
           {cellItem.welfare ? (<Text style={styles.companyTag}>{cellItem.welfare}</Text>) : null}
           {cellItem.industry ? (<Text style={styles.companyTag}>{cellItem.industry}</Text>) : null}

@@ -214,7 +214,7 @@ export default class Jobs extends Component<IProps, IState> {
       <JobCell
         cellItem={item}
         onPress={() => {
-          RootLoading.info('敬请期待')
+          navigation.push('JobDetail')
         }}
       />
     )

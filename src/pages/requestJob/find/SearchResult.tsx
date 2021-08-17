@@ -15,6 +15,7 @@ import GradientButton from '../../components/GradientButton'
 import JobCell from '../../components/JobCell'
 import CompanyCell from './CompanyCell'
 import SystemHelper from '../../../utils/system'
+import CompanyJobCell from '../publicView/CompanyJobCell'
 
 type IProps = GenProps<'SearchResult'> & {
 
@@ -40,7 +41,7 @@ export default class SearchResult extends Component<IProps, IState> {
       selectCity: '广州',
       jobDataSource: [],
       companyDataSource: [],
-      selectTabs: 0
+      selectTabs: 1
     }
   }
 
@@ -94,6 +95,7 @@ export default class SearchResult extends Component<IProps, IState> {
         companyDataSource: [
           {
             id: 1,
+            title: '华为技术有限公司',
             company: '华为技术有限公司',
             welfare: '六险一金',
             industry: '计算机软件',
@@ -104,33 +106,34 @@ export default class SearchResult extends Component<IProps, IState> {
             location: '深圳·龙岗',
             financing: '不需要融资',
             staffAmount: '2000人以上',
-            feature: '硬件智能, IT服务'
-          }, {
-            id: 2,
-            company: '贝壳找房（深圳）科技有限公司',
-            welfare: '',
-            industry: '计算机软件',
-            years: '成立34年',
-            tag: '火热招聘',
-            score: 4,
-            onlineJobs: '在招职位545',
-            location: '深圳·龙岗',
-            financing: '上市公司',
-            staffAmount: '2000人以上',
-            feature: '居住服务'
-          }, {
-            id: 3,
-            company: '金蝶',
-            welfare: '',
-            industry: '计算机软件',
-            years: '成立34年',
-            tag: '火热招聘',
-            score: 3,
-            onlineJobs: '在招职位545',
-            location: '深圳·龙岗',
-            financing: '不需要融资',
-            staffAmount: '2000人以上',
-            feature: '硬件智能, IT服务'
+            feature: '硬件智能, IT服务',
+            isOfficial: 1,
+            isBestEmployer: 1,
+            data: [{
+              id: 1,
+              name: '运营视觉设计师',
+              publishTime: '2021-08-03',
+              experience: '3-4年',
+              education: '大专及以上',
+              location: '深圳·宝安区',
+              salary: '15K-30K',
+            }, {
+              id: 2,
+              name: '运营视觉设计师',
+              publishTime: '2021-08-03',
+              experience: '3-4年',
+              education: '大专及以上',
+              location: '深圳·宝安区',
+              salary: '15K-30K',
+            }, {
+              id: 3,
+              name: '运营视觉设计师',
+              publishTime: '2021-08-03',
+              experience: '3-4年',
+              education: '大专及以上',
+              location: '深圳·宝安区',
+              salary: '15K-30K',
+            }]
           }
         ]
 
@@ -174,49 +177,65 @@ export default class SearchResult extends Component<IProps, IState> {
   }
 
   renderSectionHeader(section: any) {
-    if (section.title === '搜索历史') {
-      return (
-        <View style={styles.searchHeader}>
-          <Text style={styles.searchHeaderTitle}>{section.title}</Text>
-          <NextTouchableOpacity
-            style={styles.deleteHistory}
-            onPress={() => {
-
-            }}
-          >
-            <Image
-              source={require('../../../assets/requestJobs/delete-icon.png')}
-              style={styles.deleteHistoryIcon}
-            />
-          </NextTouchableOpacity>
-        </View>
-      )
+    const {
+      id,
+      title,
+      company,
+      welfare,
+      industry,
+      years,
+      tag,
+      score,
+      onlineJobs,
+      location,
+      financing,
+      staffAmount,
+      feature,
+      isOfficial,
+      isBestEmployer,
+    } = section
+    const item = {
+      id,
+      title,
+      company,
+      welfare,
+      industry,
+      years,
+      tag,
+      score,
+      onlineJobs,
+      location,
+      financing,
+      staffAmount,
+      feature,
+      isOfficial,
+      isBestEmployer,
     }
     return (
-      <View style={styles.searchHeader}>
-        <Text style={styles.searchHeaderTitle}>{section.title}</Text>
-      </View>
+      <CompanyCell
+        cellStyle={{
+          marginTop: 0,
+          borderRadius: 0,
+          borderBottomWidth: 5,
+          borderBottomColor: '#F7F7F7',
+        }}
+        cellItem={item}
+      />
     )
   }
 
-  renderItem(item: any) {
-    const { selectItem, dataSource } = this.state
+  renderSectionFooter(section: any) {
     return (
       <NextTouchableOpacity
-        style={[styles.tagBtn,
-          // selectItem && selectItem.id === item.id && { backgroundColor: '#E2FFF0', }
-        ]}
-        onPress={() => {
-          this.setState({ searchValue: item.label })
-        }}
+        style={styles.moreJobsBtn}
       >
-        <Text
-          numberOfLines={1}
-          style={[styles.tagText,
-            // selectItem && selectItem.id === item.id && { backgroundColor: '#E2FFF0', } && { color: greenColor, fontWeight: 'bold' }
-          ]}>
-          {item.label}
+        <Text style={styles.moreJobsText}>
+          查看更多
         </Text>
+        <Image
+          style={styles.moreJobsImage}
+          source={require('../../../assets/requestJobs/next-green.png')}
+        />
       </NextTouchableOpacity>
     )
   }
@@ -307,9 +326,10 @@ export default class SearchResult extends Component<IProps, IState> {
   renderItemSeparatorComponent() {
     return (
       <View style={{
-        width: SystemHelper.width,
-        height: 5,
-        backgroundColor: '#F7F7F7',
+        marginLeft: 21,
+        width: SystemHelper.width - 42,
+        height: 1,
+        backgroundColor: '#F0F0F0',
       }} />
     )
   }
@@ -373,13 +393,7 @@ export default class SearchResult extends Component<IProps, IState> {
 
   renderCompanyCell(item: any) {
     return (
-      <CompanyCell
-        cellStyle={{
-          marginTop: 0,
-          borderRadius: 0,
-          borderBottomWidth: 5,
-          borderBottomColor: '#F7F7F7',
-        }}
+      <CompanyJobCell
         cellItem={item}
       />
     )
@@ -390,6 +404,17 @@ export default class SearchResult extends Component<IProps, IState> {
       companyRefreshState,
       companyDataSource,
     } = this.state
+    return (
+      <SectionList
+        style={styles.listView}
+        sections={companyDataSource}
+        ItemSeparatorComponent={() => this.renderItemSeparatorComponent()}
+        renderSectionHeader={({ section }) => this.renderSectionHeader(section)}
+        renderSectionFooter={({ section }) => this.renderSectionFooter(section)}
+        renderItem={({ item }: any) => this.renderCompanyCell(item)}
+        keyExtractor={item => item.id.toString()}
+      />
+    )
     return (
       <RefreshListView
         style={styles.listView}
