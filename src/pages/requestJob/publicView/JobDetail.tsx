@@ -365,16 +365,16 @@ export default class JobDetail extends Component<IProps, IState> {
             <Text style={styles.jobContent}>{dataSource.jobAddPoints}</Text>
           </View>
         ) : (
-          <NextTouchableOpacity
-            style={styles.addScoreBtn}
-            onPress={() => {
-              this.setState({ showAddScore: true })
-            }}
-          >
-            <Text style={styles.addScoreText}>加分项</Text>
-            <Text style={styles.showAddScoreText}>...查看全部</Text>
-          </NextTouchableOpacity>
-        )}
+            <NextTouchableOpacity
+              style={styles.addScoreBtn}
+              onPress={() => {
+                this.setState({ showAddScore: true })
+              }}
+            >
+              <Text style={styles.addScoreText}>加分项</Text>
+              <Text style={styles.showAddScoreText}>...查看全部</Text>
+            </NextTouchableOpacity>
+          )}
       </View>
     )
   }
@@ -386,7 +386,12 @@ export default class JobDetail extends Component<IProps, IState> {
         style={styles.headerView}
       >
         <Text style={styles.jobInfoTitle}>公司信息</Text>
-        <View style={styles.companyInfo}>
+        <NextTouchableOpacity
+          onPress={() => {
+            const { navigation } = this.props
+            navigation.push('CompanyDetail')
+          }}
+          style={styles.companyInfo}>
           <View style={styles.companyIcon} />
           <View style={styles.companyTitle}>
             <Text style={styles.companyName}>{dataSource.company}</Text>
@@ -398,7 +403,7 @@ export default class JobDetail extends Component<IProps, IState> {
             style={styles.nextBtn}
             source={require('../../../assets/requestJobs/next-gray.png')}
           />
-        </View>
+        </NextTouchableOpacity>
         <View style={styles.companyTag}>
           <Text style={styles.companyTagItem}>
             {dataSource.companyXingzhi}
