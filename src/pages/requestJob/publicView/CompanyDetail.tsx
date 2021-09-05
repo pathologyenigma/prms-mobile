@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList, StatusBar } from 'react-native'
+import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList, StatusBar, ImageSourcePropType } from 'react-native'
 import styles from './styles/CompanyDetail.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
@@ -10,10 +10,13 @@ import NavBar, { EButtonType } from '../../components/NavBar'
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { greenColor } from '../../../utils/constant'
 import GradientButton from '../../components/GradientButton'
-import { Tabs } from '@ant-design/react-native'
+import { ListView, Tabs } from '@ant-design/react-native'
 import JobCell from '../../components/JobCell'
 import SystemHelper from '../../../utils/system'
 import InterviewerFooter from '../../components/InterviewerFooter'
+import LinearGradient from 'react-native-linear-gradient'
+import CompanyCommentCell from './CompanyCommentCell'
+import CompanyQuestionCell from './CompanyQuestionCell'
 
 type IProps = GenProps<'CompanyDetail'> & {
 
@@ -22,54 +25,53 @@ type IProps = GenProps<'CompanyDetail'> & {
 interface IState {
   dataSource: any,
   showAddScore: boolean,
-  selectLikesTabs: number
+  selectLikesTabs: number,
+  progressWidth: undefined | number,
+  commentRefresh: RefreshState,
+  showAllComment: boolean
 }
 
-const recommendListData = [
+const commentList = [
   {
     id: 1,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '李女士·产品线HRBP'
+    name: '莫春婷',
+    job: 'UI设计师',
+    tag: '面试官人很好 面试效率高 环境高大上',
+    score: 4,
+    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
+    time: '2021年12月24日',
+    like: 10,
+    isLike: false,
   }, {
     id: 2,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
+    name: '莫春婷',
+    job: 'UI设计师',
+    tag: '面试官人很好 面试效率高 环境高大上',
+    score: 1,
+    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
+    time: '2021年12月24日',
+    like: 1,
+    isLike: true,
   }, {
     id: 3,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
+    name: '莫春婷',
+    job: 'UI设计师',
+    tag: '面试官人很好 面试效率高 环境高大上',
+    score: 3,
+    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
+    time: '2021年12月24日',
+    like: 10,
+    isLike: false,
   }, {
     id: 4,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
+    name: '莫春婷',
+    job: 'UI设计师',
+    tag: '面试官人很好 面试效率高 环境高大上',
+    score: 4,
+    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
+    time: '2021年12月24日',
+    like: 10,
+    isLike: false,
   },
   {
     id: 5,
@@ -84,37 +86,34 @@ const recommendListData = [
     interviewer: '李女士·产品线HRBP'
   }, {
     id: 6,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
+    name: '莫春婷',
+    job: 'UI设计师',
+    tag: '面试官人很好 面试效率高 环境高大上',
+    score: 4,
+    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
+    time: '2021年12月24日',
+    like: 10,
+    isLike: false,
   }, {
     id: 7,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
+    name: '莫春婷',
+    job: 'UI设计师',
+    tag: '面试官人很好 面试效率高 环境高大上',
+    score: 4,
+    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
+    time: '2021年12月24日',
+    like: 10,
+    isLike: false,
   }, {
     id: 8,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
+    name: '莫春婷',
+    job: 'UI设计师',
+    tag: '面试官人很好 面试效率高 环境高大上',
+    score: 4,
+    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
+    time: '2021年12月24日',
+    like: 10,
+    isLike: false,
   },
   {
     id: 9,
@@ -129,37 +128,34 @@ const recommendListData = [
     interviewer: '李女士·产品线HRBP'
   }, {
     id: 10,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
+    name: '莫春婷',
+    job: 'UI设计师',
+    tag: '面试官人很好 面试效率高 环境高大上',
+    score: 4,
+    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
+    time: '2021年12月24日',
+    like: 10,
+    isLike: false,
   }, {
     id: 11,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
+    name: '莫春婷',
+    job: 'UI设计师',
+    tag: '面试官人很好 面试效率高 环境高大上',
+    score: 4,
+    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
+    time: '2021年12月24日',
+    like: 10,
+    isLike: false,
   }, {
     id: 12,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
+    name: '莫春婷',
+    job: 'UI设计师',
+    tag: '面试官人很好 面试效率高 环境高大上',
+    score: 4,
+    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
+    time: '2021年12月24日',
+    like: 10,
+    isLike: false,
   },
 ]
 
@@ -169,7 +165,10 @@ export default class CompanyDetail extends Component<IProps, IState> {
     this.state = {
       dataSource: undefined,
       showAddScore: false,
-      selectLikesTabs: 0
+      selectLikesTabs: 0,
+      progressWidth: undefined,
+      commentRefresh: RefreshState.HeaderRefreshing,
+      showAllComment: false,
     }
   }
 
@@ -211,7 +210,16 @@ export default class CompanyDetail extends Component<IProps, IState> {
           companyXingzhi: '创业公司',
           companyAmount: '少于50人',
           companyIndustry: '计算机软件',
-          recommendList: recommendListData,
+          commentRefresh: RefreshState.Idle,
+          commentList: commentList,
+          companyQuestion: [{
+            id: 1,
+            question: '你如何看待智慧网络的企业发展/前景？',
+            answer: '公司发展前景不错，会定期组织员工团建和培训。',
+            answerAmount: 1,
+            focus: 1,
+          }],
+          onlineJobs: 18,
         },
       })
     }, 300);
@@ -395,7 +403,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
             <View style={styles.companyXinxiLocaViewLeft}>
               <Image
                 style={styles.locationIcon}
-                source={require('../../../assets/requestJobs/conpany-question.png')}
+                source={require('../../../assets/requestJobs/company-location.png')}
               />
               <Text style={styles.companyXinxiCompany}>{dataSource.location}</Text>
             </View>
@@ -434,8 +442,249 @@ export default class CompanyDetail extends Component<IProps, IState> {
     if (!dataSource) {
       return null
     }
+    const start = { x: 0, y: 0.5 }
+    const end = { x: 1, y: 0.5 }
     return (
-      <Text>在招职位</Text>
+      <LinearGradient
+        start={start}
+        end={end}
+        colors={['#57DE9E', '#81E3AE']}
+        style={styles.onlineView}
+      >
+        <NextTouchableOpacity
+          style={styles.onlineViewBtn}
+          onPress={() => {
+            RootLoading.info('在招职位')
+          }}
+        >
+          <Text style={styles.onlineText}>{`在招职位（${dataSource.onlineJobs}）`}</Text>
+        </NextTouchableOpacity>
+      </LinearGradient>
+    )
+  }
+
+  renderCompanyPhoto() {
+    return (
+      <View style={styles.companyPhotoView}>
+        <Text style={styles.companyPhotoText}>公司相册</Text>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={styles.companyPhotoScrollview}
+        >
+          <NextTouchableOpacity
+            style={styles.companyPhotoItem}
+          />
+          <NextTouchableOpacity
+            style={styles.companyPhotoItem}
+          />
+          <NextTouchableOpacity
+            style={styles.companyPhotoItem}
+          />
+        </ScrollView>
+      </View>
+    )
+  }
+
+  renderHotReviewer() {
+    return (
+      <View style={styles.companyPhotoView}>
+        <Text style={styles.companyPhotoText}>热门招聘官</Text>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={styles.reviewerScrollview}
+        >
+          <NextTouchableOpacity
+            style={styles.reviewerItem}
+          >
+            <View style={styles.reviewerIcon} />
+            <Text style={styles.reviewerName}>江良华</Text>
+            <Text style={styles.reviewerJob} numberOfLines={1}>技术总监</Text>
+
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            style={styles.reviewerItem}
+          >
+            <View style={styles.reviewerIcon} />
+            <Text style={styles.reviewerName}>徐海燕</Text>
+            <Text style={styles.reviewerJob} numberOfLines={1}>运营总监兼人事总监兼人事</Text>
+
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            style={styles.reviewerItem}
+          >
+            <View style={styles.reviewerIcon} />
+            <Text style={styles.reviewerName}>黄小军</Text>
+            <Text style={styles.reviewerJob} numberOfLines={1}>招聘专员</Text>
+          </NextTouchableOpacity>
+        </ScrollView>
+      </View>
+    )
+  }
+
+  renderStar(star: number = 0) {
+    let showStarArray = []
+    for (let i = 0; i < 5; i++) {
+      if (i < star) {
+        showStarArray.push(require('../../../assets/requestJobs/star.png'))
+      } else {
+        showStarArray.push(require('../../../assets/requestJobs/star-gray.png'))
+      }
+    }
+    return (
+      <View style={styles.starView}>
+        {showStarArray.map((value: string, index: number) => {
+          return (
+            <Image
+              style={styles.starItem}
+              key={index.toString()}
+              source={value as ImageSourcePropType}
+            />
+          )
+        })}
+      </View>
+    )
+  }
+
+  renderLinearGradient(text: string, progress: number) {
+    const start = { x: 0, y: 0.5 }
+    const end = { x: 1, y: 0.5 }
+    const { progressWidth } = this.state
+    if (progress < 0 || progress > 1) {
+      return null
+    }
+    return (
+      <View style={[styles.reviewerContainerRightItem,]}>
+        <Text style={styles.scoreTitle}>{text}</Text>
+        <View onLayout={(event: any) => {
+          console.log('event.nativeEvent.layout.width: ', event.nativeEvent.layout.width)
+          if (!progressWidth) {
+            this.setState({ progressWidth: event.nativeEvent.layout.width })
+          }
+        }} style={[styles.linearView]}>
+          {progressWidth && (
+            <LinearGradient
+              start={start}
+              end={end}
+              colors={['#FECB50', '#FFB932']}
+              style={[styles.linearItem, { width: progressWidth * progress }]}
+            />
+          )}
+        </View>
+      </View>
+    )
+  }
+
+  renderReviewerEvaluation() {
+    const score = 4.4
+    const star = 4
+    return (
+      <View style={styles.interviewView}>
+        <Text style={styles.companyPhotoText}>面试评价</Text>
+        <View style={styles.reviewerContainer}>
+          <View style={styles.reviewerContainerLeft}>
+            <View style={styles.scoreView}>
+              <Text style={styles.scoreText}>{score}</Text>
+              <Text style={styles.scoreUnit}>分</Text>
+            </View>
+            {this.renderStar(star)}
+          </View>
+          <View style={styles.line} />
+          <View style={styles.reviewerContainerRight}>
+            {this.renderLinearGradient('职位描述：', 0.8)}
+            {this.renderLinearGradient('公司情况：', 0.7)}
+            {this.renderLinearGradient('面试官：', 0.88)}
+          </View>
+        </View>
+      </View>
+    )
+  }
+
+  renderCommetCell(item: any) {
+    return (
+      <CompanyCommentCell
+        cellItem={item}
+        likePress={() => {
+          RootLoading.info('点赞了~')
+        }}
+      />
+    )
+  }
+
+  renderFooterView(showAllComment: boolean, allComment: number) {
+    if (showAllComment) {
+      return <Text style={styles.noMoreText}>没有更多了</Text>
+    }
+    return (
+      <NextTouchableOpacity
+        style={styles.showMoreBtn}
+        onPress={() => {
+          this.setState({
+            showAllComment: true
+          })
+        }}
+      >
+        <Text style={styles.showMoreText}>
+          {`全部${allComment}条面试评价`}
+        </Text>
+      </NextTouchableOpacity>
+    )
+  }
+
+  renderCommentList() {
+    const { dataSource, commentRefresh, showAllComment } = this.state
+    if (!dataSource || !dataSource.commentList) {
+      return null
+    }
+    let showDs: any = []
+    if (dataSource.commentList.length > 2) {
+      if (!showAllComment) {
+        showDs.push(dataSource.commentList[0])
+        showDs.push(dataSource.commentList[1])
+      } else {
+        showDs = dataSource.commentList
+      }
+    }
+    return (
+      <RefreshListView
+        style={styles.commentList}
+        refreshState={commentRefresh}
+        automaticallyAdjustContentInsets={false}
+        data={showDs}
+        renderItem={({ item }: any) => this.renderCommetCell(item)}
+        keyExtractor={(item: any) => item.id.toString()}
+        ListFooterComponent={this.renderFooterView(showAllComment, dataSource.commentList.length)}
+        footerNoMoreDataText="没有更多了"
+      />
+    )
+  }
+
+  renderCompanyQuestion() {
+    const { dataSource } = this.state
+    if (!dataSource || !dataSource.companyQuestion) {
+      return null
+    }
+    return (
+      <View style={styles.interviewView}>
+        <Text style={styles.companyPhotoText}>公司问答</Text>
+        {dataSource.companyQuestion.map((item: any, index: number) => {
+          return (
+            <CompanyQuestionCell
+              key={index.toString()}
+              cellItem={item}
+            />
+          )
+        })}
+        <NextTouchableOpacity
+          style={styles.askQuestionBtn}
+          onPress={() => {
+
+          }}
+        >
+          <Text style={styles.askQuestionText}>我来提问</Text>
+        </NextTouchableOpacity>
+      </View>
     )
   }
 
@@ -459,6 +708,11 @@ export default class CompanyDetail extends Component<IProps, IState> {
               {this.renderCompanyInfo()}
               {this.renderCompayRules()}
               {this.renderCompany()}
+              {this.renderCompanyPhoto()}
+              {this.renderHotReviewer()}
+              {this.renderReviewerEvaluation()}
+              {this.renderCommentList()}
+              {this.renderCompanyQuestion()}
             </View>
           ) : null}
         </ScrollView>

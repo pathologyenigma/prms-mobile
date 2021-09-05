@@ -288,4 +288,177 @@ export default StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 13
   },
+  companyPhotoView: {
+    marginTop: 39,
+  },
+  companyPhotoText: {
+    fontSize: 20,
+    color: '#FFFFFF',
+    fontWeight: '400'
+  },
+  companyPhotoScrollview: {
+    marginTop: 28,
+    marginLeft: 11,
+    paddingRight: 20
+  },
+  companyPhotoItem: {
+    width: 270,
+    height: 150,
+    borderRadius: 8,
+    backgroundColor: greenColor,
+    marginRight: 13
+  },
+  reviewerScrollview: {
+    marginTop: 23,
+    marginLeft: 11,
+    paddingRight: 20
+  },
+  reviewerItem: {
+    marginRight: 24,
+    alignItems: 'center',
+    maxWidth: 83,
+  },
+  reviewerIcon: {
+    width: 55,
+    height: 55,
+    backgroundColor: greenColor,
+    borderRadius: 27.5
+  },
+  reviewerName: {
+    marginTop: 10,
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#FFFFFF'
+  },
+  reviewerJob: {
+    marginTop: 9,
+    fontSize: 12,
+    color: '#EDEDED',
+    maxWidth: 83,
+  },
+  interviewView: {
+    marginTop: 26,
+    paddingHorizontal: 11,
+  },
+  reviewerContainer: {
+    flexDirection: 'row'
+  },
+  scoreView: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    display: 'flex',
+    alignItems: 'flex-end',
+    marginBottom: 10,
+    marginTop: 18,
+  },
+  scoreText: {
+    color: '#FC384B',
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  scoreUnit: {
+    marginBottom: 4,
+    color: '#DDDDDD',
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginLeft: 15,
+  },
+  starView: {
+    flexDirection: 'row'
+  },
+  starItem: {
+    width: 10,
+    height: 10,
+    marginRight: 5
+  },
+  reviewerContainerLeft: {
+    alignItems: 'center',
+  },
+  line: {
+    width: 1,
+    height: 45,
+    backgroundColor: '#dddddd',
+    marginHorizontal: 17,
+    alignSelf: 'center'
+  },
+  reviewerContainerRight: {
+    flex: 1,
+    justifyContent: 'space-between'
+  },
+  reviewerContainerRightItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  scoreTitle: {
+    color: '#DDDDDD',
+    fontSize: 13,
+    fontWeight: 'bold',
+    minWidth: 65,
+  },
+  linearView: {
+    height: 6,
+    backgroundColor: '#DDDDDD',
+    borderRadius: 3,
+    overflow: 'hidden',
+    flex: 1,
+  },
+  linearItem: {
+    height: 6,
+    borderRadius: 3,
+    overflow: 'hidden'
+  },
+  commentList: {
+    flex: 1
+  },
+  noMoreText: {
+    marginTop: 19,
+    alignSelf: 'center',
+    fontSize: 10,
+    color: '#AAAAAA',
+    width: SystemHelper.width,
+    textAlign: 'center'
+  },
+  showMoreBtn: {
+    width: SystemHelper.width,
+    alignItems: 'center',
+    marginTop: 19,
+  },
+  showMoreText: {
+    color: '#57DE9E',
+    fontSize: 14,
+    fontWeight: 'bold'
+  },
+  askQuestionBtn: {
+    width: 91,
+    alignSelf: 'center',
+    height: 28,
+    borderWidth: 1,
+    borderColor: '#57DE9E',
+    borderRadius: 13,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 28,
+  },
+  askQuestionText: {
+    fontSize: 12,
+    color: '#57DE9E'
+  },
+  onlineView: {
+    marginHorizontal: 22,
+    height: 40,
+    marginVertical: 10,
+    borderRadius: 4,
+    backgroundColor: 'red',
+  },
+  onlineViewBtn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%'
+  },
+  onlineText: {
+    fontSize: 13,
+    color: '#FFFFFF',
+    fontWeight: 'bold'
+  }
 })

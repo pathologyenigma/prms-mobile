@@ -32,17 +32,6 @@ export default class CompanyJobCell extends PureComponent<ICell> {
             {cellItem.salary}
           </Text>
         </View>
-        {/* <View style={styles.cellCompanyView}>
-          <Text style={styles.cellCompany}>
-            {cellItem.company}
-          </Text>
-          <Text style={styles.cellCompany}>
-            {cellItem.financing}
-          </Text>
-          <Text style={styles.cellCompany}>
-            {cellItem.staffAmount}
-          </Text>
-        </View> */}
         <View style={styles.cellJobView}>
           <Text style={styles.cellExperience}>
             {cellItem.location}
