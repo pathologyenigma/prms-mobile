@@ -255,7 +255,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
           <NextTouchableOpacity
             style={styles.rightItem}
             onPress={() => {
-              RootLoading.info('举报')
+              navigation.push('ReportComplaints')
             }}
           >
             <Image resizeMode="center" style={styles.jubao} source={require('../../../assets/requestJobs/jubao-white.png')} />

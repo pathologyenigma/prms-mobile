@@ -85,7 +85,7 @@ export default class NavBar extends Component<INavBarProps> {
       content = (
         <Image
           style={[Styles.icon, right.style]}
-          resizeMode="center"
+          resizeMode="contain"
           source={right.value as ImageRequireSource}
         />
       )
