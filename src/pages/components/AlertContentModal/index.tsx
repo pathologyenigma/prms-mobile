@@ -16,13 +16,13 @@ interface IProps {
   visible: boolean,
   leftBtn?: IButton,
   rightBtn?: IButton,
+  bottomStyle?: any,
   imageSource?: ImageSourcePropType,
   imageStyle?: StyleProp<ImageStyle>,
   detail?: string,
   tips?: string,
   showCloseBtn?: boolean,
   closeOnPress?: () => void,
-  needTriangleBg?: boolean,
   titleStyle?: StyleProp<TextStyle>,
   showSubscribeBtn?: boolean,
   showSubscribeOnPress?: () => void
@@ -31,25 +31,25 @@ interface IProps {
 export default class AlertContentModal extends Component<IProps> {
 
   renderBtn() {
-    const { needTriangleBg, leftBtn, rightBtn, detail } = this.props
+    const { leftBtn, rightBtn, bottomStyle } = this.props
     return (
-      <View style={[styles.btnView, !!detail && { marginTop: 10, }]}>
+      <View style={[styles.btnView, bottomStyle]}>
         {leftBtn ? (
           <NextTouchableOpacity
-            style={[styles.button, leftBtn.buttonStyle, !rightBtn && { width: 200 }]}
+            style={[styles.button, leftBtn.buttonStyle]}
             onPress={leftBtn.act}
           >
-            <Text style={[styles.buttonText, leftBtn.buttonTextStyle]}>
+            <Text style={[styles.leftText, leftBtn.buttonTextStyle]}>
               {leftBtn.title}
             </Text>
           </NextTouchableOpacity>
         ) : null}
         {rightBtn ? (
           <NextTouchableOpacity
-            style={[styles.button, rightBtn.buttonStyle]}
+            style={[styles.button, { borderLeftWidth: 1, borderLeftColor: '#DDDDDD' }, rightBtn.buttonStyle]}
             onPress={rightBtn.act}
           >
-            <Text style={[styles.buttonText, rightBtn.buttonTextStyle]}>
+            <Text style={[styles.rightText, rightBtn.buttonTextStyle]}>
               {rightBtn.title}
             </Text>
           </NextTouchableOpacity>
@@ -76,6 +76,7 @@ export default class AlertContentModal extends Component<IProps> {
         visible={visible}
         showCloseBtn={showCloseBtn}
         closeOnPress={closeOnPress}
+        contextChildrenStyle={styles.contextChildrenStyle}
       >
         <View style={styles.contentView}>
           {imageSource ? (

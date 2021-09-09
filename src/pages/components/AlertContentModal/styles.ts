@@ -12,39 +12,52 @@ export default StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    marginHorizontal: 37,
+    marginHorizontal: 40,
     lineHeight: 21,
-    fontSize: 16,
+    fontSize: 20,
     textAlign: 'center',
-    color: '#323338',
+    color: '#333333',
+    fontWeight: 'bold'
   },
   detail: {
-    marginHorizontal: 37,
+    marginHorizontal: 40,
     lineHeight: 21,
-    fontSize: 16,
+    fontSize: 15,
     textAlign: 'center',
-    color: '#323338',
+    color: '#666666',
     marginTop: 20,
+    fontWeight: 'bold'
+  },
+  contextChildrenStyle: {
+    paddingBottom: 0,
+    borderRadius: 16,
   },
   btnView: {
     flexDirection: 'row',
     marginTop: 30,
-    justifyContent: 'space-around',
+    height: 60,
+    borderTopWidth: 1,
+    borderTopColor: '#DDDDDD',
+    justifyContent: 'space-evenly'
   },
   button: {
-    width: 110,
-    height: 46,
-    borderRadius: 8,
-    backgroundColor: greenColor,
+    paddingHorizontal: 1,
+    height: 59,
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 11,
+    width: '50%'
   },
-  buttonText: {
+  leftText: {
     lineHeight: 20,
     fontSize: 16,
     textAlign: 'center',
-    color: '#ffffff',
+    color: '#333333',
+  },
+  rightText: {
+    lineHeight: 20,
+    fontSize: 16,
+    textAlign: 'center',
+    color: greenColor,
   },
   tips: {
     marginTop: 10,
@@ -53,25 +66,5 @@ export default StyleSheet.create({
     fontSize: 14,
     color: 'rgba(32,33,38,0.4)',
     alignSelf: 'center'
-  },
-  modalBtn: {
-    borderRadius: 8,
-    width: 193,
-    height: 52,
-  },
-  modalBtn_aboveStyle: {
-    width: 193,
-    height: 44,
-  },
-  modalBtnText: {
-    height: 20,
-    fontSize: 16,
-    lineHeight: 20,
-    textAlign: 'center',
-    color: '#ffffff',
-  },
-  bottomStyle: {
-    backgroundColor: '#77C931',
-    height: 30,
   },
 })

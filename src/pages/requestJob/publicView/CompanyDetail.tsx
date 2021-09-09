@@ -1,22 +1,17 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList, StatusBar, ImageSourcePropType } from 'react-native'
+import { Text, View, Image, ScrollView, StatusBar, ImageSourcePropType } from 'react-native'
 import styles from './styles/CompanyDetail.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
-import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import RootLoading from '../../../utils/rootLoading'
-import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
-import { greenColor } from '../../../utils/constant'
-import GradientButton from '../../components/GradientButton'
-import { ListView, Tabs } from '@ant-design/react-native'
-import JobCell from '../../components/JobCell'
 import SystemHelper from '../../../utils/system'
-import InterviewerFooter from '../../components/InterviewerFooter'
 import LinearGradient from 'react-native-linear-gradient'
 import CompanyCommentCell from './CompanyCommentCell'
 import CompanyQuestionCell from './CompanyQuestionCell'
+import AlertContentModal from '../../components/AlertContentModal'
+import BottomContentModal from '../../components/BottomContentModal'
 
 type IProps = GenProps<'CompanyDetail'> & {
 
@@ -28,7 +23,9 @@ interface IState {
   selectLikesTabs: number,
   progressWidth: undefined | number,
   commentRefresh: RefreshState,
-  showAllComment: boolean
+  showAllComment: boolean,
+  shieldVisible: boolean,
+  welfareVisible: boolean
 }
 
 const commentList = [
@@ -169,6 +166,8 @@ export default class CompanyDetail extends Component<IProps, IState> {
       progressWidth: undefined,
       commentRefresh: RefreshState.HeaderRefreshing,
       showAllComment: false,
+      shieldVisible: false,
+      welfareVisible: false
     }
   }
 
@@ -263,7 +262,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
           <NextTouchableOpacity
             style={styles.rightItem}
             onPress={() => {
-              RootLoading.info('加入黑名单')
+              this.setState({ shieldVisible: true })
             }}
           >
             <Image resizeMode="center" style={styles.fenxiang} source={require('../../../assets/requestJobs/blacklist.png')} />
@@ -280,7 +279,12 @@ export default class CompanyDetail extends Component<IProps, IState> {
         style={styles.compayRulesView}
       >
         <View style={styles.rulesContainer}>
-          <View style={styles.rulesInfoContainer}>
+          <NextTouchableOpacity
+            style={styles.rulesInfoContainer}
+            onPress={() => {
+              this.setState({ welfareVisible: true })
+            }}
+          >
             <View style={styles.rulesView}>
               <Image
                 style={styles.rulesIcon}
@@ -311,7 +315,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
                 {dataSource.isFlexibleWork}
               </Text>
             </View>
-          </View>
+          </NextTouchableOpacity>
           <NextTouchableOpacity
             style={styles.nextBtn}
             onPress={() => {
@@ -379,7 +383,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
             </View>
           )}
         </ScrollView>
-      </View>
+      </View >
     )
   }
 
@@ -395,7 +399,12 @@ export default class CompanyDetail extends Component<IProps, IState> {
           深圳智慧网络有限公司是一家新兴崛起的高科技企业，专为通信、互联网、电子商务、移动平台等领域的客户提供计算机软件技术的开发、测试、维护和咨询服务。总部位于环境优美、交通便捷的深圳科技园区内，在上海设有分公司,可以远程办公,薪资丰厚,欢迎加入呀!
         </Text>
         <Text style={styles.showMore}>查看展开</Text>
-        <View style={styles.companyXinxiView}>
+        <NextTouchableOpacity
+          onPress={() => {
+            const { navigation } = this.props
+            navigation.push('MapNavigation')
+          }}
+          style={styles.companyXinxiView}>
           <Text style={styles.companyXinxiTitle}>
             公司地址
           </Text>
@@ -412,8 +421,8 @@ export default class CompanyDetail extends Component<IProps, IState> {
               source={require('../../../assets/requestJobs/white-next.png')}
             />
           </View>
-        </View>
-      </View>
+        </NextTouchableOpacity>
+      </View >
     )
   }
 
@@ -688,8 +697,78 @@ export default class CompanyDetail extends Component<IProps, IState> {
     )
   }
 
-  render() {
+  renderWelfare() {
     const { dataSource } = this.state
+    if (!dataSource) {
+      return null
+    }
+    console.log('SystemHelper.safeBottom: ', SystemHelper.safeBottom)
+    const fullArray = [
+      { id: 1, name: '五险一金', img: require('../../../assets/requestJobs/wxyj-gray.png') },
+      { id: 2, name: '年终奖', img: require('../../../assets/requestJobs/nzj-gray.png') },
+      { id: 3, name: '餐补', img: require('../../../assets/requestJobs/ycbz-gray.png') },
+      { id: 4, name: '交通补助', img: require('../../../assets/requestJobs/jtbz-gray.png') },
+      { id: 5, name: '技能培训', img: require('../../../assets/requestJobs/jnpx-gray.png') },
+      { id: 6, name: '带薪年假', img: require('../../../assets/requestJobs/dxnj-gray.png') },
+      { id: 7, name: '免费零食', img: require('../../../assets/requestJobs/mfls-gray.png') },
+      { id: 8, name: '免费体检', img: require('../../../assets/requestJobs/mftj-gray.png') },
+    ]
+    return (
+      <View style={styles.bottomView}>
+        <NextTouchableOpacity
+          style={styles.closeBtn}
+          onPress={() => {
+            this.setState({ welfareVisible: false })
+          }}
+        >
+          <Image
+            style={styles.closeIcon}
+            source={require('../../../assets/requestJobs/close_circle.png')}
+          />
+        </NextTouchableOpacity>
+        <Text style={styles.bottomViewWorkTime}>
+          工作时间
+        </Text>
+        <View style={styles.bottomViewTimeView}>
+          <Image
+            style={styles.bottomViewTimeIcon}
+            source={require('../../../assets/requestJobs/shijian-gray.png')}
+          />
+          <Text style={styles.bottomViewTimeText}>
+            周末双休
+          </Text>
+        </View>
+        <Text style={styles.bottomViewWorkTime}>
+          企业福利
+        </Text>
+        <View style={styles.bottomViewFuliView}>
+          {fullArray.map((item: any, index: number) => {
+            return (
+              <View
+                key={index.toString()}
+                style={styles.bottomViewFuliItem}
+              >
+                <Image
+                  style={styles.bottomViewFuliIcon}
+                  source={item.img}
+                  resizeMode="center"
+                />
+                <Text style={styles.bottomViewFuliText}>
+                  {item.name}
+                </Text>
+              </View>
+            )
+          })}
+        </View>
+        <Text style={styles.bottomViewDetail}>
+          工作时间和福利信息由企业提供，每个岗位可能实际情况略有不同，具体内容可与企业招聘方确认
+        </Text>
+      </View >
+    )
+  }
+
+  render() {
+    const { dataSource, shieldVisible, welfareVisible } = this.state
     return (
       <View style={styles.container}>
         <StatusBar
@@ -717,7 +796,26 @@ export default class CompanyDetail extends Component<IProps, IState> {
           ) : null}
         </ScrollView>
         {this.renderCompanyFooter()}
-      </View>
+        <AlertContentModal
+          visible={shieldVisible}
+          title="屏蔽公司"
+          detail="屏蔽该公司后，趁早找将不再向您推荐该公司的相关职位，也不再主动将您推给对方"
+          bottomStyle={{ marginTop: 37 }}
+          leftBtn={{
+            title: '我再想想',
+            act: () => this.setState({ shieldVisible: false }),
+          }}
+          rightBtn={{
+            title: '添加屏蔽',
+            act: () => this.setState({ shieldVisible: false }),
+          }}
+        />
+        <BottomContentModal
+          visible={welfareVisible}
+        >
+          {this.renderWelfare()}
+        </BottomContentModal>
+      </View >
     )
   }
 }

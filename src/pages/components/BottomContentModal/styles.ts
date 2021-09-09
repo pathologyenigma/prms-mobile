@@ -9,15 +9,14 @@ export default StyleSheet.create({
     position: 'absolute',
   },
   context: {
-    width: SystemHelper.width - 80,
-    marginHorizontal: 40,
+    width: SystemHelper.width,
     borderRadius: 8,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
   topView: {
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
     borderRadius: 8,
-    paddingTop: 30,
-    paddingBottom: 30,
   },
 })

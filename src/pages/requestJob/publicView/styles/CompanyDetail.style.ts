@@ -294,7 +294,8 @@ export default StyleSheet.create({
   companyPhotoText: {
     fontSize: 20,
     color: '#FFFFFF',
-    fontWeight: '400'
+    fontWeight: '400',
+    paddingHorizontal: 11,
   },
   companyPhotoScrollview: {
     marginTop: 28,
@@ -460,5 +461,80 @@ export default StyleSheet.create({
     fontSize: 13,
     color: '#FFFFFF',
     fontWeight: 'bold'
+  },
+  bottomView: {
+    paddingTop: 14,
+    paddingBottom: SystemHelper.safeBottom + 50,
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12
+  },
+  closeBtn: {
+    width: 76,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'flex-end'
+  },
+  closeIcon: {
+    width: 40,
+    height: 40
+  },
+  bottomViewWorkTime: {
+    color: '#333333',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 17,
+    marginHorizontal: 22,
+  },
+  bottomViewTimeView: {
+    flexDirection: 'row',
+    marginTop: 24,
+    marginLeft: 22,
+    height: 16,
+    alignItems: 'center',
+  },
+  bottomViewTimeIcon: {
+    width: 16,
+    height: 16,
+    marginRight: 12
+  },
+  bottomViewTimeText: {
+    color: '#888888',
+    fontSize: 15
+  },
+  bottomViewFuliView: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginLeft: 13,
+    marginTop: 14,
+    width: SystemHelper.width - 42,
+  },
+  bottomViewFuliItem: {
+    width: (SystemHelper.width - 66) / 3,
+    flexDirection: 'row',
+    height: 40,
+    marginBottom: 10,
+    backgroundColor: '#F4F4F4',
+    borderRadius: 8,
+    marginLeft: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  bottomViewFuliIcon: {
+    width: 20,
+    height: 18
+  },
+  bottomViewFuliText: {
+    color: '#666666',
+    fontSize: 13,
+    marginLeft: 7
+  },
+  bottomViewDetail: {
+    color: '#888888',
+    fontSize: 11,
+    marginTop: 84,
+    marginHorizontal: 12,
   }
 })
