@@ -6,9 +6,13 @@ export default StyleSheet.create({
     minHeight: 100,
     paddingTop: 16,
     paddingBottom: 8,
+    marginLeft: 22,
+    marginRight: 20,
     backgroundColor: '#FFF',
     marginTop: 10,
     marginHorizontal: 21,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
   },
   cellTitleView: {
     flexDirection: 'row',

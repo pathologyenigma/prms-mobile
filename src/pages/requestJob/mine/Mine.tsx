@@ -35,12 +35,18 @@ export default class Mine extends Component<IProps, IState> {
     const end = { x: 1, y: 0.5 }
     return (
       <View style={styles.iconView}>
-        <View style={styles.avatar}>
+        <NextTouchableOpacity
+          style={styles.avatar}
+          onPress={() => {
+            const { navigation } = this.props
+            navigation.push('UserInfo')
+          }}
+        >
           <Image
             style={styles.gender}
             source={require('../../../assets/requestJobs/women-icon.png')}
           />
-        </View>
+        </NextTouchableOpacity>
         <View style={styles.nameView}>
           <Text style={styles.nameTitle}>
             李小冉
@@ -55,14 +61,21 @@ export default class Mine extends Component<IProps, IState> {
           colors={['#2A2420', '#443A35', '#2F2925']}
           style={styles.onlineJianliView}
         >
-          <View style={styles.onlineJianliTop}>
-            <Text style={styles.onlineJianli}>在线简历</Text>
-            <Image
-              style={styles.yellowRight}
-              source={require('../../../assets/requestJobs/chakan.png')}
-            />
-          </View>
-          <Text style={styles.onlineText}>完善度90%</Text>
+          <NextTouchableOpacity
+            onPress={() => {
+              const { navigation } = this.props
+              navigation.push('EditOnlineResume')
+            }}
+          >
+            <View style={styles.onlineJianliTop}>
+              <Text style={styles.onlineJianli}>在线简历</Text>
+              <Image
+                style={styles.yellowRight}
+                source={require('../../../assets/requestJobs/chakan.png')}
+              />
+            </View>
+            <Text style={styles.onlineText}>完善度90%</Text>
+          </NextTouchableOpacity>
         </LinearGradient>
       </View>
     )

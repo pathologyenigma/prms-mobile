@@ -23,6 +23,9 @@ import CompanyDetail from '../../pages/requestJob/publicView/CompanyDetail'
 import ReportComplaints from '../../pages/requestJob/publicView/ReportComplaints'
 import ReportComplaintsDetail from '../../pages/requestJob/publicView/ReportComplaintsDetail'
 import MapNavigation from '../../pages/requestJob/publicView/MapNavigation'
+import OnlineRequestJobs from '../../pages/requestJob/publicView/OnlineRequestJobs'
+import UserInfo from '../../pages/requestJob/mine/UserInfo'
+import EditOnlineResume from '../../pages/requestJob/mine/EditOnlineResume'
 
 type TRouterParams = {
   Find: any,
@@ -45,7 +48,10 @@ type TRouterParams = {
   CompanyDetail: any,
   ReportComplaints: any,
   ReportComplaintsDetail: { type: string },
-  MapNavigation: any
+  MapNavigation: any,
+  OnlineRequestJobs: { title: string },
+  UserInfo: any,
+  EditOnlineResume: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -83,6 +89,9 @@ export default class RouterStacks {
       CompanyDetail,
       ReportComplaints,
       ReportComplaintsDetail,
-      MapNavigation
+      MapNavigation,
+      OnlineRequestJobs,
+      UserInfo,
+      EditOnlineResume,
     }
 }

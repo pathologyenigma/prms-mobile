@@ -86,6 +86,7 @@ export default class JobDetail extends Component<IProps, IState> {
         {dataSource.map((item: any, index: number) => {
           return (
             <NextTouchableOpacity
+              key={index.toString()}
               style={styles.cell}
               onPress={() => {
                 navigation.push('ReportComplaintsDetail', {

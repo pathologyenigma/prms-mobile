@@ -453,6 +453,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
     }
     const start = { x: 0, y: 0.5 }
     const end = { x: 1, y: 0.5 }
+    const title = `在招职位（${dataSource.onlineJobs}）`
     return (
       <LinearGradient
         start={start}
@@ -463,10 +464,11 @@ export default class CompanyDetail extends Component<IProps, IState> {
         <NextTouchableOpacity
           style={styles.onlineViewBtn}
           onPress={() => {
-            RootLoading.info('在招职位')
+            const { navigation } = this.props
+            navigation.push('OnlineRequestJobs', { title })
           }}
         >
-          <Text style={styles.onlineText}>{`在招职位（${dataSource.onlineJobs}）`}</Text>
+          <Text style={styles.onlineText}>{title}</Text>
         </NextTouchableOpacity>
       </LinearGradient>
     )
