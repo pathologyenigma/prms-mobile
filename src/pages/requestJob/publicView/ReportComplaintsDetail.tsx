@@ -19,7 +19,7 @@ interface IState {
   selectImage: any
 }
 
-export default class JobDetail extends Component<IProps, IState> {
+export default class ReportComplaintsDetail extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     const { route: { params } } = props

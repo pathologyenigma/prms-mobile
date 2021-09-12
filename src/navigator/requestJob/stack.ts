@@ -26,6 +26,8 @@ import MapNavigation from '../../pages/requestJob/publicView/MapNavigation'
 import OnlineRequestJobs from '../../pages/requestJob/publicView/OnlineRequestJobs'
 import UserInfo from '../../pages/requestJob/mine/UserInfo'
 import EditOnlineResume from '../../pages/requestJob/mine/EditOnlineResume'
+import EditPersonalGoods from '../../pages/requestJob/mine/EditPersonalGoods'
+import EditWorkExperience from '../../pages/requestJob/mine/EditWorkExperience'
 
 type TRouterParams = {
   Find: any,
@@ -51,7 +53,9 @@ type TRouterParams = {
   MapNavigation: any,
   OnlineRequestJobs: { title: string },
   UserInfo: any,
-  EditOnlineResume: any
+  EditOnlineResume: any,
+  EditPersonalGoods: { personalGoods: string, personalGoodsCallback: (editContents: string) => void },
+  EditWorkExperience: { workItemCallback: (workItem: any) => void, workItem?: any, }
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -93,5 +97,7 @@ export default class RouterStacks {
       OnlineRequestJobs,
       UserInfo,
       EditOnlineResume,
+      EditPersonalGoods,
+      EditWorkExperience,
     }
 }

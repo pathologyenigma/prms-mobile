@@ -36,15 +36,13 @@ export default StyleSheet.create({
   },
   cellView: {
     marginTop: 12,
-    paddingHorizontal: 11,
-    paddingVertical: 16,
-    borderBottomColor: '#ECECEC',
-    borderBottomWidth: 1
+    paddingTop: 12,
   },
   titleView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 11
   },
   titleText: {
     color: '#333333',
@@ -56,6 +54,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 16,
+    paddingHorizontal: 11
   },
   expectJobsText: {
     color: '#333333',
@@ -147,5 +146,55 @@ export default StyleSheet.create({
   btnContainer: {
     width: SystemHelper.width - 44,
     height: 40,
+  },
+  editIcon: {
+    width: 17,
+    height: 17,
+  },
+  editPersonalView: {
+    flexDirection: 'row',
+  },
+  editPersonalText: {
+    color: '#FF8F4F',
+    fontSize: 13,
+    marginRight: 10
+  },
+  editPersonalDetail: {
+    marginTop: 20,
+    color: '#666666',
+    fontSize: 13,
+    paddingHorizontal: 11
+  },
+  workExperienceView: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#ECECEC',
+    paddingBottom: 30,
+    paddingHorizontal: 11
+  },
+  companyInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20
+  },
+  workExperienceCompany: {
+    flex: 1,
+    color: '#333333',
+    fontSize: 15
+  },
+  workExperienceTime: {
+    color: '#888888',
+    fontSize: 13,
+    marginRight: 10
+  },
+  workExperienceText: {
+    marginTop: 10,
+    color: '#666666',
+    fontSize: 13
+  },
+  workExperienceLocation: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#666666',
+    marginTop: 10
   }
 })

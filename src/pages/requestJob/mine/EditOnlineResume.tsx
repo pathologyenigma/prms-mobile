@@ -14,21 +14,51 @@ type IProps = GenProps<'EditOnlineResume'> & {
 
 interface IState {
   expectJobs: any,
-  selectGender: number | undefined
+  workExperience: any,
+  projectExperience: any,
+  educationExperience: any,
+  personalGoods: string
 }
 
 export default class EditOnlineResume extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
-      selectGender: undefined,
       expectJobs: [{
         id: 1,
         type: 'UI/界面设计',
         salary: '15-20K',
         location: '深圳',
         status: '在职找工作·随时入职'
-      }]
+      }],
+      workExperience: [{
+        id: 1,
+        company: '广东智慧网络有限公司',
+        durationTime: '2017.03～至今',
+        job: 'UI设计师  技术部',
+        description: '内容：1、负责线上APP的改版功能，更新迭代；2、根据产品及产品需求，独立完成项目设计，建立产品的界面设计规范；3、根据原型图完成出色的设计稿,交付给开发人员使用'
+      }, {
+        id: 2,
+        company: '广东智慧科技有限公司',
+        durationTime: '2015.04～2017.03',
+        job: 'UI设计师  技术部',
+        description: '内容：1、负责线上APP的改版功能，更新迭代；2、根据产品及产品需求，独立完成项目设计，建立产品的界面设计规范；3、根据原型图完成出色的设计稿,交付给开发人员使用'
+      }],
+      projectExperience: [{
+        id: 1,
+        project: '广东智慧网络公司官网',
+        durationTime: '2017.03～2018.01',
+        job: '网页设计师',
+        description: '内容：1、负责线上APP的改版功能，更新迭代；2、根据产品及产品需求，独立完成项目设计，建立产品的界面设计规范；3、根据原型图完成出色的设计稿,交付给开发人员使用'
+      }],
+      educationExperience: [{
+        id: 1,
+        name: '广东白云学院',
+        durationTime: '2017.03～2018.01',
+        education: '本科·视觉传达',
+        description: '内容：1、在校担任宣传部社长；获得XXXX荣誉称号'
+      }],
+      personalGoods: '自信、爱心、责任感、强迫症'
     }
   }
 
@@ -91,7 +121,11 @@ export default class EditOnlineResume extends Component<IProps, IState> {
     const { expectJobs } = this.state
     const { navigation } = this.props
     return (
-      <View style={styles.cellView}>
+      <View style={[styles.cellView, {
+        borderBottomColor: '#ECECEC',
+        borderBottomWidth: 1,
+        paddingBottom: 12
+      }]}>
         <NextTouchableOpacity
           onPress={() => {
             navigation.push('JobExpectations')
@@ -151,51 +185,181 @@ export default class EditOnlineResume extends Component<IProps, IState> {
     )
   }
 
-  renderGender() {
-    const { selectGender } = this.state
+  renderWorkExperience() {
+    const { workExperience } = this.state
+    const { navigation } = this.props
     return (
-      <View style={styles.genderView}>
-        <Text style={styles.genderText}>性别</Text>
-        <View style={styles.genderDetail}>
-          <NextTouchableOpacity
-            onPress={() => {
-              this.setState({ selectGender: 0 })
-            }}
-            style={[
-              styles.genderDetailBtn,
-              selectGender === 0 && {
-                backgroundColor: '#E9FFF0',
-                borderColor: '#7AD398'
+      <View style={styles.cellView}>
+        <NextTouchableOpacity
+          onPress={() => {
+            navigation.push('EditWorkExperience', {
+              workItemCallback: (workItem: any) => {
+                workExperience.push({ workItem })
+                this.setState({ workExperience })
               }
-            ]}
-          >
-            <Text style={[styles.genderDetailText,
-            selectGender === 0 && {
-              fontWeight: 'bold',
-              color: '#7AD398'
-            }
-            ]}>男</Text>
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
-            onPress={() => {
-              this.setState({ selectGender: 1 })
-            }}
-            style={[
-              styles.genderDetailBtn,
-              selectGender === 1 && {
-                backgroundColor: '#E9FFF0',
-                borderColor: '#7AD398'
+            })
+          }}
+          style={styles.titleView}>
+          <Text style={styles.titleText}>工作经验</Text>
+          <Image
+            style={styles.addIcon}
+            source={require('../../../assets/requestJobs/add-gray.png')}
+          />
+        </NextTouchableOpacity>
+        {workExperience.map((item: any, index: number) => {
+          return (
+            <NextTouchableOpacity
+              key={index.toString()}
+              onPress={() => {
+                navigation.push('EditWorkExperience', {
+                  workItem: item,
+                  workItemCallback: (workItem: any) => {
+                    for (let i = 0; i < workExperience.length; i++) {
+                      if (item.company === workItem.company) {
+                        workExperience.split(0, workItem)
+                        break
+                      }
+                    }
+                  }
+                })
+              }}
+              style={styles.workExperienceView}>
+              <View style={styles.companyInfo}>
+                <Text style={styles.workExperienceCompany}>{item.company}</Text>
+                <Text style={styles.workExperienceTime}>{item.durationTime}</Text>
+                <Image
+                  source={require('../../../assets/requestJobs/next-gray.png')}
+                  style={styles.nextIcon}
+                />
+              </View>
+              <View>
+                <Text style={styles.workExperienceText}>{item.job}</Text>
+                <Text numberOfLines={2} style={styles.workExperienceLocation}>{item.description}</Text>
+              </View>
+            </NextTouchableOpacity>
+          )
+        })}
+      </View>
+    )
+  }
+
+  renderProjectExperience() {
+    const { projectExperience } = this.state
+    const { navigation } = this.props
+    return (
+      <View style={styles.cellView}>
+        <NextTouchableOpacity
+          onPress={() => {
+            navigation.push('JobExpectations')
+          }}
+          style={styles.titleView}>
+          <Text style={styles.titleText}>项目经历</Text>
+          <Image
+            style={styles.addIcon}
+            source={require('../../../assets/requestJobs/add-gray.png')}
+          />
+        </NextTouchableOpacity>
+        {projectExperience.map((item: any, index: number) => {
+          return (
+            <NextTouchableOpacity
+              key={index.toString()}
+              onPress={() => {
+                navigation.push('JobExpectations')
+              }}
+              style={styles.workExperienceView}
+            >
+              <View style={styles.companyInfo}>
+                <Text style={styles.workExperienceCompany}>{item.project}</Text>
+                <Text style={styles.workExperienceTime}>{item.durationTime}</Text>
+                <Image
+                  source={require('../../../assets/requestJobs/next-gray.png')}
+                  style={styles.nextIcon}
+                />
+              </View>
+              <View>
+                <Text style={styles.workExperienceText}>{item.job}</Text>
+                <Text numberOfLines={2} style={styles.workExperienceLocation}>{item.description}</Text>
+              </View>
+            </NextTouchableOpacity>
+          )
+        })}
+      </View>
+    )
+  }
+
+  renderEducationExperience() {
+    const { educationExperience } = this.state
+    const { navigation } = this.props
+    return (
+      <View style={styles.cellView}>
+        <NextTouchableOpacity
+          onPress={() => {
+            navigation.push('JobExpectations')
+          }}
+          style={styles.titleView}>
+          <Text style={styles.titleText}>教育经历</Text>
+          <Image
+            style={styles.addIcon}
+            source={require('../../../assets/requestJobs/add-gray.png')}
+          />
+        </NextTouchableOpacity>
+        {educationExperience.map((item: any, index: number) => {
+          return (
+            <NextTouchableOpacity
+              key={index.toString()}
+              onPress={() => {
+                navigation.push('JobExpectations')
+              }}
+              style={styles.workExperienceView}
+            >
+              <View style={styles.companyInfo}>
+                <Text style={styles.workExperienceCompany}>{item.name}</Text>
+                <Text style={styles.workExperienceTime}>{item.durationTime}</Text>
+                <Image
+                  source={require('../../../assets/requestJobs/next-gray.png')}
+                  style={styles.nextIcon}
+                />
+              </View>
+              <View>
+                <Text style={styles.workExperienceText}>{item.education}</Text>
+                <Text numberOfLines={2} style={styles.workExperienceLocation}>{item.description}</Text>
+              </View>
+            </NextTouchableOpacity>
+          )
+        })}
+      </View>
+    )
+  }
+
+  renderPersonalGoods() {
+    const { personalGoods } = this.state
+    const { navigation } = this.props
+    return (
+      <View style={[styles.cellView, {
+        borderBottomColor: '#ECECEC',
+        borderBottomWidth: 1,
+        paddingBottom: 12
+      }]}>
+        <NextTouchableOpacity
+          onPress={() => {
+            navigation.push('EditPersonalGoods', {
+              personalGoods,
+              personalGoodsCallback: (editContents: string) => {
+                this.setState({ personalGoods: editContents })
               }
-            ]}
-          >
-            <Text style={[styles.genderDetailText,
-            selectGender === 1 && {
-              fontWeight: 'bold',
-              color: '#7AD398'
-            }
-            ]}>女</Text>
-          </NextTouchableOpacity>
-        </View>
+            })
+          }}
+          style={styles.titleView}>
+          <Text style={styles.titleText}>个人优势</Text>
+          <View style={styles.editPersonalView}>
+            <Text style={styles.editPersonalText}>待完善</Text>
+            <Image
+              style={styles.editIcon}
+              source={require('../../../assets/requestJobs/edit-gray.png')}
+            />
+          </View>
+        </NextTouchableOpacity>
+        <Text style={styles.editPersonalDetail}>{personalGoods}</Text>
       </View>
     )
   }
@@ -229,6 +393,10 @@ export default class EditOnlineResume extends Component<IProps, IState> {
         >
           {this.renderIcon()}
           {this.renderRequestJobs()}
+          {this.renderPersonalGoods()}
+          {this.renderWorkExperience()}
+          {this.renderProjectExperience()}
+          {this.renderEducationExperience()}
         </ScrollView>
         {this.renderSaveBtn()}
       </View>

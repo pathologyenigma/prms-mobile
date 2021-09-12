@@ -57,11 +57,11 @@ export default StyleSheet.create({
   pickContainerView: {
     flexDirection: 'row',
     height: SystemHelper.safeBottom + 190,
+    overflow: 'hidden'
   },
   pickView: {
-    // backgroundColor: 'yellow',
     width: (SystemHelper.width - 44) / 2,
-    marginTop: -50
+    marginTop: -50,
   },
   selectView: {
     height: 43,
@@ -69,7 +69,6 @@ export default StyleSheet.create({
     backgroundColor: '#F7F7F7',
     position: 'absolute',
     top: 81,
-    // borderRadius: 4,
   },
   selectLineView: {
     height: 1,
@@ -77,6 +76,6 @@ export default StyleSheet.create({
     backgroundColor: '#F7F7F7',
     position: 'absolute',
     top: 80,
-    zIndex: 2
+    zIndex: 2,
   },
 })
