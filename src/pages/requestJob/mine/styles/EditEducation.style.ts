@@ -11,13 +11,13 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: '#ffffff',
   },
-  saveBtn: {
-    color: '#333333',
-    fontSize: 15
-  },
   titleView: {
     marginTop: 10,
     paddingHorizontal: 11,
+  },
+  saveBtn: {
+    color: '#333333',
+    fontSize: 15,
   },
   title: {
     fontSize: 20,
@@ -69,11 +69,6 @@ export default StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
   },
-  timeTips: {
-    color: '#333333',
-    fontSize: 15,
-    fontWeight: 'bold'
-  },
   inputView: {
     borderRadius: 8,
     width: SystemHelper.width - 22,
@@ -100,22 +95,6 @@ export default StyleSheet.create({
     paddingHorizontal: 11,
     justifyContent: 'center',
     marginTop: 10,
-  },
-  hideView: {
-    flexDirection: 'row',
-    marginTop: 47,
-    paddingHorizontal: 11,
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  hideText: {
-    color: '#333333',
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-  hideSwitch: {
-    backgroundColor: 'red',
-    height: 22,
   },
   footerView: {
     flexDirection: 'row',

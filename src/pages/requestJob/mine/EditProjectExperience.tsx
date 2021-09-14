@@ -1,28 +1,27 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView, StatusBar, BackHandler, Switch } from 'react-native'
-import styles from './styles/EditWorkExperience.style'
+import { Text, View, BackHandler, ScrollView, StatusBar } from 'react-native'
+import styles from './styles/EditProjectExperience.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import { TextInput } from 'react-native-gesture-handler'
 import JobStatusModal from '../jobs/JobStatusModal'
+import GradientButton from '../../components/GradientButton'
 import AlertContentModal from '../../components/AlertContentModal'
 import SystemHelper from '../../../utils/system'
-import GradientButton from '../../components/GradientButton'
 
-type IProps = GenProps<'EditWorkExperience'> & {
+type IProps = GenProps<'EditProjectExperience'> & {
 
 }
 
 interface IState {
   selectImage: any,
-  company: string,
-  job: string,
-  apartment: string,
+  project: string,
+  role: string,
   beginTime: string,
   endTime: string,
   content: string,
-  hideInfo: boolean,
+  performance: string,
   beginTimeVisible: boolean,
   endTimeVisible: boolean,
   beginTimeArray: any,
@@ -31,19 +30,18 @@ interface IState {
   giveUpSaveVisible: boolean
 }
 
-export default class EditWorkExperience extends Component<IProps, IState> {
+export default class EditProjectExperience extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
-    const { route: { params: { workItem } } } = props
+    const { route: { params: { projectItem } } } = props
     BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
     this.state = {
-      company: (workItem && workItem.company) || '',
-      job: (workItem && workItem.job) || '',
-      apartment: (workItem && workItem.apartment) || '',
-      beginTime: (workItem && workItem.beginTime) || '',
-      endTime: (workItem && workItem.endTime) || '',
-      content: (workItem && workItem.content) || '',
-      hideInfo: (workItem && workItem.hideInfo) || false,
+      project: (projectItem && projectItem.project) || '',
+      role: (projectItem && projectItem.role) || '',
+      beginTime: (projectItem && projectItem.beginTime) || '',
+      endTime: (projectItem && projectItem.endTime) || '',
+      content: (projectItem && projectItem.content) || '',
+      performance: (projectItem && projectItem.performance) || '',
       selectImage: [],
       beginTimeVisible: false,
       endTimeVisible: false,
@@ -87,10 +85,11 @@ export default class EditWorkExperience extends Component<IProps, IState> {
 
   onBackAndroid = () => {
     // 安卓返回按钮弹出退出确认框
-    const { company, job, apartment, beginTime, endTime, content } = this.state
-    const { navigation, route: { params: { workItem, workItemCallback } } } = this.props
-    const disableSave = company || job || apartment || beginTime || endTime || content
-    if (disableSave) {
+    const { project, role, beginTime, endTime, content } = this.state
+    const { navigation } = this.props
+    const editInfo = project || role || beginTime || endTime || content
+    // const editAllInfo = name && professional && beginTime && endTime && schoolExperience && education && fullTime
+    if (editInfo) {
       this.setState({ giveUpSaveVisible: true })
     } else {
       navigation.pop()
@@ -99,9 +98,9 @@ export default class EditWorkExperience extends Component<IProps, IState> {
   }
 
   renderNavBar() {
-    const { company, job, apartment, beginTime, endTime, content, hideInfo } = this.state
-    const { navigation, route: { params: { workItem, workItemCallback } } } = this.props
-    const disableSave = company && job && apartment && beginTime && endTime && content
+    const { project, role, beginTime, endTime, content } = this.state
+    const { navigation, route: { params: { projectItem, projectItemCallback } } } = this.props
+    const disableSave = project && role && beginTime && endTime && content
     return (
       <NavBar
         statusBarTheme="dark-content"
@@ -116,15 +115,15 @@ export default class EditWorkExperience extends Component<IProps, IState> {
             navigation.pop()
           },
         }}
-        title={workItem ? '编辑工作经历' : '添加工作经历'}
+        title={projectItem ? '编辑项目经历' : '添加项目经历'}
         right={{
           type: EButtonType.TEXT,
           style: styles.saveBtn,
-          value: workItem ? '' : ' 保存',
+          value: projectItem ? '' : "保存",
           disable: !disableSave,
           act: () => {
-            if (workItemCallback) {
-              workItemCallback({ company, job, apartment, beginTime, endTime, content, hideInfo, index: workItem && workItem.index })
+            if (projectItemCallback) {
+              projectItemCallback({ project, role, beginTime, endTime, content, performance, index: projectItem && projectItem.index })
             }
             navigation.pop()
           },
@@ -133,11 +132,11 @@ export default class EditWorkExperience extends Component<IProps, IState> {
     )
   }
 
-  renderCompany() {
-    const { company } = this.state
+  renderProject() {
+    const { project } = this.state
     return (
       <View style={styles.cell}>
-        <Text style={styles.cellTitle}>公司名称</Text>
+        <Text style={styles.cellTitle}>项目名称</Text>
         <TextInput
           underlineColorAndroid="transparent"
           returnKeyType="done"
@@ -147,20 +146,20 @@ export default class EditWorkExperience extends Component<IProps, IState> {
           style={styles.cellInput}
           placeholder="请填写"
           placeholderTextColor="#AAAAAA"
-          value={company}
+          value={project}
           onChangeText={(value) => {
-            this.setState({ company: value })
+            this.setState({ project: value })
           }}
         />
       </View>
     )
   }
 
-  renderJob() {
-    const { job } = this.state
+  renderRole() {
+    const { role } = this.state
     return (
       <View style={styles.cell}>
-        <Text style={styles.cellTitle}>职位名称</Text>
+        <Text style={styles.cellTitle}>担任角色</Text>
         <TextInput
           underlineColorAndroid="transparent"
           returnKeyType="done"
@@ -170,32 +169,9 @@ export default class EditWorkExperience extends Component<IProps, IState> {
           style={styles.cellInput}
           placeholder="请填写"
           placeholderTextColor="#AAAAAA"
-          value={job}
+          value={role}
           onChangeText={(value) => {
-            this.setState({ job: value })
-          }}
-        />
-      </View>
-    )
-  }
-
-  renderApartment() {
-    const { apartment } = this.state
-    return (
-      <View style={styles.cell}>
-        <Text style={styles.cellTitle}>所属部门</Text>
-        <TextInput
-          underlineColorAndroid="transparent"
-          returnKeyType="done"
-          autoCorrect={false}
-          autoCapitalize="none"
-          multiline={true}
-          style={styles.cellInput}
-          placeholder="请填写"
-          placeholderTextColor="#AAAAAA"
-          value={apartment}
-          onChangeText={(value) => {
-            this.setState({ apartment: value })
+            this.setState({ role: value })
           }}
         />
       </View>
@@ -206,7 +182,7 @@ export default class EditWorkExperience extends Component<IProps, IState> {
     const { beginTime, endTime } = this.state
     return (
       <View style={styles.cell}>
-        <Text style={styles.cellTitle}>在职时间</Text>
+        <Text style={styles.cellTitle}>项目时间</Text>
         <View style={styles.durationView}>
           <NextTouchableOpacity
             style={{ flex: 1, }}
@@ -238,7 +214,7 @@ export default class EditWorkExperience extends Component<IProps, IState> {
     const { content } = this.state
     return (
       <View style={styles.contentCell}>
-        <Text style={styles.cellTitle}>工作内容</Text>
+        <Text style={styles.cellTitle}>项目描述</Text>
         <View style={styles.inputView}>
           <TextInput
             underlineColorAndroid="transparent"
@@ -263,28 +239,42 @@ export default class EditWorkExperience extends Component<IProps, IState> {
     )
   }
 
-  renderHide() {
-    const { hideInfo } = this.state
+  renderWorkPerformance() {
+    const { performance } = this.state
     return (
-      <View style={styles.hideView}>
-        <Text style={styles.hideText}>对这家公司隐藏我的信息</Text>
-        <Switch
-          onValueChange={(res: boolean) => this.setState({ hideInfo: res })}
-          thumbColor='#fff'
-          trackColor={{ false: '#ddd', true: '#57DE9E' }}
-          value={hideInfo}
-        />
+      <View style={styles.contentCell}>
+        <Text style={styles.cellTitle}>项目业绩</Text>
+        <View style={styles.inputView}>
+          <TextInput
+            underlineColorAndroid="transparent"
+            returnKeyType="done"
+            autoCorrect={false}
+            autoCapitalize="none"
+            multiline={true}
+            style={styles.contentInput}
+            placeholder="选填"
+            placeholderTextColor="#AAAAAA"
+            value={performance}
+            maxLength={500}
+            onChangeText={(value) => {
+              this.setState({ performance: value })
+            }}
+          />
+          <Text style={styles.contentAmount}>
+            {`${performance.length}/500`}
+          </Text>
+        </View>
       </View>
     )
   }
 
   renderFooterBtn() {
-    const { company, job, apartment, beginTime, endTime, content, hideInfo } = this.state
-    const { navigation, route: { params: { workItem, workItemCallback } } } = this.props
-    const disableSave = company && job && apartment && beginTime && endTime && content
+    const { project, role, endTime, content, beginTime, performance } = this.state
+    const { navigation, route: { params: { projectItem, projectItemCallback } } } = this.props
+    const disableSave = project && role && endTime && content && beginTime
     return (
       <View style={styles.footerView}>
-        {workItem && (
+        {projectItem && (
           <NextTouchableOpacity
             style={styles.resetBtn}
             onPress={() => {
@@ -296,12 +286,12 @@ export default class EditWorkExperience extends Component<IProps, IState> {
         )}
         <GradientButton
           disabled={!disableSave}
-          containerStyle={[styles.confirmBtn, !workItem && { marginLeft: 0 }]}
-          linearStyle={[styles.linearStyle, !workItem && { width: SystemHelper.width - 42, marginLeft: 0 }]}
+          containerStyle={[styles.confirmBtn, !projectItem && { marginLeft: 0 }]}
+          linearStyle={[styles.linearStyle, !projectItem && { width: SystemHelper.width - 42, marginLeft: 0 }]}
           text="完成"
           onPress={() => {
-            if (workItemCallback) {
-              workItemCallback({ company, job, apartment, beginTime, endTime, content, hideInfo, index: workItem && workItem.index })
+            if (projectItemCallback) {
+              projectItemCallback({ project, role, beginTime, endTime, content, performance, index: projectItem && projectItem.index })
             }
             navigation.pop()
           }}
@@ -311,10 +301,10 @@ export default class EditWorkExperience extends Component<IProps, IState> {
   }
 
   render() {
-    const { beginTimeVisible, endTimeVisible, beginTimeArray, beginDateArray, beginTime,
-      deleteVisible, giveUpSaveVisible
+    const { beginTimeVisible, endTimeVisible, beginTimeArray, beginDateArray,
+      beginTime, deleteVisible, giveUpSaveVisible
     } = this.state
-    const { navigation, route: { params: { workItem, workItemCallback } } } = this.props
+    const { navigation, route: { params: { projectItem, projectItemCallback } } } = this.props
     return (
       <View style={styles.container}>
         <StatusBar
@@ -328,14 +318,13 @@ export default class EditWorkExperience extends Component<IProps, IState> {
           style={styles.scrollView}
           contentContainerStyle={{ paddingBottom: 100 }}
         >
-          {this.renderCompany()}
-          {this.renderJob()}
-          {this.renderApartment()}
+          {this.renderProject()}
+          {this.renderRole()}
           {this.renderDurationTime()}
           {this.renderWorkContent()}
-          {this.renderHide()}
+          {this.renderWorkPerformance()}
         </ScrollView>
-        {workItem && this.renderFooterBtn()}
+        {projectItem && this.renderFooterBtn()}
         <JobStatusModal
           title="时间段"
           visible={beginTimeVisible}
@@ -373,7 +362,7 @@ export default class EditWorkExperience extends Component<IProps, IState> {
         <AlertContentModal
           visible={deleteVisible || giveUpSaveVisible}
           title="友情提示"
-          detail={deleteVisible ? '确定删除这条工作经历吗？' : '内容尚未保存，确定放弃？'}
+          detail={deleteVisible ? '确定删除这条项目经历吗？' : '内容尚未保存，确定放弃？'}
           bottomStyle={{ marginTop: 37 }}
           leftBtn={{
             title: '取消',
@@ -388,8 +377,8 @@ export default class EditWorkExperience extends Component<IProps, IState> {
               if (deleteVisible) {
                 // 删除操作
                 this.setState({ deleteVisible: false }, () => {
-                  if (workItemCallback) {
-                    workItemCallback({ index: workItem && workItem.index, deleteItem: true })
+                  if (projectItemCallback) {
+                    projectItemCallback({ index: projectItem && projectItem.index, deleteItem: true })
                   }
                   navigation.pop()
                 })

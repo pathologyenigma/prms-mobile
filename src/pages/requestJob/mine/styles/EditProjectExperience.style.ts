@@ -101,22 +101,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
     marginTop: 10,
   },
-  hideView: {
-    flexDirection: 'row',
-    marginTop: 47,
-    paddingHorizontal: 11,
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  hideText: {
-    color: '#333333',
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-  hideSwitch: {
-    backgroundColor: 'red',
-    height: 22,
-  },
   footerView: {
     flexDirection: 'row',
     height: SystemHelper.safeBottom + 51,

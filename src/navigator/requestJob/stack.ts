@@ -28,6 +28,8 @@ import UserInfo from '../../pages/requestJob/mine/UserInfo'
 import EditOnlineResume from '../../pages/requestJob/mine/EditOnlineResume'
 import EditPersonalGoods from '../../pages/requestJob/mine/EditPersonalGoods'
 import EditWorkExperience from '../../pages/requestJob/mine/EditWorkExperience'
+import EditProjectExperience from '../../pages/requestJob/mine/EditProjectExperience'
+import EditEducation from '../../pages/requestJob/mine/EditEducation'
 
 type TRouterParams = {
   Find: any,
@@ -56,6 +58,8 @@ type TRouterParams = {
   EditOnlineResume: any,
   EditPersonalGoods: { personalGoods: string, personalGoodsCallback: (editContents: string) => void },
   EditWorkExperience: { workItemCallback: (workItem: any) => void, workItem?: any, }
+  EditProjectExperience: { projectItemCallback: (projectItem: any) => void, projectItem?: any, }
+  EditEducation: { educationItemCallback: (educationItem: any) => void, educationItem?: any, }
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -99,5 +103,7 @@ export default class RouterStacks {
       EditOnlineResume,
       EditPersonalGoods,
       EditWorkExperience,
+      EditProjectExperience,
+      EditEducation,
     }
 }
