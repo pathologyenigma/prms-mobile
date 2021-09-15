@@ -60,76 +60,57 @@ function RenderRequestJobTabs() {
   )
 }
 
-export default class Dummy extends React.Component {
+class Dummy extends React.Component {
   constructor(props: any) {
     super(props)
-    console.log('props: ', props)
     this.state = ({
       loginType: undefined
     })
-  }
-
-  componentDidMount() {
     this.loadData()
   }
 
   renderRequestType(loginType: string) {
+    const { navigation } = this.props
+    RootLoading.hide()
     if (loginType === '1') {
       //返回 我要求职 Tab页面
-      const { stacks } = RequestJobRouterStacks
-      return (
-        Object.keys(stacks).map(stack => (
-          <Stack.Screen
-            key={stack}
-            name={stack}
-            component={stacks[stack]}
-          />
-        ))
-      )
+      navigation.navigate('RenderRequestJobTabs')
+      return
     }
-    if (loginType === '2') {
-      //返回 我要找人 Tab页面
-
-    }
-    if (loginType === '3') {
-      //返回 我要创业或投资 Tab页面
-
-    }
-    //未登录,返回登录页面(默认)
-    const { stacks } = RequestLoginStacks
-    return (
-      Object.keys(stacks).map(stack => (
-        <Stack.Screen
-          key={stack}
-          name={stack}
-          component={stacks[stack]}
-        />
-      ))
-    )
+    // 默认返回 登录 Tab页面
+    navigation.navigate('RenderLoginContainer')
+    return
   }
 
   loadData() {
+    RootLoading.loading()
     AsyncStorage.getItem(Login_type, (error, result) => {
       if (!error && result) {
-        console.log('result: ', result)
-        // this.setState({})
-        this.setState({ loginType: result })
+        this.renderRequestType(result)
       } else {
-        this.setState({ loginType: 0 })
+        this.renderRequestType('0')
       }
     })
   }
 
   render() {
-    const { loginType } = this.state
-    if (loginType === undefined) {
-      return null
-    }
+    return (
+      <View style={{ flex: 1, }}>
+      </View>
+    )
+  }
+}
+
+export default class Temp extends React.Component {
+  render() {
     return (
       <Stack.Navigator
         headerMode="none"
+        initialRouteName="Dummy"
       >
-        {this.renderRequestType(loginType)}
+        <Stack.Screen key="Dummy" name="Dummy" component={Dummy} />
+        <Stack.Screen key="RenderLoginContainer" name="RenderLoginContainer" component={RenderLoginContainer} />
+        <Stack.Screen key="RenderRequestJobTabs" name="RenderRequestJobTabs" component={RenderRequestJobTabs} />
       </Stack.Navigator>
     )
   }

@@ -5,9 +5,6 @@ import Jobs from '../../pages/requestJob/jobs/Jobs'
 import Learn from '../../pages/requestJob/learn/Learn'
 import News from '../../pages/requestJob/news/News'
 import Mine from '../../pages/requestJob/mine/Mine'
-import LoginScreen from '../../pages/loginInfo/Login'
-import ForgetPassword from '../../pages/loginInfo/ForgetPassword'
-import ChooseRole from '../../pages/loginInfo/ChooseRole'
 import Tabs from './tabs/index'
 import JobExpectations from '../../pages/requestJob/jobs/JobExpectations'
 import JobExpectDetail from '../../pages/requestJob/jobs/JobExpectDetail'
@@ -30,14 +27,12 @@ import EditPersonalGoods from '../../pages/requestJob/mine/EditPersonalGoods'
 import EditWorkExperience from '../../pages/requestJob/mine/EditWorkExperience'
 import EditProjectExperience from '../../pages/requestJob/mine/EditProjectExperience'
 import EditEducation from '../../pages/requestJob/mine/EditEducation'
+import InterviewEvaluation from '../../pages/requestJob/publicView/InterviewEvaluation'
 
 type TRouterParams = {
   Find: any,
   Jobs: any,
   Learn: any,
-  LoginScreen: any,
-  ForgetPassword: any,
-  ChooseRole: any,
   News: any,
   JobExpectations: any,
   JobExpectDetail: any,
@@ -59,7 +54,8 @@ type TRouterParams = {
   EditPersonalGoods: { personalGoods: string, personalGoodsCallback: (editContents: string) => void },
   EditWorkExperience: { workItemCallback: (workItem: any) => void, workItem?: any, }
   EditProjectExperience: { projectItemCallback: (projectItem: any) => void, projectItem?: any, }
-  EditEducation: { educationItemCallback: (educationItem: any) => void, educationItem?: any, }
+  EditEducation: { educationItemCallback: (educationItem: any) => void, educationItem?: any, },
+  InterviewEvaluation: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -81,9 +77,6 @@ export default class RouterStacks {
       Learn,
       News,
       Mine,
-      LoginScreen,
-      ForgetPassword,
-      ChooseRole,
       JobExpectations,
       JobExpectDetail,
       JobSelectZhiwei,
@@ -105,5 +98,6 @@ export default class RouterStacks {
       EditWorkExperience,
       EditProjectExperience,
       EditEducation,
+      InterviewEvaluation,
     }
 }

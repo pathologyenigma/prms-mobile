@@ -234,5 +234,19 @@ export default StyleSheet.create({
     color: '#666666',
     fontSize: 13,
     marginLeft: 17
+  },
+  loginBtn: {
+    marginHorizontal: 10,
+    backgroundColor: '#fff',
+    height: 40,
+    borderRadius: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 34 + SystemHelper.safeBottom
+  },
+  loginBtnText: {
+    color: '#333333',
+    fontSize: 15,
+    fontWeight: 'bold'
   }
 })

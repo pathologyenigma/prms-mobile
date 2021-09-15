@@ -5,11 +5,15 @@ import { ConnectedComponent } from 'react-redux'
 import LoginScreen from '../../pages/loginInfo/Login'
 import ForgetPassword from '../../pages/loginInfo/ForgetPassword'
 import ChooseRole from '../../pages/loginInfo/ChooseRole'
+// import RequestJob from '../requestPerson/index'
+// import AppRouter from '../../navigator'
 
 type TRouterParams = {
   LoginScreen: any,
   ForgetPassword: any,
-  ChooseRole: any
+  ChooseRole: any,
+  // RequestJob: any,
+  // AppRouter: any,
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -28,5 +32,7 @@ export default class RouterStacks {
       LoginScreen,
       ForgetPassword,
       ChooseRole,
+      // RequestJob,
+      // AppRouter,
     }
 }

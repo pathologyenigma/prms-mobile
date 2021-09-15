@@ -212,17 +212,8 @@ class LoginScreen extends Component<IProps, IState> {
           <NextTouchableOpacity
             style={styles.passwordLogin}
             onPress={() => {
-              // this.setState({ loginType: 1 })
+              this.setState({ loginType: 1 })
               // RootLoading.info('账号密码登录')
-              AsyncStorage.setItem(Login_type, '1', (error) => {
-                console.log('1111111111: ', error)
-                if (!error) {
-                  const { navigation } = this.props
-                  // navigation.navigate('Dummy')
-                } else {
-                  RootLoading.fail('请重试或联系客服')
-                }
-              })
             }}
           >
             <Text style={styles.passwordLoginText}>账号密码登录</Text>
@@ -310,7 +301,23 @@ class LoginScreen extends Component<IProps, IState> {
             containerStyle={styles.registerTipRightBtn}
             text="注册"
             onPress={() => {
+              AsyncStorage.setItem(Login_type, '1', (error) => {
+                console.log('1111111111: ', error)
+                if (!error) {
+                  const { navigation } = this.props
+                  navigation.dispatch(
+                    CommonActions.reset({
+                      index: 1,
+                      routes: [
+                        { name: 'Dummy' },
+                      ],
+                    })
+                  )
 
+                } else {
+                  RootLoading.fail('请重试或联系客服')
+                }
+              })
             }}
           />
         </View>

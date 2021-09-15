@@ -631,9 +631,11 @@ export default class CompanyDetail extends Component<IProps, IState> {
       <NextTouchableOpacity
         style={styles.showMoreBtn}
         onPress={() => {
-          this.setState({
-            showAllComment: true
-          })
+          // this.setState({
+          //   showAllComment: true
+          // })
+          const { navigation } = this.props
+          navigation.push('InterviewEvaluation')
         }}
       >
         <Text style={styles.showMoreText}>

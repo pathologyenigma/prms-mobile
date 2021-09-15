@@ -5,6 +5,7 @@ import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
 import styles from './styles'
 
 interface ICell {
+  isWhiteMode?: boolean
   likePress?: () => void
   cellStyle?: StyleProp<ViewStyle>
   cellItem: any
@@ -28,7 +29,7 @@ export default class CompanyCommentCell extends PureComponent<ICell> {
   }
 
   render() {
-    const { cellItem, cellStyle, likePress } = this.props
+    const { cellItem, cellStyle, likePress, isWhiteMode = false } = this.props
     if (!cellItem) {
       return null
     }
@@ -44,10 +45,10 @@ export default class CompanyCommentCell extends PureComponent<ICell> {
             source={require('../../../../assets/requestJobs/icon-example.png')}
           />
           <View style={styles.commentInfo}>
-            <Text style={styles.cellTitle}>
+            <Text style={[styles.cellTitle, isWhiteMode && { color: '#333333' }]}>
               {cellItem.name}
             </Text>
-            <Text style={styles.cellJob}>
+            <Text style={[styles.cellJob, isWhiteMode && { color: '#888888' }]}>
               {`面试职位：${cellItem.job}`}
             </Text>
           </View>
@@ -57,7 +58,7 @@ export default class CompanyCommentCell extends PureComponent<ICell> {
           />
         </View>
         {this.renderTag(cellItem.tag)}
-        <Text style={styles.cellContent}>{cellItem.content}</Text>
+        <Text style={[styles.cellContent, isWhiteMode && { color: '#666666' }]}>{cellItem.content}</Text>
         <View style={styles.cellDetail}>
           <Text style={styles.cellTime}>
             {cellItem.time}

@@ -14,6 +14,9 @@ import WhiteContentModal from '../components/WhiteContentModal'
 import GradientButton from '../components/GradientButton'
 import SystemHelper from '../../utils/system'
 import NavBar, { EButtonType } from '../components/NavBar'
+import { CommonActions } from '@react-navigation/native'
+import AsyncStorage from '@react-native-community/async-storage'
+import { Login_type } from '../../utils/constant'
 
 type IProps = GenProps<'ChooseRole'> & {
 
@@ -53,8 +56,23 @@ class ChooseRole extends Component<IProps, IState> {
           console.log('this.props: ', this.props)
           console.log('this.props.navigation: ', navigation)
           // 此处将状态全局存储起来后,再回到导航首页进行判断身份跳转
-          navigation.navigate('Dummy')
-          // navigation.navigate('RenderRequestJobTabs')
+          AsyncStorage.setItem(Login_type, '1', (error) => {
+            console.log('1111111111: ', error)
+            if (!error) {
+              const { navigation } = this.props
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 1,
+                  routes: [
+                    { name: 'Dummy' },
+                  ],
+                })
+              )
+
+            } else {
+              RootLoading.fail('请重试或联系客服')
+            }
+          })
         }}
       >
         <Image

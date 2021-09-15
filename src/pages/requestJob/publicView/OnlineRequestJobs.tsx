@@ -237,7 +237,7 @@ export default class OnlineRequestJobs extends Component<IProps, IState> {
   renderList(list: any, index: number) {
     const { navigation } = this.props
     return (
-      <View key={index.toString()}>
+      <ScrollView key={index.toString()}>
         {list.map((item: any, index: number) => {
           return (
             <CompanyJobCell
@@ -251,7 +251,7 @@ export default class OnlineRequestJobs extends Component<IProps, IState> {
           )
         })}
         <Text style={styles.noMoreJobs}>没有更多职位啦</Text>
-      </View>
+      </ScrollView>
     )
   }
 

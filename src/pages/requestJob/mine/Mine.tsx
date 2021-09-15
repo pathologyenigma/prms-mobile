@@ -4,6 +4,8 @@ import LinearGradient from 'react-native-linear-gradient'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import styles from './styles/Mine.style'
 import RootLoading from '../../../utils/rootLoading'
+import AsyncStorage from "@react-native-community/async-storage";
+import { CommonActions } from '@react-navigation/native';
 
 type IProps = {
   navigation: any,
@@ -264,6 +266,32 @@ export default class Mine extends Component<IProps, IState> {
     )
   }
 
+  renderLogout() {
+    // 退出登录页面示例
+    const { navigation } = this.props
+    return (
+      <NextTouchableOpacity
+        style={styles.loginBtn}
+        onPress={() => {
+          RootLoading.loading()
+          AsyncStorage.clear(() => {
+            RootLoading.hide()
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [
+                  { name: 'Dummy' },
+                ],
+              })
+            )
+          })
+        }}
+      >
+        <Text style={styles.loginBtnText}>退出登录</Text>
+      </NextTouchableOpacity>
+    )
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -274,6 +302,7 @@ export default class Mine extends Component<IProps, IState> {
         <ScrollView>
           {this.renderNavBar()}
           {this.renderJianliView()}
+          {/* {this.renderLogout()} */}
           {this.renderAdImage()}
           {this.renderMyStudy()}
           {this.renderOther()}
