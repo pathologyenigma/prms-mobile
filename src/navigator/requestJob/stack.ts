@@ -21,6 +21,10 @@ import ReportComplaints from '../../pages/requestJob/publicView/ReportComplaints
 import ReportComplaintsDetail from '../../pages/requestJob/publicView/ReportComplaintsDetail'
 import MapNavigation from '../../pages/requestJob/publicView/MapNavigation'
 import OnlineRequestJobs from '../../pages/requestJob/publicView/OnlineRequestJobs'
+import CompanyAsk from '../../pages/requestJob/publicView/CompanyAsk'
+import SubmitCompanyQuestion from '../../pages/requestJob/publicView/SubmitCompanyQuestion'
+import CompanyResponse from '../../pages/requestJob/publicView/CompanyResponse'
+import CompanySubQuestion from '../../pages/requestJob/publicView/CompanySubQuestion'
 import UserInfo from '../../pages/requestJob/mine/UserInfo'
 import EditOnlineResume from '../../pages/requestJob/mine/EditOnlineResume'
 import EditPersonalGoods from '../../pages/requestJob/mine/EditPersonalGoods'
@@ -49,13 +53,17 @@ type TRouterParams = {
   ReportComplaintsDetail: { type: string },
   MapNavigation: any,
   OnlineRequestJobs: { title: string },
+  CompanyAsk: any,
+  SubmitCompanyQuestion: any,
+  CompanyResponse: any,
+  CompanySubQuestion: any,
   UserInfo: any,
   EditOnlineResume: any,
   EditPersonalGoods: { personalGoods: string, personalGoodsCallback: (editContents: string) => void },
   EditWorkExperience: { workItemCallback: (workItem: any) => void, workItem?: any, }
   EditProjectExperience: { projectItemCallback: (projectItem: any) => void, projectItem?: any, }
   EditEducation: { educationItemCallback: (educationItem: any) => void, educationItem?: any, },
-  InterviewEvaluation: any
+  InterviewEvaluation: any,
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -92,6 +100,10 @@ export default class RouterStacks {
       ReportComplaintsDetail,
       MapNavigation,
       OnlineRequestJobs,
+      CompanyAsk,
+      SubmitCompanyQuestion,
+      CompanyResponse,
+      CompanySubQuestion,
       UserInfo,
       EditOnlineResume,
       EditPersonalGoods,

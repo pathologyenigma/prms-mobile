@@ -7,11 +7,13 @@ interface ICell {
   likePress?: () => void
   cellStyle?: StyleProp<ViewStyle>
   cellItem: any
+  onPress?: () => void
+  isWhiteMode?: boolean
 }
 
 export default class CompanyQuestionCell extends PureComponent<ICell> {
   render() {
-    const { cellItem, cellStyle } = this.props
+    const { cellItem, cellStyle, onPress, isWhiteMode = false } = this.props
     if (!cellItem) {
       return null
     }
@@ -19,6 +21,9 @@ export default class CompanyQuestionCell extends PureComponent<ICell> {
       <NextTouchableOpacity
         style={[styles.cellView, cellStyle]}
         onPress={() => {
+          if (onPress) {
+            onPress()
+          }
         }}
       >
         <View style={styles.cellTitleView}>
@@ -26,7 +31,7 @@ export default class CompanyQuestionCell extends PureComponent<ICell> {
             style={styles.iconImage}
             source={require('../../../../assets/requestJobs/company-question.png')}
           />
-          <Text style={styles.cellTitle}>
+          <Text style={[styles.cellTitle, isWhiteMode && { color: '#333333' }]}>
             {cellItem.question}
           </Text>
         </View>
@@ -35,11 +40,11 @@ export default class CompanyQuestionCell extends PureComponent<ICell> {
             style={styles.iconImage}
             source={require('../../../../assets/requestJobs/company-answer.png')}
           />
-          <Text style={styles.cellAnswer}>
+          <Text numberOfLines={3} style={[styles.cellAnswer, isWhiteMode && { color: '#666666' }]}>
             {cellItem.answer}
           </Text>
         </View>
-        <Text style={styles.info}>{`${cellItem.answerAmount}回答  ${cellItem.focus}关注`}</Text>
+        <Text style={[styles.info, isWhiteMode && { color: '#333333' }]}>{`${cellItem.answerAmount}回答  ${cellItem.focus}关注`}</Text>
       </NextTouchableOpacity>
     )
   }

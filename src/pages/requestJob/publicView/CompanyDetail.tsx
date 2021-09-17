@@ -6,7 +6,6 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import RootLoading from '../../../utils/rootLoading'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
-import SystemHelper from '../../../utils/system'
 import LinearGradient from 'react-native-linear-gradient'
 import CompanyCommentCell from './CompanyCommentCell'
 import CompanyQuestionCell from './CompanyQuestionCell'
@@ -569,7 +568,6 @@ export default class CompanyDetail extends Component<IProps, IState> {
       <View style={[styles.reviewerContainerRightItem,]}>
         <Text style={styles.scoreTitle}>{text}</Text>
         <View onLayout={(event: any) => {
-          console.log('event.nativeEvent.layout.width: ', event.nativeEvent.layout.width)
           if (!progressWidth) {
             this.setState({ progressWidth: event.nativeEvent.layout.width })
           }
@@ -675,24 +673,35 @@ export default class CompanyDetail extends Component<IProps, IState> {
 
   renderCompanyQuestion() {
     const { dataSource } = this.state
+    const { navigation } = this.props
     if (!dataSource || !dataSource.companyQuestion) {
       return null
     }
     return (
       <View style={styles.interviewView}>
-        <Text style={styles.companyPhotoText}>公司问答</Text>
+        <NextTouchableOpacity
+          onPress={() => {
+            const { navigation } = this.props
+            navigation.push('CompanyAsk')
+          }}
+        >
+          <Text style={styles.companyPhotoText}>公司问答</Text>
+        </NextTouchableOpacity>
         {dataSource.companyQuestion.map((item: any, index: number) => {
           return (
             <CompanyQuestionCell
               key={index.toString()}
               cellItem={item}
+              onPress={() => {
+                navigation.push('SubmitCompanyQuestion')
+              }}
             />
           )
         })}
         <NextTouchableOpacity
           style={styles.askQuestionBtn}
           onPress={() => {
-
+            navigation.push('CompanySubQuestion')
           }}
         >
           <Text style={styles.askQuestionText}>我来提问</Text>
@@ -706,7 +715,6 @@ export default class CompanyDetail extends Component<IProps, IState> {
     if (!dataSource) {
       return null
     }
-    console.log('SystemHelper.safeBottom: ', SystemHelper.safeBottom)
     const fullArray = [
       { id: 1, name: '五险一金', img: require('../../../assets/requestJobs/wxyj-gray.png') },
       { id: 2, name: '年终奖', img: require('../../../assets/requestJobs/nzj-gray.png') },

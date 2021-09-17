@@ -20,12 +20,14 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
     fontSize: 13,
-    lineHeight: 18
+    lineHeight: 18,
   },
   cellAnswer: {
     color: '#ffffff',
     fontSize: 12,
-    lineHeight: 16
+    lineHeight: 16,
+    overflow: 'visible',
+    flex: 1
   },
   info: {
     color: '#AAAAAA',
