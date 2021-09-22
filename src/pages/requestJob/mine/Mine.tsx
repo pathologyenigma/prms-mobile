@@ -84,12 +84,17 @@ export default class Mine extends Component<IProps, IState> {
   }
 
   renderDetailInfo() {
+    const { navigation } = this.props
     return (
       <View style={styles.detailInfoView}>
-        <View style={styles.detailInfoItem}>
+        <NextTouchableOpacity
+          onPress={() => {
+            navigation.push('Interview')
+          }}
+          style={styles.detailInfoItem}>
           <Text style={styles.detailInfoValue}>5</Text>
           <Text style={styles.detailInfoTag}>面试</Text>
-        </View>
+        </NextTouchableOpacity>
         <View style={styles.detailInfoItem}>
           <Text style={styles.detailInfoValue}>105</Text>
           <Text style={styles.detailInfoTag}>投递</Text>
