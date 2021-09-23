@@ -6,9 +6,10 @@ import styles from './styles/Mine.style'
 import RootLoading from '../../../utils/rootLoading'
 import AsyncStorage from "@react-native-community/async-storage";
 import { CommonActions } from '@react-navigation/native';
+import { GenProps } from '../../../navigator/requestJob/stack'
 
-type IProps = {
-  navigation: any,
+type IProps = GenProps<'Mine'> & {
+
 }
 
 type IState = {
@@ -95,18 +96,30 @@ export default class Mine extends Component<IProps, IState> {
           <Text style={styles.detailInfoValue}>5</Text>
           <Text style={styles.detailInfoTag}>面试</Text>
         </NextTouchableOpacity>
-        <View style={styles.detailInfoItem}>
+        <NextTouchableOpacity
+          onPress={() => {
+            navigation.push('Delivery', { pageType: 1 })
+          }}
+          style={styles.detailInfoItem}>
           <Text style={styles.detailInfoValue}>105</Text>
           <Text style={styles.detailInfoTag}>投递</Text>
-        </View>
-        <View style={styles.detailInfoItem}>
+        </NextTouchableOpacity>
+        <NextTouchableOpacity
+          onPress={() => {
+            navigation.push('Delivery', { pageType: 2 })
+          }}
+          style={styles.detailInfoItem}>
           <Text style={styles.detailInfoValue}>1333</Text>
           <Text style={styles.detailInfoTag}>浏览</Text>
-        </View>
-        <View style={styles.detailInfoItem}>
+        </NextTouchableOpacity>
+        <NextTouchableOpacity
+          onPress={() => {
+            navigation.push('MyCollection')
+          }}
+          style={styles.detailInfoItem}>
           <Text style={styles.detailInfoValue}>4</Text>
           <Text style={styles.detailInfoTag}>收藏</Text>
-        </View>
+        </NextTouchableOpacity>
         <View style={styles.detailInfoItem}>
           <Text style={styles.detailInfoValue}>1</Text>
           <Text style={styles.detailInfoTag}>关注</Text>

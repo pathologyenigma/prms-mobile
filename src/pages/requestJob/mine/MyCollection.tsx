@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, StatusBar, SectionList } from 'react-native'
-import styles from './styles/SearchResult.style'
+import styles from './styles/MyCollection.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -13,11 +13,12 @@ import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { greenColor } from '../../../utils/constant'
 import GradientButton from '../../components/GradientButton'
 import JobCell from '../../components/JobCell'
-import CompanyCell from './CompanyCell'
 import SystemHelper from '../../../utils/system'
 import CompanyJobCell from '../publicView/CompanyJobCell'
+import CompanyCell from '../find/CompanyCell'
+import LinearGradient from 'react-native-linear-gradient'
 
-type IProps = GenProps<'SearchResult'> & {
+type IProps = GenProps<'MyCollection'> & {
 
 }
 
@@ -31,7 +32,7 @@ interface IState {
   companyRefreshState: any,
 }
 
-export default class SearchResult extends Component<IProps, IState> {
+export default class MyCollection extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
@@ -143,36 +144,23 @@ export default class SearchResult extends Component<IProps, IState> {
 
   renderNavBar() {
     const { navigation } = this.props
-    const { selectCity, searchValue } = this.state
     return (
-      <View style={styles.navBar}>
-        <NextTouchableOpacity
-          style={styles.locationBtn}
-        >
-          <Image
-            style={styles.locationIcon}
-            source={require('../../../assets/requestJobs/navbar-back.png')}
-          />
-        </NextTouchableOpacity>
-        <SearchTextinput
-          cellStyle={{ flex: 1, height: 33 }}
-          inputProps={{
-            value: searchValue,
-            placeholder: '搜索职位/公司/商区',
-          }}
-          onChangeText={(value: string) => {
-            this.setState({ searchValue: value })
-          }}
-        />
-        {/* <NextTouchableOpacity
-          style={styles.cancelBtn}
-          onPress={() => {
-            navigation.goBack()
-          }}
-        >
-          <Text style={styles.cancelText}>取消</Text>
-        </NextTouchableOpacity> */}
-      </View>
+      <NavBar
+        statusBarTheme="dark-content"
+        barStyle={{
+          borderBottomWidth: 0,
+          elevation: 0,
+        }}
+        title='我的收藏'
+        left={{
+          style: { width: 17, height: 17, },
+          type: EButtonType.IMAGE,
+          value: require('../../../assets/requestJobs/navbar-back.png'),
+          act: () => {
+            navigation.pop()
+          },
+        }}
+      />
     )
   }
 
@@ -247,6 +235,8 @@ export default class SearchResult extends Component<IProps, IState> {
       title: '公司',
     }]
     const { selectTabs } = this.state
+    const start = { x: 0, y: 0.5 }
+    const end = { x: 1, y: 0.5 }
     return (
       <View style={styles.tabsView}>
         <View style={styles.tabLeft}>
@@ -264,42 +254,19 @@ export default class SearchResult extends Component<IProps, IState> {
                     <Text style={[styles.tabsTitle, tabProps.activeTab === i && styles.selectedTitle]}>
                       {e.title}
                     </Text>
+                    {tabProps.activeTab === i && (
+                      <LinearGradient
+                        start={start}
+                        end={end}
+                        colors={['#79D398', '#82E2AC']}
+                        style={styles.linearView}
+                      />
+                    )}
                   </>
                 </NextTouchableOpacity>
               )
             })
           }
-        </View>
-        <View style={styles.conditionRightView}>
-          <NextTouchableOpacity style={styles.conditionRightBtn}>
-            <Text style={styles.conditionRightText}>
-              地点
-            </Text>
-            <Image
-              style={styles.rightBottomImg}
-              source={require('../../../assets/requestJobs/right-bootom-triangle.png')}
-            />
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
-            style={[styles.conditionRightBtn, { marginLeft: 9 }]}
-            onPress={() => {
-              const { navigation } = this.props
-              navigation.push('FilterView', {
-                filterMode: selectTabs + 1,
-                filterResultCallback: ((result) => {
-                  console.log('111111111: ', result)
-                })
-              })
-            }}
-          >
-            <Text style={styles.conditionRightText}>
-              筛选
-            </Text>
-            <Image
-              style={styles.rightBottomImg}
-              source={require('../../../assets/requestJobs/right-bootom-triangle.png')}
-            />
-          </NextTouchableOpacity>
         </View>
       </View>
     )

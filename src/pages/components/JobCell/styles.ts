@@ -15,6 +15,34 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  cellTitleTagView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  tagView: {
+    flexDirection: 'row'
+  },
+  linear: {
+    marginLeft: 9,
+    borderRadius: 3,
+    overflow: 'hidden'
+  },
+  tagText: {
+    overflow: 'hidden',
+    backgroundColor: '#fff',
+    fontSize: 11,
+    fontWeight: 'bold',
+    borderRadius: 2,
+    marginHorizontal: 1,
+    marginVertical: 1,
+    paddingVertical: 1,
+    paddingHorizontal: 4
+  },
+  cellStop: {
+    color: '#666',
+    fontSize: 16,
+    fontWeight: '400'
+  },
   cellTitle: {
     fontWeight: 'bold',
     color: '#333333',

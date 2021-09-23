@@ -35,12 +35,15 @@ import InterviewEvaluation from '../../pages/requestJob/publicView/InterviewEval
 import Interview from '../../pages/requestJob/mine/Interview'
 import InterviewAll from '../../pages/requestJob/mine/InterviewAll'
 import InterviewDetail from '../../pages/requestJob/mine/InterviewDetail'
+import Delivery from '../../pages/requestJob/mine/Delivery'
+import MyCollection from '../../pages/requestJob/mine/MyCollection'
 
 type TRouterParams = {
   Find: any,
   Jobs: any,
   Learn: any,
   News: any,
+  Mine: any,
   JobExpectations: any,
   JobExpectDetail: any,
   JobSelectZhiwei: { selectJobTypeCallback: (selectJobType: any) => void }
@@ -69,7 +72,9 @@ type TRouterParams = {
   InterviewEvaluation: any,
   Interview: any,
   InterviewAll: any,
-  InterviewDetail: any
+  InterviewDetail: any,
+  Delivery: { pageType: number },
+  MyCollection: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -119,6 +124,8 @@ export default class RouterStacks {
       InterviewEvaluation,
       Interview,
       InterviewAll,
-      InterviewDetail
+      InterviewDetail,
+      Delivery,
+      MyCollection
     }
 }
