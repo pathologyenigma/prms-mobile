@@ -120,10 +120,14 @@ export default class Mine extends Component<IProps, IState> {
           <Text style={styles.detailInfoValue}>4</Text>
           <Text style={styles.detailInfoTag}>收藏</Text>
         </NextTouchableOpacity>
-        <View style={styles.detailInfoItem}>
+        <NextTouchableOpacity
+          onPress={() => {
+            navigation.push('MyFocus')
+          }}
+          style={styles.detailInfoItem}>
           <Text style={styles.detailInfoValue}>1</Text>
           <Text style={styles.detailInfoTag}>关注</Text>
-        </View>
+        </NextTouchableOpacity>
       </View>
     )
   }

@@ -17,6 +17,7 @@ import SystemHelper from '../../../utils/system'
 import CompanyJobCell from '../publicView/CompanyJobCell'
 import CompanyCell from '../find/CompanyCell'
 import LinearGradient from 'react-native-linear-gradient'
+import ListEmptyComponent from '../../components/ListEmptyComponent'
 
 type IProps = GenProps<'MyCollection'> & {
 
@@ -36,8 +37,10 @@ export default class MyCollection extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
-      jobRefreshState: RefreshState.HeaderRefreshing,
-      companyRefreshState: RefreshState.HeaderRefreshing,
+      // jobRefreshState: RefreshState.HeaderRefreshing,
+      // companyRefreshState: RefreshState.HeaderRefreshing,
+      jobRefreshState: RefreshState.Idle,
+      companyRefreshState: RefreshState.Idle,
       searchValue: '',
       selectCity: '广州',
       jobDataSource: [],
@@ -47,7 +50,7 @@ export default class MyCollection extends Component<IProps, IState> {
   }
 
   componentDidMount() {
-    this.loadData()
+    // this.loadData()
   }
 
   loadJobListData() {
@@ -314,6 +317,14 @@ export default class MyCollection extends Component<IProps, IState> {
         automaticallyAdjustContentInsets={false}
         data={jobDataSource}
         renderItem={({ item }: any) => this.renderJobCell(item)}
+        ListEmptyComponent={
+          jobRefreshState !== RefreshState.HeaderRefreshing ? (
+            <ListEmptyComponent
+              emptyText="暂无收藏"
+              emptyImage={require('../../../assets/requestJobs/no-collection.png')}
+            />
+          ) : null
+        }
         onFooterRefresh={() => this.handleJobEndReached}
         keyExtractor={item => item.id.toString()}
         // ItemSeparatorComponent={() => this.renderItemSeparatorComponent()}
@@ -375,6 +386,14 @@ export default class MyCollection extends Component<IProps, IState> {
       <SectionList
         style={styles.listView}
         sections={companyDataSource}
+        ListEmptyComponent={
+          companyRefreshState !== RefreshState.HeaderRefreshing ? (
+            <ListEmptyComponent
+              emptyText="暂无收藏"
+              emptyImage={require('../../../assets/requestJobs/no-collection.png')}
+            />
+          ) : null
+        }
         ItemSeparatorComponent={() => this.renderItemSeparatorComponent()}
         renderSectionHeader={({ section }) => this.renderSectionHeader(section)}
         renderSectionFooter={({ section }) => this.renderSectionFooter(section)}

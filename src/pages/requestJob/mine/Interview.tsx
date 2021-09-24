@@ -279,24 +279,6 @@ export default class Interview extends Component<IProps, IState> {
     )
   }
 
-  renderFooterBtn() {
-    const { navigation } = this.props
-    return (
-      <View
-        style={styles.bottomContainer}
-      >
-        <GradientButton
-          text="我要提问"
-          containerStyle={styles.btnContainer}
-          textStyle={styles.askText}
-          onPress={() => {
-            navigation.push('CompanySubQuestion')
-          }}
-        />
-      </View>
-    )
-  }
-
   render() {
     return (
       <View style={styles.container}>
