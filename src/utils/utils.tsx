@@ -22,7 +22,23 @@ const calculateTime = (originTime: string) => {
   return status
 }
 
+const calculateSize = (originSize: number) => {
+  if (!originSize) {
+    return '--'
+  }
+  let status = ''
+  if (originSize < 1024) {
+    status = `${originSize}KB`
+  } else if (originSize < 1024 * 1024) {
+    status = `${(originSize / 1024).toFixed(2)}MB`
+  } else if (originSize < 1024 * 1024 * 1024) {
+    status = `${(originSize / 1024 / 1024).toFixed(2)} GB`
+  }
+  return status
+}
+
 export {
   formatHintsIndex,
   calculateTime,
+  calculateSize,
 }

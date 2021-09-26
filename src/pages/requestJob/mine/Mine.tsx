@@ -269,6 +269,7 @@ export default class Mine extends Component<IProps, IState> {
       require('../../../assets/requestJobs/setting.png'),
     ]
     const titleArray = ['附件简历', '隐私设置', '我的钱包', '我的关注', '切换身份', '反馈与帮助', '关于', '设置']
+    const { navigation } = this.props
     return (
       <View>
         {titleArray.map((item, index) => {
@@ -278,7 +279,15 @@ export default class Mine extends Component<IProps, IState> {
                 imageSource[index],
                 titleArray[index],
                 () => {
-                  RootLoading.info('敬请期待')
+                  switch (item) {
+                    case '附件简历':
+                      navigation.push('AttachedResume')
+                      break;
+
+                    default:
+                      RootLoading.info('敬请期待')
+                      break;
+                  }
                 }
               )
             )

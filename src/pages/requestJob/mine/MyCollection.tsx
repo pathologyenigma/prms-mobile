@@ -37,10 +37,8 @@ export default class MyCollection extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
-      // jobRefreshState: RefreshState.HeaderRefreshing,
-      // companyRefreshState: RefreshState.HeaderRefreshing,
-      jobRefreshState: RefreshState.Idle,
-      companyRefreshState: RefreshState.Idle,
+      jobRefreshState: RefreshState.HeaderRefreshing,
+      companyRefreshState: RefreshState.HeaderRefreshing,
       searchValue: '',
       selectCity: '广州',
       jobDataSource: [],
@@ -50,7 +48,7 @@ export default class MyCollection extends Component<IProps, IState> {
   }
 
   componentDidMount() {
-    // this.loadData()
+    this.loadData()
   }
 
   loadJobListData() {

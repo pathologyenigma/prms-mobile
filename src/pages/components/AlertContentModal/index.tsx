@@ -12,7 +12,7 @@ interface IButton {
 }
 
 interface IProps {
-  title: string,
+  title?: string,
   visible: boolean,
   leftBtn?: IButton,
   rightBtn?: IButton,
@@ -60,7 +60,7 @@ export default class AlertContentModal extends Component<IProps> {
 
   render() {
     const {
-      title = 'message',
+      title,
       visible,
       imageSource,
       imageStyle,
@@ -86,9 +86,11 @@ export default class AlertContentModal extends Component<IProps> {
               source={imageSource as ImageSourcePropType}
             />
           ) : (null)}
-          <Text style={[styles.title, titleStyle]} >
-            {title}
-          </Text>
+          {title ? (
+            <Text style={[styles.title, titleStyle]} >
+              {title}
+            </Text>
+          ) : null}
           {detail ? (
             <Text style={styles.detail}>
               {detail}

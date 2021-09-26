@@ -38,6 +38,9 @@ import InterviewDetail from '../../pages/requestJob/mine/InterviewDetail'
 import Delivery from '../../pages/requestJob/mine/Delivery'
 import MyCollection from '../../pages/requestJob/mine/MyCollection'
 import MyFocus from '../../pages/requestJob/mine/MyFocus'
+import AttachedResume from '../../pages/requestJob/mine/AttachedResume'
+import AttachedResumeRename from '../../pages/requestJob/mine/AttachedResumeRename'
+import AttachedResumeUpload from '../../pages/requestJob/mine/AttachedResumeUpload'
 
 type TRouterParams = {
   Find: any,
@@ -76,7 +79,10 @@ type TRouterParams = {
   InterviewDetail: any,
   Delivery: { pageType: number },
   MyCollection: any,
-  MyFocus: any
+  MyFocus: any,
+  AttachedResume: any,
+  AttachedResumeRename: any,
+  AttachedResumeUpload: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -129,6 +135,9 @@ export default class RouterStacks {
       InterviewDetail,
       Delivery,
       MyCollection,
-      MyFocus
+      MyFocus,
+      AttachedResume,
+      AttachedResumeRename,
+      AttachedResumeUpload
     }
 }
