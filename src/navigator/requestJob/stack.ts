@@ -41,6 +41,9 @@ import MyFocus from '../../pages/requestJob/mine/MyFocus'
 import AttachedResume from '../../pages/requestJob/mine/AttachedResume'
 import AttachedResumeRename from '../../pages/requestJob/mine/AttachedResumeRename'
 import AttachedResumeUpload from '../../pages/requestJob/mine/AttachedResumeUpload'
+import AttachedResumeUploadType from '../../pages/requestJob/mine/AttachedResumeUploadType'
+import AttachedResumeComputer from '../../pages/requestJob/mine/AttachedResumeComputer'
+import AttachedResumeWeixin from '../../pages/requestJob/mine/AttachedResumeWeixin'
 
 type TRouterParams = {
   Find: any,
@@ -82,7 +85,10 @@ type TRouterParams = {
   MyFocus: any,
   AttachedResume: any,
   AttachedResumeRename: any,
-  AttachedResumeUpload: any
+  AttachedResumeUpload: any,
+  AttachedResumeUploadType: any,
+  AttachedResumeComputer: any,
+  AttachedResumeWeixin: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -138,6 +144,9 @@ export default class RouterStacks {
       MyFocus,
       AttachedResume,
       AttachedResumeRename,
-      AttachedResumeUpload
+      AttachedResumeUpload,
+      AttachedResumeUploadType,
+      AttachedResumeComputer,
+      AttachedResumeWeixin,
     }
 }

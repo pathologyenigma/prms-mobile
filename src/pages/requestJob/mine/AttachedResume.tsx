@@ -118,7 +118,7 @@ export default class AttachedResume extends Component<IProps, IState> {
           style={styles.uploadBtn}
           onPress={() => {
             const { navigation } = this.props
-            navigation.push('AttachedResumeUpload')
+            navigation.push('AttachedResumeUploadType')
           }}
         >
           <Image
