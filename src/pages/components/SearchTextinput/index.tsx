@@ -33,11 +33,9 @@ const styles = StyleSheet.create({
 })
 
 type TProps = {
-  title?: string,
   defaultValue?: string,
   cellStyle?: StyleProp<TextStyle>,
-  titleStyle?: StyleProp<ViewStyle>,
-  inputStyle?: StyleProp<ViewStyle>,
+  inputStyle?: any,
   inputProps?: TextInputProps,
   warning?: boolean,
   onChangeText: (value: string) => void,
@@ -46,7 +44,7 @@ type TProps = {
 export default class SearchTextinput extends PureComponent<TProps> {
   render() {
     const {
-      title, defaultValue = '', cellStyle, onChangeText, titleStyle, inputStyle, inputProps,
+      defaultValue = '', cellStyle, onChangeText, inputStyle, inputProps,
     } = this.props
     return (
       <View style={[styles.container, cellStyle]}>

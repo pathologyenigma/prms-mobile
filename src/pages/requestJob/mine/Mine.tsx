@@ -283,7 +283,9 @@ export default class Mine extends Component<IProps, IState> {
                     case '附件简历':
                       navigation.push('AttachedResume')
                       break;
-
+                    case '隐私设置':
+                      navigation.push('PrivacySetting')
+                      break;
                     default:
                       RootLoading.info('敬请期待')
                       break;

@@ -44,6 +44,10 @@ import AttachedResumeUpload from '../../pages/requestJob/mine/AttachedResumeUplo
 import AttachedResumeUploadType from '../../pages/requestJob/mine/AttachedResumeUploadType'
 import AttachedResumeComputer from '../../pages/requestJob/mine/AttachedResumeComputer'
 import AttachedResumeWeixin from '../../pages/requestJob/mine/AttachedResumeWeixin'
+import PrivacySetting from '../../pages/requestJob/mine/PrivacySetting'
+import PrivacyName from '../../pages/requestJob/mine/PrivacyName'
+import BanCompany from '../../pages/requestJob/mine/BanCompany'
+import BanCompanySearch from '../../pages/requestJob/mine/BanCompanySearch'
 
 type TRouterParams = {
   Find: any,
@@ -88,7 +92,11 @@ type TRouterParams = {
   AttachedResumeUpload: any,
   AttachedResumeUploadType: any,
   AttachedResumeComputer: any,
-  AttachedResumeWeixin: any
+  AttachedResumeWeixin: any,
+  PrivacySetting: any,
+  PrivacyName: any,
+  BanCompany: any,
+  BanCompanySearch
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -148,5 +156,9 @@ export default class RouterStacks {
       AttachedResumeUploadType,
       AttachedResumeComputer,
       AttachedResumeWeixin,
+      PrivacySetting,
+      PrivacyName,
+      BanCompany,
+      BanCompanySearch,
     }
 }
