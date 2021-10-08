@@ -1,18 +1,12 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList } from 'react-native'
+import { Text, View, Image, } from 'react-native'
 import styles from './styles/BanCompany.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
-import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import RootLoading from '../../../utils/rootLoading'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
-import GradientButton from '../../components/GradientButton'
-import ListEmptyComponent from '../../components/ListEmptyComponent'
-import { differenceInHours, format, formatDistance } from 'date-fns'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
-import SystemHelper from '../../../utils/system'
-import { calculateTime } from '../../../utils/utils'
 import LinearGradient from 'react-native-linear-gradient'
 
 type IProps = GenProps<'BanCompany'> & {
@@ -29,39 +23,24 @@ export default class BanCompany extends Component<IProps, IState> {
     super(props)
     this.state = {
       refreshState: RefreshState.HeaderRefreshing,
-      dataSource: []
+      dataSource: undefined
     }
   }
 
   componentDidMount() {
+    RootLoading.loading()
     this.loadData()
   }
 
   loadData() {
     const localDataSource = [{
       id: 1,
-      name: '廖女士·人事经理',
-      company: '智慧网络有限公司',
-      activeTime: '2021-09-22T17:30:10.000Z',
-    }, {
-      id: 2,
-      name: '廖先生·人事经理',
-      company: '智慧网络有限公司',
-      activeTime: '2021-09-24T17:30:10.000Z',
-    }, {
-      id: 3,
-      name: '廖女士·人事经理',
-      company: '智慧网络有限公司',
-      activeTime: '2021-09-24T17:42:10.000Z',
-    }, {
-      id: 4,
-      name: '廖女士·人事经理',
-      company: '智慧网络有限公司',
-      activeTime: '2021-09-24T18:42:10.000Z',
+      company: '深圳智慧网络有限公司',
     }]
     setTimeout(() => {
+      RootLoading.hide()
       this.setState({
-        // dataSource: localDataSource,
+        dataSource: localDataSource,
         refreshState: 3
       })
     }, 300);
@@ -69,6 +48,7 @@ export default class BanCompany extends Component<IProps, IState> {
 
   renderNavBar() {
     const { navigation } = this.props
+    const { dataSource } = this.state
     return (
       <NavBar
         statusBarTheme="dark-content"
@@ -76,7 +56,7 @@ export default class BanCompany extends Component<IProps, IState> {
           borderBottomWidth: 0,
           elevation: 0,
         }}
-        title="屏蔽企业"
+        title={(dataSource && dataSource.length === 0) ? '屏蔽企业' : ''}
         left={{
           style: { width: 17, height: 17, },
           type: EButtonType.IMAGE,
@@ -89,6 +69,37 @@ export default class BanCompany extends Component<IProps, IState> {
     )
   }
 
+  renderHeader() {
+    return (
+      <View style={styles.headerView}>
+        <Text style={styles.headerTitle}>
+          屏蔽公司
+        </Text>
+        <Text style={styles.headerTips}>
+          添加屏蔽公司后，你和这些公司的招聘者都不会被相互推荐，你的查看行为也不会告知对方
+        </Text>
+        <NextTouchableOpacity
+          style={styles.headerSearchView}
+          onPress={() => {
+            const { navigation } = this.props
+            navigation.push('BanCompanySearch')
+          }}
+        >
+          <Image
+            style={styles.searchIcon}
+            source={require('../../../assets/requestJobs/search-input.png')}
+          />
+          <Text style={styles.headerSearchText}>
+            搜索关键词、企业名称
+          </Text>
+        </NextTouchableOpacity>
+        <Text style={styles.headerBanTips}>
+          已屏蔽1家公司
+        </Text>
+      </View>
+    )
+  }
+
   handleRefresh() {
 
   }
@@ -97,50 +108,18 @@ export default class BanCompany extends Component<IProps, IState> {
 
   }
 
-  renderDashLine() {
-    const dashArray = ['', '', '', '', '', '', '', '', '', '', '', '', '',]
-    return (
-      <View style={styles.dashView}>
-        {dashArray.map((item, index) => {
-          return (
-            <View
-              key={index.toString()}
-              style={styles.dashItem}
-            />
-          )
-        })}
-      </View>
-    )
-  }
-
   renderItem(item: any) {
-    const { navigation } = this.props
-    const { dataSource } = this.state
-    const status = calculateTime(item.activeTime)
     return (
-      <NextTouchableOpacity
+      <View
         style={styles.cellStyle}
-        onPress={() => {
-
-        }}
       >
-        <Image
-          source={require('../../../assets/requestJobs/icon-example.png')}
-          style={styles.cellIcon}
-        />
-        <View style={styles.cellInfo}>
-          <View style={styles.statusView}>
-            <Text style={styles.cellName}>{item.name}</Text>
-            <View style={[styles.dotIcon, status === '刚刚活跃' && { backgroundColor: '#7DDBA3', }]} />
-            <Text style={[styles.cellStatus, status === '刚刚活跃' && { color: '#7DDBA3', }]}>{status}</Text>
-          </View>
-          <Text style={styles.cellCompany}>{item.company}</Text>
-        </View>
-        <Image
-          style={styles.nextIcon}
-          source={require('../../../assets/requestJobs/next-gray.png')}
-        />
-      </NextTouchableOpacity >
+        <Text style={styles.cellCompany}>{item.company}</Text>
+        <NextTouchableOpacity
+          style={styles.cancelBanBtn}
+        >
+          <Text style={styles.cancelBanText}>解除</Text>
+        </NextTouchableOpacity>
+      </View >
     )
   }
 
@@ -162,6 +141,7 @@ export default class BanCompany extends Component<IProps, IState> {
           style={styles.linear}
         >
           <NextTouchableOpacity
+            style={styles.addBtn}
             onPress={() => {
               const { navigation } = this.props
               navigation.push('BanCompanySearch')
@@ -193,17 +173,23 @@ export default class BanCompany extends Component<IProps, IState> {
         }
         onFooterRefresh={() => this.handleEndReached}
         keyExtractor={(item: any) => item.id.toString()}
-        footerRefreshingText="加载更多"
-        footerNoMoreDataText={dataSource.length === 0 ? '' : '没有更多了'}
+        footerRefreshingText=""
+        footerNoMoreDataText=""
       />
     )
   }
 
   render() {
     const { dataSource } = this.state
+    if (!dataSource) {
+      return <View style={{ backgroundColor: '#fff', }} />
+    }
     return (
       <View style={[styles.container, dataSource && dataSource.length === 0 && { backgroundColor: '#fff', }]}>
         {this.renderNavBar()}
+        {dataSource.length > 0 && (
+          this.renderHeader()
+        )}
         {this.renderList()}
       </View>
     )

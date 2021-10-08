@@ -9,6 +9,7 @@ import NavBar, { EButtonType } from '../../components/NavBar'
 import SearchTextinput from '../../components/SearchTextinput'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
+import GradientButton from '../../components/GradientButton'
 
 type IProps = GenProps<'BanCompanySearch'> & {
 
@@ -17,6 +18,7 @@ type IProps = GenProps<'BanCompanySearch'> & {
 interface IState {
   dataSource: any,
   searchValue: string,
+  allConnect: boolean
 }
 
 export default class BanCompanySearch extends Component<IProps, IState> {
@@ -25,6 +27,7 @@ export default class BanCompanySearch extends Component<IProps, IState> {
     this.state = {
       dataSource: [],
       searchValue: '',
+      allConnect: false,
     }
   }
 
@@ -55,6 +58,7 @@ export default class BanCompanySearch extends Component<IProps, IState> {
           inputProps={{
             value: searchValue,
             placeholder: '请输入要屏蔽的公司',
+            autoFocus: true
           }}
           onChangeText={(value: string) => {
             this.setState({ searchValue: value }, () => {
@@ -76,22 +80,42 @@ export default class BanCompanySearch extends Component<IProps, IState> {
 
   renderItem(item: any) {
     const { dataSource } = this.state
-    const { navigation } = this.props
+    let selectIcon = require('../../../assets/requestJobs/pingbi-weixuan.png')
+    if (item.selected) {
+      selectIcon = require('../../../assets/requestJobs/pingbi-xuanzhong.png')
+    }
     return (
       <NextTouchableOpacity
-        style={[styles.tagBtn,
-          // selectItem && selectItem.id === item.id && { backgroundColor: '#E2FFF0', }
-        ]}
+        key={item.id.toString()}
+        style={styles.tagBtn}
         onPress={() => {
-
+          const nextDs: any = []
+          dataSource.forEach((comItem: any) => {
+            if (comItem.id === item.id) {
+              nextDs.push({
+                ...item,
+                selected: !item.selected
+              })
+            } else {
+              nextDs.push(comItem)
+            }
+          })
+          this.setState({
+            dataSource: nextDs
+          })
         }}
       >
+        <Image
+          source={selectIcon}
+          style={styles.selectedIcon}
+          resizeMode="center"
+        />
         <Text
           numberOfLines={1}
           style={[styles.tagText,
             // selectItem && selectItem.id === item.id && { backgroundColor: '#E2FFF0', } && { color: greenColor, fontWeight: 'bold' }
           ]}>
-          {item.label}
+          {item.name}
         </Text>
       </NextTouchableOpacity>
     )
@@ -140,6 +164,39 @@ export default class BanCompanySearch extends Component<IProps, IState> {
     )
   }
 
+  renderFooterBtn() {
+    const { dataSource, allConnect } = this.state
+    const selectItems = dataSource.filter((e: any) => e.selected === true)
+    return (
+      <View style={styles.footerView}>
+        <NextTouchableOpacity
+          style={styles.checkAll}
+          onPress={() => {
+            this.setState({ allConnect: !allConnect })
+          }}
+        >
+          <Image
+            source={allConnect
+              ? require('../../../assets/requestJobs/pingbi-xuanzhong.png')
+              : require('../../../assets/requestJobs/pingbi-weixuan.png')}
+            style={styles.checkAllIcon}
+            resizeMode="center"
+          />
+          <Text style={styles.resetText}>所有与【深圳智慧网络有限公司】相关的公司</Text>
+        </NextTouchableOpacity>
+        <GradientButton
+          disabled={selectItems.length === 0}
+          containerStyle={styles.confirmBtn}
+          linearStyle={styles.linearStyle}
+          text={`屏蔽所选公司（${selectItems.length}）`}
+          onPress={() => {
+
+          }}
+        />
+      </View>
+    )
+  }
+
   render() {
     const { searchValue } = this.state
     return (
@@ -152,7 +209,10 @@ export default class BanCompanySearch extends Component<IProps, IState> {
         />
         {this.renderNavBar()}
         {searchValue ? (
-          this.renderList()
+          <View style={{ flex: 1 }}>
+            {this.renderList()}
+            {this.renderFooterBtn()}
+          </View>
         ) : (
           this.renderTips()
         )}

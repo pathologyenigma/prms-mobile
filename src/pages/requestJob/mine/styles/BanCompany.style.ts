@@ -4,7 +4,7 @@ import SystemHelper from '../../../../utils/system'
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F6F6F6',
+    backgroundColor: '#fff',
   },
   listView: {
     flex: 1,
@@ -34,13 +34,25 @@ export default StyleSheet.create({
   },
   cellStyle: {
     marginTop: 13,
-    height: 88,
+    height: 30,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
+    justifyContent: 'space-between',
     backgroundColor: '#fff',
-    paddingHorizontal: 11
+  },
+  cancelBanBtn: {
+    width: 56,
+    height: 25,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#7FDDA1',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cancelBanText: {
+    color: '#7FDDA1',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   linear: {
     width: 160,
@@ -49,6 +61,12 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 24
+  },
+  addBtn: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   text: {
     color: '#FFFFFF',
@@ -65,8 +83,8 @@ export default StyleSheet.create({
   },
   cellCompany: {
     color: '#666666',
-    fontSize: 12,
-    marginTop: 5
+    fontSize: 15,
+    fontWeight: 'bold'
   },
   statusView: {
     flexDirection: 'row',
@@ -93,5 +111,47 @@ export default StyleSheet.create({
   nextIcon: {
     width: 7,
     height: 12
+  },
+  headerView: {
+
+    marginHorizontal: 11,
+  },
+  headerTitle: {
+    marginTop: 10,
+    color: '#333333',
+    fontSize: 23,
+    fontWeight: 'bold',
+  },
+  headerTips: {
+    fontWeight: 'bold',
+    color: '#888888',
+    fontSize: 15,
+    lineHeight: 18,
+    marginTop: 16,
+  },
+  headerSearchView: {
+    flexDirection: 'row',
+    height: 33,
+    marginTop: 25,
+    borderRadius: 16,
+    backgroundColor: '#eee',
+    alignItems: 'center',
+    marginHorizontal: 9,
+    paddingHorizontal: 17,
+  },
+  searchIcon: {
+    width: 15,
+    height: 15,
+  },
+  headerSearchText: {
+    marginLeft: 13,
+    color: '#888888',
+    fontSize: 13,
+  },
+  headerBanTips: {
+    marginTop: 38,
+    color: '#333333',
+    fontSize: 18,
+    fontWeight: 'bold'
   }
 })

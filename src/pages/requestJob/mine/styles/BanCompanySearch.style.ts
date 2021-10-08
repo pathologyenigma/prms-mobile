@@ -9,7 +9,7 @@ export default StyleSheet.create({
   },
   listView: {
     paddingHorizontal: 21,
-    flex: 1
+    flex: 1,
   },
   contentView: {
     flex: 1,
@@ -42,7 +42,7 @@ export default StyleSheet.create({
   },
   wxts: {
     color: '#666666',
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: 'bold',
     width: SystemHelper.width - 60,
   },
@@ -69,18 +69,17 @@ export default StyleSheet.create({
     fontSize: 15
   },
   tagBtn: {
-    height: 35,
-    width: (SystemHelper.width - 64) / 3,
-    backgroundColor: '#F7F7F7',
+    width: SystemHelper.width - 22,
     alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 4,
-    marginRight: 6,
-    marginTop: 14,
-    paddingHorizontal: 2
+    flexDirection: 'row',
+    paddingHorizontal: 2,
+    minHeight: 50
   },
   tagText: {
-    color: '#666666'
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#666666',
+    marginLeft: 17
   },
   searchHeader: {
     height: 40,
@@ -103,5 +102,43 @@ export default StyleSheet.create({
   deleteHistoryIcon: {
     width: 16,
     height: 17
-  }
+  },
+  selectedIcon: {
+    width: 23,
+    height: 23
+  },
+  footerView: {
+    height: SystemHelper.safeBottom + 110,
+    borderTopColor: '#E1E1E1',
+    borderTopWidth: 1,
+    paddingTop: 10,
+  },
+  checkAll: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 11,
+  },
+  checkAllIcon: {
+    width: 17,
+    height: 17,
+  },
+  resetText: {
+    color: '#888888',
+    fontSize: 12,
+    fontWeight: 'bold',
+    marginLeft: 15,
+  },
+  confirmBtn: {
+    marginLeft: 22,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F0F0F0',
+    borderRadius: 4,
+    marginTop: 16,
+    width: SystemHelper.width - 44,
+  },
+  linearStyle: {
+    width: SystemHelper.width - 44,
+  },
 })
