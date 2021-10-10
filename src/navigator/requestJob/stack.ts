@@ -48,6 +48,9 @@ import PrivacySetting from '../../pages/requestJob/mine/PrivacySetting'
 import PrivacyName from '../../pages/requestJob/mine/PrivacyName'
 import BanCompany from '../../pages/requestJob/mine/BanCompany'
 import BanCompanySearch from '../../pages/requestJob/mine/BanCompanySearch'
+import MyWallet from '../../pages/requestJob/mine/MyWallet'
+import BalanceWithdrawal from '../../pages/requestJob/mine/BalanceWithdrawal'
+import WithdrawalResult from '../../pages/requestJob/mine/WithdrawalResult'
 
 type TRouterParams = {
   Find: any,
@@ -96,7 +99,10 @@ type TRouterParams = {
   PrivacySetting: any,
   PrivacyName: any,
   BanCompany: any,
-  BanCompanySearch
+  BanCompanySearch: any,
+  MyWallet: any,
+  BalanceWithdrawal: any,
+  WithdrawalResult: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -160,5 +166,8 @@ export default class RouterStacks {
       PrivacyName,
       BanCompany,
       BanCompanySearch,
+      MyWallet,
+      BalanceWithdrawal,
+      WithdrawalResult
     }
 }

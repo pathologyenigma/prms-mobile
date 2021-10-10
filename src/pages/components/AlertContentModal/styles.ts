@@ -20,13 +20,13 @@ export default StyleSheet.create({
     fontWeight: 'bold'
   },
   detail: {
-    marginHorizontal: 40,
+    marginHorizontal: 20,
     lineHeight: 21,
     fontSize: 15,
     textAlign: 'center',
     color: '#666666',
     marginTop: 20,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   contextChildrenStyle: {
     paddingBottom: 0,

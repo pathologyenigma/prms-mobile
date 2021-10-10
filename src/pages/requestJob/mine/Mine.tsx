@@ -286,6 +286,9 @@ export default class Mine extends Component<IProps, IState> {
                     case '隐私设置':
                       navigation.push('PrivacySetting')
                       break;
+                    case '我的钱包':
+                      navigation.push('MyWallet')
+                      break;
                     default:
                       RootLoading.info('敬请期待')
                       break;

@@ -20,6 +20,7 @@ interface IProps {
   imageSource?: ImageSourcePropType,
   imageStyle?: StyleProp<ImageStyle>,
   detail?: string,
+  extraView?: any,
   tips?: string,
   showCloseBtn?: boolean,
   closeOnPress?: () => void,
@@ -70,6 +71,7 @@ export default class AlertContentModal extends Component<IProps> {
       titleStyle,
       closeOnPress,
       showSubscribeBtn,
+      extraView,
     } = this.props
     return (
       <WhiteContentModal
@@ -96,6 +98,11 @@ export default class AlertContentModal extends Component<IProps> {
               {detail}
             </Text>
           ) : null}
+          {extraView ? (
+            extraView
+          ) : null
+          }
+
           {this.renderBtn()}
           {tips ? (
             <Text style={styles.tips}>
