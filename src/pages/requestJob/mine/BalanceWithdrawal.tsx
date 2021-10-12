@@ -79,7 +79,7 @@ export default class BalanceWithdrawal extends Component<IProps, IState> {
           value: '收益明细',
           style: styles.recordBtn,
           act: () => {
-            RootLoading.info('收益明细')
+            navigation.push('IncomeDetail')
           }
         }}
       />

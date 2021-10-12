@@ -51,6 +51,7 @@ import BanCompanySearch from '../../pages/requestJob/mine/BanCompanySearch'
 import MyWallet from '../../pages/requestJob/mine/MyWallet'
 import BalanceWithdrawal from '../../pages/requestJob/mine/BalanceWithdrawal'
 import WithdrawalResult from '../../pages/requestJob/mine/WithdrawalResult'
+import IncomeDetail from '../../pages/requestJob/mine/IncomeDetail'
 
 type TRouterParams = {
   Find: any,
@@ -102,7 +103,8 @@ type TRouterParams = {
   BanCompanySearch: any,
   MyWallet: any,
   BalanceWithdrawal: any,
-  WithdrawalResult: any
+  WithdrawalResult: any,
+  IncomeDetail: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -168,6 +170,7 @@ export default class RouterStacks {
       BanCompanySearch,
       MyWallet,
       BalanceWithdrawal,
-      WithdrawalResult
+      WithdrawalResult,
+      IncomeDetail
     }
 }
