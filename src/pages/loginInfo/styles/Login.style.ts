@@ -78,7 +78,6 @@ export default StyleSheet.create({
     marginLeft: 22
   },
   accountLoginConatiner: {
-    height: 35,
     marginHorizontal: 21,
     borderBottomColor: '#DDDDDD',
     borderBottomWidth: 1,

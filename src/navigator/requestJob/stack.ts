@@ -52,6 +52,9 @@ import MyWallet from '../../pages/requestJob/mine/MyWallet'
 import BalanceWithdrawal from '../../pages/requestJob/mine/BalanceWithdrawal'
 import WithdrawalResult from '../../pages/requestJob/mine/WithdrawalResult'
 import IncomeDetail from '../../pages/requestJob/mine/IncomeDetail'
+import JinbiRecharge from '../../pages/requestJob/mine/JinbiRecharge'
+import JinbiSignin from '../../pages/requestJob/mine/JinbiSignin'
+import JinbiSigninRules from '../../pages/requestJob/mine/JinbiSigninRules'
 
 type TRouterParams = {
   Find: any,
@@ -104,7 +107,10 @@ type TRouterParams = {
   MyWallet: any,
   BalanceWithdrawal: any,
   WithdrawalResult: any,
-  IncomeDetail: any
+  IncomeDetail: any,
+  JinbiRecharge: any,
+  JinbiSignin: any,
+  JinbiSigninRules: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -171,6 +177,9 @@ export default class RouterStacks {
       MyWallet,
       BalanceWithdrawal,
       WithdrawalResult,
-      IncomeDetail
+      IncomeDetail,
+      JinbiRecharge,
+      JinbiSignin,
+      JinbiSigninRules,
     }
 }

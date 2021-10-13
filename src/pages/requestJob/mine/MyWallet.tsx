@@ -106,7 +106,7 @@ export default class MyWallet extends Component<IProps, IState> {
           <NextTouchableOpacity
             style={styles.itemBtn}
             onPress={() => {
-              RootLoading.info('充值,敬请期待')
+              navigation.push('JinbiRecharge')
             }}
           >
             {/* <ImageBackground
