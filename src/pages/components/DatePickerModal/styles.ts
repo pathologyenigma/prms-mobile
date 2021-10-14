@@ -7,7 +7,6 @@ export default StyleSheet.create({
     width: SystemHelper.width * 5,
     marginLeft: SystemHelper.width / 2 + 20,
     height: 210,
-    fontWeight: 'bold',
   },
   title: {
     lineHeight: 21,
@@ -15,7 +14,6 @@ export default StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginHorizontal: 26,
-    fontWeight: '400'
   },
   btnView: {
     flexDirection: 'row',

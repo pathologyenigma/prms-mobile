@@ -289,6 +289,9 @@ export default class Mine extends Component<IProps, IState> {
                     case '我的钱包':
                       navigation.push('MyWallet')
                       break;
+                    case '反馈与帮助':
+                      navigation.push('FeedbackAndHelp')
+                      break;
                     default:
                       RootLoading.info('敬请期待')
                       break;

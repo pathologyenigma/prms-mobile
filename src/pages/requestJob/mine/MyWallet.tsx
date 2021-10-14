@@ -58,7 +58,7 @@ export default class MyWallet extends Component<IProps, IState> {
           value: '交易记录',
           style: styles.recordBtn,
           act: () => {
-            RootLoading.info('交易记录')
+            navigation.push('JinbiTradeRecord')
           }
         }}
       />

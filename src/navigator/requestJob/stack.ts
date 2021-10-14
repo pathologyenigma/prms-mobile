@@ -55,6 +55,11 @@ import IncomeDetail from '../../pages/requestJob/mine/IncomeDetail'
 import JinbiRecharge from '../../pages/requestJob/mine/JinbiRecharge'
 import JinbiSignin from '../../pages/requestJob/mine/JinbiSignin'
 import JinbiSigninRules from '../../pages/requestJob/mine/JinbiSigninRules'
+import JinbiTradeRecord from '../../pages/requestJob/mine/JinbiTradeRecord'
+import JinbiTradeRecordDetail from '../../pages/requestJob/mine/JinbiTradeRecordDetail'
+import FeedbackAndHelp from '../../pages/requestJob/mine/FeedbackAndHelp'
+import FeedbackAndHelpAnswer from '../../pages/requestJob/mine/FeedbackAndHelpAnswer'
+import FeedbackAndHelpSubmit from '../../pages/requestJob/mine/FeedbackAndHelpSubmit'
 
 type TRouterParams = {
   Find: any,
@@ -110,7 +115,12 @@ type TRouterParams = {
   IncomeDetail: any,
   JinbiRecharge: any,
   JinbiSignin: any,
-  JinbiSigninRules: any
+  JinbiSigninRules: any,
+  JinbiTradeRecord: any,
+  JinbiTradeRecordDetail: { recordeDetail: any },
+  FeedbackAndHelp: any,
+  FeedbackAndHelpAnswer: { feedbackItem: any },
+  FeedbackAndHelpSubmit: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -181,5 +191,10 @@ export default class RouterStacks {
       JinbiRecharge,
       JinbiSignin,
       JinbiSigninRules,
+      JinbiTradeRecord,
+      JinbiTradeRecordDetail,
+      FeedbackAndHelp,
+      FeedbackAndHelpAnswer,
+      FeedbackAndHelpSubmit,
     }
 }

@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 8,
     overflow: 'hidden',
-    width: 200,
   },
   linear: {
     flex: 1,
