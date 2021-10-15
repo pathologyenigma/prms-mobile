@@ -60,6 +60,9 @@ import JinbiTradeRecordDetail from '../../pages/requestJob/mine/JinbiTradeRecord
 import FeedbackAndHelp from '../../pages/requestJob/mine/FeedbackAndHelp'
 import FeedbackAndHelpAnswer from '../../pages/requestJob/mine/FeedbackAndHelpAnswer'
 import FeedbackAndHelpSubmit from '../../pages/requestJob/mine/FeedbackAndHelpSubmit'
+import About from '../../pages/requestJob/mine/About'
+import Setting from '../../pages/requestJob/mine/Setting'
+import AgreementPrivacy from '../../pages/requestJob/mine/AgreementPrivacy'
 
 type TRouterParams = {
   Find: any,
@@ -120,7 +123,10 @@ type TRouterParams = {
   JinbiTradeRecordDetail: { recordeDetail: any },
   FeedbackAndHelp: any,
   FeedbackAndHelpAnswer: { feedbackItem: any },
-  FeedbackAndHelpSubmit: any
+  FeedbackAndHelpSubmit: any,
+  About: any,
+  Setting: any,
+  AgreementPrivacy: { pageType: number } // 1: 用户协议 2: 隐私政策
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -196,5 +202,8 @@ export default class RouterStacks {
       FeedbackAndHelp,
       FeedbackAndHelpAnswer,
       FeedbackAndHelpSubmit,
+      About,
+      Setting,
+      AgreementPrivacy
     }
 }

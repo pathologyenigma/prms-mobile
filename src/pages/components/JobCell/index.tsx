@@ -37,6 +37,7 @@ export default class JobCell extends PureComponent<ICell> {
     }
     return (
       <LinearGradient
+        key={text.toString()}
         start={start}
         end={end}
         colors={colors}
@@ -85,6 +86,7 @@ export default class JobCell extends PureComponent<ICell> {
     }
     return (
       <NextTouchableOpacity
+        key={cellItem.id.toString()}
         style={[styles.cellView, cellItem.isStop && { opacity: 0.5 }, cellStyle]}
         onPress={() => {
           if (onPress) {

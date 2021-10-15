@@ -292,6 +292,12 @@ export default class Mine extends Component<IProps, IState> {
                     case '反馈与帮助':
                       navigation.push('FeedbackAndHelp')
                       break;
+                    case '关于':
+                      navigation.push('About')
+                      break;
+                    case '设置':
+                      navigation.push('Setting')
+                      break;
                     default:
                       RootLoading.info('敬请期待')
                       break;
@@ -305,32 +311,6 @@ export default class Mine extends Component<IProps, IState> {
     )
   }
 
-  renderLogout() {
-    // 退出登录页面示例
-    const { navigation } = this.props
-    return (
-      <NextTouchableOpacity
-        style={styles.loginBtn}
-        onPress={() => {
-          RootLoading.loading()
-          AsyncStorage.clear(() => {
-            RootLoading.hide()
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [
-                  { name: 'Dummy' },
-                ],
-              })
-            )
-          })
-        }}
-      >
-        <Text style={styles.loginBtnText}>退出登录</Text>
-      </NextTouchableOpacity>
-    )
-  }
-
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -341,7 +321,6 @@ export default class Mine extends Component<IProps, IState> {
         <ScrollView>
           {this.renderNavBar()}
           {this.renderJianliView()}
-          {/* {this.renderLogout()} */}
           {this.renderAdImage()}
           {this.renderMyStudy()}
           {this.renderOther()}

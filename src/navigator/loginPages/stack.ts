@@ -5,6 +5,8 @@ import { ConnectedComponent } from 'react-redux'
 import LoginScreen from '../../pages/loginInfo/Login'
 import ForgetPassword from '../../pages/loginInfo/ForgetPassword'
 import ChooseRole from '../../pages/loginInfo/ChooseRole'
+import AgreementPrivacy from '../../pages/loginInfo/AgreementPrivacy'
+
 // import RequestJob from '../requestPerson/index'
 // import AppRouter from '../../navigator'
 
@@ -12,6 +14,7 @@ type TRouterParams = {
   LoginScreen: any,
   ForgetPassword: any,
   ChooseRole: any,
+  AgreementPrivacy: { pageType: number } // 1: 用户协议 2: 隐私政策
   // RequestJob: any,
   // AppRouter: any,
 }
@@ -32,6 +35,7 @@ export default class RouterStacks {
       LoginScreen,
       ForgetPassword,
       ChooseRole,
+      AgreementPrivacy,
       // RequestJob,
       // AppRouter,
     }

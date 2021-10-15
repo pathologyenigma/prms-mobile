@@ -225,6 +225,7 @@ class LoginScreen extends Component<IProps, IState> {
 
   renderPrivicy() {
     const { loginType } = this.state
+    const { navigation } = this.props
     return (
       <View>
         {loginType === 2 ? (
@@ -261,7 +262,7 @@ class LoginScreen extends Component<IProps, IState> {
           </Text>
           <NextTouchableOpacity
             onPress={() => {
-              RootLoading.info('用户协议,敬请期待')
+              navigation.push('AgreementPrivacy', { pageType: 1 })
             }}
           >
             <Text style={styles.privacyDetail}>《用户协议》</Text>
@@ -271,7 +272,7 @@ class LoginScreen extends Component<IProps, IState> {
           </Text>
           <NextTouchableOpacity
             onPress={() => {
-              RootLoading.info('隐私政策,敬请期待')
+              navigation.push('AgreementPrivacy', { pageType: 2 })
             }}
           >
             <Text style={styles.privacyDetail}>《隐私政策》</Text>

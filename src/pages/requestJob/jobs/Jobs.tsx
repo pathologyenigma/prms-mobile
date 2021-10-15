@@ -212,6 +212,7 @@ export default class Jobs extends Component<IProps, IState> {
     const { navigation } = this.props
     return (
       <JobCell
+        key={item.id.toString()}
         cellItem={item}
         onPress={() => {
           navigation.push('JobDetail')
@@ -219,17 +220,6 @@ export default class Jobs extends Component<IProps, IState> {
       />
     )
   }
-
-  // id: 1,
-  // name: '项目经理',
-  // company: '深圳市酷魅科技有限公司',
-  // financing: '融资未公开',
-  // staffAmount: '1-49人',
-  // experience: '3-4年',
-  // education: '大专及以上',
-  // location: '深圳·宝安区',
-  // salary: '15K-30K',
-  // interviewer: '李女士·产品线HRBP'
 
   renderCondition() {
     const { selectCondition } = this.state
