@@ -63,6 +63,7 @@ import FeedbackAndHelpSubmit from '../../pages/requestJob/mine/FeedbackAndHelpSu
 import About from '../../pages/requestJob/mine/About'
 import Setting from '../../pages/requestJob/mine/Setting'
 import AgreementPrivacy from '../../pages/requestJob/mine/AgreementPrivacy'
+import AuthoritySetting from '../../pages/requestJob/mine/AuthoritySetting'
 
 type TRouterParams = {
   Find: any,
@@ -127,6 +128,7 @@ type TRouterParams = {
   About: any,
   Setting: any,
   AgreementPrivacy: { pageType: number } // 1: 用户协议 2: 隐私政策
+  AuthoritySetting: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -204,6 +206,7 @@ export default class RouterStacks {
       FeedbackAndHelpSubmit,
       About,
       Setting,
-      AgreementPrivacy
+      AgreementPrivacy,
+      AuthoritySetting
     }
 }

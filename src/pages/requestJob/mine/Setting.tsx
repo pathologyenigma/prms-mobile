@@ -107,6 +107,7 @@ export default class Setting extends Component<IProps, IState> {
 
   renderContent() {
     const { cacheSize } = this.state
+    const { navigation } = this.props
     return (
       <View style={styles.content}>
         {this.renderCell('账号与安全', () => {
@@ -119,7 +120,7 @@ export default class Setting extends Component<IProps, IState> {
           RootLoading.info('招呼语设置')
         })}
         {this.renderCell('权限设置', () => {
-          RootLoading.info('权限设置')
+          navigation.push('AuthoritySetting')
         })}
         <NextTouchableOpacity
           style={styles.cellView}
