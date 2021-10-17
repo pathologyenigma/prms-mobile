@@ -18,7 +18,7 @@ export default StyleSheet.create({
     marginTop: 10,
     paddingBottom: 8,
   },
-  accountLoginConatiner: {
+  accountLoginContainer: {
     height: 57,
     paddingTop: 20,
     borderBottomColor: '#DDDDDD',

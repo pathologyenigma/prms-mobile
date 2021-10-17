@@ -17,7 +17,8 @@ type IProps = GenProps<'Setting'> & {
 
 interface IState {
   cacheSize: string,
-  cacheVisible: boolean
+  cacheVisible: boolean,
+  logoutVisible: boolean
 }
 
 export default class Setting extends Component<IProps, IState> {
@@ -25,7 +26,8 @@ export default class Setting extends Component<IProps, IState> {
     super(props)
     this.state = {
       cacheSize: '',
-      cacheVisible: false
+      cacheVisible: false,
+      logoutVisible: false
     }
   }
 
@@ -111,10 +113,10 @@ export default class Setting extends Component<IProps, IState> {
     return (
       <View style={styles.content}>
         {this.renderCell('账号与安全', () => {
-          RootLoading.info('账号与安全')
+          navigation.push('AccountSetting')
         })}
         {this.renderCell('消息通知', () => {
-          RootLoading.info('消息通知')
+          navigation.push('NotificationSetting')
         })}
         {this.renderCell('招呼语设置', () => {
           RootLoading.info('招呼语设置')
@@ -150,24 +152,28 @@ export default class Setting extends Component<IProps, IState> {
     )
   }
 
-  renderBtn() {
+  logout() {
     const { navigation } = this.props
+    RootLoading.loading()
+    AsyncStorage.clear(() => {
+      RootLoading.hide()
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [
+            { name: 'Dummy' },
+          ],
+        })
+      )
+    })
+  }
+
+  renderBtn() {
     return (
       <NextTouchableOpacity
         style={styles.logoOutBtn}
         onPress={() => {
-          RootLoading.loading()
-          AsyncStorage.clear(() => {
-            RootLoading.hide()
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [
-                  { name: 'Dummy' },
-                ],
-              })
-            )
-          })
+          this.setState({ logoutVisible: true })
         }}
       >
         <Text style={styles.logoOutText}>
@@ -178,7 +184,7 @@ export default class Setting extends Component<IProps, IState> {
   }
 
   render() {
-    const { cacheSize, cacheVisible } = this.state
+    const { cacheSize, cacheVisible, logoutVisible } = this.state
     return (
       <View style={styles.container}>
         <StatusBar
@@ -207,6 +213,27 @@ export default class Setting extends Component<IProps, IState> {
                 cacheVisible: false
               }, () => {
                 this.clearCache()
+              })
+            },
+          }}
+        />
+        <AlertContentModal
+          visible={logoutVisible}
+          title="友情提示"
+          detail="确定退出登录吗?"
+          leftBtn={{
+            title: '取消',
+            act: () => this.setState({
+              logoutVisible: false,
+            }),
+          }}
+          rightBtn={{
+            title: '确定',
+            act: () => {
+              this.setState({
+                logoutVisible: false
+              }, () => {
+                this.logout()
               })
             },
           }}

@@ -64,6 +64,11 @@ import About from '../../pages/requestJob/mine/About'
 import Setting from '../../pages/requestJob/mine/Setting'
 import AgreementPrivacy from '../../pages/requestJob/mine/AgreementPrivacy'
 import AuthoritySetting from '../../pages/requestJob/mine/AuthoritySetting'
+import AccountSetting from '../../pages/requestJob/mine/AccountSetting'
+import ChangePhone from '../../pages/requestJob/mine/ChangePhone'
+import EmailBinding from '../../pages/requestJob/mine/EmailBinding'
+import ChangePassword from '../../pages/requestJob/mine/ChangePassword'
+import NotificationSetting from '../../pages/requestJob/mine/NotificationSetting'
 
 type TRouterParams = {
   Find: any,
@@ -128,7 +133,12 @@ type TRouterParams = {
   About: any,
   Setting: any,
   AgreementPrivacy: { pageType: number } // 1: 用户协议 2: 隐私政策
-  AuthoritySetting: any
+  AuthoritySetting: any,
+  AccountSetting: any,
+  ChangePhone: any,
+  EmailBinding: { email: string },
+  ChangePassword: any,
+  NotificationSetting: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -207,6 +217,11 @@ export default class RouterStacks {
       About,
       Setting,
       AgreementPrivacy,
-      AuthoritySetting
+      AuthoritySetting,
+      AccountSetting,
+      ChangePhone,
+      EmailBinding,
+      ChangePassword,
+      NotificationSetting
     }
 }

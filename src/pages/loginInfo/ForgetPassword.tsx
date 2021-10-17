@@ -80,7 +80,7 @@ class ForgetPassword extends Component<IProps, IState> {
   renderPhone() {
     const { phone } = this.state
     return (
-      <View style={styles.accountLoginConatiner}>
+      <View style={styles.accountLoginContainer}>
         <TextInput
           underlineColorAndroid="transparent"
           returnKeyType="done"

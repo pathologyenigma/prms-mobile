@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native'
-import { greenColor } from '../../../../utils/constant'
 import SystemHelper from '../../../../utils/system'
 
 export default StyleSheet.create({

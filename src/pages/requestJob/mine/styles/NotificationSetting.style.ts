@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native'
-import { greenColor } from '../../../../utils/constant'
 import SystemHelper from '../../../../utils/system'
 
 export default StyleSheet.create({
@@ -32,11 +31,6 @@ export default StyleSheet.create({
     fontWeight: '400',
     flex: 1
   },
-  nextIcon: {
-    width: 7,
-    height: 12,
-    marginLeft: 18
-  },
   cellValue: {
     color: '#888888',
     fontSize: 13,
@@ -47,4 +41,17 @@ export default StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold'
   },
+  receiveMessageBtn: {
+    backgroundColor: '#54D693',
+    borderRadius: 4,
+    width: 60,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  receiveMessageText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '400'
+  }
 })
