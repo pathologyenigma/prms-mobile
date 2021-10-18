@@ -44,7 +44,7 @@ export default class AccountSetting extends Component<IProps, IState> {
       RootLoading.hide()
       this.setState({
         phone: '13951840000',
-        isVerified: true,
+        isVerified: false,
         bindedEmail: '780178977@qq.com',
         isBindWechat: true
       })
@@ -119,7 +119,10 @@ export default class AccountSetting extends Component<IProps, IState> {
           navigation.push('ChangePhone')
         })}
         {this.renderCell('实名认证', verifiedShow, () => {
-
+          navigation.push('VerifySetting', {
+            name: '',
+            idNumber: ''
+          })
         })}
         {this.renderCell('修改密码', '', () => {
           navigation.push('ChangePassword')

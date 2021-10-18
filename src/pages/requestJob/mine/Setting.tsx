@@ -119,7 +119,7 @@ export default class Setting extends Component<IProps, IState> {
           navigation.push('NotificationSetting')
         })}
         {this.renderCell('招呼语设置', () => {
-          RootLoading.info('招呼语设置')
+          navigation.push('GreetSetting')
         })}
         {this.renderCell('权限设置', () => {
           navigation.push('AuthoritySetting')

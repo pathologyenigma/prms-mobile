@@ -6,7 +6,7 @@ import RootLoading from '../../../utils/rootLoading'
 import { Text, View, StatusBar } from 'react-native'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import { ActivityIndicator } from '@ant-design/react-native'
-import { Switch } from '@ant-design/react-native'
+import SwitchComponent from '../../components/SwitchComponent'
 
 type IProps = GenProps<'NotificationSetting'> & {
 
@@ -78,9 +78,9 @@ export default class NotificationSetting extends Component<IProps, IState> {
             color="#888888"
           />
         ) : (
-          <Switch
-            checked={detail}
-            onChange={v => {
+          <SwitchComponent
+            value={detail}
+            switchPress={() => {
               if (onpress) {
                 onpress()
               }

@@ -69,6 +69,10 @@ import ChangePhone from '../../pages/requestJob/mine/ChangePhone'
 import EmailBinding from '../../pages/requestJob/mine/EmailBinding'
 import ChangePassword from '../../pages/requestJob/mine/ChangePassword'
 import NotificationSetting from '../../pages/requestJob/mine/NotificationSetting'
+import VerifySetting from '../../pages/requestJob/mine/VerifySetting'
+import SubmitVerifyResult from '../../pages/requestJob/mine/SubmitVerifyResult'
+import GreetSetting from '../../pages/requestJob/mine/GreetSetting'
+import GreetEdit from '../../pages/requestJob/mine/GreetEdit'
 
 type TRouterParams = {
   Find: any,
@@ -138,7 +142,11 @@ type TRouterParams = {
   ChangePhone: any,
   EmailBinding: { email: string },
   ChangePassword: any,
-  NotificationSetting: any
+  NotificationSetting: any,
+  VerifySetting: { name: string, idNumber: string }
+  SubmitVerifyResult: any
+  GreetSetting: any
+  GreetEdit: { greetItem: any }
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -222,6 +230,10 @@ export default class RouterStacks {
       ChangePhone,
       EmailBinding,
       ChangePassword,
-      NotificationSetting
+      NotificationSetting,
+      VerifySetting,
+      SubmitVerifyResult,
+      GreetSetting,
+      GreetEdit
     }
 }
