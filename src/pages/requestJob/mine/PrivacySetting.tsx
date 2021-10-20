@@ -71,6 +71,24 @@ export default class PrivacySetting extends Component<IProps, IState> {
     )
   }
 
+  renderHomeLocation() {
+    return (
+      <NextTouchableOpacity
+        style={styles.name}
+        onPress={() => {
+          const { navigation } = this.props
+          navigation.push('HomeLocation')
+        }}
+      >
+        <Text style={styles.nameText}>家的位置</Text>
+        <Image
+          style={styles.nextIcon}
+          source={require('../../../assets/requestJobs/next-gray.png')}
+        />
+      </NextTouchableOpacity>
+    )
+  }
+
   renderBanCompany() {
     return (
       <NextTouchableOpacity
@@ -101,6 +119,7 @@ export default class PrivacySetting extends Component<IProps, IState> {
           contentContainerStyle={styles.contentContainerStyle}
         >
           {this.renderName()}
+          {this.renderHomeLocation()}
           {this.renderBanCompany()}
         </ScrollView>
       </View>

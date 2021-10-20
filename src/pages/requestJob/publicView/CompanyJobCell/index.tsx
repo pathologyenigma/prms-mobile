@@ -7,11 +7,13 @@ interface ICell {
   onPress?: () => void
   cellStyle?: StyleProp<ViewStyle>
   cellItem: any
+  onDeliveryStyle?: StyleProp<ViewStyle>
+  onDeliveryPress?: () => void
 }
 
 export default class CompanyJobCell extends PureComponent<ICell> {
   render() {
-    const { onPress, cellItem, cellStyle } = this.props
+    const { onPress, cellItem, cellStyle, onDeliveryPress, onDeliveryStyle } = this.props
     if (!cellItem) {
       return null
     }
@@ -44,8 +46,19 @@ export default class CompanyJobCell extends PureComponent<ICell> {
           </Text>
         </View>
         <Text style={styles.publishTime}>
-            {`发布时间: ${cellItem.publishTime}`}
-          </Text>
+          {`发布时间: ${cellItem.publishTime}`}
+        </Text>
+        {onDeliveryPress && (
+          <NextTouchableOpacity
+            style={[styles.onDelivery, onDeliveryStyle]}
+            onPress={() => {
+              onDeliveryPress()
+            }}
+          >
+            <Text style={styles.onDeliveryText}>投递</Text>
+          </NextTouchableOpacity>
+        )
+        }
         {/* <View style={styles.interviewerView}>
           <View style={styles.interviewerIcon} />
           <Text style={styles.cellInterviewer}>

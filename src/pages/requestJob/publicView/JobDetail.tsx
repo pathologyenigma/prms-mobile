@@ -14,6 +14,7 @@ import { Tabs } from '@ant-design/react-native'
 import JobCell from '../../components/JobCell'
 import SystemHelper from '../../../utils/system'
 import InterviewerFooter from '../../components/InterviewerFooter'
+import ShareModal from '../../components/ShareModal'
 
 type IProps = GenProps<'JobDetail'> & {
 
@@ -22,7 +23,8 @@ type IProps = GenProps<'JobDetail'> & {
 interface IState {
   dataSource: any,
   showAddScore: boolean,
-  selectLikesTabs: number
+  selectLikesTabs: number,
+  shareVisible: boolean
 }
 
 const recommendListData = [
@@ -169,7 +171,8 @@ export default class JobDetail extends Component<IProps, IState> {
     this.state = {
       dataSource: undefined,
       showAddScore: false,
-      selectLikesTabs: 0
+      selectLikesTabs: 0,
+      shareVisible: false
     }
   }
 
@@ -245,7 +248,7 @@ export default class JobDetail extends Component<IProps, IState> {
           <NextTouchableOpacity
             style={styles.rightItem}
             onPress={() => {
-              RootLoading.info('分享')
+              this.setState({ shareVisible: true })
             }}
           >
             <Image resizeMode="center" style={styles.fenxiang} source={require('../../../assets/requestJobs/job-fenxiang.png')} />
@@ -319,7 +322,13 @@ export default class JobDetail extends Component<IProps, IState> {
   renderInterviewer() {
     const { dataSource } = this.state
     return (
-      <View style={styles.interviewerView}>
+      <NextTouchableOpacity
+        style={styles.interviewerView}
+        onPress={() => {
+          const { navigation } = this.props
+          navigation.push('HrPersonalInfo')
+        }}
+      >
         <View style={styles.interviewerIcon} />
         <View style={styles.interviewerInfo}>
           <View style={styles.interviewerTitleView}>
@@ -337,7 +346,7 @@ export default class JobDetail extends Component<IProps, IState> {
           style={styles.nextBtn}
           source={require('../../../assets/requestJobs/next-gray.png')}
         />
-      </View>
+      </NextTouchableOpacity>
     )
   }
 
@@ -366,16 +375,16 @@ export default class JobDetail extends Component<IProps, IState> {
             <Text style={styles.jobContent}>{dataSource.jobAddPoints}</Text>
           </View>
         ) : (
-            <NextTouchableOpacity
-              style={styles.addScoreBtn}
-              onPress={() => {
-                this.setState({ showAddScore: true })
-              }}
-            >
-              <Text style={styles.addScoreText}>加分项</Text>
-              <Text style={styles.showAddScoreText}>...查看全部</Text>
-            </NextTouchableOpacity>
-          )}
+          <NextTouchableOpacity
+            style={styles.addScoreBtn}
+            onPress={() => {
+              this.setState({ showAddScore: true })
+            }}
+          >
+            <Text style={styles.addScoreText}>加分项</Text>
+            <Text style={styles.showAddScoreText}>...查看全部</Text>
+          </NextTouchableOpacity>
+        )}
       </View>
     )
   }
@@ -557,7 +566,7 @@ export default class JobDetail extends Component<IProps, IState> {
   }
 
   render() {
-    const { dataSource } = this.state
+    const { dataSource, shareVisible } = this.state
     return (
       <View style={styles.container}>
         <StatusBar
@@ -583,6 +592,12 @@ export default class JobDetail extends Component<IProps, IState> {
           ) : null}
         </ScrollView>
         {this.renderInterviewerFooter()}
+        <ShareModal
+          visible={shareVisible}
+          cancelOnpress={() => {
+            this.setState({ shareVisible: false })
+          }}
+        />
       </View>
     )
   }

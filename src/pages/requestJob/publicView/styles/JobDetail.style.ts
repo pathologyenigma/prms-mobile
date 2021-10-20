@@ -307,7 +307,8 @@ export default StyleSheet.create({
   zhuyiIcon: {
     width: 15,
     height: 15,
-    marginRight: 7
+    marginRight: 7,
+    marginTop: 2
   },
   zhuyiText: {
     flex: 1,

@@ -73,6 +73,9 @@ import VerifySetting from '../../pages/requestJob/mine/VerifySetting'
 import SubmitVerifyResult from '../../pages/requestJob/mine/SubmitVerifyResult'
 import GreetSetting from '../../pages/requestJob/mine/GreetSetting'
 import GreetEdit from '../../pages/requestJob/mine/GreetEdit'
+import HomeLocation from '../../pages/requestJob/mine/HomeLocation'
+import MapLocate from '../../pages/requestJob/mine/MapLocate'
+import HrPersonalInfo from '../../pages/requestJob/publicView/HrPersonalInfo'
 
 type TRouterParams = {
   Find: any,
@@ -147,6 +150,9 @@ type TRouterParams = {
   SubmitVerifyResult: any
   GreetSetting: any
   GreetEdit: { greetItem: any }
+  HomeLocation: any
+  MapLocate: any
+  HrPersonalInfo: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -234,6 +240,9 @@ export default class RouterStacks {
       VerifySetting,
       SubmitVerifyResult,
       GreetSetting,
-      GreetEdit
+      GreetEdit,
+      HomeLocation,
+      MapLocate,
+      HrPersonalInfo
     }
 }

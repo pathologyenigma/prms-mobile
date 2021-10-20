@@ -69,5 +69,21 @@ export default StyleSheet.create({
     marginLeft: 11,
     color: '#666',
     fontSize: 13
+  },
+  onDelivery: {
+    backgroundColor: greenColor,
+    width: 57,
+    height: 23,
+    borderRadius: 11,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+  },
+  onDeliveryText: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: 'bold'
   }
 })
