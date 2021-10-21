@@ -39,6 +39,7 @@ export default class Find extends Component<TProps, IState> {
   }
 
   renderTabBar(tabProps: any) {
+    const { selectTabs } = this.state
     const tabs = [{
       title: '找公司',
     }, {
@@ -81,7 +82,9 @@ export default class Find extends Component<TProps, IState> {
           style={styles.searchBtn}
           onPress={() => {
             const { navigation } = this.props
-            navigation.push('Search')
+            navigation.push('FindSearch', {
+              searchType: selectTabs
+            })
           }}
         >
           <Image

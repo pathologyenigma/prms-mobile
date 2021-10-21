@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, StatusBar, SectionList } from 'react-native'
-import styles from './styles/Search.style'
+import styles from './styles/JobSearch.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -12,7 +12,7 @@ import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { greenColor } from '../../../utils/constant'
 import GradientButton from '../../components/GradientButton'
 
-type IProps = GenProps<'Search'> & {
+type IProps = GenProps<'JobSearch'> & {
 
 }
 
@@ -26,7 +26,7 @@ interface IState {
   searchHot: any,
 }
 
-export default class Search extends Component<IProps, IState> {
+export default class JobSearch extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
@@ -136,7 +136,7 @@ export default class Search extends Component<IProps, IState> {
         ]}
         onPress={() => {
           this.setState({ searchValue: item.label }, () => {
-            navigation.push('SearchResult')
+            navigation.push('JobSearchResult')
           })
         }}
       >

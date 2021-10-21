@@ -12,8 +12,8 @@ import JobSelectZhiwei from '../../pages/requestJob/jobs/JobSelectZhiwei'
 import JobSelectIndustry from '../../pages/requestJob/jobs/JobSelectIndustry'
 import JobSelectCity from '../../pages/requestJob/jobs/JobSelectCity'
 import JobSelectSalary from '../../pages/requestJob/jobs/JobSelectSalary'
-import Search from '../../pages/requestJob/find/Search'
-import SearchResult from '../../pages/requestJob/find/SearchResult'
+import JobSearch from '../../pages/requestJob/jobs/JobSearch'
+import JobSearchResult from '../../pages/requestJob/jobs/JobSearchResult'
 import FilterView from '../../pages/requestJob/publicView/FilterView'
 import JobDetail from '../../pages/requestJob/publicView/JobDetail'
 import CompanyDetail from '../../pages/requestJob/publicView/CompanyDetail'
@@ -76,6 +76,9 @@ import GreetEdit from '../../pages/requestJob/mine/GreetEdit'
 import HomeLocation from '../../pages/requestJob/mine/HomeLocation'
 import MapLocate from '../../pages/requestJob/mine/MapLocate'
 import HrPersonalInfo from '../../pages/requestJob/publicView/HrPersonalInfo'
+import FindSearch from '../../pages/requestJob/find/FindSearch'
+import FindSearchResult from '../../pages/requestJob/find/FindSearchResult'
+
 
 type TRouterParams = {
   Find: any,
@@ -89,8 +92,8 @@ type TRouterParams = {
   JobSelectIndustry: { selectJobIndustryCallback: (selectJobIndustry: any) => void }
   JobSelectCity: { selectJobCityCallback: (selectJobIndustry: any) => void }
   JobSelectSalary: { selectJobSalaryCallback: (selectJobSalary: any) => void }
-  Search: any
-  SearchResult: any
+  JobSearch: any
+  JobSearchResult: any
   FilterView: { filterMode: number, filterResultCallback: (res: any) => void }
   JobDetail: any,
   CompanyDetail: any,
@@ -153,6 +156,8 @@ type TRouterParams = {
   HomeLocation: any
   MapLocate: any
   HrPersonalInfo: any
+  FindSearch: { searchType: number } // 0-找公司; 1-找招聘会
+  FindSearchResult: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -180,8 +185,8 @@ export default class RouterStacks {
       JobSelectIndustry,
       JobSelectCity,
       JobSelectSalary,
-      Search,
-      SearchResult,
+      JobSearch,
+      JobSearchResult,
       FilterView,
       JobDetail,
       CompanyDetail,
@@ -243,6 +248,8 @@ export default class RouterStacks {
       GreetEdit,
       HomeLocation,
       MapLocate,
-      HrPersonalInfo
+      HrPersonalInfo,
+      FindSearch,
+      FindSearchResult
     }
 }

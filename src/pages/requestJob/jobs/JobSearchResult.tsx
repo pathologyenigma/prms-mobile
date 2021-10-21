@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, StatusBar, SectionList } from 'react-native'
-import styles from './styles/SearchResult.style'
+import styles from './styles/JobSearchResult.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -13,11 +13,12 @@ import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { greenColor } from '../../../utils/constant'
 import GradientButton from '../../components/GradientButton'
 import JobCell from '../../components/JobCell'
-import CompanyCell from './CompanyCell'
+
 import SystemHelper from '../../../utils/system'
 import CompanyJobCell from '../publicView/CompanyJobCell'
+import CompanyCell from '../find/CompanyCell'
 
-type IProps = GenProps<'SearchResult'> & {
+type IProps = GenProps<'JobSearchResult'> & {
 
 }
 
@@ -31,7 +32,7 @@ interface IState {
   companyRefreshState: any,
 }
 
-export default class SearchResult extends Component<IProps, IState> {
+export default class JobSearchResult extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {

@@ -98,6 +98,17 @@ export default class FilterView extends Component<IProps, IState> {
       { id: 4, label: '数据服务' },
       { id: 5, label: '医疗健康' },
     ]
+    const jobFairSizeDataSource = [
+      { id: 0, label: '少于15企业' },
+      { id: 1, label: '15-50企业' },
+      { id: 2, label: '50-150企业' },
+      { id: 3, label: '150-500企业' },
+    ]
+    const jobFairJieduanDataSource = [
+      { id: 0, label: '正在热招' },
+      { id: 1, label: '即将开始' },
+      { id: 2, label: '未开始' },
+    ]
     let localDataSource: any = []
     switch (filterMode) {
       case 0:
@@ -120,6 +131,14 @@ export default class FilterView extends Component<IProps, IState> {
         localDataSource = [
           { key: 'companySize', title: '公司规模', data: companySizeDataSource },
           { key: 'companyFinancing', title: '融资阶段', data: companyFinancingDataSource },
+          { key: 'companyIndustry', title: '行业领域', data: companyIndustryDataSource },
+        ]
+        break;
+      case 4:
+        // 发现-搜索-招聘会-筛选
+        localDataSource = [
+          { key: 'jobFairSizeDataSource', title: '招聘会规模', data: jobFairSizeDataSource },
+          { key: 'jobFairJieduanDataSource', title: '招聘阶段', data: jobFairJieduanDataSource },
           { key: 'companyIndustry', title: '行业领域', data: companyIndustryDataSource },
         ]
         break;

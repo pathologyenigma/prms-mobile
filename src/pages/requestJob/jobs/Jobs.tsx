@@ -128,7 +128,7 @@ export default class Jobs extends Component<IProps, IState> {
           </NextTouchableOpacity>
           <NextTouchableOpacity
             onPress={() => {
-              navigation.navigate('RenderRequestJobTabs')
+              navigation.push('JobSearch')
             }}
           >
             <Image
