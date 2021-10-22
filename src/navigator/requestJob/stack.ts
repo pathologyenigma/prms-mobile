@@ -78,7 +78,9 @@ import MapLocate from '../../pages/requestJob/mine/MapLocate'
 import HrPersonalInfo from '../../pages/requestJob/publicView/HrPersonalInfo'
 import FindSearch from '../../pages/requestJob/find/FindSearch'
 import FindSearchResult from '../../pages/requestJob/find/FindSearchResult'
-
+import JobfairDetail from '../../pages/requestJob/find/JobfairDetail'
+import JobfairQuestion from '../../pages/requestJob/find/JobfairQuestion'
+import JobfairSubmitSuccess from '../../pages/requestJob/find/JobfairSubmitSuccess'
 
 type TRouterParams = {
   Find: any,
@@ -158,6 +160,9 @@ type TRouterParams = {
   HrPersonalInfo: any
   FindSearch: { searchType: number } // 0-找公司; 1-找招聘会
   FindSearchResult: any
+  JobfairDetail: any
+  JobfairQuestion: any
+  JobfairSubmitSuccess: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -250,6 +255,9 @@ export default class RouterStacks {
       MapLocate,
       HrPersonalInfo,
       FindSearch,
-      FindSearchResult
+      FindSearchResult,
+      JobfairDetail,
+      JobfairQuestion,
+      JobfairSubmitSuccess,
     }
 }

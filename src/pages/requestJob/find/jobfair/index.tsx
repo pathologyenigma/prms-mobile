@@ -85,7 +85,8 @@ export default class Jobfair extends Component<TProps, IState> {
       <JobfairCell
         cellItem={item}
         onPress={() => {
-          RootLoading.info('click company')
+          const { navigation } = this.props
+          navigation.push('JobfairDetail')
         }}
       />
     )
