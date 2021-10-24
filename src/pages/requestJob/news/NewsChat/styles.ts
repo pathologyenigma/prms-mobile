@@ -9,6 +9,7 @@ export default StyleSheet.create({
   },
   listView: {
     flex: 1,
+    backgroundColor: '#F0F0F0',
   },
   contentStyle: {
   },
@@ -35,17 +36,38 @@ export default StyleSheet.create({
     paddingHorizontal: 11,
     flexDirection: 'row',
     alignItems: 'flex-end',
-    paddingBottom: 13,
     borderBottomColor: '#F0F0F0',
     borderBottomWidth: 1,
     backgroundColor: '#fff',
+    paddingRight: 11,
+    justifyContent: 'space-between',
   },
   selectTypeBtn: {
-    marginRight: 51,
+    paddingBottom: 13,
   },
   selectTypeText: {
     color: '#666666',
     fontSize: 14
+  },
+  allReadBtn: {
+    width: 85,
+    height: 28,
+    flexDirection: 'row',
+    borderRadius: 14,
+    borderColor: '#666666',
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  allReadIcon: {
+    width: 12,
+    height: 12
+  },
+  allReadText: {
+    marginLeft: 3,
+    color: '#666666',
+    fontSize: 13
   },
   tongzhiTips: {
     flexDirection: 'row',

@@ -22,7 +22,6 @@ export default StyleSheet.create({
     height: 54,
     width: 54,
     borderRadius: 27,
-    backgroundColor: greenColor,
   },
   titleView: {
     marginLeft: 10,

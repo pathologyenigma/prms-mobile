@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
+import { greenColor } from '../../../../utils/constant'
 import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
 import styles from './styles'
 
@@ -59,7 +60,15 @@ export default class MessageCell extends PureComponent<ICell> {
           }
         }}
       >
-        <View style={styles.icon} />
+        {cellItem.image ? (
+          <Image
+            source={typeof (cellItem.image) === 'string'
+              ? { uri: cellItem.image }
+              : cellItem.image
+            }
+            style={styles.icon}
+          />
+        ) : <View style={[styles.icon, { backgroundColor: greenColor, }]} />}
         <View style={styles.titleView}>
           <View style={styles.contactInfo}>
             <View style={styles.contactDetail}>

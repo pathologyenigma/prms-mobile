@@ -240,7 +240,7 @@ export default class FindSearchResult extends Component<IProps, IState> {
     }, {
       title: '招聘会',
     }]
-    const { selectTabs } = this.state
+
     return (
       <View style={styles.tabsView}>
         <View style={styles.tabLeft}>
