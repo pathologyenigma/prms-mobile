@@ -86,6 +86,7 @@ export default class NewsChat extends Component<TProps, IState> {
       notificationDataSource: [
         {
           id: 1,
+          type: 'official',
           name: '官方通知',
           company: '官方',
           time: '00:00',
@@ -94,12 +95,14 @@ export default class NewsChat extends Component<TProps, IState> {
         },
         {
           id: 2,
+          type: 'learn',
           name: '学习通知',
           time: '00:00',
           message: '您报名的《50天产品速成培训班》马上就要开…',
           image: require('../../../../assets/requestJobs/notification-xuexi.png')
         }, {
           id: 3,
+          type: 'consume',
           name: '消费通知',
           time: '00:00',
           message: '您于2021年4月21号用账户余额5元充值5个金币',
@@ -107,6 +110,7 @@ export default class NewsChat extends Component<TProps, IState> {
         },
         {
           id: 4,
+          type: 'jobs',
           name: '最新职位',
           time: '00:00',
           message: '47位Boss发布最新职位',
@@ -283,7 +287,14 @@ export default class NewsChat extends Component<TProps, IState> {
         key={item.id.toString()}
         cellItem={item}
         onPress={() => {
-          RootLoading.info('click message')
+          const { navigation } = this.props
+          if (item.type !== 'jobs') {
+            navigation.push('NewsDetailList', {
+              notificationType: item.type
+            })
+          } else {
+            navigation.push('NotificationNewJob')
+          }
         }}
       />
     )

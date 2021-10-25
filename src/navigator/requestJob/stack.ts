@@ -82,6 +82,8 @@ import JobfairDetail from '../../pages/requestJob/find/JobfairDetail'
 import JobfairQuestion from '../../pages/requestJob/find/JobfairQuestion'
 import JobfairSubmitSuccess from '../../pages/requestJob/find/JobfairSubmitSuccess'
 import NewsSearch from '../../pages/requestJob/news/NewsSearch'
+import NewsDetailList from '../../pages/requestJob/news/NewsDetailList'
+import NotificationNewJob from '../../pages/requestJob/news/NotificationNewJob'
 
 type TRouterParams = {
   Find: any,
@@ -165,6 +167,8 @@ type TRouterParams = {
   JobfairQuestion: any
   JobfairSubmitSuccess: any
   NewsSearch: any
+  NewsDetailList: { notificationType: any }
+  NotificationNewJob: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -262,5 +266,7 @@ export default class RouterStacks {
       JobfairQuestion,
       JobfairSubmitSuccess,
       NewsSearch,
+      NewsDetailList,
+      NotificationNewJob,
     }
 }

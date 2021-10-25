@@ -94,6 +94,21 @@ export default StyleSheet.create({
   cellInterviewer: {
     marginLeft: 11,
     color: '#666',
-    fontSize: 13
+    fontSize: 13,
+    flex: 1
+  },
+  newTagView: {
+    backgroundColor: '#FF6C61',
+    width: 45,
+    height: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  newTagText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: 'bold',
+    lineHeight: 16,
   }
 })

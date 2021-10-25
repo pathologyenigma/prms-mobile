@@ -7,11 +7,8 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import RootLoading from '../../../utils/rootLoading'
 import { Tabs } from '@ant-design/react-native'
 import NavBar, { EButtonType } from '../../components/NavBar'
-import SearchTextinput from '../../components/SearchTextinput'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
-import { greenColor } from '../../../utils/constant'
-import GradientButton from '../../components/GradientButton'
 import JobCell from '../../components/JobCell'
 import SystemHelper from '../../../utils/system'
 import CompanyJobCell from '../publicView/CompanyJobCell'
@@ -325,7 +322,6 @@ export default class MyCollection extends Component<IProps, IState> {
         }
         onFooterRefresh={() => this.handleJobEndReached}
         keyExtractor={item => item.id.toString()}
-        // ItemSeparatorComponent={() => this.renderItemSeparatorComponent()}
         footerRefreshingText="加载更多"
         footerNoMoreDataText="没有更多了"
       />

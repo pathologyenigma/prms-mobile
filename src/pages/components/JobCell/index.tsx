@@ -8,6 +8,7 @@ interface ICell {
   onPress?: () => void
   cellStyle?: StyleProp<ViewStyle>
   cellItem: any
+  showNewTag?: boolean
 }
 
 export default class JobCell extends PureComponent<ICell> {
@@ -80,7 +81,7 @@ export default class JobCell extends PureComponent<ICell> {
   }
 
   render() {
-    const { onPress, cellItem, cellStyle } = this.props
+    const { onPress, cellItem, cellStyle, showNewTag } = this.props
     if (!cellItem) {
       return null
     }
@@ -138,8 +139,13 @@ export default class JobCell extends PureComponent<ICell> {
           <Text style={styles.cellInterviewer}>
             {cellItem.interviewer}
           </Text>
+          {showNewTag && (
+            <View style={styles.newTagView}>
+              <Text style={styles.newTagText}>new</Text>
+            </View>
+          )}
         </View>
-      </NextTouchableOpacity >
+      </NextTouchableOpacity>
     )
   }
 }
