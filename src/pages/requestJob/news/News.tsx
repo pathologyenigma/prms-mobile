@@ -54,7 +54,7 @@ export default class News extends Component<TProps, IState> {
           style={styles.searchBtn}
           onPress={() => {
             const { navigation } = this.props
-            navigation.goBack()
+            navigation.push('AllMessages')
           }}
         >
           <Image
@@ -69,16 +69,6 @@ export default class News extends Component<TProps, IState> {
           />
         </NextTouchableOpacity>
       </View>
-    )
-  }
-
-  renderNavBar() {
-    return (
-      <NavBar
-        barStyle={{ elevation: 0, borderBottomWidth: 0, }}
-        statusBarTheme="dark-content"
-        title="消息"
-      />
     )
   }
 

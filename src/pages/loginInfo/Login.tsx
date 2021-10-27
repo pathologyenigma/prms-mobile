@@ -175,7 +175,8 @@ class LoginScreen extends Component<IProps, IState> {
             style={styles.passwordLogin}
             onPress={() => {
               RootLoading.info('忘记密码')
-              navigation.push('ForgetPassword')
+              // navigation.push('ForgetPassword')
+              navigation.push('InputVerifyCode')
             }}
           >
             <Text style={styles.passwordLoginText}>忘记密码</Text>
