@@ -11,6 +11,8 @@ import CompanyCommentCell from './CompanyCommentCell'
 import CompanyQuestionCell from './CompanyQuestionCell'
 import AlertContentModal from '../../components/AlertContentModal'
 import BottomContentModal from '../../components/BottomContentModal'
+// @ts-ignore
+import Video from 'react-native-video'
 
 type IProps = GenProps<'CompanyDetail'> & {
 
@@ -25,6 +27,8 @@ interface IState {
   showAllComment: boolean,
   shieldVisible: boolean,
   welfareVisible: boolean
+  videoPlaying: boolean
+  isFirstLoadVideo: boolean
 }
 
 const commentList = [
@@ -166,12 +170,22 @@ export default class CompanyDetail extends Component<IProps, IState> {
       commentRefresh: RefreshState.HeaderRefreshing,
       showAllComment: false,
       shieldVisible: false,
-      welfareVisible: false
+      welfareVisible: false,
+      videoPlaying: true,
+      isFirstLoadVideo: true
     }
   }
 
   componentDidMount() {
     this.loadData()
+  }
+
+  componentDidUpdate() {
+    const { videoPlaying, isFirstLoadVideo } = this.state
+    // 从后面页面返回的时候,视频播放组件会重新渲染(#TODO)
+    if (!videoPlaying && isFirstLoadVideo) {
+      this.setState({ videoPlaying: true })
+    }
   }
 
   loadData() {
@@ -474,6 +488,8 @@ export default class CompanyDetail extends Component<IProps, IState> {
   }
 
   renderCompanyPhoto() {
+    const { navigation } = this.props
+    const { videoPlaying } = this.state
     return (
       <View style={styles.companyPhotoView}>
         <Text style={styles.companyPhotoText}>公司相册</Text>
@@ -483,8 +499,35 @@ export default class CompanyDetail extends Component<IProps, IState> {
           style={styles.companyPhotoScrollview}
         >
           <NextTouchableOpacity
+            onPress={() => {
+              navigation.push('VideoComponent', { videoUri: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' })
+            }}
             style={styles.companyPhotoItem}
-          />
+          >
+            <Image
+              style={styles.videroPlayIcon}
+              source={require('../../../assets/requestJobs/video-play-btn.png')}
+            />
+            <Video
+              style={{
+                width: '100%',
+                height: '100%',
+              }}
+              source={{ uri: encodeURI('http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4') }}   // 可以是一个 URL 或者 本地文件 // 对空格进行转义,否则无法播放
+              resizeMode="contain"
+              controls={false}
+              autoPlay={false}
+              paused={!videoPlaying}
+              onLoad={() => {
+                setTimeout(() => {
+                  this.setState({
+                    videoPlaying: false,
+                    isFirstLoadVideo: false
+                  })
+                }, 100);
+              }}
+            />
+          </NextTouchableOpacity>
           <NextTouchableOpacity
             style={styles.companyPhotoItem}
           />

@@ -155,41 +155,52 @@ export default class Mine extends Component<IProps, IState> {
 
   renderJianliView() {
     return (
-      <View style={styles.jianliView}>
-        <View style={styles.jianliItem}>
-          <Image
-            style={styles.jianliIcon}
-            source={require('../../../assets/requestJobs/jianlishuaxin.png')}
-          />
-          <Text style={styles.jianliTag}>简历刷新</Text>
+      <View style={styles.jianliViewContainer}>
+        <View style={styles.jianliView}>
+          <View style={styles.jianliItem}>
+            <Image
+              style={styles.jianliIcon}
+              source={require('../../../assets/requestJobs/jianlishuaxin.png')}
+            />
+            <Text style={styles.jianliTag}>简历刷新</Text>
+          </View>
+          <View style={styles.jianliItem}>
+            <Image
+              style={styles.jianliIcon}
+              source={require('../../../assets/requestJobs/jianlizhiding.png')}
+            />
+            <Text style={styles.jianliTag}>简历置顶</Text>
+          </View>
+          <View style={styles.jianliItem}>
+            <Image
+              style={styles.jianliIcon}
+              source={require('../../../assets/requestJobs/jianliyouhua.png')}
+            />
+            <Text style={styles.jianliTag}>简历优化</Text>
+          </View>
         </View>
-        <View style={styles.jianliItem}>
-          <Image
-            style={styles.jianliIcon}
-            source={require('../../../assets/requestJobs/jianlizhiding.png')}
-          />
-          <Text style={styles.jianliTag}>简历置顶</Text>
-        </View>
-        <View style={styles.jianliItem}>
-          <Image
-            style={styles.jianliIcon}
-            source={require('../../../assets/requestJobs/jianliyouhua.png')}
-          />
-          <Text style={styles.jianliTag}>简历优化</Text>
-        </View>
-        <View style={styles.jianliItem}>
-          <Image
-            style={styles.jianliIcon}
-            source={require('../../../assets/requestJobs/jianlimoban.png')}
-          />
-          <Text style={styles.jianliTag}>简历模板</Text>
-        </View>
-        <View style={styles.jianliItem}>
-          <Image
-            style={styles.jianliIcon}
-            source={require('../../../assets/requestJobs/zhiweizhixun.png')}
-          />
-          <Text style={styles.jianliTag}>职位咨询</Text>
+        <View style={styles.jianliView}>
+          <View style={styles.jianliItem}>
+            <Image
+              style={styles.jianliIcon}
+              source={require('../../../assets/requestJobs/jianlimoban.png')}
+            />
+            <Text style={styles.jianliTag}>简历模板</Text>
+          </View>
+          <View style={styles.jianliItem}>
+            <Image
+              style={styles.jianliIcon}
+              source={require('../../../assets/requestJobs/jianlitoudi.png')}
+            />
+            <Text style={styles.jianliTag}>简历投递</Text>
+          </View>
+          <View style={styles.jianliItem}>
+            <Image
+              style={styles.jianliIcon}
+              source={require('../../../assets/requestJobs/zhiweizhixun.png')}
+            />
+            <Text style={styles.jianliTag}>职位咨询</Text>
+          </View>
         </View>
       </View>
     )
@@ -288,6 +299,9 @@ export default class Mine extends Component<IProps, IState> {
                       break;
                     case '我的钱包':
                       navigation.push('MyWallet')
+                      break;
+                    case '切换身份':
+                      navigation.push('ChooseRole')
                       break;
                     case '反馈与帮助':
                       navigation.push('FeedbackAndHelp')

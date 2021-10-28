@@ -307,7 +307,17 @@ export default StyleSheet.create({
     height: 150,
     borderRadius: 8,
     backgroundColor: greenColor,
-    marginRight: 13
+    marginRight: 13,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden'
+  },
+  videroPlayIcon: {
+    width: 48,
+    height: 48,
+    position: 'absolute',
+    alignSelf: 'center',
+    zIndex: 1
   },
   reviewerScrollview: {
     marginTop: 23,

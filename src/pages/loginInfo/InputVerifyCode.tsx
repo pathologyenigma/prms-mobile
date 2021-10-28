@@ -198,7 +198,7 @@ class InputVerifyCode extends Component<IProps, IState> {
           <NextTouchableOpacity
             style={styles.countTimeBtn}
             onPress={() => {
-
+              this.countTimeFunc(60)
             }}
           >
             <Text style={styles.sendBtnText}>
@@ -226,6 +226,10 @@ class InputVerifyCode extends Component<IProps, IState> {
     return (
       <NextTouchableOpacity
         style={styles.finishBtn}
+        onPress={() => {
+          const { navigation } = this.props
+          navigation.push('SetPassword')
+        }}
       >
         <Text
           style={styles.finishBtnText}

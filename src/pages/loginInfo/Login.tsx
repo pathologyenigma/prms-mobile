@@ -174,7 +174,6 @@ class LoginScreen extends Component<IProps, IState> {
           <NextTouchableOpacity
             style={styles.passwordLogin}
             onPress={() => {
-              RootLoading.info('忘记密码')
               // navigation.push('ForgetPassword')
               navigation.push('InputVerifyCode')
             }}

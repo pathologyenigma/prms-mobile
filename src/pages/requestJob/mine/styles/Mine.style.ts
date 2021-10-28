@@ -139,20 +139,26 @@ export default StyleSheet.create({
     color: '#FDFDFD',
     fontSize: 13,
   },
-  jianliView: {
+  jianliViewContainer: {
     backgroundColor: '#fff',
-    height: 110,
-    marginHorizontal: 11,
-    marginTop: -68,
+    height: 192,
+    marginTop: -58,
     borderRadius: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 12,
-    paddingTop: 16,
+    paddingTop: 5,
     elevation: 3,
     shadowRadius: 5,
     shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 3 },
+    marginHorizontal: 11,
+  },
+  jianliView: {
+    backgroundColor: '#fff',
+    // height: 110,
+    marginHorizontal: 11,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+    marginTop: 12,
   },
   jianliItem: {
     alignItems: 'center'
@@ -164,7 +170,6 @@ export default StyleSheet.create({
   jianliTag: {
     color: '#333333',
     fontSize: 12,
-    marginTop: 7
   },
   adImage: {
     marginTop: 21,

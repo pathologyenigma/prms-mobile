@@ -77,10 +77,10 @@ class ChooseRole extends Component<IProps, IState> {
       >
         <Image
           style={styles.typeLogo}
-          source={require('../../assets/wx_logo.png')}
+          source={require('../../assets/requestJobs/role-person.png')}
         />
         <Text style={styles.requestJobTitle}>
-          我要求职
+          个人
         </Text>
       </NextTouchableOpacity>
     )
@@ -94,29 +94,11 @@ class ChooseRole extends Component<IProps, IState> {
         }}
       >
         <Image
-          style={styles.typeLogo}
-          source={require('../../assets/wx_logo.png')}
+          style={styles.hrLogo}
+          source={require('../../assets/requestJobs/role-hr.png')}
         />
         <Text style={styles.requestPersonTitle}>
-          我要招人
-        </Text>
-      </NextTouchableOpacity>
-    )
-  }
-
-  renderInvestment() {
-    return (
-      <NextTouchableOpacity style={styles.grayCellView}
-        onPress={() => {
-          RootLoading.info('我要创业或投资')
-        }}
-      >
-        <Image
-          style={styles.typeLogo}
-          source={require('../../assets/wx_logo.png')}
-        />
-        <Text style={styles.requestPersonTitle}>
-          我要创业或投资
+          招聘
         </Text>
       </NextTouchableOpacity>
     )
@@ -133,7 +115,6 @@ class ChooseRole extends Component<IProps, IState> {
           <Text style={styles.chooseTitle}>请选择身份并继续</Text>
           {this.renderFindJob()}
           {this.renderFindPerson()}
-          {this.renderInvestment()}
         </ScrollView>
       </View>
     )

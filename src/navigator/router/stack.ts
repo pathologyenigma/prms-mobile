@@ -6,13 +6,14 @@ import LoginScreen from '../../pages/loginInfo/Login'
 import ForgetPassword from '../../pages/loginInfo/ForgetPassword'
 import ChooseRole from '../../pages/loginInfo/ChooseRole'
 import InputVerifyCode from '../../pages/loginInfo/InputVerifyCode'
-
+import SetPassword from '../../pages/loginInfo/SetPassword'
 
 type TRouterParams = {
   LoginScreen: any,
   ForgetPassword: any,
   ChooseRole: any
   InputVerifyCode: any
+  SetPassword: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -32,5 +33,6 @@ export default class RouterStacks {
       ForgetPassword,
       ChooseRole,
       InputVerifyCode,
+      SetPassword,
     }
 }

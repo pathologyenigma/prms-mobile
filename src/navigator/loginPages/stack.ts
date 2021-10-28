@@ -7,6 +7,7 @@ import ForgetPassword from '../../pages/loginInfo/ForgetPassword'
 import ChooseRole from '../../pages/loginInfo/ChooseRole'
 import AgreementPrivacy from '../../pages/loginInfo/AgreementPrivacy'
 import InputVerifyCode from '../../pages/loginInfo/InputVerifyCode'
+import SetPassword from '../../pages/loginInfo/SetPassword'
 
 // import RequestJob from '../requestPerson/index'
 // import AppRouter from '../../navigator'
@@ -17,6 +18,7 @@ type TRouterParams = {
   ChooseRole: any,
   AgreementPrivacy: { pageType: number } // 1: 用户协议 2: 隐私政策
   InputVerifyCode: any
+  SetPassword: any
   // RequestJob: any,
   // AppRouter: any,
 }
@@ -39,6 +41,7 @@ export default class RouterStacks {
       ChooseRole,
       AgreementPrivacy,
       InputVerifyCode,
+      SetPassword,
       // RequestJob,
       // AppRouter,
     }

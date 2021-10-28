@@ -19,26 +19,31 @@ export default StyleSheet.create({
     paddingBottom: 8,
   },
   cellView: {
-    marginTop: 40,
-    height: 80,
+    marginTop: 56,
+    height: 90,
     borderRadius: 8,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#CFFFEA',
+    backgroundColor: '#BDFFDD',
     paddingLeft: 20
   },
   typeLogo: {
-    width: 20,
-    height: 20
+    width: 37,
+    height: 35
+  },
+  hrLogo: {
+    width: 36,
+    height: 36
   },
   requestJobTitle: {
-    marginLeft: 20,
+    marginLeft: 22,
     color: greenColor,
-    fontSize: 16
+    fontSize: 15,
+    fontWeight: '400'
   },
   grayCellView: {
-    marginTop: 40,
-    height: 80,
+    marginTop: 56,
+    height: 90,
     borderRadius: 8,
     flexDirection: 'row',
     alignItems: 'center',
@@ -46,8 +51,8 @@ export default StyleSheet.create({
     paddingLeft: 20
   },
   requestPersonTitle: {
-    marginLeft: 20,
-    color: '#919191',
-    fontSize: 16
+    marginLeft: 22,
+    color: '#888888',
+    fontSize: 15
   },
 })
