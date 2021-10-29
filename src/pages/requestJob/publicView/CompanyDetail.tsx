@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView, StatusBar, ImageSourcePropType } from 'react-native'
+import { Text, View, Image, ScrollView, StatusBar, ImageSourcePropType, Modal, ActivityIndicator } from 'react-native'
 import styles from './styles/CompanyDetail.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -13,6 +13,7 @@ import AlertContentModal from '../../components/AlertContentModal'
 import BottomContentModal from '../../components/BottomContentModal'
 // @ts-ignore
 import Video from 'react-native-video'
+import ImageViewer from 'react-native-image-zoom-viewer'
 
 type IProps = GenProps<'CompanyDetail'> & {
 
@@ -29,6 +30,8 @@ interface IState {
   welfareVisible: boolean
   videoPlaying: boolean
   isFirstLoadVideo: boolean
+  imageModalVisible: boolean
+  imageSelectIndex: number
 }
 
 const commentList = [
@@ -172,7 +175,9 @@ export default class CompanyDetail extends Component<IProps, IState> {
       shieldVisible: false,
       welfareVisible: false,
       videoPlaying: true,
-      isFirstLoadVideo: true
+      isFirstLoadVideo: true,
+      imageModalVisible: false,
+      imageSelectIndex: 0
     }
   }
 
@@ -232,6 +237,17 @@ export default class CompanyDetail extends Component<IProps, IState> {
             focus: 1,
           }],
           onlineJobs: 18,
+          imageList: [{
+            url: 'https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png',
+          }, {
+            url: 'https://search-operate.cdn.bcebos.com/166bf3b072119c9ce60cc33c551369bc.jpg',
+          }, {
+            url: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.cubui.com%2Fwp-content%2Fuploads%2F2018%2F01%2Freact-native-lesson.png&refer=http%3A%2F%2Fwww.cubui.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1638094787&t=3043e6ae76d0b9fc72c97f4a96d02ef5',
+          }, {
+            url: 'https://alifei03.cfp.cn/creative/vcg/veer/800/new/VCG41N113145561.jpg',
+          }, {
+            url: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.cubui.com%2Fwp-content%2Fuploads%2F2018%2F01%2Freact-native-lesson.png&refer=http%3A%2F%2Fwww.cubui.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1638094787&t=3043e6ae76d0b9fc72c97f4a96d02ef5',
+          }]
         },
       })
     }, 300);
@@ -489,7 +505,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
 
   renderCompanyPhoto() {
     const { navigation } = this.props
-    const { videoPlaying } = this.state
+    const { videoPlaying, dataSource } = this.state
     return (
       <View style={styles.companyPhotoView}>
         <Text style={styles.companyPhotoText}>公司相册</Text>
@@ -514,7 +530,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
                 height: '100%',
               }}
               source={{ uri: encodeURI('http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4') }}   // 可以是一个 URL 或者 本地文件 // 对空格进行转义,否则无法播放
-              resizeMode="contain"
+              resizeMode="cover"
               controls={false}
               autoPlay={false}
               paused={!videoPlaying}
@@ -524,16 +540,29 @@ export default class CompanyDetail extends Component<IProps, IState> {
                     videoPlaying: false,
                     isFirstLoadVideo: false
                   })
-                }, 100);
+                }, 0);
               }}
             />
           </NextTouchableOpacity>
-          <NextTouchableOpacity
-            style={styles.companyPhotoItem}
-          />
-          <NextTouchableOpacity
-            style={styles.companyPhotoItem}
-          />
+          {dataSource.imageList.map((e: any, index: number) => {
+            return (
+              <NextTouchableOpacity
+                onPress={() => {
+                  this.setState({
+                    imageModalVisible: true,
+                    imageSelectIndex: index
+                  })
+                }}
+                style={styles.companyPhotoItem}
+              >
+                <Image
+                  source={{ uri: e.url }}
+                  style={{ width: '100%', height: '100%' }}
+                  resizeMode="cover"
+                />
+              </NextTouchableOpacity>
+            )
+          })}
         </ScrollView>
       </View>
     )
@@ -822,8 +851,62 @@ export default class CompanyDetail extends Component<IProps, IState> {
     )
   }
 
+  renderImageModal() {
+    const { imageModalVisible, dataSource, imageSelectIndex } = this.state
+    return (
+      <Modal
+        visible={imageModalVisible}
+        transparent={true}
+        onRequestClose={() => this.setState({ imageModalVisible: false })}
+      >
+        <ImageViewer
+          style={{ paddingTop: -200 }}
+          imageUrls={dataSource.imageList}
+          index={imageSelectIndex}
+          onSwipeDown={() => {
+            console.log('onSwipeDown');
+            this.setState({ imageModalVisible: false })
+          }}
+          enableSwipeDown={true}
+          saveToLocalByLongPress={false}
+          renderIndicator={(currentIndex?: number, allSize?: number) => {
+            return (
+              <Text style={styles.modalIndex}>
+                {`${currentIndex}/${allSize}`}
+              </Text>
+            )
+          }}
+          renderHeader={() => {
+            return (
+              <NextTouchableOpacity
+                style={styles.imageCloseBtn}
+                onPress={() => {
+                  this.setState({ imageModalVisible: false })
+                }}
+              >
+                <Image
+                  style={styles.imageCloseBtnIcon}
+                  resizeMode="center"
+                  source={require('../../../assets/requestJobs/close-white.png')}
+                />
+              </NextTouchableOpacity>
+            )
+          }}
+          loadingRender={() => {
+            return (
+              <ActivityIndicator
+                size="large"
+                color="#888888"
+              />
+            )
+          }}
+        />
+      </Modal>
+    )
+  }
+
   render() {
-    const { dataSource, shieldVisible, welfareVisible } = this.state
+    const { dataSource, shieldVisible, welfareVisible, imageModalVisible } = this.state
     return (
       <View style={styles.container}>
         <StatusBar
@@ -847,6 +930,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
               {this.renderReviewerEvaluation()}
               {this.renderCommentList()}
               {this.renderCompanyQuestion()}
+              {this.renderImageModal()}
             </View>
           ) : null}
         </ScrollView>

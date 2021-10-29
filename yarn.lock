@@ -4645,9 +4645,19 @@ react-native-http-cache@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/react-native-http-cache/-/react-native-http-cache-0.2.0.tgz#1796ef5a2bbad845a066338f6f8d96a591e421e3"
 
+react-native-image-pan-zoom@^2.1.12:
+  version "2.1.12"
+  resolved "https://registry.yarnpkg.com/react-native-image-pan-zoom/-/react-native-image-pan-zoom-2.1.12.tgz#eb98bf56fb5610379bdbfdb63219cc1baca98fd2"
+
 react-native-image-picker@^4.0.6:
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-4.0.6.tgz#0dfa5bb83bcf6ff58635ebb9201a185c2271e8cc"
+
+react-native-image-zoom-viewer@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-image-zoom-viewer/-/react-native-image-zoom-viewer-3.0.1.tgz#a2bd5fb3bda15e0686ce88fcde8576726495d7fb"
+  dependencies:
+    react-native-image-pan-zoom "^2.1.12"
 
 react-native-iphone-x-helper@^1.3.0, react-native-iphone-x-helper@^1.3.1:
   version "1.3.1"

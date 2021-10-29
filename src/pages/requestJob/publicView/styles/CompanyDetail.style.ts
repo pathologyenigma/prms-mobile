@@ -306,7 +306,6 @@ export default StyleSheet.create({
     width: 270,
     height: 150,
     borderRadius: 8,
-    backgroundColor: greenColor,
     marginRight: 13,
     alignItems: 'center',
     justifyContent: 'center',
@@ -546,5 +545,29 @@ export default StyleSheet.create({
     fontSize: 11,
     marginTop: 84,
     marginHorizontal: 12,
+  },
+  imageCloseBtn: {
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    marginLeft: 22,
+    position: 'absolute',
+    zIndex: 999
+  },
+  imageCloseBtnIcon: {
+    width: 18,
+    height: 18
+  },
+  modalIndex: {
+    width: 50,
+    height: 50,
+    lineHeight: 50,
+    textAlign: 'right',
+    right: 20,
+    color: '#fff',
+    fontWeight: '400',
+    fontSize: 18,
+    zIndex: 999,
+    position: 'absolute'
   }
 })
