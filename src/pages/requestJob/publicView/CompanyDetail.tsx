@@ -516,7 +516,14 @@ export default class CompanyDetail extends Component<IProps, IState> {
         >
           <NextTouchableOpacity
             onPress={() => {
-              navigation.push('VideoComponent', { videoUri: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4' })
+              navigation.push('VideoComponent',
+                {
+                  videoUri: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4',
+                  closeCallback: () => {
+                    this.setState({ videoPlaying: true })
+                  }
+                },
+              )
             }}
             style={styles.companyPhotoItem}
           >
@@ -534,13 +541,16 @@ export default class CompanyDetail extends Component<IProps, IState> {
               controls={false}
               autoPlay={false}
               paused={!videoPlaying}
+              onProgress={(currentTime: number) => {
+
+              }}
               onLoad={() => {
                 setTimeout(() => {
                   this.setState({
                     videoPlaying: false,
                     isFirstLoadVideo: false
                   })
-                }, 0);
+                }, 1000);
               }}
             />
           </NextTouchableOpacity>

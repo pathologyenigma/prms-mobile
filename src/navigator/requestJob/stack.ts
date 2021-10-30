@@ -87,6 +87,7 @@ import NotificationNewJob from '../../pages/requestJob/news/NotificationNewJob'
 import AllMessages from '../../pages/requestJob/news/AllMessages'
 import ChooseRole from '../../pages/loginInfo/ChooseRole'
 import VideoComponent from '../../pages/components/VideoComponent'
+import MessagePage from '../../pages/requestJob/news/MessagePage'
 
 type TRouterParams = {
   Find: any,
@@ -174,7 +175,8 @@ type TRouterParams = {
   NotificationNewJob: any
   AllMessages: any
   ChooseRole: any
-  VideoComponent: { videoUri: string }
+  VideoComponent: { videoUri: string, closeCallback: () => void }
+  MessagePage: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -277,5 +279,6 @@ export default class RouterStacks {
       AllMessages,
       ChooseRole,
       VideoComponent,
+      MessagePage
     }
 }

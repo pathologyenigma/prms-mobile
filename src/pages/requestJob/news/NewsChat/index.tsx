@@ -365,7 +365,8 @@ export default class NewsChat extends Component<TProps, IState> {
         <MessageCell
           cellItem={item.item}
           onPress={() => {
-            RootLoading.info('click message')
+            const { navigation } = this.props
+            navigation.push('MessagePage')
           }}
         />
       </SwipeRow >

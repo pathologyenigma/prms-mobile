@@ -60,7 +60,8 @@ export default class VideoComponent extends Component<IProps, IVideoComponentSta
   }
 
   renderNavBar() {
-    const { navigation } = this.props
+    const { navigation, route: { params } } = this.props
+    
     return (
       <NavBar
         statusBarTheme="light-content"
@@ -75,6 +76,9 @@ export default class VideoComponent extends Component<IProps, IVideoComponentSta
           type: EButtonType.IMAGE,
           value: require('../../../assets/requestJobs/close-white.png'),
           act: () => {
+            if (params.closeCallback) {
+              params.closeCallback()
+            }
             navigation.pop()
           },
         }}
