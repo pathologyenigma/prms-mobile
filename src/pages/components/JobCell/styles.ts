@@ -110,5 +110,13 @@ export default StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     lineHeight: 16,
+  },
+  timeViewText: {
+    color: '#888888',
+    fontSize: 12,
+    borderTopColor: '#F0F0F0',
+    borderTopWidth: 1,
+    marginTop: 10,
+    paddingTop: 10,
   }
 })

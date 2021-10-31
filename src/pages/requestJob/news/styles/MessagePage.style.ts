@@ -91,6 +91,7 @@ export default StyleSheet.create({
   listView: {
     flex: 1,
     backgroundColor: '#F3F3F3',
+    paddingHorizontal: 11,
   },
   footerContainer: {
     flexDirection: 'row',
@@ -213,4 +214,95 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 2
   },
+  cellSendMessage: {
+    marginTop: 25,
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
+  },
+  icon: {
+    width: 45,
+    height: 45,
+    borderRadius: 22,
+  },
+  cellSendContent: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: 'bold',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    backgroundColor: '#7DD49C',
+    borderRadius: 8,
+    borderTopRightRadius: 2,
+    maxWidth: SystemHelper.width - 126,
+    marginRight: 7,
+    marginTop: 8
+  },
+  cellReceiveMessage: {
+    marginTop: 25,
+    flexDirection: 'row',
+  },
+  cellReceiveContent: {
+    color: '#333333',
+    fontSize: 13,
+    fontWeight: 'bold',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderTopLeftRadius: 2,
+    maxWidth: SystemHelper.width - 126,
+    marginLeft: 7,
+    marginTop: 8
+  },
+  requestResumeView: {
+    marginTop: 25,
+  },
+  requestResume: {
+    maxWidth: SystemHelper.width - 126,
+    backgroundColor: '#fff',
+    paddingTop: 15,
+    marginLeft: 7,
+    borderRadius: 8,
+    borderTopLeftRadius: 2,
+  },
+  requestResumeTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+  },
+  requestResumeDocIcon: {
+    width: 38,
+    height: 38,
+    borderRadius: 4,
+    backgroundColor: '#7DD49C',
+  },
+  requestResumeDocText: {
+    color: '#333333',
+    fontSize: 13,
+    fontWeight: 'bold',
+    maxWidth: SystemHelper.width - 196,
+    marginLeft: 7,
+  },
+  requestResumeBtn: {
+    flexDirection: 'row',
+    borderTopWidth: 1,
+    borderTopColor: '#DDDDDD',
+    height: 52,
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  requestResumeBtnLine: {
+    width: 1,
+    height: '100%',
+    backgroundColor: '#DDDDDD',
+  },
+  requestResumeBtnItem: {
+    width: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  requestResumeBtnRegect: {
+    color: '#333333',
+    fontSize: 16
+  }
 })

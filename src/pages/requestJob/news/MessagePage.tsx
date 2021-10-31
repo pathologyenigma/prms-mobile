@@ -2,7 +2,10 @@ import React, { Component } from 'react'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import styles from './styles/MessagePage.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
+import { connect } from 'react-redux'
+import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import RootLoading from '../../../utils/rootLoading'
+import { IStoreState } from '../../../reducer'
 import { Text, View, Image, StatusBar, TextInput } from 'react-native'
 import { versionCode } from '../../../utils/config'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -13,13 +16,12 @@ import { ScrollView } from 'react-native-gesture-handler'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import SystemHelper from '../../../utils/system'
+import JobCell from '../../components/JobCell'
 
-type IProps = GenProps<'MessagePage'> & {
-
-}
-
+type IProps = GenProps<'MessagePage'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 interface IState {
   dataSource: any,
+  refreshState: RefreshState,
   content: string,
   showCommonWord: boolean
   showMediaView: boolean
@@ -27,13 +29,14 @@ interface IState {
   commonWordData: any
 }
 
-export default class MessagePage extends Component<IProps, IState> {
+class MessagePage extends Component<IProps, IState> {
   private inputRef: any
   constructor(props: IProps) {
     super(props)
     this.state = {
       content: '',
-      dataSource: undefined,
+      dataSource: [],
+      RefreshState: 1,
       showCommonWord: false,
       showMediaView: false,
       showSendBtn: false,
@@ -55,11 +58,45 @@ export default class MessagePage extends Component<IProps, IState> {
   }
 
   loadData() {
-    this.setState({})
+    this.setState({
+      dataSource: [{
+        id: 1,
+        type: 'jianli',
+        name: '项目经理',
+        company: '深圳市酷魅科技有限公司',
+        financing: '融资未公开',
+        staffAmount: '1-49人',
+        experience: '3-4年',
+        education: '大专及以上',
+        location: '深圳·宝安区',
+        salary: '15K-30K',
+        interviewer: '李女士·产品线HRBP',
+        time: '6月25日  20:40  ',
+        launch: '李女士'
+      }, {
+        id: 2,
+        type: 'message',
+        content: '这是我的资料，希望能成为贵团队的一员。',
+        time: '6月25日  20:40  ',
+        launch: '李女士'
+      }, {
+        id: 3,
+        type: 'message',
+        content: '请问有相关作品和个人简历吗？麻烦发送一份给我。',
+        time: '6月25日  20:40  ',
+        launch: '王经理'
+      }, {
+        id: 4,
+        type: 'requestResume',
+        content: '我想要一份您的附件简历到我的邮箱，您是否同意',
+        time: '6月25日  20:40  ',
+        launch: '王经理'
+      }]
+    })
   }
 
   renderNavBar() {
-    const { navigation } = this.props
+    const { navigation, userInfo } = this.props
     return (
       <View style={styles.navBar}>
         <NextTouchableOpacity
@@ -77,8 +114,8 @@ export default class MessagePage extends Component<IProps, IState> {
           </Text>
         </NextTouchableOpacity>
         <View style={styles.barTitleView}>
-          <Text style={styles.barTitle}>李慧敏</Text>
-          <Text style={styles.barDetail}>领航新时代·人力总监</Text>
+          <Text style={styles.barTitle}>{userInfo.userInfo.username}</Text>
+          <Text style={styles.barDetail}>{userInfo.userInfo.currentRole}</Text>
         </View>
         <NextTouchableOpacity
           style={styles.editBtbn}
@@ -158,7 +195,93 @@ export default class MessagePage extends Component<IProps, IState> {
     )
   }
 
+  renderTextMessage(item: any) {
+    const { userInfo } = this.props
+    const isSend = userInfo.userInfo.username !== item.launch
+    if (isSend) {
+      return (
+        <View style={styles.cellSendMessage}>
+          <Text style={styles.cellSendContent}>
+            {item.content}
+          </Text>
+          <Image
+            source={{ uri: 'https://alifei03.cfp.cn/creative/vcg/veer/800/new/VCG41N113145561.jpg' }}
+            style={styles.icon}
+          />
+        </View >
+      )
+    }
+    return (
+      <View style={styles.cellReceiveMessage}>
+        <Image
+          source={{ uri: 'https://alifei03.cfp.cn/creative/vcg/veer/800/new/VCG41N113145561.jpg' }}
+          style={styles.icon}
+        />
+        <Text style={styles.cellReceiveContent}>
+          {item.content}
+        </Text>
+      </View>
+    )
+  }
+
+  renderRequestResume(item: any) {
+    const { userInfo } = this.props
+    const isSend = userInfo.userInfo.username !== item.launch
+    if (isSend) {
+      return (
+        <Text>正在请求简历中</Text>
+      )
+    }
+    return (
+      <View style={styles.cellReceiveMessage}>
+        <Image
+          source={{ uri: 'https://alifei03.cfp.cn/creative/vcg/veer/800/new/VCG41N113145561.jpg' }}
+          style={styles.icon}
+        />
+        <View style={styles.requestResume}>
+          <View style={styles.requestResumeTop}>
+            <View style={styles.requestResumeDocIcon} />
+            <Text style={styles.requestResumeDocText}>{item.content}</Text>
+          </View>
+          <View style={styles.requestResumeBtn}>
+            <NextTouchableOpacity
+              style={styles.requestResumeBtnItem}
+            >
+              <Text style={styles.requestResumeBtnRegect}>拒绝</Text>
+            </NextTouchableOpacity>
+            <View style={styles.requestResumeBtnLine} />
+            <NextTouchableOpacity
+              style={styles.requestResumeBtnItem}
+            >
+              <Text style={[styles.requestResumeBtnRegect, { color: '#7DD49C' }]}>同意</Text>
+            </NextTouchableOpacity>
+          </View>
+        </View>
+      </View>
+    )
+  }
+
   renderCellItem(item: any) {
+    const { userInfo } = this.props
+    if (item.type === 'jianli') {
+      // 打招呼简历
+      return (
+        <JobCell
+          key={item.id.toString()}
+          cellItem={item}
+          showCellTime={true}
+          launchText={userInfo.userInfo.username === item.launch ? '由招聘官发起的通知' : '由你发起的通知'}
+        />
+      )
+    }
+    if (item.type === 'message') {
+      // 文字消息
+      return this.renderTextMessage(item)
+    }
+    if (item.type === 'requestResume') {
+      // 请求简历
+      return this.renderRequestResume(item)
+    }
     return null
   }
 
@@ -167,6 +290,7 @@ export default class MessagePage extends Component<IProps, IState> {
     return (
       <RefreshListView
         style={styles.listView}
+        contentContainerStyle={{ paddingBottom: 100, }}
         // onHeaderRefresh={() => this.handleRefresh()}
         // refreshState={refreshState}
         automaticallyAdjustContentInsets={false}
@@ -404,3 +528,17 @@ export default class MessagePage extends Component<IProps, IState> {
     )
   }
 }
+
+const mapStateToProps = (state: IStoreState) => {
+  return {
+    userInfo: state.userInfo
+  }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
+  return bindActionCreators({
+
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MessagePage)

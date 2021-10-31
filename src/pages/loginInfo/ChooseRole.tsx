@@ -18,9 +18,7 @@ import { CommonActions } from '@react-navigation/native'
 import AsyncStorage from '@react-native-community/async-storage'
 import { Login_type } from '../../utils/constant'
 
-type IProps = GenProps<'ChooseRole'> & {
-
-}
+type IProps = GenProps<'ChooseRole'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 interface IState {
 
@@ -48,29 +46,37 @@ class ChooseRole extends Component<IProps, IState> {
   }
 
   renderFindJob() {
+    const { chooseRole } = this.props
     return (
       <NextTouchableOpacity style={styles.cellView}
         onPress={() => {
-          // RootLoading.info('我要求职')
-          const { navigation } = this.props
-          console.log('this.props: ', this.props)
-          console.log('this.props.navigation: ', navigation)
-          // 此处将状态全局存储起来后,再回到导航首页进行判断身份跳转
-          AsyncStorage.setItem(Login_type, '1', (error) => {
-            console.log('1111111111: ', error)
-            if (!error) {
+          console.log('sssssssssss')
+          RootLoading.loading()
+          chooseRole('user', (error, result) => {
+            RootLoading.hide()
+            if (!error && result) {
+              console.log('ssssssssss: ', error, result)
               const { navigation } = this.props
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 1,
-                  routes: [
-                    { name: 'Dummy' },
-                  ],
-                })
-              )
+              console.log('this.props: ', this.props)
+              console.log('this.props.navigation: ', navigation)
+              // 此处将状态全局存储起来后,再回到导航首页进行判断身份跳转
+              AsyncStorage.setItem(Login_type, '1', (error) => {
+                console.log('1111111111: ', error)
+                if (!error) {
+                  const { navigation } = this.props
+                  navigation.dispatch(
+                    CommonActions.reset({
+                      index: 1,
+                      routes: [
+                        { name: 'Dummy' },
+                      ],
+                    })
+                  )
 
-            } else {
-              RootLoading.fail('请重试或联系客服')
+                } else {
+                  RootLoading.fail('请重试或联系客服')
+                }
+              })
             }
           })
         }}
@@ -135,6 +141,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
     reset_reducer: actions.reset_reducer,
     update_kv: actions.update_kv,
     loginMobile: actions.loginMobile,
+    chooseRole: actions.chooseRole
   }, dispatch)
 }
 

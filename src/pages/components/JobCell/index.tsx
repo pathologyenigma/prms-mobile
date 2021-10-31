@@ -9,6 +9,8 @@ interface ICell {
   cellStyle?: StyleProp<ViewStyle>
   cellItem: any
   showNewTag?: boolean
+  showCellTime?: boolean
+  launchText?: string
 }
 
 export default class JobCell extends PureComponent<ICell> {
@@ -81,7 +83,7 @@ export default class JobCell extends PureComponent<ICell> {
   }
 
   render() {
-    const { onPress, cellItem, cellStyle, showNewTag } = this.props
+    const { onPress, cellItem, cellStyle, showNewTag, showCellTime, launchText } = this.props
     if (!cellItem) {
       return null
     }
@@ -123,7 +125,7 @@ export default class JobCell extends PureComponent<ICell> {
             {cellItem.staffAmount}
           </Text>
         </View>
-        <View style={styles.cellJobView}>
+        <View style={[styles.cellJobView, showCellTime && { borderBottomWidth: 0, paddingBottom: 0, }]}>
           <Text style={styles.cellExperience}>
             {cellItem.experience}
           </Text>
@@ -145,6 +147,9 @@ export default class JobCell extends PureComponent<ICell> {
             </View>
           )}
         </View>
+        {showCellTime && (
+          <Text style={styles.timeViewText}>{`${cellItem.time}  ${launchText}`}</Text>
+        )}
       </NextTouchableOpacity>
     )
   }
