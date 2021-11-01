@@ -17,6 +17,8 @@ import { ScrollView } from 'react-native-gesture-handler'
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import SystemHelper from '../../../utils/system'
 import JobCell from '../../components/JobCell'
+import AlertContentModal from '../../components/AlertContentModal'
+import WhiteContentModal from '../../components/WhiteContentModal'
 
 type IProps = GenProps<'MessagePage'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 interface IState {
@@ -27,7 +29,25 @@ interface IState {
   showMediaView: boolean
   showSendBtn: boolean
   commonWordData: any
+  alertModalVisible: boolean
+  alertType: number
+  inappropriateVisible: boolean
+  selectReason: string
+  operateModalVisible: boolean
+  rejectReason: string
+  rejectModalVisible: boolean
 }
+
+const inappropriateArray = [
+  '职位不匹配',
+  '公司不合适',
+  '行业不感兴趣',
+  '工作地点太远',
+  '薪资不满意',
+  '暂无求职意向',
+  '已找到工作',
+  '其他原因'
+]
 
 class MessagePage extends Component<IProps, IState> {
   private inputRef: any
@@ -40,6 +60,13 @@ class MessagePage extends Component<IProps, IState> {
       showCommonWord: false,
       showMediaView: false,
       showSendBtn: false,
+      alertModalVisible: false,
+      alertType: 0,
+      inappropriateVisible: false,
+      operateModalVisible: false,
+      rejectReason: '',
+      rejectModalVisible: false,
+      selectReason: '',
       commonWordData: [{
         id: 1,
         content: '你好，对贵司该职位很感兴趣，这是我的简历，期待你的回复。'
@@ -91,7 +118,26 @@ class MessagePage extends Component<IProps, IState> {
         content: '我想要一份您的附件简历到我的邮箱，您是否同意',
         time: '6月25日  20:40  ',
         launch: '王经理'
-      }]
+      }, {
+        id: 5,
+        type: 'inviteInterview',
+        content: '领航新时代向您发出面试邀请，点击查看详情',
+        time: '6月25日  20:40  ',
+        launch: '李女士'
+      }, {
+        id: 6,
+        type: 'acceptInterview',
+        content: '接受了面试邀请',
+        time: '6月25日  20:40  ',
+        launch: '李女士'
+      }, {
+        id: 7,
+        type: 'rejectInterview',
+        content: '您已拒绝面试邀请',
+        detail: '已找到合适的公司，暂时不打算跳槽。',
+        time: '6月25日  20:40  ',
+        launch: '李女士'
+      },]
     })
   }
 
@@ -120,7 +166,7 @@ class MessagePage extends Component<IProps, IState> {
         <NextTouchableOpacity
           style={styles.editBtbn}
           onPress={() => {
-
+            this.setState({ operateModalVisible: true })
           }}
         >
           <Image
@@ -137,6 +183,12 @@ class MessagePage extends Component<IProps, IState> {
       <View style={styles.operateVeiw}>
         <NextTouchableOpacity
           style={styles.operateBtn}
+          onPress={() => {
+            this.setState({
+              alertModalVisible: true,
+              alertType: 1
+            })
+          }}
         >
           <Image
             source={require('../../../assets/requestJobs/message-phone.png')}
@@ -151,6 +203,12 @@ class MessagePage extends Component<IProps, IState> {
         </NextTouchableOpacity>
         <NextTouchableOpacity
           style={styles.operateBtn}
+          onPress={() => {
+            this.setState({
+              alertModalVisible: true,
+              alertType: 2
+            })
+          }}
         >
           <Image
             source={require('../../../assets/requestJobs/message-jianli.png')}
@@ -165,6 +223,12 @@ class MessagePage extends Component<IProps, IState> {
         </NextTouchableOpacity>
         <NextTouchableOpacity
           style={styles.operateBtn}
+          onPress={() => {
+            this.setState({
+              alertModalVisible: true,
+              alertType: 3
+            })
+          }}
         >
           <Image
             source={require('../../../assets/requestJobs/message-weixin.png')}
@@ -179,6 +243,12 @@ class MessagePage extends Component<IProps, IState> {
         </NextTouchableOpacity>
         <NextTouchableOpacity
           style={styles.operateBtn}
+          onPress={() => {
+            this.setState({
+              inappropriateVisible: true,
+              selectReason: '',
+            })
+          }}
         >
           <Image
             source={require('../../../assets/requestJobs/message-close.png')}
@@ -246,6 +316,9 @@ class MessagePage extends Component<IProps, IState> {
           <View style={styles.requestResumeBtn}>
             <NextTouchableOpacity
               style={styles.requestResumeBtnItem}
+              onPress={() => {
+                this.setState({ rejectModalVisible: true })
+              }}
             >
               <Text style={styles.requestResumeBtnRegect}>拒绝</Text>
             </NextTouchableOpacity>
@@ -257,6 +330,120 @@ class MessagePage extends Component<IProps, IState> {
             </NextTouchableOpacity>
           </View>
         </View>
+      </View>
+    )
+  }
+
+  renderInviteInterview(item: any) {
+    return (
+      <View style={styles.cellReceiveMessage}>
+        <Image
+          source={{ uri: 'https://alifei03.cfp.cn/creative/vcg/veer/800/new/VCG41N113145561.jpg' }}
+          style={styles.icon}
+        />
+        <View style={styles.requestResume}>
+          <View style={styles.requestResumeTop}>
+            <Image
+              source={require('../../../assets/requestJobs/message-invite.png')}
+              style={styles.inviteIcon}
+            />
+            <Text style={styles.requestResumeDocText}>{item.content}</Text>
+          </View>
+          {/* <NextTouchableOpacity
+            style={styles.inviteBtn}
+          >
+            <Text style={[styles.requestResumeBtnRegect, { color: '#7DD49C' }]}>立即查看</Text>
+          </NextTouchableOpacity> */}
+          <View style={styles.requestResumeBtn}>
+            <NextTouchableOpacity
+              style={styles.requestResumeBtnItem}
+              onPress={() => {
+                this.setState({ rejectModalVisible: true })
+              }}
+            >
+              <Text style={styles.requestResumeBtnRegect}>拒绝</Text>
+            </NextTouchableOpacity>
+            <View style={styles.requestResumeBtnLine} />
+            <NextTouchableOpacity
+              style={styles.requestResumeBtnItem}
+            >
+              <Text style={[styles.requestResumeBtnRegect, { color: '#7DD49C' }]}>接受</Text>
+            </NextTouchableOpacity>
+          </View>
+        </View>
+      </View>
+    )
+  }
+
+  renderAcceptInterview(item: any) {
+    const { userInfo } = this.props
+    const isSend = userInfo.userInfo.username !== item.launch
+    if (isSend) {
+      return (
+        <View style={styles.cellSendMessage}>
+          <View style={[styles.cellSendContent, { flexDirection: 'row' }]}>
+            <Text style={styles.cellSendText}>
+              {item.content}
+            </Text>
+            <Image
+              source={require('../../../assets/requestJobs/message-accpet-interview.png')}
+              style={styles.accpetIcon}
+            />
+          </View>
+          <Image
+            source={{ uri: 'https://alifei03.cfp.cn/creative/vcg/veer/800/new/VCG41N113145561.jpg' }}
+            style={styles.icon}
+          />
+        </View >
+      )
+    }
+    return (
+      <View style={styles.cellReceiveMessage}>
+        <Image
+          source={{ uri: 'https://alifei03.cfp.cn/creative/vcg/veer/800/new/VCG41N113145561.jpg' }}
+          style={styles.icon}
+        />
+        <Text style={styles.cellReceiveContent}>
+          {item.content}
+        </Text>
+      </View>
+    )
+  }
+
+  renderRejectInterview(item: any) {
+    const { userInfo } = this.props
+    const isSend = userInfo.userInfo.username !== item.launch
+    if (isSend) {
+      return (
+        <View style={styles.cellSendMessage}>
+          <View style={[styles.cellSendContent]}>
+            <View style={{ flexDirection: 'row', paddingBottom: 5, borderBottomWidth: 1, borderBottomColor: '#fff' }}>
+              <Text style={styles.cellSendText}>
+                {item.content}
+              </Text>
+              <Image
+                source={require('../../../assets/requestJobs/message-reject-interview.png')}
+                style={styles.rejectIcon}
+              />
+            </View>
+            <Text style={styles.detailText}>{`“${item.detail}”`}</Text>
+          </View>
+          <Image
+            source={{ uri: 'https://alifei03.cfp.cn/creative/vcg/veer/800/new/VCG41N113145561.jpg' }}
+            style={styles.icon}
+          />
+        </View >
+      )
+    }
+    return (
+      <View style={styles.cellReceiveMessage}>
+        <Image
+          source={{ uri: 'https://alifei03.cfp.cn/creative/vcg/veer/800/new/VCG41N113145561.jpg' }}
+          style={styles.icon}
+        />
+        <Text style={styles.cellReceiveContent}>
+          {item.content}
+        </Text>
       </View>
     )
   }
@@ -281,6 +468,15 @@ class MessagePage extends Component<IProps, IState> {
     if (item.type === 'requestResume') {
       // 请求简历
       return this.renderRequestResume(item)
+    }
+    if (item.type === 'inviteInterview') {
+      return this.renderInviteInterview(item)
+    }
+    if (item.type === 'acceptInterview') {
+      return this.renderAcceptInterview(item)
+    }
+    if (item.type === 'rejectInterview') {
+      return this.renderRejectInterview(item)
     }
     return null
   }
@@ -511,6 +707,191 @@ class MessagePage extends Component<IProps, IState> {
     )
   }
 
+  renderModal() {
+    const { alertModalVisible, alertType } = this.state
+    let title = ''
+    let detail = ''
+    switch (alertType) {
+      case 1: // 发电话
+        detail = '确定与对方交换电话吗?'
+        break;
+      case 2: // 发简历
+        title = '确定向招聘者发送简历吗？'
+        detail = '该附件简历将直接发送至对方邮箱?'
+        break;
+      case 3: // 换微信
+        detail = '确定与对方交换微信吗?'
+        break;
+      case 4: // 不合适
+        detail = '确定与对方交换微信吗?'
+        break;
+      default:
+        break;
+    }
+    return (
+      <AlertContentModal
+        visible={alertModalVisible}
+        title={title}
+        detail={detail}
+        leftBtn={{
+          title: '取消',
+          act: () => {
+            this.setState({ alertModalVisible: false })
+          },
+        }}
+        rightBtn={{
+          title: '确定',
+          act: () => {
+            this.setState({ alertModalVisible: false })
+          },
+        }}
+      />
+    )
+  }
+
+  renderInappropriateModal() {
+    const { selectReason, inappropriateVisible } = this.state
+    return (
+      <WhiteContentModal
+        visible={inappropriateVisible}
+        showCloseBtn={false}
+        modalStyle={{ justifyContent: 'flex-end' }}
+        contextStyle={styles.contextStyle}
+      >
+        <View style={styles.modalContentView}>
+          <Text style={styles.inappropriateTitle}>选择不合适原因</Text>
+          <NextTouchableOpacity
+            style={styles.rightBtn}
+            onPress={() => {
+              this.setState({ inappropriateVisible: false })
+            }}
+          >
+            <Image
+              style={styles.inappropriateClose}
+              source={require('../../../assets/requestJobs/inappropriate-close.png')}
+            />
+          </NextTouchableOpacity>
+          <View style={styles.inappropriateView}>
+            {inappropriateArray.map((e: any, index: number) => {
+              return (
+                <NextTouchableOpacity
+                  style={[styles.inappropriateBtn,
+                  selectReason === e && { backgroundColor: '#E2FFF0', }
+                  ]}
+                  onPress={() => {
+                    this.setState({ selectReason: e })
+                  }}
+                >
+                  <Text style={[styles.inappropriateText,
+                  selectReason === e && { color: greenColor, fontWeight: 'bold' }]}>
+                    {e}
+                  </Text>
+                </NextTouchableOpacity>
+              )
+            })}
+          </View>
+          <GradientButton
+            text="提交"
+            containerStyle={styles.submitContainer}
+            onPress={() => {
+
+            }}
+          />
+        </View>
+      </WhiteContentModal>
+    )
+  }
+
+  renderOperateModal() {
+    const { operateModalVisible } = this.state
+    return (
+      <WhiteContentModal
+        visible={operateModalVisible}
+        showCloseBtn={false}
+        modalStyle={{ justifyContent: 'flex-end' }}
+        contextStyle={styles.operateBtnStyle}
+        contextChildrenStyle={{ paddingTop: 0 }}
+      >
+        <View style={styles.modalContentView}>
+          <NextTouchableOpacity
+            onPress={() => {
+              this.setState({ operateModalVisible: false })
+            }}
+            style={styles.operateBtnItem}
+          >
+            <Text style={styles.operateBtnText}>置顶聊天</Text>
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            onPress={() => {
+              this.setState({ operateModalVisible: false })
+            }}
+            style={styles.operateBtnItem}
+          >
+            <Text style={styles.operateBtnText}>拉黑对方</Text>
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            onPress={() => {
+              this.setState({ operateModalVisible: false })
+            }}
+            style={styles.complainBtnItem}
+          >
+            <Text style={[styles.operateBtnText, { color: '#F25C5C' }]}>举报投诉</Text>
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            onPress={() => {
+              this.setState({ operateModalVisible: false })
+            }}
+            style={styles.operateCancelBtnItem}
+          >
+            <Text style={styles.operateBtnText}>取消</Text>
+          </NextTouchableOpacity>
+        </View>
+      </WhiteContentModal>
+    )
+  }
+
+  renderRegectModal() {
+    const { rejectModalVisible, rejectReason } = this.state
+    return (
+      <WhiteContentModal
+        visible={rejectModalVisible}
+        contextChildrenStyle={{ paddingTop: 0 }}
+      >
+        <View style={styles.regectContent}>
+          <Text style={styles.regectViewTitle}>拒绝原因</Text>
+          <View style={styles.inputView}>
+            <TextInput
+              underlineColorAndroid="transparent"
+              returnKeyType="done"
+              autoCorrect={false}
+              autoCapitalize="none"
+              multiline={true}
+              style={styles.regectInput}
+              placeholder="请填写拒绝面试原因"
+              placeholderTextColor="#AAAAAA"
+              value={rejectReason}
+              maxLength={50}
+              onChangeText={(value) => {
+                this.setState({ rejectReason: value })
+              }}
+            />
+            <Text style={styles.regectAmount}>
+              {`${rejectReason.length}/50`}
+            </Text>
+          </View>
+          <NextTouchableOpacity
+            style={styles.rejectConfirmBtn}
+            onPress={() => {
+              this.setState({ rejectModalVisible: false })
+            }}
+          >
+            <Text style={styles.rejectConfirmText}>确定</Text>
+          </NextTouchableOpacity>
+        </View>
+      </WhiteContentModal>
+    )
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -524,6 +905,10 @@ class MessagePage extends Component<IProps, IState> {
         {this.renderOperateView()}
         {this.renderList()}
         {this.renderInput()}
+        {this.renderModal()}
+        {this.renderInappropriateModal()}
+        {this.renderOperateModal()}
+        {this.renderRegectModal()}
       </View>
     )
   }

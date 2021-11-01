@@ -219,10 +219,20 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end'
   },
+  accpetIcon: {
+    width: 17,
+    height: 12,
+    marginLeft: 11
+  },
   icon: {
     width: 45,
     height: 45,
     borderRadius: 22,
+  },
+  detailText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    marginTop: 9
   },
   cellSendContent: {
     color: '#fff',
@@ -236,6 +246,16 @@ export default StyleSheet.create({
     maxWidth: SystemHelper.width - 126,
     marginRight: 7,
     marginTop: 8
+  },
+  cellSendText: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: 'bold',
+  },
+  rejectIcon: {
+    width: 16,
+    height: 16,
+    marginLeft: 6
   },
   cellReceiveMessage: {
     marginTop: 25,
@@ -304,5 +324,155 @@ export default StyleSheet.create({
   requestResumeBtnRegect: {
     color: '#333333',
     fontSize: 16
+  },
+  contextStyle: {
+    width: SystemHelper.width,
+    marginHorizontal: 0,
+    borderRadius: 0,
+  },
+  modalContentView: {
+    width: SystemHelper.width,
+    height: SystemHelper.safeBottom + 255,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+  },
+  inappropriateTitle: {
+    color: '#333333',
+    fontWeight: '400',
+    fontSize: 18,
+    alignSelf: 'center',
+  },
+  rightBtn: {
+    position: 'absolute',
+    top: 2,
+    right: 5,
+    minWidth: 50,
+    height: 30,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 2
+  },
+  rightText: {
+    height: 20,
+    fontSize: 15,
+    lineHeight: 20,
+    textAlign: 'center',
+    color: greenColor
+  },
+  inappropriateView: {
+    flexDirection: 'row',
+    marginTop: 20,
+    width: SystemHelper.width,
+    alignItems: 'center',
+    flexWrap: 'wrap',
+  },
+  inappropriateBtn: {
+    marginTop: 12,
+    marginLeft: 12,
+    height: 35,
+    width: (SystemHelper.width - 46) / 3,
+    backgroundColor: '#F7F7F7',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 4
+  },
+  inappropriateText: {
+    color: '#666666'
+  },
+  inappropriateClose: {
+    width: 40,
+    height: 40
+  },
+  submitContainer: {
+    marginTop: 10,
+    marginHorizontal: 22,
+  },
+  operateBtnStyle: {
+    width: SystemHelper.width,
+    marginHorizontal: 0,
+    borderRadius: 0,
+  },
+  operateBtnItem: {
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomColor: '#E1E1E1',
+    borderBottomWidth: 1
+  },
+  operateBtnText: {
+    color: '#333333',
+    fontSize: 15,
+    fontWeight: '400'
+  },
+  complainBtnItem: {
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  operateCancelBtnItem: {
+    paddingTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopColor: '#F7F7F7',
+    borderTopWidth: 5,
+  },
+  regectContent: {
+    marginTop: 20,
+  },
+  regectViewTitle: {
+    color: '#333',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  inputView: {
+    borderRadius: 8,
+    width: SystemHelper.width - 100,
+    paddingHorizontal: 11,
+    height: 111,
+    justifyContent: 'space-between',
+    backgroundColor: '#F4F4F4',
+    marginTop: 20,
+  },
+  regectInput: {
+    width: '100%',
+    color: '#666666',
+    fontSize: 15,
+    textAlignVertical: 'top'
+  },
+  regectAmount: {
+    color: '#888888',
+    fontSize: 15,
+    textAlign: 'right',
+    marginBottom: 5
+  },
+  rejectConfirmBtn: {
+    width: 184,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#7DDBA3',
+    borderRadius: 6,
+    alignSelf: 'center',
+    marginTop: 20,
+  },
+  rejectConfirmText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
+  inviteBtn: {
+    flexDirection: 'row',
+    borderTopWidth: 1,
+    borderTopColor: '#DDDDDD',
+    height: 52,
+    marginTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inviteIcon: {
+    width: 38,
+    height: 38,
   }
 })

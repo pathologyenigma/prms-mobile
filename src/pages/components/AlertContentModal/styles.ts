@@ -12,7 +12,8 @@ export default StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    marginHorizontal: 40,
+    marginHorizontal: 20,
+    marginBottom: 10,
     lineHeight: 21,
     fontSize: 20,
     textAlign: 'center',
@@ -25,7 +26,6 @@ export default StyleSheet.create({
     fontSize: 15,
     textAlign: 'center',
     color: '#666666',
-    marginTop: 20,
     fontWeight: 'bold',
   },
   contextChildrenStyle: {
