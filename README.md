@@ -1,6 +1,12 @@
 # 趁早找 App
 
-1. 列表刷新状态:
+1. 项目运行步骤:
+    ```javascript
+        1. yarn
+        2. yarn patch-android-cache-libs
+    ```
+
+2. 列表刷新状态:
 
 ```javascript
     0、Idle（普通状态）

@@ -27,7 +27,7 @@ type IState = {
 export default class Jobs extends Component<IProps, IState> {
   constructor(props: any) {
     super(props)
-    console.log('props: ', props)
+    console.log('111111112props: ', props)
     this.state = {
       videoSource: [],
       listDataSource: [{
