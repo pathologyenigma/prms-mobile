@@ -8,7 +8,9 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "tslint .",
-    "patch-android-cache-libs": "cp patch/HttpCacheModule.java ./node_modules/react-native-http-cache/android/src/main/java/cn/reactnative/httpcache/HttpCacheModule.java"
+    "patch-android-cache-libs": "cp patch/HttpCacheModule.java ./node_modules/react-native-http-cache/android/src/main/java/cn/reactnative/httpcache/HttpCacheModule.java",
+    "patch-ios-cache-libs": "cp patch/RCTHttpCache.podspec ./node_modules/react-native-http-cache/RCTHttpCache.podspec",
+    "postinstall": "npm run patch-android-cache-libs && npm run patch-ios-cache-libs"
   },
   "dependencies": {
     "@ant-design/react-native": "^4.0.5",
@@ -16,7 +18,6 @@
     "@react-native-community/async-storage": "^1.12.0",
     "@react-native-community/cameraroll": "^4.0.4",
     "@react-native-community/masked-view": "^0.1.11",
-    "@react-native-community/picker": "^1.8.1",
     "@react-native-community/segmented-control": "^2.2.2",
     "@react-native-community/slider": "^3.0.3",
     "@react-native-hero/picker": "^0.0.8",
