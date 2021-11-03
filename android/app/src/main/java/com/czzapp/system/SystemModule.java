@@ -1,4 +1,4 @@
-package com.aweProject.system;
+package com.czzapp.system;
 
 import android.app.Activity;
 import android.content.Context;

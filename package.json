@@ -10,7 +10,8 @@
     "lint": "tslint .",
     "patch-android-cache-libs": "cp patch/HttpCacheModule.java ./node_modules/react-native-http-cache/android/src/main/java/cn/reactnative/httpcache/HttpCacheModule.java",
     "patch-ios-cache-libs": "cp patch/RCTHttpCache.podspec ./node_modules/react-native-http-cache/RCTHttpCache.podspec",
-    "postinstall": "npm run patch-android-cache-libs && npm run patch-ios-cache-libs"
+    "patch-gradle-cache-libs": "cp patch/build.gradle ./node_modules/react-native-http-cache/android/build.gradle",
+    "postinstall": "npm run patch-android-cache-libs && npm run patch-ios-cache-libs && npm run patch-gradle-cache-libs"
   },
   "dependencies": {
     "@ant-design/react-native": "^4.0.5",
@@ -27,8 +28,8 @@
     "@react-navigation/stack": "^5.14.5",
     "date-fns": "^2.16.1",
     "graphql": "^16.0.1",
-    "react": "16.13.1",
-    "react-native": "0.63.3",
+    "react": "17.0.1",
+    "react-native": "^0.64.2",
     "react-native-date-picker": "^4.1.0",
     "react-native-extra-dimensions-android": "^1.2.5",
     "react-native-gesture-handler": "^1.10.3",
@@ -57,11 +58,11 @@
     "@babel/runtime": "^7.14.6",
     "@types/node": "^15.12.2",
     "@types/react": "^17.0.11",
-    "@types/react-native": "^0.62.1",
+    "@types/react-native": "^0.64.12",
     "@types/react-native-vector-icons": "^6.4.5",
     "babel-jest": "^27.0.6",
     "jest": "^27.0.6",
-    "metro-react-native-babel-preset": "^0.66.1",
+    "metro-react-native-babel-preset": "^0.66.2",
     "react-test-renderer": "17.0.1",
     "tslint": "^6.1.3"
   },

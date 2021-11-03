@@ -1,7 +1,8 @@
-package com.aweProject.system;
+package com.czzapp.system;
 
 import androidx.annotation.NonNull;
 
+import com.czzapp.system.SystemModule;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
