@@ -3,6 +3,13 @@ import { Dispatch } from 'react'
 import { AnyAction } from 'redux'
 import AsyncStorage from '@react-native-community/async-storage'
 import RootLoading from '../utils/rootLoading'
+import {
+  Query
+} from "@apollo/client/react/components"
+import {
+  gql
+} from "@apollo/client"
+import { apolloClientShare, GET_LOGIN, loginGql } from '../utils/postQuery'
 
 const reset_reducer = () => {
   return {
@@ -30,8 +37,28 @@ const update_kv = (key: string, value: string) => {
   }
 }
 
-const loginMobile = (mobileNumber: string, email: string, password: string, callback: (error: any, result?: any) => void) => {
-
+const loginMobile = (account: string, password: string, callback: (error: any, result?: any) => void) => {
+  console.log('2222222222@@@: ', GET_LOGIN(account, password))
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.query({
+      query: GET_LOGIN(account, password),
+    })
+      .then((res) => {
+        console.log('res: ', res)
+        if (res && res.data) {
+          dispatch(update_user_info('UserLogIn', res.data.UserLogIn))
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error) => {
+        console.log('error: ', error)
+        if (callback) {
+          callback(error)
+        }
+      })
+  }
 }
 
 // 发送重置密码的验证码

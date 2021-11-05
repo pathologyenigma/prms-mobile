@@ -16,22 +16,21 @@ import SystemHelper from '../../utils/system'
 import { CommonActions } from '@react-navigation/native'
 import AsyncStorage from '@react-native-community/async-storage'
 import { Login_type } from '../../utils/constant'
+import {
+  Query
+} from "@apollo/client/react/components"
+import {
+  gql
+} from "@apollo/client"
 
-type IProps = GenProps<'LoginScreen'> & {
-  email: string,
-  password: string,
-  number: string,
-  reset_reducer: () => void,
-  update_kv: (key: string, value: string | number) => void,
-  loginMobile: any
-}
+type IProps = GenProps<'LoginScreen'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 interface IState {
   loginType: number,
   passwordShow: boolean,
   showRegisterTips: boolean,
   showPrivacyTips: boolean,
-  phone: string
+  account: string
   password: string
 }
 
@@ -39,12 +38,12 @@ class LoginScreen extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
-      loginType: 2, // 0 : 一键登录 1: 账号密码登录 2: 验证码登录
+      loginType: 1, // 0 : 一键登录 1: 账号密码登录 2: 验证码登录
       passwordShow: false, // 是否隐藏密码(以*进行展示)
       showRegisterTips: false,
       showPrivacyTips: false,
-      phone: '',
-      password: ''
+      account: 'ccb',
+      password: 'ccb123123'
     }
   }
 
@@ -54,9 +53,9 @@ class LoginScreen extends Component<IProps, IState> {
   }
 
   requestLogin() {
-    const { phone } = this.state
-    if (!phone) {
-      RootLoading.fail('请先输入手机号码')
+    const { account } = this.state
+    if (!account) {
+      RootLoading.fail('请先输入账户名')
       return
     }
     // TODO 哪些场景会弹出 用户协议和隐私政策 的提示 modal
@@ -65,7 +64,7 @@ class LoginScreen extends Component<IProps, IState> {
 
   renderOneClickLogin() {
     const { dispatch, update_kv } = this.props
-    const { phone } = this.state
+    const { account } = this.state
     return (
       <View style={styles.oneClickLoginView}>
         <Image
@@ -77,10 +76,10 @@ class LoginScreen extends Component<IProps, IState> {
           cellStyle={styles.oneClickLoginStyle}
           title="+86"
           inputProps={{
-            value: phone,
+            value: account,
             placeholder: '请输入您的手机号码',
             onChangeText: (value) => {
-              this.setState({ phone: value })
+              this.setState({ account: value })
             },
           }}
         />
@@ -106,8 +105,8 @@ class LoginScreen extends Component<IProps, IState> {
   }
 
   renderPasswordLogin() {
-    const { passwordShow, phone, password } = this.state
-    const { navigation } = this.props
+    const { passwordShow, account, password } = this.state
+    const { navigation, loginMobile } = this.props
     return (
       <View>
         <Text style={styles.accountLoginTitle}>密码登录</Text>
@@ -119,9 +118,9 @@ class LoginScreen extends Component<IProps, IState> {
             autoCapitalize="none"
             style={styles.accountLoginInput}
             placeholder="请输入手机号或邮箱"
-            value={phone}
+            value={account}
             onChangeText={(value) => {
-              this.setState({ phone: value })
+              this.setState({ account: value })
             }}
           />
         </View>
@@ -153,10 +152,21 @@ class LoginScreen extends Component<IProps, IState> {
           </NextTouchableOpacity>
         </View>
         <NextTouchableOpacity
-          style={[styles.loginBtn, { marginTop: 108 }]}
+          style={[styles.loginBtn, { marginTop: 108 }, (!account || !password) && { opacity: 0.8 }]}
+          disabled={!account || !password}
           onPress={() => {
             // RootLoading.info('登录')
-            navigation.push('ChooseRole')
+            RootLoading.loading()
+            loginMobile(account, password, (error, result) => {
+              console.log('111111111: ', error, result)
+              RootLoading.hide()
+              if (!error && result) {
+                RootLoading.success('登录成功')
+                navigation.push('ChooseRole')
+              } else {
+                RootLoading.fail(error)
+              }
+            })
           }}
         >
           <Text style={styles.loginText}>登录</Text>
@@ -196,7 +206,7 @@ class LoginScreen extends Component<IProps, IState> {
             inputProps={{
               placeholder: '请输入您的手机号码',
               onChangeText: (value) => {
-                this.setState({ phone: value })
+                this.setState({ account: value })
               },
             }}
           />
@@ -283,11 +293,11 @@ class LoginScreen extends Component<IProps, IState> {
   }
 
   renderRegisterTipView() {
-    const { phone } = this.state
+    const { account } = this.state
     return (
       <View style={styles.registerTipView}>
         <Text style={styles.registerTipTitle}>
-          {`新手机号注册提醒手机号[${phone}]未注册，点击注册，将为您注册账号并进入趁早找。`}
+          {`新手机号注册提醒手机号[${account}]未注册，点击注册，将为您注册账号并进入趁早找。`}
         </Text>
         <View style={styles.registerTipBtnView}>
           <NextTouchableOpacity
@@ -302,6 +312,7 @@ class LoginScreen extends Component<IProps, IState> {
             containerStyle={styles.registerTipRightBtn}
             text="注册"
             onPress={() => {
+
               AsyncStorage.setItem(Login_type, '1', (error) => {
                 console.log('1111111111: ', error)
                 if (!error) {

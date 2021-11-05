@@ -51,7 +51,7 @@ export default StyleSheet.create({
     height: 55,
     marginHorizontal: 21,
     borderRadius: 8,
-    backgroundColor: 'rgba(84,214,147,0.6)',
+    backgroundColor: greenColor,
     width: SystemHelper.width - 42,
     alignItems: 'center',
     justifyContent: 'center',
