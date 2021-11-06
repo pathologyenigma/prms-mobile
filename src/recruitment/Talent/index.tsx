@@ -1,12 +1,9 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+import Empty from './Empty'
 
 function Talent() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>找人才</Text>
-    </View>
-  )
+  return <Empty />
 }
 
 const styles = StyleSheet.create({
