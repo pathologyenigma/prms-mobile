@@ -1,9 +1,10 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import Empty from './Empty'
+import TalentList from './TalentList'
 
 function Talent() {
-  return <Empty />
+  return <TalentList />
 }
 
 const styles = StyleSheet.create({
