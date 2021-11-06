@@ -5,6 +5,7 @@ import Home from './Home'
 
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import { StatusBar } from 'react-native'
 
 const Stack = createStackNavigator()
 
@@ -12,6 +13,7 @@ class App extends Component {
   render() {
     return (
       <NavigationContainer>
+        <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator>
           {Object.keys(screens).map(key => (
             <Stack.Screen
