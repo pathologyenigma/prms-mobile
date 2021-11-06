@@ -1,11 +1,26 @@
 import React from 'react'
-import { View, StyleSheet, StatusBar, ScrollView } from 'react-native'
+import {
+  View,
+  StyleSheet,
+  StatusBar,
+  FlatList,
+  ListRenderItem,
+} from 'react-native'
 import FilterButton from '../../components/FilterButton'
 import RadioLabelGroup from '../../components/RadioLabelGroup'
 import { headerHeight, navigationBarHeight } from '../../theme'
 import NavBar from './NavBar'
+import NoMoreFooter from './NoMoreFooter'
+import TalentListItem from './TalentListItem'
+import UpgradeFeature from './UpgradeFeature'
 
 export default function TalentList() {
+  const data = ['a', 'b']
+
+  const renderItem: ListRenderItem<string> = ({ index, item }) => {
+    return <TalentListItem key={index} />
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -21,6 +36,12 @@ export default function TalentList() {
         />
         <FilterButton text={'筛选'} style={styles.filterButton} />
       </View>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        ListHeaderComponent={UpgradeFeature}
+        ListFooterComponent={NoMoreFooter}
+      />
     </View>
   )
 }
