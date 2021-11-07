@@ -17,7 +17,7 @@ type TRouterParams = {
   ForgetPassword: any,
   ChooseRole: any,
   AgreementPrivacy: { pageType: number } // 1: 用户协议 2: 隐私政策
-  InputVerifyCode: any
+  InputVerifyCode: { phone: string }
   SetPassword: any
   // RequestJob: any,
   // AppRouter: any,

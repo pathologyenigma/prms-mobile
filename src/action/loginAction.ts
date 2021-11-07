@@ -9,7 +9,7 @@ import {
 import {
   gql
 } from "@apollo/client"
-import { apolloClientShare, GET_LOGIN, loginGql } from '../utils/postQuery'
+import { apolloClientShare, loginGql, numberCheckGql, registerGql, sendSMSGql } from '../utils/postQuery'
 
 const reset_reducer = () => {
   return {
@@ -38,15 +38,111 @@ const update_kv = (key: string, value: string) => {
 }
 
 const loginMobile = (account: string, password: string, callback: (error: any, result?: any) => void) => {
-  console.log('2222222222@@@: ', GET_LOGIN(account, password))
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
-      query: GET_LOGIN(account, password),
+      query: loginGql,
+      variables: {
+        info: {
+          account,
+          password: {
+            isVerifyCode: false,
+            value: password
+          }
+        }
+      }
     })
       .then((res) => {
         console.log('res: ', res)
         if (res && res.data) {
           dispatch(update_user_info('UserLogIn', res.data.UserLogIn))
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error) => {
+        console.log('error: ', error)
+        if (callback) {
+          callback(error)
+        }
+      })
+  }
+}
+
+const userNumberCheck = (num: string, callback: (error: any, result?: any) => void) => {
+  console.log('num: ', num)
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.query({
+      query: numberCheckGql,
+      variables: {
+        num,
+      }
+    })
+      .then((res) => {
+        console.log('res: ', res)
+        if (res && res.data) {
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error) => {
+        console.log('error: ', error)
+        if (callback) {
+          callback(error)
+        }
+      })
+  }
+}
+
+const sendSMS = (phoneNumber: string, callback: (error: any, result?: any) => void) => {
+  console.log('phoneNumber: ', phoneNumber)
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.query({
+      query: sendSMSGql,
+      variables: {
+        phoneNumber: phoneNumber,
+      }
+    })
+      .then((res) => {
+        console.log('res: ', res)
+        if (res && res.data) {
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error) => {
+        console.log('error: ', error)
+        if (callback) {
+          callback(error)
+        }
+      })
+  }
+}
+
+const registerAccount = (
+  username: string,
+  email: string,
+  password: string,
+  confirmPassword: string,
+  phoneNumber: string,
+  verifyCode: string, callback: (error: any, result?: any) => void) => {
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.query({
+      query: registerGql,
+      variables: {
+        username,
+        email,
+        password,
+        confirmPassword,
+        phoneNumber,
+        verifyCode,
+      }
+    })
+      .then((res) => {
+        console.log('res: ', res)
+        if (res && res.data) {
           if (callback) {
             callback(undefined, res.data)
           }
@@ -146,4 +242,7 @@ export {
   sendResetCode,
   verificationResetCode,
   chooseRole,
+  userNumberCheck,
+  sendSMS,
+  registerAccount,
 }

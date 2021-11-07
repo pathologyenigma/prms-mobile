@@ -15,11 +15,7 @@ import GradientButton from '../components/GradientButton'
 import SystemHelper from '../../utils/system'
 import NavBar, { EButtonType } from '../components/NavBar'
 
-type IProps = GenProps<'InputVerifyCode'> & {
-  email: string,
-  password: string,
-  number: string,
-}
+type IProps = GenProps<'InputVerifyCode'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 interface IState {
   email: string
@@ -29,8 +25,11 @@ interface IState {
   secondCode: string,
   thirdCode: string,
   fourCode: string,
+  fiveCode: string,
+  sixCode: string,
   countTime: number
   focusIndex: number
+
 }
 
 class InputVerifyCode extends Component<IProps, IState> {
@@ -39,28 +38,38 @@ class InputVerifyCode extends Component<IProps, IState> {
   private secondInputRef: any
   private thirdInputRef: any
   private fourInputRef: any
+  private fiveInputRef: any
+  private sixInputRef: any
   constructor(props: IProps) {
     super(props)
+    const { route: { params } } = props
     this.state = {
       email: '',
-      phone: '',
+      phone: (params && params.phone) || '',
       password: '',
       verifyCode: '',
       secondCode: '',
       thirdCode: '',
       fourCode: '',
+      fiveCode: '',
+      sixCode: '',
       countTime: 60,
       focusIndex: 0
     }
   }
 
-  requestFinish() {
-    const { phone, email, password } = this.state
-    if (!phone && !email) {
-      RootLoading.fail('请输入手机号码或邮箱')
-      return
-    }
-
+  componentDidMount() {
+    // 暂时注释,以免浪费验证码
+    // RootLoading.loading('正在发送验证码')
+    // this.props.sendSMS(this.state.phone, (error, reuslt) => {
+    //   console.log('error, reuslt: ', error, reuslt)
+    //   if (!error && reuslt) {
+    //     RootLoading.success('发送成功')
+    //     this.countTimeFunc(60)
+    //   } else {
+    //     RootLoading.fail('发送失败,请重试')
+    //   }
+    // })
   }
 
   componentWillUnmount() {
@@ -104,7 +113,7 @@ class InputVerifyCode extends Component<IProps, IState> {
   }
 
   renderVerifyCode() {
-    const { verifyCode, countTime, focusIndex, secondCode, thirdCode, fourCode } = this.state
+    const { verifyCode, countTime, focusIndex, secondCode, thirdCode, fourCode, fiveCode, sixCode } = this.state
     console.log('focusIndex: ', focusIndex)
     console.log('secondInput: ', this.refs.secondInput)
     return (
@@ -193,6 +202,48 @@ class InputVerifyCode extends Component<IProps, IState> {
               })
             }}
           />
+          <TextInput
+            ref={(e) => this.fiveInputRef = e}
+            underlineColorAndroid="transparent"
+            returnKeyType="done"
+            autoCorrect={false}
+            autoCapitalize="none"
+            style={styles.accountLoginInput}
+            placeholder=""
+            maxLength={1}
+            value={fiveCode}
+            onChangeText={(value) => {
+              if (value === '') {
+                if (this.fourInputRef) { this.fourInputRef.focus() }
+              } else {
+                if (this.fiveInputRef) { this.fiveInputRef.blur() }
+              }
+              this.setState({
+                fiveCode: value,
+              })
+            }}
+          />
+          <TextInput
+            ref={(e) => this.sixInputRef = e}
+            underlineColorAndroid="transparent"
+            returnKeyType="done"
+            autoCorrect={false}
+            autoCapitalize="none"
+            style={styles.accountLoginInput}
+            placeholder=""
+            maxLength={1}
+            value={sixCode}
+            onChangeText={(value) => {
+              if (value === '') {
+                if (this.fiveInputRef) { this.fiveInputRef.focus() }
+              } else {
+                if (this.sixInputRef) { this.sixInputRef.blur() }
+              }
+              this.setState({
+                sixCode: value,
+              })
+            }}
+          />
         </View>
         {countTime === 60 ? (
           <NextTouchableOpacity
@@ -223,12 +274,30 @@ class InputVerifyCode extends Component<IProps, IState> {
   }
 
   renderFinish() {
+    const username = ''
+    const email = ''
+    const password = ''
+    const confirmPassword = ''
+    const phoneNumber = ''
+    const verifyCode = ''
     return (
       <NextTouchableOpacity
         style={styles.finishBtn}
         onPress={() => {
           const { navigation } = this.props
           navigation.push('SetPassword')
+          this.props.registerAccount(
+            username,
+            email,
+            password,
+            confirmPassword,
+            phoneNumber,
+            verifyCode,
+            (error, result) => {
+              console.log('进行注册操作')
+              // 此处和接口字段相差较多!!!
+            }
+          )
         }}
       >
         <Text
@@ -250,7 +319,7 @@ class InputVerifyCode extends Component<IProps, IState> {
           style={styles.scrollview}
         >
           <Text style={styles.pageTitle}>输入短信验证码</Text>
-          <Text style={styles.pageDetail}>已向您的手机13430022233发送验证码</Text>
+          <Text style={styles.pageDetail}>{`已向您的手机${phone}发送验证码`}</Text>
           {this.renderVerifyCode()}
           {this.renderFinish()}
         </ScrollView>
@@ -261,7 +330,6 @@ class InputVerifyCode extends Component<IProps, IState> {
 
 const mapStateToProps = (state: IStoreState) => {
   return {
-    email: state.loginInfo.email,
     phone: state.loginInfo.phone,
     password: state.loginInfo.password,
     verifyCode: state.loginInfo.verifyCode,
@@ -273,6 +341,8 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
     reset_reducer: actions.reset_reducer,
     update_kv: actions.update_kv,
     loginMobile: actions.loginMobile,
+    sendSMS: actions.sendSMS,
+    registerAccount: actions.registerAccount
   }, dispatch)
 }
 

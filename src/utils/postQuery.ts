@@ -17,8 +17,6 @@ const initApolloClient = () => {
   return apolloClientShare
 }
 
-// const loginGql = ''
-
 export const GET_ALL_COUNTRIES = gql`
   query getAllCountry {
     getAllCountry {
@@ -30,22 +28,39 @@ export const GET_ALL_COUNTRIES = gql`
   }
 `;
 
-const GET_LOGIN = (account: string, password: string) => gql`
-  query UserLogIn {
-    UserLogIn (info:{
-      account: "ccb"
-      password:{
-        isVerifyCode:false
-        value: "ccb123123"
-      }
-    }){
+const sendSMSGql = gql`
+  query StaticSendSms( $phoneNumber:String! ) {
+    StaticSendSms(phoneNumber:$phoneNumber)
+  }
+`
+
+const numberCheckGql = gql`
+  query UserNumberCheck( $num:String! ) {
+    UserNumberCheck(num:$num)
+  }
+  `
+
+const loginGql = gql`
+  query UserLogIn( $info:Login! ) {
+    UserLogIn(info:$info) {
       username
+      token
+      createdAt
     }
+  }
+`
+
+const registerGql = gql`
+  query UserRegister( $info:Register! ) {
+    UserRegister(info:$info)
   }
 `
 
 export {
   apolloClientShare,
   initApolloClient,
-  GET_LOGIN,
+  sendSMSGql,
+  loginGql,
+  numberCheckGql,
+  registerGql,
 }

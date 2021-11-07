@@ -12,7 +12,7 @@ type TRouterParams = {
   LoginScreen: any,
   ForgetPassword: any,
   ChooseRole: any
-  InputVerifyCode: any
+  InputVerifyCode: { phone: string }
   SetPassword: any
 }
 

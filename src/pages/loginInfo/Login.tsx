@@ -22,6 +22,7 @@ import {
 import {
   gql
 } from "@apollo/client"
+import { numberRegex } from '../../utils/regex'
 
 type IProps = GenProps<'LoginScreen'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
@@ -42,7 +43,7 @@ class LoginScreen extends Component<IProps, IState> {
       passwordShow: false, // 是否隐藏密码(以*进行展示)
       showRegisterTips: false,
       showPrivacyTips: false,
-      account: 'ccb',
+      account: '13951848647',
       password: 'ccb123123'
     }
   }
@@ -158,13 +159,16 @@ class LoginScreen extends Component<IProps, IState> {
             // RootLoading.info('登录')
             RootLoading.loading()
             loginMobile(account, password, (error, result) => {
-              console.log('111111111: ', error, result)
+              console.log('111111111: ', error)
+              console.log('111111112: ', result)
               RootLoading.hide()
               if (!error && result) {
                 RootLoading.success('登录成功')
                 navigation.push('ChooseRole')
+              } else if (error.toString() === 'Error: user not found') {
+                RootLoading.fail('该账号未注册,请先注册')
               } else {
-                RootLoading.fail(error)
+                RootLoading.fail(error.toString())
               }
             })
           }}
@@ -175,8 +179,9 @@ class LoginScreen extends Component<IProps, IState> {
           <NextTouchableOpacity
             style={styles.passwordLogin}
             onPress={() => {
-              this.setState({ loginType: 2 })
-              RootLoading.info('验证码登录/注册')
+              this.setState({
+                loginType: 2,
+              })
             }}
           >
             <Text style={styles.passwordLoginText}>验证码登录/注册</Text>
@@ -185,7 +190,11 @@ class LoginScreen extends Component<IProps, IState> {
             style={styles.passwordLogin}
             onPress={() => {
               // navigation.push('ForgetPassword')
-              navigation.push('InputVerifyCode')
+              if (numberRegex.test(account)) {
+                navigation.push('InputVerifyCode', { phone: account })
+              } else {
+                RootLoading.info('请输入正确的手机号以接收验证码!')
+              }
             }}
           >
             <Text style={styles.passwordLoginText}>忘记密码</Text>
@@ -196,6 +205,7 @@ class LoginScreen extends Component<IProps, IState> {
   }
 
   renderVerifyCodeLogin() {
+    const { account } = this.state
     return (
       <View>
         <View style={styles.verifyCodeLoginView}>
@@ -204,6 +214,7 @@ class LoginScreen extends Component<IProps, IState> {
             cellStyle={[styles.oneClickLoginStyle, { marginTop: 31 }]}
             title="+86"
             inputProps={{
+              value: account,
               placeholder: '请输入您的手机号码',
               onChangeText: (value) => {
                 this.setState({ account: value })
@@ -213,8 +224,11 @@ class LoginScreen extends Component<IProps, IState> {
           <NextTouchableOpacity
             style={[styles.loginBtn, { marginTop: 44 }]}
             onPress={() => {
-              RootLoading.info('下一步')
-              this.requestLogin()
+              if (numberRegex.test(account)) {
+                this.requestLogin()
+              } else {
+                RootLoading.info('请输入正确的手机号以接收验证码!')
+              }
             }}
           >
             <Text style={styles.loginText}>下一步</Text>
@@ -312,24 +326,25 @@ class LoginScreen extends Component<IProps, IState> {
             containerStyle={styles.registerTipRightBtn}
             text="注册"
             onPress={() => {
+              const { navigation } = this.props
+              navigation.push('InputVerifyCode', { phone: account })
+              //   AsyncStorage.setItem(Login_type, '1', (error) => {
+              //     console.log('1111111111: ', error)
+              //     if (!error) {
+              //       const { navigation } = this.props
+              //       navigation.dispatch(
+              //         CommonActions.reset({
+              //           index: 1,
+              //           routes: [
+              //             { name: 'Dummy' },
+              //           ],
+              //         })
+              //       )
 
-              AsyncStorage.setItem(Login_type, '1', (error) => {
-                console.log('1111111111: ', error)
-                if (!error) {
-                  const { navigation } = this.props
-                  navigation.dispatch(
-                    CommonActions.reset({
-                      index: 1,
-                      routes: [
-                        { name: 'Dummy' },
-                      ],
-                    })
-                  )
-
-                } else {
-                  RootLoading.fail('请重试或联系客服')
-                }
-              })
+              //     } else {
+              //       RootLoading.fail('请重试或联系客服')
+              //     }
+              //   })
             }}
           />
         </View>
@@ -338,6 +353,8 @@ class LoginScreen extends Component<IProps, IState> {
   }
 
   renderPrivacyView() {
+    const { account } = this.state
+    const { navigation } = this.props
     return (
       <View style={styles.privacyModal}>
         <Text style={styles.privacyModalTitle}>
@@ -379,7 +396,22 @@ class LoginScreen extends Component<IProps, IState> {
             text="同意并继续"
             onPress={() => {
               this.setState({ showPrivacyTips: false }, () => {
-                this.setState({ showRegisterTips: true })
+                RootLoading.loading()
+                const { userNumberCheck } = this.props
+                userNumberCheck(account, (error, result) => {
+                  console.log('sssssssssssSS: ', error, result)
+                  RootLoading.hide()
+                  if (!error && result) {
+                    if (result.UserNumberCheck) {
+                      // 该手机号是否可用(是否已经注册过)-已经注册过
+                      navigation.push('InputVerifyCode', { phone: account })
+                    } else {
+                      this.setState({ showRegisterTips: true })
+                    }
+                  } else {
+                    RootLoading.fail(error)
+                  }
+                })
               })
             }}
           />
@@ -461,6 +493,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
     reset_reducer: actions.reset_reducer,
     update_kv: actions.update_kv,
     loginMobile: actions.loginMobile,
+    userNumberCheck: actions.userNumberCheck
   }, dispatch)
 }
 
