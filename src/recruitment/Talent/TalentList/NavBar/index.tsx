@@ -5,8 +5,12 @@ import IconButton from '../../../components/IconButton'
 import RadioLabelGroup from '../../../components/RadioLabelGroup'
 import { headerHeight, navigationBarHeight } from '../../../theme'
 import LinearGradientMaskedView from '../../../components/LinearGradientMaskedView'
+import { useNavigation } from '@react-navigation/core'
+import { StackNavigationProp } from '@react-navigation/stack'
 
 export default function NavBar() {
+  const navigation = useNavigation<StackNavigationProp<any>>()
+
   return (
     <LinearGradient
       style={styles.header}
@@ -30,7 +34,10 @@ export default function NavBar() {
             />
           </ScrollView>
         </LinearGradientMaskedView>
-        <IconButton icon={require('./guanli.png')} />
+        <IconButton
+          icon={require('./guanli.png')}
+          onPress={() => navigation.navigate('PostJob')}
+        />
         <IconButton icon={require('./sousuo.png')} style={{ marginRight: 8 }} />
       </View>
     </LinearGradient>

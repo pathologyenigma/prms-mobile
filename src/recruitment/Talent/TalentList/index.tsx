@@ -38,6 +38,7 @@ export default function TalentList() {
       </View>
       <FlatList
         data={data}
+        keyExtractor={item => item}
         renderItem={renderItem}
         ListHeaderComponent={UpgradeFeature}
         ListFooterComponent={NoMoreFooter}

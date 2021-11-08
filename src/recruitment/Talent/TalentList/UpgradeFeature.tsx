@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     backgroundColor: '#E7FEF1',
     borderRadius: 2,
+    overflow: 'hidden',
   },
   button: {
     height: 24,

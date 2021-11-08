@@ -51,9 +51,10 @@ const styles = StyleSheet.create({
   name: {
     color: '#333333',
     fontSize: 16,
+    lineHeight: 22,
   },
   nameRow: {
-    marginTop: 16,
+    marginTop: 12,
   },
   activeState: {
     width: 6,
@@ -68,12 +69,13 @@ const styles = StyleSheet.create({
     marginLeft: 5.5,
   },
   experienceRow: {
-    marginTop: 10,
+    marginTop: 9,
     alignItems: 'center',
   },
   experience: {
     color: '#333333',
     fontSize: 13,
+    lineHeight: 18,
     fontWeight: '500',
   },
   experienceDivider: {
@@ -87,6 +89,7 @@ const styles = StyleSheet.create({
     height: 19,
     lineHeight: 19,
     borderRadius: 2,
+    overflow: 'hidden',
     alignSelf: 'flex-start',
     color: '#666666',
     paddingHorizontal: 8,
@@ -97,13 +100,14 @@ const styles = StyleSheet.create({
   },
   jobName: {
     fontSize: 15,
+    lineHeight: 21,
     color: '#333333',
     marginLeft: 11.5,
     fontWeight: '500',
   },
   jobIcon: {},
   advantage: {
-    marginTop: 10,
+    marginTop: 9,
     color: '#888888',
     fontSize: 14,
     lineHeight: 18,
