@@ -6,27 +6,18 @@ import {
   StackNavigationOptions,
 } from '@react-navigation/stack'
 import { StatusBar, Image } from 'react-native'
+import BackImage from './components/BackImage'
 
 import Home from './Home'
 import PostJob, { PostJobOptions } from './Job/PostJob'
-import BackImage from './components/BackImage'
+import EditJobName, { EditJobNameOptions } from './Job/EditJboName'
+import PostJobSuccess, { PostJobSuccessOptions } from './Job/PostJobSuccess'
+import JobPostRule, { JobPostRuleOptions } from './Job/JobPostRule'
+import EditJobDescription, {
+  EditJobDescriptionOptions,
+} from './Job/EditJobDescription'
 
 const Stack = createStackNavigator()
-
-const screenOptions: StackNavigationOptions = {
-  headerStyle: {
-    backgroundColor: '#FFFFFF',
-  },
-  headerTitleStyle: {
-    color: '#333333',
-    fontWeight: '500',
-    fontSize: 18,
-  },
-  headerTitleAlign: 'center',
-  headerBackTitleVisible: false,
-  headerBackImage: () => <BackImage />,
-  headerPressColorAndroid: '#00000000',
-}
 
 class App extends Component {
   render() {
@@ -34,6 +25,30 @@ class App extends Component {
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            key="EditJobDescription"
+            name="EditJobDescription"
+            component={EditJobDescription}
+            options={EditJobDescriptionOptions}
+          />
+          <Stack.Screen
+            key="JobPostRule"
+            name="JobPostRule"
+            component={JobPostRule}
+            options={JobPostRuleOptions}
+          />
+          <Stack.Screen
+            key="PostJobSuccess"
+            name="PostJobSuccess"
+            component={PostJobSuccess}
+            options={PostJobSuccessOptions}
+          />
+          <Stack.Screen
+            key="EditJobName"
+            name="EditJobName"
+            component={EditJobName}
+            options={EditJobNameOptions}
+          />
           <Stack.Screen
             key="PostJob"
             name="PostJob"
@@ -52,6 +67,21 @@ class App extends Component {
       </NavigationContainer>
     )
   }
+}
+
+const screenOptions: StackNavigationOptions = {
+  headerStyle: {
+    backgroundColor: '#FFFFFF',
+  },
+  headerTitleStyle: {
+    color: '#333333',
+    fontWeight: '500',
+    fontSize: 18,
+  },
+  headerTitleAlign: 'center',
+  headerBackTitleVisible: false,
+  headerBackImage: () => <BackImage />,
+  headerPressColorAndroid: '#00000000',
 }
 
 const screens: {

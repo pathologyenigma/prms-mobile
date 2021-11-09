@@ -1,6 +1,6 @@
-import { StackNavigationOptions } from '@react-navigation/stack'
 import React from 'react'
 import { View, Text, Image, StyleSheet, StatusBar } from 'react-native'
+import { StackNavigationOptions } from '@react-navigation/stack'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import GradientButton from '../../components/GradientButton'
 import AdmissionPicker from './AdmissionPicker'
