@@ -92,19 +92,32 @@ class ChooseRole extends Component<IProps, IState> {
     )
   }
 
-  renderFindPerson() {
+  renderFindPerson(title: string) {
+    let icon = require('../../assets/requestJobs/role-person.png')
+    if (title === '招聘') {
+      icon = require('../../assets/requestJobs/role-hr.png')
+    } else if (title === '学习') {
+      icon = require('../../assets/requestJobs/role-xuexi.png')
+    } else if (title === '创业') {
+      icon = require('../../assets/requestJobs/role-chuangye.png')
+    } else if (title === '投资') {
+      icon = require('../../assets/requestJobs/role-touzi.png')
+    } else if (title === '顾问') {
+      icon = require('../../assets/requestJobs/role-guwen.png')
+    }
     return (
       <NextTouchableOpacity style={styles.grayCellView}
         onPress={() => {
-          RootLoading.info('我要招人')
+          RootLoading.info(`我要${title},敬请期待`)
         }}
       >
         <Image
           style={styles.hrLogo}
-          source={require('../../assets/requestJobs/role-hr.png')}
+          source={icon}
+          resizeMode="center"
         />
         <Text style={styles.requestPersonTitle}>
-          招聘
+          {title}
         </Text>
       </NextTouchableOpacity>
     )
@@ -119,8 +132,14 @@ class ChooseRole extends Component<IProps, IState> {
           style={styles.scrollview}
         >
           <Text style={styles.chooseTitle}>请选择身份并继续</Text>
-          {this.renderFindJob()}
-          {this.renderFindPerson()}
+          <View style={styles.roleView}>
+            {this.renderFindJob()}
+            {this.renderFindPerson('招聘')}
+            {this.renderFindPerson('学习')}
+            {this.renderFindPerson('创业')}
+            {this.renderFindPerson('投资')}
+            {this.renderFindPerson('顾问')}
+          </View>
         </ScrollView>
       </View>
     )

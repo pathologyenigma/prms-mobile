@@ -9,7 +9,7 @@ import {
 import {
   gql
 } from "@apollo/client"
-import { apolloClientShare, loginGql, numberCheckGql, registerGql, sendSMSGql } from '../utils/postQuery'
+import { apolloClientShare, getENTEditEnterpriseBasicInfoGql, getUserEditPersonalDataGql, loginGql, numberCheckGql, registerGql, sendSMSGql } from '../utils/postQuery'
 
 const reset_reducer = () => {
   return {
@@ -44,10 +44,8 @@ const loginMobile = (account: string, password: string, callback: (error: any, r
       variables: {
         info: {
           account,
-          password: {
-            isVerifyCode: false,
-            value: password
-          }
+          deviceId: 'deviceId',
+          password,
         }
       }
     })
@@ -61,6 +59,7 @@ const loginMobile = (account: string, password: string, callback: (error: any, r
         }
       })
       .catch((error) => {
+        // TODO:此处由于登录接口错误,会返回错误的结果,实际参数是正确的.注意后续流程复测
         console.log('error: ', error)
         if (callback) {
           callback(error)
@@ -157,6 +156,48 @@ const registerAccount = (
   }
 }
 
+// 编辑企业信息
+const getENTEditEnterpriseBasicInfo = (info: any, callback: (error: any, result?: any) => void) => {
+  const { enterpriseName, abbreviation, enterpriseLocation, enterprisecCoordinate,
+    enterpriseNature, enterpriseIndustry, enterpriseFinancing, enterpriseSize, enterpriseProfile,
+    logo, establishedDate, homepage, tel
+  } = info
+  apolloClientShare.mutate({
+    mutation: getENTEditEnterpriseBasicInfoGql,
+    variables: {
+      info: {
+        enterpriseName,
+        abbreviation,
+        enterpriseLocation,
+        enterprisecCoordinate: [1],
+        enterpriseNature,
+        enterpriseIndustry,
+        enterpriseFinancing,
+        enterpriseSize,
+        enterpriseProfile,
+        logo,
+        establishedDate,
+        homepage,
+        tel,
+      }
+    }
+  })
+    .then((res) => {
+      console.log('res: ', res)
+      if (res && res.data) {
+        if (callback) {
+          callback(undefined, res.data)
+        }
+      }
+    })
+    .catch((error) => {
+      console.log('error: ', error)
+      if (callback) {
+        callback(error)
+      }
+    })
+}
+
 // 发送重置密码的验证码
 const sendResetCode = (mobileNumber?: string, email?: string, callback?: (error: any, result?: any) => void) => {
 
@@ -245,4 +286,5 @@ export {
   userNumberCheck,
   sendSMS,
   registerAccount,
+  getENTEditEnterpriseBasicInfo,
 }

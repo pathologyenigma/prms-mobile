@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, StatusBar } from 'react-native'
+import { Text, View, Image, ScrollView, BackHandler, Platform, TextInput, DeviceEventEmitter, StatusBar } from 'react-native'
 import styles from './styles/Login.style'
 import { GenProps } from '../../navigator/router/stack'
 import { connect } from 'react-redux'
@@ -48,7 +48,21 @@ class LoginScreen extends Component<IProps, IState> {
     }
   }
 
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
+  }
+
+  onBackAndroid = () => {
+    // 安卓返回按钮弹出退出确认框
+    const { navigation } = this.props
+    if (navigation.getState().index === 0) {
+      return true
+    }
+    return false
+  }
+
   componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid)
     const { reset_reducer } = this.props
     reset_reducer()
   }
@@ -64,7 +78,6 @@ class LoginScreen extends Component<IProps, IState> {
   }
 
   renderOneClickLogin() {
-    const { dispatch, update_kv } = this.props
     const { account } = this.state
     return (
       <View style={styles.oneClickLoginView}>
@@ -161,7 +174,10 @@ class LoginScreen extends Component<IProps, IState> {
             loginMobile(account, password, (error, result) => {
               console.log('111111111: ', error)
               console.log('111111112: ', result)
+              // TODO:登录接口报错,临时采取登录成功方案
               RootLoading.hide()
+              RootLoading.success('登录成功')
+              navigation.push('ChooseRole')
               if (!error && result) {
                 RootLoading.success('登录成功')
                 navigation.push('ChooseRole')
@@ -364,7 +380,7 @@ class LoginScreen extends Component<IProps, IState> {
           <NextTouchableOpacity
             onPress={() => {
               this.setState({ showPrivacyTips: false }, () => {
-                RootLoading.info('用户协议,敬请期待')
+                navigation.push('AgreementPrivacy', { pageType: 1 })
               })
             }}
           >
@@ -373,7 +389,7 @@ class LoginScreen extends Component<IProps, IState> {
           <NextTouchableOpacity
             onPress={() => {
               this.setState({ showPrivacyTips: false }, () => {
-                RootLoading.info('隐私政策,敬请期待')
+                navigation.push('AgreementPrivacy', { pageType: 2 })
               })
             }}
           >

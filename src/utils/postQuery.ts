@@ -56,6 +56,18 @@ const registerGql = gql`
   }
 `
 
+const getUserEditPersonalDataGql = gql`
+  mutation UserEditPersonalData($info:BasicData!){
+    UserEditPersonalData(info:$info)
+  }
+`
+
+const getENTEditEnterpriseBasicInfoGql = gql`
+  mutation ENTEditEnterpriseBasicInfo ($info:EditEnterpriseBasicInfo!){
+    ENTEditEnterpriseBasicInfo (info:$info)
+  }
+`
+
 export {
   apolloClientShare,
   initApolloClient,
@@ -63,4 +75,6 @@ export {
   loginGql,
   numberCheckGql,
   registerGql,
+  getUserEditPersonalDataGql,
+  getENTEditEnterpriseBasicInfoGql,
 }

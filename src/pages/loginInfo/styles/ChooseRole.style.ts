@@ -9,7 +9,7 @@ export default StyleSheet.create({
   },
   scrollview: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: 13,
   },
   chooseTitle: {
     color: '#333',
@@ -18,8 +18,14 @@ export default StyleSheet.create({
     marginTop: 10,
     paddingBottom: 8,
   },
+  roleView: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
   cellView: {
-    marginTop: 56,
+    width: (SystemHelper.width - 36) / 2,
+    marginTop: 36,
     height: 90,
     borderRadius: 8,
     flexDirection: 'row',
@@ -32,8 +38,8 @@ export default StyleSheet.create({
     height: 35
   },
   hrLogo: {
-    width: 36,
-    height: 36
+    width: 37,
+    height: 38
   },
   requestJobTitle: {
     marginLeft: 22,
@@ -42,7 +48,8 @@ export default StyleSheet.create({
     fontWeight: '400'
   },
   grayCellView: {
-    marginTop: 56,
+    width: (SystemHelper.width - 36) / 2,
+    marginTop: 36,
     height: 90,
     borderRadius: 8,
     flexDirection: 'row',

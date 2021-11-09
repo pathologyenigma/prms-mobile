@@ -153,6 +153,7 @@ export default StyleSheet.create({
     color: '#333333',
     fontSize: 16,
     fontWeight: 'bold',
+    lineHeight: 18,
     flex: 1
   },
   videoDetail: {
