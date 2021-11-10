@@ -56,6 +56,20 @@ const registerGql = gql`
   }
 `
 
+// 重置密码
+const resetPasswordGql = gql`
+  query UserResetPassword( $info:ResetPassword! ) {
+    UserResetPassword(info:$info)
+  }
+`
+
+// check 验证码
+const checkUserVerifyCodeConsumeGql = gql`
+  query UserVerifyCodeConsume( $info:VerifyInfo! ) {
+    UserVerifyCodeConsume(info:$info)
+  }
+`
+
 const getUserEditPersonalDataGql = gql`
   mutation UserEditPersonalData($info:BasicData!){
     UserEditPersonalData(info:$info)
@@ -77,4 +91,6 @@ export {
   registerGql,
   getUserEditPersonalDataGql,
   getENTEditEnterpriseBasicInfoGql,
+  resetPasswordGql,
+  checkUserVerifyCodeConsumeGql
 }

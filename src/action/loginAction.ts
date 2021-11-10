@@ -9,7 +9,7 @@ import {
 import {
   gql
 } from "@apollo/client"
-import { apolloClientShare, getENTEditEnterpriseBasicInfoGql, getUserEditPersonalDataGql, loginGql, numberCheckGql, registerGql, sendSMSGql } from '../utils/postQuery'
+import { apolloClientShare, checkUserVerifyCodeConsumeGql, getENTEditEnterpriseBasicInfoGql, getUserEditPersonalDataGql, loginGql, numberCheckGql, registerGql, resetPasswordGql, sendSMSGql } from '../utils/postQuery'
 
 const reset_reducer = () => {
   return {
@@ -94,6 +94,7 @@ const userNumberCheck = (num: string, callback: (error: any, result?: any) => vo
   }
 }
 
+// 发送验证码
 const sendSMS = (phoneNumber: string, callback: (error: any, result?: any) => void) => {
   console.log('phoneNumber: ', phoneNumber)
   return (dispatch: Dispatch<AnyAction>) => {
@@ -198,9 +199,71 @@ const getENTEditEnterpriseBasicInfo = (info: any, callback: (error: any, result?
     })
 }
 
-// 发送重置密码的验证码
+// 发送验证码
 const sendResetCode = (mobileNumber?: string, email?: string, callback?: (error: any, result?: any) => void) => {
 
+}
+
+// 检查验证码(operation 中不同参数对应不同接口功能)
+const checkUserVerifyCodeConsume = (
+  phoneNumber: string,
+  verifyCode: string,
+  operation: string,
+  callback: (error: any, result?: any) => void) => {
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.query({
+      query: checkUserVerifyCodeConsumeGql,
+      variables: {
+        phoneNumber,
+        verifyCode,
+        operation
+      }
+    })
+      .then((res) => {
+        console.log('res: ', res)
+        if (res) {
+          if (callback) {
+            callback(undefined, res)
+          }
+        }
+      })
+      .catch((error) => {
+        console.log('error: ', error)
+        if (callback) {
+          callback(error)
+        }
+      })
+  }
+}
+
+// 重置密码
+const resetPassword = (
+  password: string,
+  confirmPassword: string,
+  callback: (error: any, result?: any) => void) => {
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.query({
+      query: resetPasswordGql,
+      variables: {
+        password,
+        confirmPassword,
+      }
+    })
+      .then((res) => {
+        console.log('res: ', res)
+        if (res && res.data) {
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error) => {
+        console.log('error: ', error)
+        if (callback) {
+          callback(error)
+        }
+      })
+  }
 }
 
 const chooseRole = (role: string, callback?: (error: any, result?: any) => void) => {
@@ -287,4 +350,6 @@ export {
   sendSMS,
   registerAccount,
   getENTEditEnterpriseBasicInfo,
+  checkUserVerifyCodeConsume,
+  resetPassword,
 }

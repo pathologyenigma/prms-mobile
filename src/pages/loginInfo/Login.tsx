@@ -207,7 +207,10 @@ class LoginScreen extends Component<IProps, IState> {
             onPress={() => {
               // navigation.push('ForgetPassword')
               if (numberRegex.test(account)) {
-                navigation.push('InputVerifyCode', { phone: account })
+                navigation.push('InputVerifyCode', {
+                  phone: account,
+                  operation: 'UserResetPassword'
+                })
               } else {
                 RootLoading.info('请输入正确的手机号以接收验证码!')
               }
@@ -343,7 +346,10 @@ class LoginScreen extends Component<IProps, IState> {
             text="注册"
             onPress={() => {
               const { navigation } = this.props
-              navigation.push('InputVerifyCode', { phone: account })
+              navigation.push('InputVerifyCode', {
+                phone: account,
+                operation: 'UserRegister'
+              })
               //   AsyncStorage.setItem(Login_type, '1', (error) => {
               //     console.log('1111111111: ', error)
               //     if (!error) {
@@ -420,7 +426,10 @@ class LoginScreen extends Component<IProps, IState> {
                   if (!error && result) {
                     if (result.UserNumberCheck) {
                       // 该手机号是否可用(是否已经注册过)-已经注册过
-                      navigation.push('InputVerifyCode', { phone: account })
+                      navigation.push('InputVerifyCode', {
+                        phone: account,
+                        operation: 'UserLogIn'
+                      })
                     } else {
                       this.setState({ showRegisterTips: true })
                     }
