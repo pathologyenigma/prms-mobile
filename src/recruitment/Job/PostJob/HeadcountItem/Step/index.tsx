@@ -31,7 +31,6 @@ export default function Step({ value = 1, onValueChange }: StepProps) {
         onPress={handleMinus}
         hitSlop={{ top: 12, left: 12, right: 0, bottom: 12 }}
         style={styles.button}
-        iconStyle={styles.button}
         icon={require('./minus.png')}
       />
       <TextInput
@@ -46,7 +45,6 @@ export default function Step({ value = 1, onValueChange }: StepProps) {
         onPress={handlePlugs}
         hitSlop={{ top: 12, left: 0, right: 12, bottom: 12 }}
         style={styles.button}
-        iconStyle={styles.button}
         icon={require('./plugs.png')}
       />
     </View>

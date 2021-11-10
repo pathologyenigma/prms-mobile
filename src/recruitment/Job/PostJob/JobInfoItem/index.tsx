@@ -1,10 +1,17 @@
 import React from 'react'
-import { View, Text, StyleSheet, Image } from 'react-native'
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableWithoutFeedback,
+} from 'react-native'
 
 interface JobInfoItemPros {
   title: string
   content?: string
-  placeholder: string
+  placeholder?: string
+  onPress?: () => void
   renderIndicator?: () => JSX.Element
   renderTitleBadge?: () => JSX.Element
 }
@@ -13,6 +20,7 @@ export default function JobInfoItem({
   title,
   content,
   placeholder,
+  onPress,
   renderIndicator,
   renderTitleBadge,
 }: JobInfoItemPros) {
@@ -62,15 +70,17 @@ export default function JobInfoItem({
   }
 
   return (
-    <View style={styles.container}>
-      {_renderTitle()}
-      <View style={styles.detail}>
-        {_renderContent()}
-        {_renderPlaceholder()}
-        {_renderIndicator()}
+    <TouchableWithoutFeedback onPress={onPress}>
+      <View style={styles.container}>
+        {_renderTitle()}
+        <View style={styles.detail}>
+          {_renderContent()}
+          {_renderPlaceholder()}
+          {_renderIndicator()}
+        </View>
+        <View style={styles.diviver} />
       </View>
-      <View style={styles.diviver} />
-    </View>
+    </TouchableWithoutFeedback>
   )
 }
 

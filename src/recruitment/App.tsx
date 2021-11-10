@@ -16,6 +16,10 @@ import JobPostRule, { JobPostRuleOptions } from './Job/JobPostRule'
 import EditJobDescription, {
   EditJobDescriptionOptions,
 } from './Job/EditJobDescription'
+import EditJobAddress, { EditJobAddressOptions } from './Job/EditJobAddress'
+import SearchJobAddress, {
+  SearchJobAddressOptions,
+} from './Job/SearchJobAddress'
 
 const Stack = createStackNavigator()
 
@@ -25,6 +29,19 @@ class App extends Component {
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            key="EditJobAddress"
+            name="EditJobAddress"
+            component={EditJobAddress}
+            options={EditJobAddressOptions}
+          />
+          <Stack.Screen
+            key="SearchJobAddress"
+            name="SearchJobAddress"
+            component={SearchJobAddress}
+            options={SearchJobAddressOptions}
+          />
+
           <Stack.Screen
             key="EditJobDescription"
             name="EditJobDescription"
