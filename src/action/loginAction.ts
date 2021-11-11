@@ -9,21 +9,12 @@ import {
 import {
   gql
 } from "@apollo/client"
-import { apolloClientShare, checkUserVerifyCodeConsumeGql, getENTEditEnterpriseBasicInfoGql, getUserEditPersonalDataGql, loginGql, numberCheckGql, registerGql, resetPasswordGql, sendSMSGql } from '../utils/postQuery'
+import { apolloClientShare, checkUserVerifyCodeConsumeGql, getENTEditEnterpriseBasicInfoGql, getUserEditPersonalDataGql, loginGql, numberCheckGql, registerGql, resetPasswordGql, sendSMSGql, testGql } from '../utils/postQuery'
+import errorHandler from '../utils/errorhandler'
 
 const reset_reducer = () => {
   return {
     type: 'loginInfo/reset_reducer',
-  }
-}
-
-const update_user_info = (key: string, value: string) => {
-  return {
-    type: 'userInfo/update_kv',
-    payload: {
-      key,
-      value,
-    },
   }
 }
 
@@ -37,6 +28,33 @@ const update_kv = (key: string, value: string) => {
   }
 }
 
+const loginMobile1 = (account: string, password: string, callback: (error: any, result?: any) => void) => {
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.query({
+      query: testGql,
+      variables: {
+        currency: 'CNY'
+      }
+    })
+      .then((res) => {
+        console.log('res: ', res)
+        // if (res && res.data) {
+        //   // dispatch(update_user_info('UserLogIn', res.data.UserLogIn))
+        //   if (callback) {
+        //     callback(undefined, res.data)
+        //   }
+        // }
+      })
+      .catch((error) => {
+        // TODO:此处由于登录接口错误,会返回错误的结果,实际参数是正确的.注意后续流程复测
+        console.log('error: ', error)
+        // if (callback) {
+        //   callback(error)
+        // }
+      })
+  }
+}
+
 const loginMobile = (account: string, password: string, callback: (error: any, result?: any) => void) => {
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
@@ -44,15 +62,15 @@ const loginMobile = (account: string, password: string, callback: (error: any, r
       variables: {
         info: {
           account,
-          deviceId: 'deviceId',
           password,
+          deviceId: 'deviceId',
         }
       }
     })
       .then((res) => {
         console.log('res: ', res)
         if (res && res.data) {
-          dispatch(update_user_info('UserLogIn', res.data.UserLogIn))
+          dispatch(update_kv('UserLogIn', res.data.UserLogIn))
           if (callback) {
             callback(undefined, res.data)
           }
@@ -61,9 +79,7 @@ const loginMobile = (account: string, password: string, callback: (error: any, r
       .catch((error) => {
         // TODO:此处由于登录接口错误,会返回错误的结果,实际参数是正确的.注意后续流程复测
         console.log('error: ', error)
-        if (callback) {
-          callback(error)
-        }
+        errorHandler(error)
       })
   }
 }
@@ -210,25 +226,28 @@ const checkUserVerifyCodeConsume = (
   verifyCode: string,
   operation: string,
   callback: (error: any, result?: any) => void) => {
+  console.log('checkUserVerifyCodeConsume: ', phoneNumber, verifyCode, operation)
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: checkUserVerifyCodeConsumeGql,
       variables: {
-        phoneNumber,
-        verifyCode,
-        operation
+        info: {
+          phoneNumber: "13951848647",
+          verifyCode: "tested",
+          operation: "UserResetPassword"
+        }
       }
     })
       .then((res) => {
-        console.log('res: ', res)
-        if (res) {
+        console.log('res1: ', res)
+        if (res && res.data) {
           if (callback) {
-            callback(undefined, res)
+            callback(undefined, res.data)
           }
         }
       })
       .catch((error) => {
-        console.log('error: ', error)
+        console.log('error1: ', error)
         if (callback) {
           callback(error)
         }
@@ -238,15 +257,20 @@ const checkUserVerifyCodeConsume = (
 
 // 重置密码
 const resetPassword = (
+  phone: string,
   password: string,
   confirmPassword: string,
   callback: (error: any, result?: any) => void) => {
+  console.log('resetPassword: ', password, confirmPassword)
   return (dispatch: Dispatch<AnyAction>) => {
-    apolloClientShare.query({
-      query: resetPasswordGql,
+    apolloClientShare.mutate({
+      mutation: resetPasswordGql,
       variables: {
-        password,
-        confirmPassword,
+        info: {
+          phoneNumber: phone,
+          password,
+          confirmPassword,
+        }
       }
     })
       .then((res) => {
@@ -258,10 +282,7 @@ const resetPassword = (
         }
       })
       .catch((error) => {
-        console.log('error: ', error)
-        if (callback) {
-          callback(error)
-        }
+        errorHandler(error)
       })
   }
 }

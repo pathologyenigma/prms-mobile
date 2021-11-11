@@ -9,10 +9,14 @@ import { hostUri } from "./config";
 
 let apolloClientShare: ApolloClient<any>
 
-const initApolloClient = () => {
+const initApolloClient = (Authorization: string) => {
+  console.log('Authorization: ', Authorization)
   apolloClientShare = new ApolloClient({
     uri: hostUri,
-    cache: new InMemoryCache()
+    cache: new InMemoryCache(),
+    headers: {
+      'Authorization': Authorization
+    }
   })
   return apolloClientShare
 }
@@ -40,8 +44,16 @@ const numberCheckGql = gql`
   }
   `
 
+const testGql = gql`
+  query rates($currency:String!) {
+    rates(currency:$currency){
+      currency
+    }
+  }
+`
+
 const loginGql = gql`
-  query UserLogIn( $info:Login! ) {
+  query UserLogIn( $info:LogIn! ) {
     UserLogIn(info:$info) {
       username
       token
@@ -58,7 +70,7 @@ const registerGql = gql`
 
 // 重置密码
 const resetPasswordGql = gql`
-  query UserResetPassword( $info:ResetPassword! ) {
+  mutation UserResetPassword( $info:ResetPassword! ) {
     UserResetPassword(info:$info)
   }
 `
@@ -92,5 +104,6 @@ export {
   getUserEditPersonalDataGql,
   getENTEditEnterpriseBasicInfoGql,
   resetPasswordGql,
-  checkUserVerifyCodeConsumeGql
+  checkUserVerifyCodeConsumeGql,
+  testGql
 }

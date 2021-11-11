@@ -13,17 +13,18 @@ import {
 } from "@apollo/client"
 import { initApolloClient } from './src/utils/postQuery'
 
+console.log('store: ', store)
 class App extends Component {
   render() {
     return (
       <NavigationContainer>
-        <ApolloProvider client={initApolloClient()}>
-          <AntProvider>
-            <Provider store={store}>
+        <AntProvider>
+          <Provider store={store}>
+            <ApolloProvider client={initApolloClient('')}>
               <Navigator />
-            </Provider>
-          </AntProvider>
-        </ApolloProvider>
+            </ApolloProvider>
+          </Provider>
+        </AntProvider>
       </NavigationContainer>
     )
   }

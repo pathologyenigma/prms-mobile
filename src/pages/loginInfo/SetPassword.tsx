@@ -75,6 +75,7 @@ class SetPassword extends Component<IProps, IState> {
 
   renderInput() {
     const { confirmPassword, password } = this.state
+    console.log('phone: ', this.props.phone)
     return (
       <View>
         <View style={styles.accountLoginConatiner}>
@@ -129,15 +130,13 @@ class SetPassword extends Component<IProps, IState> {
             RootLoading.info('密码不一致,请重新输入')
           } else {
             RootLoading.loading()
-            this.props.resetPassword(password, confirmPassword, (error, result) => {
+            this.props.resetPassword(this.props.phone, password, confirmPassword, (error, result) => {
               if (!error) {
                 RootLoading.success()
                 // 密码重置/设置操作,将用户信息存储下来即可选择角色
                 // TODO:此处需要将用户角色信息存储下来
                 const { navigation } = this.props
                 navigation.push('ChooseRole')
-              } else {
-                RootLoading.fail(error.toString())
               }
             })
           }

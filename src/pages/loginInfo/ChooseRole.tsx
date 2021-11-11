@@ -25,6 +25,13 @@ interface IState {
 }
 
 class ChooseRole extends Component<IProps, IState> {
+
+  componentDidMount() {
+    console.log('ChooseRole: ', AsyncStorage.getAllKeys((error, result) => {
+      console.log('ChooseRole', error, result)
+    }))
+  }
+
   renderNavBar() {
     const { navigation } = this.props
     return (

@@ -49,12 +49,12 @@ class InputVerifyCode extends Component<IProps, IState> {
       phone: (params && params.phone) || '',
       operation: (params && params.operation) || 'UserRegister',
       password: '',
-      firstCode: '',
-      secondCode: '',
-      thirdCode: '',
-      fourCode: '',
-      fiveCode: '',
-      sixCode: '',
+      firstCode: 't',
+      secondCode: 'e',
+      thirdCode: 's',
+      fourCode: 't',
+      fiveCode: 'e',
+      sixCode: 'd',
       countTime: 60,
       focusIndex: 0
     }
@@ -66,6 +66,8 @@ class InputVerifyCode extends Component<IProps, IState> {
   }
 
   sendSms() {
+    // TODO:临时关闭验证码发送,使用 tested 即可
+    return
     RootLoading.loading('正在发送验证码')
     this.props.sendSMS(this.state.phone, (error, reuslt) => {
       console.log('error, reuslt: ', error, reuslt)
@@ -293,7 +295,6 @@ class InputVerifyCode extends Component<IProps, IState> {
     this.props.checkUserVerifyCodeConsume(
       phone, verifyCode, operation, (error, result) => {
         console.log('22222222: ', error, result)
-        navigation.push('SetPassword', { operation })
         if (!error && result) {
           // 校验通过
           RootLoading.success('校验通过')

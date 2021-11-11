@@ -19,6 +19,7 @@ import {
   gql
 } from "@apollo/client"
 import { getENTEditEnterpriseBasicInfo } from '../../../action/loginAction'
+import AsyncStorage from '@react-native-community/async-storage'
 
 type IProps = GenProps<'Jobs'> & {
 
@@ -82,6 +83,9 @@ export default class Jobs extends Component<IProps, IState> {
 
   loadData() {
     // 获取视频和列表数据
+    // AsyncStorage.getAllKeys((error, result) => {
+    //   console.log('AsyncStorage: ', error, result)
+    // })
   }
 
   renderNavBar() {
