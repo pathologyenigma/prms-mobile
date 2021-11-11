@@ -20,6 +20,8 @@ import EditJobAddress, { EditJobAddressOptions } from './Job/EditJobAddress'
 import SearchJobAddress, {
   SearchJobAddressOptions,
 } from './Job/SearchJobAddress'
+import EditJobWelfare, { EditJobWelfareOptions } from './Job/EditJobWelfare'
+import RechargeExplain, { RechargeExplainOptions } from './Job/RechargeExplain'
 
 const Stack = createStackNavigator()
 
@@ -29,6 +31,27 @@ class App extends Component {
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            key="EditJobWelfare"
+            name="EditJobWelfare"
+            component={EditJobWelfare}
+            options={EditJobWelfareOptions}
+          />
+          <Stack.Screen
+            key="RechargeExplain"
+            name="RechargeExplain"
+            component={RechargeExplain}
+            options={RechargeExplainOptions}
+          />
+          <Stack.Screen
+            key="Home"
+            name="Home"
+            component={Home}
+            options={{
+              header: () => null,
+            }}
+          />
+
           <Stack.Screen
             key="EditJobAddress"
             name="EditJobAddress"
@@ -71,14 +94,6 @@ class App extends Component {
             name="PostJob"
             component={PostJob}
             options={PostJobOptions}
-          />
-          <Stack.Screen
-            key="Home"
-            name="Home"
-            component={Home}
-            options={{
-              header: () => null,
-            }}
           />
         </Stack.Navigator>
       </NavigationContainer>

@@ -20,10 +20,14 @@ function Home() {
         tabBarIcon: ({ focused, color, size }) => {
           return (
             <Image
-              source={icons[route.name]}
+              source={
+                focused
+                  ? icons[route.name].selected
+                  : icons[route.name].unselected
+              }
               resizeMode="center"
               resizeMethod="resize"
-              style={{ tintColor: color, width: size, height: size }}
+              style={{ width: size, height: size }}
             />
           )
         },
@@ -65,11 +69,23 @@ const tabs: {
 }
 
 const icons: {
-  [key: string]: ImageRequireSource
+  [key: string]: {
+    selected: ImageRequireSource
+    unselected: ImageRequireSource
+  }
 } = {
-  Talent: require('./rencai.png'),
-  Msg: require('./xiaoxi.png'),
-  Me: require('./wode.png'),
+  Talent: {
+    selected: require('./rencai-selected.png'),
+    unselected: require('./rencai.png'),
+  },
+  Msg: {
+    selected: require('./xiaoxi-selected.png'),
+    unselected: require('./xiaoxi.png'),
+  },
+  Me: {
+    selected: require('./wode-selected.png'),
+    unselected: require('./wode.png'),
+  },
 }
 
 export default Home
