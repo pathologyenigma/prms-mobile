@@ -3,19 +3,45 @@ import {
   InMemoryCache,
   ApolloProvider,
   useQuery,
-  gql
+  gql,
+  split,
+  ApolloLink,
+  HttpLink,
 } from "@apollo/client"
-import { hostUri } from "./config";
+import { hostUri, wssUri } from "./config"
+import { WebSocketLink, } from '@apollo/link-ws'
+import { getMainDefinition } from '@apollo/client/utilities';
 
 let apolloClientShare: ApolloClient<any>
 
 const initApolloClient = (Authorization: string) => {
   console.log('Authorization: ', Authorization)
+  const ws = new WebSocketLink({
+    uri: wssUri,
+    options: {
+      reconnect: true,
+      connectionParams: {
+        Authorization: Authorization || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6ImNjYjI3ODUiLCJkZWFkVGltZSI6IjE2MzY3NDM0NDkxNDk4NjQwMDAwMCIsImlhdCI6MTYzNjc0MzQ0OSwiZXhwIjoxNjM2NzQ3MDQ5fQ.VYeafdauTFk-OVr_xDS3kcE_HTZsP5Lb17G5OOMy2ZM',
+      }
+    },
+  });
+
+  const http = new HttpLink({ uri: hostUri })
+
+  const newLink = split(
+    ({ query }) => {
+      const def = getMainDefinition(query);
+      return def.kind === 'OperationDefinition' && def.operation === 'subscription';
+    },
+    ws,
+    http,
+  )
   apolloClientShare = new ApolloClient({
-    uri: hostUri,
+    // uri: hostUri,
+    link: newLink,
     cache: new InMemoryCache(),
     headers: {
-      'Authorization': Authorization
+      Authorization: Authorization || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6ImNjYjI3ODUiLCJkZWFkVGltZSI6IjE2MzY3NDM0NDkxNDk4NjQwMDAwMCIsImlhdCI6MTYzNjc0MzQ0OSwiZXhwIjoxNjM2NzQ3MDQ5fQ.VYeafdauTFk-OVr_xDS3kcE_HTZsP5Lb17G5OOMy2ZM'
     }
   })
   return apolloClientShare
@@ -82,6 +108,15 @@ const checkUserVerifyCodeConsumeGql = gql`
   }
 `
 
+// subscription message
+const subscriptionGqlServerGql = gql`
+  subscription newMessage{
+    newMessage{
+      messageContent
+    }
+  }
+`
+
 const getUserEditPersonalDataGql = gql`
   mutation UserEditPersonalData($info:BasicData!){
     UserEditPersonalData(info:$info)
@@ -105,5 +140,6 @@ export {
   getENTEditEnterpriseBasicInfoGql,
   resetPasswordGql,
   checkUserVerifyCodeConsumeGql,
+  subscriptionGqlServerGql,
   testGql
 }

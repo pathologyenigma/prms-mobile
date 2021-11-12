@@ -108,7 +108,7 @@ class LoginScreen extends Component<IProps, IState> {
 
   renderPasswordLogin() {
     const { passwordShow } = this.state
-    const { navigation, loginMobile, phone, update_kv, password } = this.props
+    const { navigation, loginMobile, phone, update_kv, password, subscriptionMessage } = this.props
     return (
       <View>
         <Text style={styles.accountLoginTitle}>密码登录</Text>
@@ -494,7 +494,8 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
     reset_reducer: actions.reset_reducer,
     update_kv: actions.update_kv,
     loginMobile: actions.loginMobile,
-    userNumberCheck: actions.userNumberCheck
+    userNumberCheck: actions.userNumberCheck,
+    subscriptionMessage: actions.subscriptionMessage
   }, dispatch)
 }
 

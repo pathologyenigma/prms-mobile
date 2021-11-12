@@ -9,7 +9,7 @@ import {
 import {
   gql
 } from "@apollo/client"
-import { apolloClientShare, checkUserVerifyCodeConsumeGql, getENTEditEnterpriseBasicInfoGql, getUserEditPersonalDataGql, loginGql, numberCheckGql, registerGql, resetPasswordGql, sendSMSGql, testGql } from '../utils/postQuery'
+import { apolloClientShare, checkUserVerifyCodeConsumeGql, getENTEditEnterpriseBasicInfoGql, getUserEditPersonalDataGql, initApolloClient, loginGql, numberCheckGql, registerGql, resetPasswordGql, sendSMSGql, subscriptionGqlServerGql, testGql } from '../utils/postQuery'
 import errorHandler from '../utils/errorhandler'
 
 const reset_reducer = () => {
@@ -287,6 +287,23 @@ const resetPassword = (
   }
 }
 
+// 订阅消息
+const subscriptionMessage = ((callback?: (error: any, result?: any) => void) => {
+  console.log('111111111: 22loadData ')
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.subscribe({
+      query: subscriptionGqlServerGql,
+    })
+      .subscribe((res) => {
+        // 注意:在浏览器中 debug 的模式中未打印出值.待排查原因
+        console.log('subscriptionMessage-res: ', res)
+        if (res && callback) {
+          callback(undefined, res)
+        }
+      })
+  }
+})
+
 const chooseRole = (role: string, callback?: (error: any, result?: any) => void) => {
   return (dispatch: Dispatch<AnyAction>) => {
     postWithToken('https://www.baidu.com')
@@ -373,4 +390,5 @@ export {
   getENTEditEnterpriseBasicInfo,
   checkUserVerifyCodeConsume,
   resetPassword,
+  subscriptionMessage,
 }

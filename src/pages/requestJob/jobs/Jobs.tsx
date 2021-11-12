@@ -12,6 +12,9 @@ import { Carousel } from '@ant-design/react-native'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import JobCell from '../../components/JobCell'
 import { GenProps } from '../../../navigator/requestJob/stack'
+import { connect } from 'react-redux'
+import { bindActionCreators, Dispatch, AnyAction } from 'redux'
+import * as actions from '../../../action/loginAction'
 import {
   Query
 } from "@apollo/client/react/components"
@@ -21,9 +24,7 @@ import {
 import { getENTEditEnterpriseBasicInfo } from '../../../action/loginAction'
 import AsyncStorage from '@react-native-community/async-storage'
 
-type IProps = GenProps<'Jobs'> & {
-
-}
+type IProps = GenProps<'Jobs'> & ReturnType<typeof mapDispatchToProps>
 
 type IState = {
   videoSource: [],
@@ -32,7 +33,7 @@ type IState = {
   selectCondition: number
 }
 
-export default class Jobs extends Component<IProps, IState> {
+class Jobs extends Component<IProps, IState> {
   constructor(props: any) {
     super(props)
     console.log('111111112props: ', props)
@@ -86,6 +87,12 @@ export default class Jobs extends Component<IProps, IState> {
     // AsyncStorage.getAllKeys((error, result) => {
     //   console.log('AsyncStorage: ', error, result)
     // })
+    // 测试订阅
+    console.log('111111111: loadData ')
+    this.props.subscriptionMessage((error, result) => {
+      console.log('subscriptionMessage: ', error, result)
+      RootLoading.info(`收到新消息 :${result.data.newMessage.messageContent}`)
+    })
   }
 
   renderNavBar() {
@@ -432,3 +439,15 @@ export default class Jobs extends Component<IProps, IState> {
     )
   }
 }
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
+  return bindActionCreators({
+    reset_reducer: actions.reset_reducer,
+    update_kv: actions.update_kv,
+    loginMobile: actions.loginMobile,
+    userNumberCheck: actions.userNumberCheck,
+    subscriptionMessage: actions.subscriptionMessage,
+  }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(Jobs)

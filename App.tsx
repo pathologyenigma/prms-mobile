@@ -19,11 +19,11 @@ class App extends Component {
     return (
       <NavigationContainer>
         <AntProvider>
-          <Provider store={store}>
-            <ApolloProvider client={initApolloClient('')}>
+          <ApolloProvider client={initApolloClient('')}>
+            <Provider store={store}>
               <Navigator />
-            </ApolloProvider>
-          </Provider>
+            </Provider>
+          </ApolloProvider>
         </AntProvider>
       </NavigationContainer>
     )

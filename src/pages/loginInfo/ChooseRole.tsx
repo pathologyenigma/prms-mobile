@@ -59,34 +59,55 @@ class ChooseRole extends Component<IProps, IState> {
         onPress={() => {
           console.log('sssssssssss')
           RootLoading.loading()
-          chooseRole('user', (error, result) => {
+          setTimeout(() => {
             RootLoading.hide()
-            if (!error && result) {
-              console.log('ssssssssss: ', error, result)
-              const { navigation } = this.props
-              console.log('this.props: ', this.props)
-              console.log('this.props.navigation: ', navigation)
-              // 此处将状态全局存储起来后,再回到导航首页进行判断身份跳转
-              AsyncStorage.setItem(Login_type, '1', (error) => {
-                console.log('1111111111: ', error)
-                if (!error) {
-                  const { navigation } = this.props
-                  navigation.dispatch(
-                    CommonActions.reset({
-                      index: 1,
-                      routes: [
-                        { name: 'Dummy' },
-                      ],
-                    })
-                  )
+            AsyncStorage.setItem(Login_type, '1', (error) => {
+              console.log('1111111111: ', error)
+              if (!error) {
+                const { navigation } = this.props
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 1,
+                    routes: [
+                      { name: 'Dummy' },
+                    ],
+                  })
+                )
 
-                } else {
-                  RootLoading.fail('请重试或联系客服')
-                }
-              })
-            }
-          })
-        }}
+              } else {
+                RootLoading.fail('请重试或联系客服')
+              }
+            })
+          }, 1000)
+          // chooseRole('user', (error, result) => {
+          //   RootLoading.hide()
+          //   if (!error && result) {
+          //     console.log('ssssssssss: ', error, result)
+          //     const { navigation } = this.props
+          //     console.log('this.props: ', this.props)
+          //     console.log('this.props.navigation: ', navigation)
+          //     // 此处将状态全局存储起来后,再回到导航首页进行判断身份跳转
+          //     AsyncStorage.setItem(Login_type, '1', (error) => {
+          //       console.log('1111111111: ', error)
+          //       if (!error) {
+          //         const { navigation } = this.props
+          //         navigation.dispatch(
+          //           CommonActions.reset({
+          //             index: 1,
+          //             routes: [
+          //               { name: 'Dummy' },
+          //             ],
+          //           })
+          //         )
+
+          //       } else {
+          //         RootLoading.fail('请重试或联系客服')
+          //       }
+          //     })
+          //   }
+          // })
+        }
+        }
       >
         <Image
           style={styles.typeLogo}
@@ -95,7 +116,7 @@ class ChooseRole extends Component<IProps, IState> {
         <Text style={styles.requestJobTitle}>
           个人
         </Text>
-      </NextTouchableOpacity>
+      </NextTouchableOpacity >
     )
   }
 

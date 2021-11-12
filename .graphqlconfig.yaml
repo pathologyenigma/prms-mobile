@@ -1,7 +1,7 @@
 # 此处也可以直接使用 schema: 'http://localhost:4000/api/graphql' 配置为可访问的graphql服务
 # schemaPath: "./server/schema.graphql"
-schema: "http://be.chenzaozhao.com:4000/graphql"
+schema: "https://be.chenzaozhao.com/graphql"
 includes: ["**/*.{graphql,gql,ts,tsx,js}"] # 将为那些文件提供语法提示
 extensions:
   endpoints:
-    default: http://be.chenzaozhao.com:4000/graphql # 配置后可以直接进行 test 测试
+    default: https://be.chenzaozhao.com/graphql # 配置后可以直接进行 test 测试
