@@ -22,6 +22,9 @@ import SearchJobAddress, {
 } from './Job/SearchJobAddress'
 import EditJobWelfare, { EditJobWelfareOptions } from './Job/EditJobWelfare'
 import RechargeExplain, { RechargeExplainOptions } from './Job/RechargeExplain'
+import RechargeFeekback, {
+  RechargeFeekbackOptions,
+} from './Job/RechargeFeekback'
 
 const Stack = createStackNavigator()
 
@@ -31,6 +34,12 @@ class App extends Component {
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            key="RechargeFeekback"
+            name="RechargeFeekback"
+            component={RechargeFeekback}
+            options={RechargeFeekbackOptions}
+          />
           <Stack.Screen
             key="EditJobWelfare"
             name="EditJobWelfare"

@@ -6,13 +6,15 @@ import {
   Text,
   StyleSheet,
   TextStyle,
+  ViewStyle,
 } from 'react-native'
 
 interface TextButtonProps {
   title: string
   onPress?: () => void
   hitSlop?: ViewProps['hitSlop']
-  style?: StyleProp<TextStyle>
+  style?: StyleProp<ViewStyle>
+  textStyle?: StyleProp<TextStyle>
 }
 
 export default function TextButton({
@@ -20,17 +22,23 @@ export default function TextButton({
   hitSlop,
   style,
   title,
+  textStyle,
 }: TextButtonProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
+      style={[styles.button, style]}
       hitSlop={{ left: 8, right: 8, top: 8, bottom: 8, ...hitSlop }}>
-      <Text style={[styles.text, style]}>{title}</Text>
+      <Text style={[styles.text, textStyle]}>{title}</Text>
     </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
+  button: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   text: {
     color: '#333333',
     fontSize: 15,

@@ -23,7 +23,11 @@ export default function IconButton({
   style,
 }: IconButtonProps) {
   return (
-    <TouchableOpacity onPress={onPress} hitSlop={hitSlop} activeOpacity={0.5}>
+    <TouchableOpacity
+      onPress={onPress}
+      hitSlop={hitSlop}
+      activeOpacity={0.5}
+      style={style}>
       <Image source={icon} style={[styles.icon, style]} resizeMode="center" />
     </TouchableOpacity>
   )
