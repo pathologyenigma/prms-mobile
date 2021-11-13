@@ -35,6 +35,12 @@ class App extends Component {
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
           <Stack.Screen
+            key="PostJob"
+            name="PostJob"
+            component={PostJob}
+            options={PostJobOptions}
+          />
+          <Stack.Screen
             key="RechargeFeekback"
             name="RechargeFeekback"
             component={RechargeFeekback}
@@ -97,12 +103,6 @@ class App extends Component {
             name="EditJobName"
             component={EditJobName}
             options={EditJobNameOptions}
-          />
-          <Stack.Screen
-            key="PostJob"
-            name="PostJob"
-            component={PostJob}
-            options={PostJobOptions}
           />
         </Stack.Navigator>
       </NavigationContainer>

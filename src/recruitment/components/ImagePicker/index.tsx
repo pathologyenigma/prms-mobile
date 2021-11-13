@@ -110,7 +110,7 @@ export default function ImagePicker({
         <Image
           style={[styles.image, imageStyle]}
           source={uri ? { uri } : defaultImage}
-          resizeMode="center"
+          resizeMode="cover"
         />
       </View>
     </TouchableOpacity>

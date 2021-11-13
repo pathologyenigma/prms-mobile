@@ -7,6 +7,7 @@ import AdmissionPicker from './AdmissionPicker'
 import DropdownButton from './DropdownButton'
 import HeadcountItem from './HeadcountItem'
 import JobInfoItem from './JobInfoItem'
+import JobNatureModal from './JobNatureModal'
 
 export const PostJobOptions: StackNavigationOptions = {
   title: '发布职位',
@@ -44,7 +45,8 @@ function PostJob() {
         )}
       />
       <HeadcountItem />
-      <GradientButton text="立即发布" style={styles.postButton} />
+      <GradientButton title="立即发布" style={styles.postButton} />
+      <JobNatureModal visible={true} />
     </KeyboardAwareScrollView>
   )
 }
