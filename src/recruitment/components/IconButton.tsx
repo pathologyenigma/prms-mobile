@@ -14,28 +14,19 @@ interface IconButtonProps {
   hitSlop?: ViewProps['hitSlop']
   icon: ImageSourcePropType
   style?: StyleProp<ImageStyle>
+  iconStyle?: StyleProp<ImageStyle>
 }
 
 export default function IconButton({
   onPress,
-  hitSlop,
+  hitSlop = { top: 8, right: 8, bottom: 8, left: 8 },
   icon,
-  style,
+  style = { width: 36, height: 36 },
+  iconStyle,
 }: IconButtonProps) {
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      hitSlop={hitSlop}
-      activeOpacity={0.5}
-      style={style}>
-      <Image source={icon} style={[styles.icon, style]} resizeMode="center" />
+    <TouchableOpacity style={style} onPress={onPress} hitSlop={hitSlop}>
+      <Image source={icon} style={iconStyle} resizeMode="center" />
     </TouchableOpacity>
   )
 }
-
-const styles = StyleSheet.create({
-  icon: {
-    width: 36,
-    height: 36,
-  },
-})
