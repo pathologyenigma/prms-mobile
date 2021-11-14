@@ -40,6 +40,7 @@ interface Props {
   values: string[]
   style?: StyleProp<TextStyle>
   itemStyle?: StyleProp<TextStyle>
+  roundRectType?: 'left' | 'right' | 'all' | 'none'
 }
 
 function PickerAndroid({
@@ -48,6 +49,7 @@ function PickerAndroid({
   values = [],
   style = { height: 180 },
   itemStyle = {},
+  roundRectType = 'all',
 }: Props) {
   const handleItemSelected = useCallback((event: Event) => {
     const selectedIndex = event.nativeEvent.selectedIndex
@@ -70,8 +72,8 @@ function PickerAndroid({
       style={style}
       fontSize={fontSize}
       textColorCenter={color}
-      lineSpacingMultiplier={2.4}
-      roundRectType="all"
+      lineSpacingMultiplier={(19 + fontSize) / fontSize}
+      roundRectType={roundRectType}
     />
   )
 }

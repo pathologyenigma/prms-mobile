@@ -140,7 +140,7 @@ public class WheelView extends View {
 
         textColorOut = 0xFFa8a8a8;
         textColorCenter = 0xFF2a2a2a;
-        dividerColor = 0x44d5d5d5;
+        dividerColor = 0x66d5d5d5;
         // dividerColor = 0x44ff0000;
         textSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 21, context.getResources().getDisplayMetrics());
 

@@ -9,6 +9,7 @@ interface PickerProps {
   values: string[]
   style?: StyleProp<TextStyle>
   itemStyle?: StyleProp<TextStyle>
+  roundRectType?: 'left' | 'right' | 'all' | 'none'
 }
 
 export default function Picker({
@@ -17,6 +18,7 @@ export default function Picker({
   selectedValue,
   onValueChange,
   values,
+  roundRectType,
 }: PickerProps) {
   if (Platform.OS === 'ios') {
     const { color } = StyleSheet.flatten(itemStyle)
@@ -44,6 +46,7 @@ export default function Picker({
       itemStyle={itemStyle}
       values={values}
       selectedValue={selectedValue}
+      roundRectType={roundRectType}
     />
   )
 }

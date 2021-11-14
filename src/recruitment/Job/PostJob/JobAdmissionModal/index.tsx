@@ -34,7 +34,7 @@ export default function JobAdmissionModal({ visible }: JobAdmissionModalProps) {
       </View>
       <View style={styles.pannels}>
         {selectedTabIndex === 0 && (
-          <View style={styles.single}>
+          <View style={styles.pannel}>
             <Picker
               style={styles.picker}
               itemStyle={styles.pickerItem}
@@ -56,7 +56,7 @@ export default function JobAdmissionModal({ visible }: JobAdmissionModalProps) {
           </View>
         )}
         {selectedTabIndex === 1 && (
-          <View style={styles.single}>
+          <View style={styles.pannel}>
             <Picker
               style={styles.picker}
               itemStyle={styles.pickerItem}
@@ -77,6 +77,47 @@ export default function JobAdmissionModal({ visible }: JobAdmissionModalProps) {
             />
           </View>
         )}
+        {selectedTabIndex === 2 && (
+          <View style={styles.pannel}>
+            <View style={styles.row}>
+              <Picker
+                roundRectType="left"
+                style={[
+                  styles.picker,
+                  { marginRight: Platform.OS === 'ios' ? -9 : 0 },
+                ]}
+                itemStyle={styles.pickerItem}
+                values={['2000', '3000', '4000', '5000', '6000', '7000']}
+                selectedValue={'学历不限'}
+              />
+              <Picker
+                roundRectType="none"
+                style={[
+                  styles.picker,
+                  { marginHorizontal: 0, borderRadius: 0, padding: 0 },
+                ]}
+                itemStyle={styles.pickerItem}
+                values={['2000', '3000', '4000', '5000', '6000', '7000']}
+                selectedValue={'学历不限'}
+              />
+              <Picker
+                roundRectType="right"
+                style={[
+                  styles.picker,
+                  { marginLeft: Platform.OS === 'ios' ? -9 : 0 },
+                ]}
+                itemStyle={styles.pickerItem}
+                values={['12 薪', '13 薪', '14 薪', '15 薪', '16 薪']}
+                selectedValue={'学历不限'}
+              />
+            </View>
+            <GradientButton
+              style={styles.button}
+              title="完成"
+              onPress={() => setSelectedTabIndex(2)}
+            />
+          </View>
+        )}
       </View>
     </BottomModal>
   )
@@ -93,9 +134,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: isIphoneX() ? getBottomSpace() : 0,
   },
-  single: {
+  pannel: {
     flex: 1,
     overflow: 'hidden',
+  },
+  row: {
+    flex: 1,
+    flexDirection: 'row',
   },
   picker: {
     marginHorizontal: Platform.OS === 'ios' ? 12 : 22,
@@ -103,6 +148,7 @@ const styles = StyleSheet.create({
   pickerItem: {
     color: '#333333',
     fontSize: 15,
+    fontWeight: 'bold',
   },
   button: {
     marginHorizontal: 22,

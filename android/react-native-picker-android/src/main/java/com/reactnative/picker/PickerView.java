@@ -27,8 +27,11 @@ public class PickerView extends FrameLayout implements WheelAdapter, OnItemSelec
         FrameLayout.LayoutParams layoutParams = new LayoutParams(-1, -1);
         layoutParams.gravity = Gravity.CENTER;
         addView(wheelView, layoutParams);
+        wheelView.setTextXOffset(1);
         wheelView.setAdapter(this);
         wheelView.setOnItemSelectedListener(this);
+
+        setClipChildren(true);
     }
 
     List<String> items = Collections.emptyList();
