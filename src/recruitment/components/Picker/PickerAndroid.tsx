@@ -57,15 +57,9 @@ function PickerAndroid({
   }, [])
 
   const selectedIndex = values.findIndex(v => v === selectedValue)
-  const is = StyleSheet.flatten(itemStyle)
-  const fontSize = is.fontSize ?? 15
-  const itemHeight =
-    is.height && typeof is.height === 'number' ? is.height : is.lineHeight
-  const color = is.color && typeof is.color === 'string' ? is.color : undefined
-  let lineSpacingMultiplier = 2
-  if (itemHeight && itemHeight > fontSize) {
-    lineSpacingMultiplier = (itemHeight * 1.0) / fontSize
-  }
+  const s = StyleSheet.flatten(itemStyle)
+  const fontSize = s.fontSize ?? 15
+  const color = s.color && typeof s.color === 'string' ? s.color : undefined
 
   return (
     <HBDPickerView
@@ -76,7 +70,7 @@ function PickerAndroid({
       style={style}
       fontSize={fontSize}
       textColorCenter={color}
-      lineSpacingMultiplier={lineSpacingMultiplier}
+      lineSpacingMultiplier={2.4}
       roundRectType="all"
     />
   )

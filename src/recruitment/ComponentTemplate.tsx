@@ -1,5 +1,14 @@
-import React from 'react'
-import { View, Text, Image, StyleSheet } from 'react-native'
+import React, { useState } from 'react'
+import {
+  ViewStyle,
+  StyleProp,
+  TextStyle,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+} from 'react-native'
 
 export default function ComponseView() {
   return <View style={styles.container}></View>

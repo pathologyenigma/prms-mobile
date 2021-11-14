@@ -51,9 +51,6 @@ export default function JobNatureModal({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   header: {
     height: 60,
     flexDirection: 'row',

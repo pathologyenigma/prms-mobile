@@ -1,5 +1,12 @@
 import React from 'react'
-import { View, Text, Image, StyleSheet, StatusBar } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  StatusBar,
+} from 'react-native'
 import { StackNavigationOptions } from '@react-navigation/stack'
 
 export const EditJobNameOptions: StackNavigationOptions = {

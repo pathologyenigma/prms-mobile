@@ -1,6 +1,6 @@
 import React from 'react'
 import { Picker as PickerIOS } from '@react-native-picker/picker'
-import { TextStyle, Platform, StyleProp, StyleSheet } from 'react-native'
+import { TextStyle, Platform, StyleProp, StyleSheet, View } from 'react-native'
 import PickerAndroid from './PickerAndroid'
 
 interface PickerProps {
@@ -23,7 +23,7 @@ export default function Picker({
 
     return (
       <PickerIOS
-        style={style}
+        style={[styles.picker, style]}
         itemStyle={itemStyle}
         selectedValue={selectedValue}
         onValueChange={onValueChange}>
@@ -40,10 +40,18 @@ export default function Picker({
   }
   return (
     <PickerAndroid
-      style={style}
+      style={[styles.picker, style]}
       itemStyle={itemStyle}
       values={values}
       selectedValue={selectedValue}
     />
   )
 }
+
+const styles = StyleSheet.create({
+  picker: {
+    flex: 1,
+    overflow: 'hidden',
+    justifyContent: 'center',
+  },
+})
