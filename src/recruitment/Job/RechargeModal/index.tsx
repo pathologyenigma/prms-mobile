@@ -66,9 +66,10 @@ export default function RechargeModal({ visible }: RechargeModalProps) {
     index: number,
   ) => {
     return (
-      <TouchableWithoutFeedback onPress={() => setSelectedIndex(index)}>
+      <TouchableWithoutFeedback
+        key={denomination}
+        onPress={() => setSelectedIndex(index)}>
         <View
-          key={denomination}
           style={[
             styles.item,
             { width, height: 70 },

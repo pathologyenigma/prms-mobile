@@ -10,6 +10,7 @@ import JobInfoItem from './JobInfoItem'
 import JobNatureModal from './JobNatureModal'
 import JobAdmissionModal from './JobAdmissionModal'
 import RechargeModal from '../RechargeModal'
+import JobLabelModal from './JobLabelModal'
 
 export const PostJobOptions: StackNavigationOptions = {
   title: '发布职位',
@@ -50,7 +51,8 @@ function PostJob() {
       <GradientButton title="立即发布" style={styles.postButton} />
       <JobNatureModal visible={false} />
       <JobAdmissionModal visible={false} />
-      <RechargeModal visible={true} />
+      <JobLabelModal visible={true} />
+      <RechargeModal visible={false} />
     </KeyboardAwareScrollView>
   )
 }

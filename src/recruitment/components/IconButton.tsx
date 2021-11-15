@@ -6,7 +6,6 @@ import {
   ViewProps,
   StyleProp,
   ImageStyle,
-  StyleSheet,
 } from 'react-native'
 
 interface IconButtonProps {
@@ -21,7 +20,12 @@ export default function IconButton({
   onPress,
   hitSlop = { top: 8, right: 8, bottom: 8, left: 8 },
   icon,
-  style = { width: 36, height: 36 },
+  style = {
+    width: 36,
+    height: 36,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   iconStyle,
 }: IconButtonProps) {
   return (

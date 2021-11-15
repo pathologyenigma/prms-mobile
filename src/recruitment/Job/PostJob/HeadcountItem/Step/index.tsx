@@ -62,6 +62,8 @@ const styles = StyleSheet.create({
   button: {
     width: 26,
     height: 26,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   input: {
     height: 26,
