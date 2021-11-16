@@ -1,13 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   ViewStyle,
   StyleProp,
-  TextStyle,
   StyleSheet,
   Text,
   View,
   Image,
-  ScrollView,
   ImageSourcePropType,
 } from 'react-native'
 

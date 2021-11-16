@@ -26,6 +26,7 @@ import RechargeFeekback, {
   RechargeFeekbackOptions,
 } from './Job/RechargeFeekback'
 import TalentDetail, { TalentDetailOptions } from './Talent/TalentDetail'
+import TipCandidate, { TipCandidateOptions } from './Talent/TipCandidate'
 
 const Stack = createStackNavigator()
 
@@ -35,6 +36,12 @@ class App extends Component {
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            key="TipCandidate"
+            name="TipCandidate"
+            component={TipCandidate}
+            options={TipCandidateOptions}
+          />
           <Stack.Screen
             key="TalentDetail"
             name="TalentDetail"

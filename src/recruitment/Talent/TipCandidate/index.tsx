@@ -5,13 +5,36 @@ import TextInputWithCounter from '../../components/TextInputWithCounter'
 import GradientButton from '../../components/GradientButton'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ImagePickView from '../../components/ImagePickerView'
+import RadioWithLabel from './RadioWithLabel'
 
-export const RechargeFeekbackOptions: StackNavigationOptions = {
-  title: '问题反馈',
+export const TipCandidateOptions: StackNavigationOptions = {
+  title: '举报',
 }
 
-export default function RechargeFeekback() {
+const types = [
+  '虚假简历',
+  '违法诈骗简历',
+  '人身攻击/污言秽语',
+  '广告简历',
+  '其他原因',
+]
+
+export default function TipCandidate() {
   const [images, setImages] = useState<Array<string>>([])
+
+  const [selectedIndex, setSelectedIndex] = useState(0)
+
+  const renderType = (type: string, index: number) => {
+    return (
+      <RadioWithLabel
+        style={styles.type}
+        key={type}
+        title={type}
+        checked={selectedIndex === index}
+        onPress={() => setSelectedIndex(index)}
+      />
+    )
+  }
 
   return (
     <KeyboardAwareScrollView
@@ -20,21 +43,19 @@ export default function RechargeFeekback() {
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode={'on-drag'}
       enableResetScrollToCoords={false}>
-      <Text style={styles.title}>金币相关：充值遇到问题，余额异常</Text>
+      <View style={styles.row}>
+        <Text style={styles.hint}>请选择举报类型</Text>
+        <Text style={styles.required}>必填</Text>
+      </View>
+      <View style={styles.types}>{types.map(renderType)}</View>
+      <Text style={styles.title}>原因描述</Text>
       <TextInputWithCounter
         style={styles.inputWithCounter}
-        inputStyle={styles.input1}
+        inputStyle={styles.input}
+        countStyle={styles.count}
         placeholder="补充更详细的说明，可帮助工作人员更快定位问题，快速处理"
         placeholderTextColor="#AAAAAA"
-        maxLength={300}
-        autoFocus={false}
-      />
-      <Text style={styles.title}>联系方式</Text>
-      <TextInput
-        style={styles.input2}
-        placeholder="请输入手机号码"
-        placeholderTextColor="#AAAAAA"
-        keyboardType="phone-pad"
+        maxLength={200}
         autoFocus={false}
       />
       <Text style={styles.title}>证据截图（最多3张）</Text>
@@ -42,11 +63,17 @@ export default function RechargeFeekback() {
         <ImagePickView values={images} onValuesChange={setImages} limit={3} />
       </View>
       <GradientButton style={styles.button} title="提交" />
-      <Text style={styles.tip}>
-        温馨提示：充值金币未到账必须提供
-        <Text suppressHighlighting style={styles.tipLink}>
-          充值账单截图
+      <Text style={styles.tips}>
+        点击“提交”即表示您愿意遵守
+        <Text suppressHighlighting style={styles.link} onPress={() => {}}>
+          《用户协议》
         </Text>
+        和
+        <Text suppressHighlighting style={styles.link} onPress={() => {}}>
+          《个人信息保护政策》
+        </Text>
+        {`并同意 1、您同意并授权平台对您提交的举报材料及相关信息记录进行核实。
+2、您知悉并理解投诉行为的严肃性，如涉嫌虚假投诉/举报应承担相应的法律后果。`}
       </Text>
     </KeyboardAwareScrollView>
   )
@@ -64,11 +91,36 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontWeight: 'bold',
   },
-  inputWithCounter: {
-    height: 100,
-    marginTop: 16,
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 13,
   },
-  input1: {
+  hint: {
+    color: '#666666',
+    fontSize: 15,
+  },
+  required: {
+    color: '#FF8589',
+    fontSize: 11,
+    borderWidth: 1,
+    borderColor: '#FF8589',
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    marginLeft: 6,
+  },
+  types: {
+    marginVertical: 10,
+  },
+  type: {
+    height: 36,
+  },
+  inputWithCounter: {
+    height: 90,
+    marginTop: 16,
+    marginBottom: 6,
+  },
+  input: {
     padding: 8,
     color: '#333333',
     fontSize: 12,
@@ -76,14 +128,9 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     overflow: 'hidden',
   },
-  input2: {
-    marginTop: 16,
-    padding: 8,
-    color: '#333333',
-    fontSize: 14,
-    backgroundColor: '#F7F7F7',
-    borderRadius: 4,
-    overflow: 'hidden',
+  count: {
+    fontSize: 12,
+    color: '#888888',
   },
   button: {
     marginTop: 40,
@@ -91,14 +138,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 8,
   },
-  tip: {
+  tips: {
     marginVertical: 16,
     marginHorizontal: 10,
     fontSize: 10,
     color: '#666666',
     lineHeight: 14,
   },
-  tipLink: {
+  link: {
     color: '#57DE9E',
   },
   imageButton: {

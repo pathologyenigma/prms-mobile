@@ -7,6 +7,7 @@ import {
   TextInputProps,
   StyleProp,
   ViewStyle,
+  TextStyle,
 } from 'react-native'
 
 interface TextInputWithCounterProps {
@@ -14,6 +15,7 @@ interface TextInputWithCounterProps {
   placeholderTextColor?: TextInputProps['placeholderTextColor']
   maxLength?: TextInputProps['maxLength']
   inputStyle?: StyleProp<ViewStyle>
+  countStyle?: StyleProp<TextStyle>
   style?: StyleProp<ViewStyle>
   value?: string
   onChangeText?: TextInputProps['onChangeText']
@@ -25,6 +27,7 @@ export default function TextInputWithCounter({
   placeholderTextColor = '#CCCCCC',
   maxLength = 1000,
   inputStyle,
+  countStyle,
   style,
   value,
   onChangeText,
@@ -56,8 +59,8 @@ export default function TextInputWithCounter({
         onChangeText={handleChangeText}
       />
       <View style={styles.row}>
-        <Text style={styles.count}>{count}</Text>
-        <Text style={styles.limit}>{`/${maxLength}`}</Text>
+        <Text style={[styles.count, countStyle]}>{count}</Text>
+        <Text style={[styles.limit, countStyle]}>{`/${maxLength}`}</Text>
       </View>
     </View>
   )
