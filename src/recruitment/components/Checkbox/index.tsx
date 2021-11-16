@@ -18,6 +18,7 @@ export default function Checkbox({
   onCheckedChange,
   style,
 }: CheckboxProps) {
+  // 使用 IconButton 重构
   return (
     <TouchableWithoutFeedback
       onPress={() => {

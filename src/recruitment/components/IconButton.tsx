@@ -6,13 +6,14 @@ import {
   ViewProps,
   StyleProp,
   ImageStyle,
+  ViewStyle,
 } from 'react-native'
 
 interface IconButtonProps {
   onPress?: () => void
   hitSlop?: ViewProps['hitSlop']
   icon: ImageSourcePropType
-  style?: StyleProp<ImageStyle>
+  style?: StyleProp<ViewStyle>
   iconStyle?: StyleProp<ImageStyle>
 }
 

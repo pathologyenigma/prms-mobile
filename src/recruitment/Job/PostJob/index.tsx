@@ -11,6 +11,7 @@ import JobNatureModal from './JobNatureModal'
 import JobAdmissionModal from './JobAdmissionModal'
 import RechargeModal from '../RechargeModal'
 import JobLabelModal from './JobLabelModal'
+import Vip from './Vip'
 
 export const PostJobOptions: StackNavigationOptions = {
   title: '发布职位',
@@ -43,9 +44,7 @@ function PostJob() {
       <JobInfoItem
         title="选择增值服务"
         placeholder="求职者将在求职首页顶部看到您的招聘职位"
-        renderTitleBadge={() => (
-          <Image source={require('./vip.png')} resizeMode="contain" />
-        )}
+        renderTitleBadge={() => <Vip />}
       />
       <HeadcountItem />
       <GradientButton title="立即发布" style={styles.postButton} />
