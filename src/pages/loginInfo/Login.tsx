@@ -14,8 +14,6 @@ import WhiteContentModal from '../components/WhiteContentModal'
 import GradientButton from '../components/GradientButton'
 import SystemHelper from '../../utils/system'
 import { CommonActions } from '@react-navigation/native'
-import AsyncStorage from '@react-native-community/async-storage'
-import { Login_type } from '../../utils/constant'
 import { numberRegex } from '../../utils/regex'
 
 type IProps = GenProps<'LoginScreen'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
@@ -159,6 +157,9 @@ class LoginScreen extends Component<IProps, IState> {
           disabled={!phone || !password}
           onPress={() => {
             RootLoading.loading()
+            // RootLoading.success('登录成功')
+            // navigation.push('ChooseRole')
+            // return
             loginMobile(phone, password, (error, result) => {
               if (!error && result) {
                 RootLoading.success('登录成功')
@@ -327,7 +328,7 @@ class LoginScreen extends Component<IProps, IState> {
                 phone: phone,
                 operation: 'UserRegister'
               })
-              //   AsyncStorage.setItem(Login_type, '1', (error) => {
+              //   AsyncStorage.setItem(Login_Identity, '1', (error) => {
               //     console.log('1111111111: ', error)
               //     if (!error) {
               //       const { navigation } = this.props

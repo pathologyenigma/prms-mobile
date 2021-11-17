@@ -21,12 +21,17 @@ const initApolloClient = (Authorization: string) => {
     options: {
       reconnect: true,
       connectionParams: {
-        Authorization: Authorization || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6ImNjYjI3ODUiLCJkZWFkVGltZSI6IjE2MzY3NDM0NDkxNDk4NjQwMDAwMCIsImlhdCI6MTYzNjc0MzQ0OSwiZXhwIjoxNjM2NzQ3MDQ5fQ.VYeafdauTFk-OVr_xDS3kcE_HTZsP5Lb17G5OOMy2ZM',
+        Authorization: Authorization || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMiwidXNlcm5hbWUiOiLlhrflhagiLCJpZGVudGl0eSI6eyJyb2xlIjoiSFIiLCJpZGVudGl0eSI6IkVudGVycHJpc2VVc2VyIiwiZW50TmFtZSI6ImVudF8zIn0sImRlYWRUaW1lIjoiMTYzNzE2NTA0NDc3Mzg2NDAwMDAwIiwiaWF0IjoxNjM3MTY1MDQ0LCJleHAiOjE2MzcxNjg2NDR9.aMsmVczKlvyVu_9xHj7tT9TBrdBicDLmIx0IH-yNl3A',
       }
     },
   });
 
-  const http = new HttpLink({ uri: hostUri })
+  const http = new HttpLink({
+    uri: hostUri,
+    headers: {
+      Authorization: Authorization || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMiwidXNlcm5hbWUiOiLlhrflhagiLCJpZGVudGl0eSI6eyJyb2xlIjoiSFIiLCJpZGVudGl0eSI6IkVudGVycHJpc2VVc2VyIiwiZW50TmFtZSI6ImVudF8zIn0sImRlYWRUaW1lIjoiMTYzNzE2NTA0NDc3Mzg2NDAwMDAwIiwiaWF0IjoxNjM3MTY1MDQ0LCJleHAiOjE2MzcxNjg2NDR9.aMsmVczKlvyVu_9xHj7tT9TBrdBicDLmIx0IH-yNl3A',
+    }
+  })
 
   const newLink = split(
     ({ query }) => {
@@ -40,9 +45,9 @@ const initApolloClient = (Authorization: string) => {
     // uri: hostUri,
     link: newLink,
     cache: new InMemoryCache(),
-    headers: {
-      Authorization: Authorization || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6ImNjYjI3ODUiLCJkZWFkVGltZSI6IjE2MzY3NDM0NDkxNDk4NjQwMDAwMCIsImlhdCI6MTYzNjc0MzQ0OSwiZXhwIjoxNjM2NzQ3MDQ5fQ.VYeafdauTFk-OVr_xDS3kcE_HTZsP5Lb17G5OOMy2ZM'
-    }
+    // headers: {
+    //   Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMiwidXNlcm5hbWUiOiLlhrflhagiLCJpZGVudGl0eSI6eyJyb2xlIjoiSFIiLCJpZGVudGl0eSI6IkVudGVycHJpc2VVc2VyIiwiZW50TmFtZSI6ImVudF8zIn0sImRlYWRUaW1lIjoiMTYzNzE2NTA0NDc3Mzg2NDAwMDAwIiwiaWF0IjoxNjM3MTY1MDQ0LCJleHAiOjE2MzcxNjg2NDR9.aMsmVczKlvyVu_9xHj7tT9TBrdBicDLmIx0IH-yNl3A'
+    // }
   })
   return apolloClientShare
 }
@@ -117,6 +122,13 @@ const subscriptionGqlServerGql = gql`
   }
 `
 
+// 选择身份
+const chooseOrSwitchIdentityGql = gql`
+  mutation UserChooseOrSwitchIdentity($targetIdentity:String!,$role:String!){
+    UserChooseOrSwitchIdentity(targetIdentity:$targetIdentity,role:$role)
+  }
+`
+
 const getUserEditPersonalDataGql = gql`
   mutation UserEditPersonalData($info:BasicData!){
     UserEditPersonalData(info:$info)
@@ -141,5 +153,6 @@ export {
   resetPasswordGql,
   checkUserVerifyCodeConsumeGql,
   subscriptionGqlServerGql,
-  testGql
+  testGql,
+  chooseOrSwitchIdentityGql
 }

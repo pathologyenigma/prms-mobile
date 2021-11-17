@@ -305,7 +305,7 @@ class InputVerifyCode extends Component<IProps, IState> {
           } else {
             // 注册操作、忘记密码操作,进入到密码设置页面
             // this.props.checkUserVerifyCodeConsume()
-            navigation.push('SetPassword', { operation })
+            navigation.push('SetPassword', { operation: 'UserResetPassword' })
           }
         } else {
           // 校验不通过

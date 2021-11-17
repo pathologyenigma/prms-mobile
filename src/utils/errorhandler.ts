@@ -1,3 +1,5 @@
+import { DeviceEventEmitter } from "react-native"
+import { Log_Out } from "./constant"
 import RootLoading from "./rootLoading"
 
 function errorHandler(error: any) {
@@ -11,6 +13,15 @@ function errorHandler(error: any) {
       break
     case 'Error: missing authorization':
       errorMsg = '没权限操作,请重新登录'
+      setTimeout(() => {
+        DeviceEventEmitter.emit(Log_Out)
+      }, 1000);
+      break
+    case 'Error: token expired':
+      errorMsg = '登录已过期,请重新登录'
+      setTimeout(() => {
+        DeviceEventEmitter.emit(Log_Out)
+      }, 1000);
       break
     default:
   }

@@ -27,9 +27,9 @@ export default class RouterStacks {
   public static readonly stacks: {
     [key: string]: any
   } = {
+      RequestPerson,
       LoginScreen,
       ForgetPassword,
       ChooseRole,
-      RequestPerson,
     }
 }

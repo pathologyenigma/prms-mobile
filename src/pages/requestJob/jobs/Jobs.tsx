@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView, StatusBar } from 'react-native'
+import { Text, View, Image, ScrollView, StatusBar, DeviceEventEmitter } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import RootLoading from '../../../utils/rootLoading'
 import GradientButton from '../../components/GradientButton'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import styles from './styles/Jobs.style'
 import LinearGradient from 'react-native-linear-gradient'
-import { gradienViewRightGreenColor, greenColor } from '../../../utils/constant'
+import { gradienViewRightGreenColor, greenColor, Log_Out } from '../../../utils/constant'
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { Carousel } from '@ant-design/react-native'
 import NavBar, { EButtonType } from '../../components/NavBar'
@@ -22,6 +22,7 @@ import {
   gql
 } from "@apollo/client"
 import { getENTEditEnterpriseBasicInfo } from '../../../action/loginAction'
+import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage'
 
 type IProps = GenProps<'Jobs'> & ReturnType<typeof mapDispatchToProps>

@@ -16,20 +16,31 @@ import SystemHelper from '../../utils/system'
 import NavBar, { EButtonType } from '../components/NavBar'
 import { CommonActions } from '@react-navigation/native'
 import AsyncStorage from '@react-native-community/async-storage'
-import { Login_type } from '../../utils/constant'
+import { Login_Token, Login_Identity } from '../../utils/constant'
 
 type IProps = GenProps<'ChooseRole'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 interface IState {
-
+  loginIdentity: string
 }
 
 class ChooseRole extends Component<IProps, IState> {
+  constructor(props: IProps) {
+    super(props)
+    this.state = ({
+      loginIdentity: ''
+    })
+  }
 
   componentDidMount() {
-    console.log('ChooseRole: ', AsyncStorage.getAllKeys((error, result) => {
-      console.log('ChooseRole', error, result)
-    }))
+    RootLoading.loading()
+    AsyncStorage.getItem(Login_Identity, (error, result) => {
+      RootLoading.hide()
+      if (!error && result) {
+        console.log('getAllKeys: ', error, result)
+        this.setState({ loginIdentity: result })
+      }
+    })
   }
 
   renderNavBar() {
@@ -52,91 +63,83 @@ class ChooseRole extends Component<IProps, IState> {
     )
   }
 
-  renderFindJob() {
+  chooseOrSwitchIdentity(targetIdentity: string, role: string) {
     const { chooseRole } = this.props
-    return (
-      <NextTouchableOpacity style={styles.cellView}
-        onPress={() => {
-          console.log('sssssssssss')
-          RootLoading.loading()
-          setTimeout(() => {
-            RootLoading.hide()
-            AsyncStorage.setItem(Login_type, '1', (error) => {
-              console.log('1111111111: ', error)
-              if (!error) {
-                const { navigation } = this.props
-                navigation.dispatch(
-                  CommonActions.reset({
-                    index: 1,
-                    routes: [
-                      { name: 'Dummy' },
-                    ],
-                  })
-                )
+    chooseRole(targetIdentity, role, (error, result) => {
+      RootLoading.hide()
+      if (!error && result) {
+        const { navigation } = this.props
+        // 此处将状态全局存储起来后,再回到导航首页进行判断身份跳转
+        AsyncStorage.multiSet([[Login_Identity, targetIdentity], [Login_Token, result.UserChooseOrSwitchIdentity]], (error) => {
+          if (!error) {
+            const { navigation } = this.props
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [
+                  { name: 'Dummy' },
+                ],
+              })
+            )
 
-              } else {
-                RootLoading.fail('请重试或联系客服')
-              }
-            })
-          }, 1000)
-          // chooseRole('user', (error, result) => {
-          //   RootLoading.hide()
-          //   if (!error && result) {
-          //     console.log('ssssssssss: ', error, result)
-          //     const { navigation } = this.props
-          //     console.log('this.props: ', this.props)
-          //     console.log('this.props.navigation: ', navigation)
-          //     // 此处将状态全局存储起来后,再回到导航首页进行判断身份跳转
-          //     AsyncStorage.setItem(Login_type, '1', (error) => {
-          //       console.log('1111111111: ', error)
-          //       if (!error) {
-          //         const { navigation } = this.props
-          //         navigation.dispatch(
-          //           CommonActions.reset({
-          //             index: 1,
-          //             routes: [
-          //               { name: 'Dummy' },
-          //             ],
-          //           })
-          //         )
-
-          //       } else {
-          //         RootLoading.fail('请重试或联系客服')
-          //       }
-          //     })
-          //   }
-          // })
-        }
-        }
-      >
-        <Image
-          style={styles.typeLogo}
-          source={require('../../assets/requestJobs/role-person.png')}
-        />
-        <Text style={styles.requestJobTitle}>
-          个人
-        </Text>
-      </NextTouchableOpacity >
-    )
+          } else {
+            RootLoading.fail('请重试或联系客服')
+          }
+        })
+      }
+    })
   }
 
-  renderFindPerson(title: string) {
-    let icon = require('../../assets/requestJobs/role-person.png')
-    if (title === '招聘') {
-      icon = require('../../assets/requestJobs/role-hr.png')
+  renderRole(title: string) {
+    const { loginIdentity } = this.state
+    let viewStyle: any
+    let textStyle: any
+    let icon = require('../../assets/loginPages/role-person.png')
+    if (title === '个人') {
+      if (loginIdentity === 'PersonalUser') {
+        icon = require('../../assets/loginPages/role-person.png')
+        viewStyle = styles.currentCellView
+        textStyle = styles.currentTitle
+      } else {
+        icon = require('../../assets/loginPages/role-person-gray.png')
+      }
+    } else if (title === '招聘') {
+      if (loginIdentity === 'EnterpriseUser') {
+        icon = require('../../assets/loginPages/role-zhaopin.png')
+        viewStyle = styles.currentCellView
+        textStyle = styles.currentTitle
+      } else {
+        icon = require('../../assets/loginPages/role-zhaopin-gray.png')
+      }
     } else if (title === '学习') {
-      icon = require('../../assets/requestJobs/role-xuexi.png')
+      icon = loginIdentity === 'Learn'
+        ? require('../../assets/loginPages/role-learn.png')
+        : require('../../assets/loginPages/role-learn-gray.png')
     } else if (title === '创业') {
-      icon = require('../../assets/requestJobs/role-chuangye.png')
+      icon = loginIdentity === 'Chuangye'
+        ? require('../../assets/loginPages/role-chuangye.png')
+        : require('../../assets/loginPages/role-chuangye-gray.png')
     } else if (title === '投资') {
-      icon = require('../../assets/requestJobs/role-touzi.png')
+      icon = loginIdentity === 'Touzi'
+        ? require('../../assets/loginPages/role-touzi.png')
+        : require('../../assets/loginPages/role-touzi-gray.png')
     } else if (title === '顾问') {
-      icon = require('../../assets/requestJobs/role-guwen.png')
+      icon = loginIdentity === 'Guwen'
+        ? require('../../assets/loginPages/role-guwen.png')
+        : require('../../assets/loginPages/role-guwen-gray.png')
     }
     return (
-      <NextTouchableOpacity style={styles.grayCellView}
+      <NextTouchableOpacity key={title.toString()} style={[styles.grayCellView, viewStyle]}
         onPress={() => {
-          RootLoading.info(`我要${title},敬请期待`)
+          console.log('titletitletitletitle1: ')
+          if (title === '个人') {
+            this.chooseOrSwitchIdentity('PersonalUser', 'PersonalUser')
+          } else if (title === '招聘') {
+            console.log('titletitletitletitle2: ')
+            this.chooseOrSwitchIdentity('EnterpriseUser', 'HR')
+          } else {
+            RootLoading.info(`我要${title},敬请期待`)
+          }
         }}
       >
         <Image
@@ -144,7 +147,7 @@ class ChooseRole extends Component<IProps, IState> {
           source={icon}
           resizeMode="center"
         />
-        <Text style={styles.requestPersonTitle}>
+        <Text style={[styles.requestPersonTitle, textStyle]}>
           {title}
         </Text>
       </NextTouchableOpacity>
@@ -152,6 +155,8 @@ class ChooseRole extends Component<IProps, IState> {
   }
 
   render() {
+    const roles = ['个人', '招聘', '学习', '创业', '投资', '顾问']
+    const { loginIdentity } = this.state
     return (
       <View style={styles.container}>
         {this.renderNavBar()}
@@ -161,12 +166,11 @@ class ChooseRole extends Component<IProps, IState> {
         >
           <Text style={styles.chooseTitle}>请选择身份并继续</Text>
           <View style={styles.roleView}>
-            {this.renderFindJob()}
-            {this.renderFindPerson('招聘')}
-            {this.renderFindPerson('学习')}
-            {this.renderFindPerson('创业')}
-            {this.renderFindPerson('投资')}
-            {this.renderFindPerson('顾问')}
+            {roles.map((item, index) => {
+              return (
+                this.renderRole(item)
+              )
+            })}
           </View>
         </ScrollView>
       </View>

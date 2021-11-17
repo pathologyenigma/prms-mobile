@@ -9,7 +9,7 @@ import {
 import {
   gql
 } from "@apollo/client"
-import { apolloClientShare, checkUserVerifyCodeConsumeGql, getENTEditEnterpriseBasicInfoGql, getUserEditPersonalDataGql, initApolloClient, loginGql, numberCheckGql, registerGql, resetPasswordGql, sendSMSGql, subscriptionGqlServerGql, testGql } from '../utils/postQuery'
+import { apolloClientShare, checkUserVerifyCodeConsumeGql, chooseOrSwitchIdentityGql, getENTEditEnterpriseBasicInfoGql, getUserEditPersonalDataGql, initApolloClient, loginGql, numberCheckGql, registerGql, resetPasswordGql, sendSMSGql, subscriptionGqlServerGql, testGql } from '../utils/postQuery'
 import errorHandler from '../utils/errorhandler'
 
 const reset_reducer = () => {
@@ -255,6 +255,35 @@ const checkUserVerifyCodeConsume = (
   }
 }
 
+// 切换角色
+const chooseRole = (
+  targetIdentity: string,
+  role: string,
+  callback: (error: any, result?: any) => void) => {
+  console.log('chooseRole: ', targetIdentity, role)
+  console.log('apolloClientShare: ', apolloClientShare)
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.mutate({
+      mutation: chooseOrSwitchIdentityGql,
+      variables: {
+        targetIdentity: "EnterpriseUser",
+        role: "HR"
+      }
+    })
+      .then((res) => {
+        console.log('res: ', res)
+        if (res && res.data) {
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error) => {
+        errorHandler(error)
+      })
+  }
+}
+
 // 重置密码
 const resetPassword = (
   phone: string,
@@ -300,61 +329,14 @@ const subscriptionMessage = ((callback?: (error: any, result?: any) => void) => 
         if (res && callback) {
           callback(undefined, res)
         }
+      }, (error) => {
+        errorHandler(error)
+        console.log('error: ', error)
+      }, () => {
+        console.log('complete: ')
       })
   }
 })
-
-const chooseRole = (role: string, callback?: (error: any, result?: any) => void) => {
-  return (dispatch: Dispatch<AnyAction>) => {
-    postWithToken('https://www.baidu.com')
-      .then((result) => {
-        console.log('1111111: ', result)
-        const res = {
-          id: '1',
-          avatar: 'https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png',
-          username: '王经理',
-          mobileNumber: '13951840000',
-          dateOfBirth: '1994-01',
-          gender: '1',
-          city: '1',
-          lastOnlineAt: '1',
-          lastLoginAt: '1',
-          updatedAt: '1',
-          createdAt: '1',
-          currentRole: '人力总监'
-        }
-        dispatch(update_user_info('userInfo', res))
-        if (callback) {
-          callback(undefined, res)
-        }
-      })
-      .catch((error) => {
-        const res = {
-          id: '1',
-          avatar: 'https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png',
-          username: '王经理',
-          mobileNumber: '13951840000',
-          dateOfBirth: '1994-01',
-          gender: '1',
-          city: '1',
-          lastOnlineAt: '1',
-          lastLoginAt: '1',
-          updatedAt: '1',
-          createdAt: '1',
-          token: '1',
-          currentRole: '1'
-        }
-        dispatch(update_user_info('userInfo', res))
-        if (callback) {
-          callback(undefined, res)
-        }
-        // console.log('22222222: ', error)
-        // if (callback) {
-        //   callback(error)
-        // }
-      })
-  }
-}
 
 /**
  * 校验验证码模式
@@ -383,7 +365,6 @@ export {
   loginMobile,
   sendResetCode,
   verificationResetCode,
-  chooseRole,
   userNumberCheck,
   sendSMS,
   registerAccount,
@@ -391,4 +372,5 @@ export {
   checkUserVerifyCodeConsume,
   resetPassword,
   subscriptionMessage,
+  chooseRole
 }

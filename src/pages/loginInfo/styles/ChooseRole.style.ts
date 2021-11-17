@@ -23,7 +23,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
-  cellView: {
+  currentCellView: {
     width: (SystemHelper.width - 36) / 2,
     marginTop: 36,
     height: 90,
@@ -41,11 +41,11 @@ export default StyleSheet.create({
     width: 37,
     height: 38
   },
-  requestJobTitle: {
+  currentTitle: {
     marginLeft: 22,
     color: greenColor,
     fontSize: 15,
-    fontWeight: '400'
+    fontWeight: '400',
   },
   grayCellView: {
     width: (SystemHelper.width - 36) / 2,
