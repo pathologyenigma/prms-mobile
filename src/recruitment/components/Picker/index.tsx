@@ -13,7 +13,7 @@ interface PickerProps {
 }
 
 export default function Picker({
-  style,
+  style = { height: 180 },
   itemStyle = {},
   selectedValue,
   onValueChange,
@@ -53,7 +53,6 @@ export default function Picker({
 
 const styles = StyleSheet.create({
   picker: {
-    flex: 1,
     overflow: 'hidden',
     justifyContent: 'center',
   },

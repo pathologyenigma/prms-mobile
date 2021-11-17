@@ -47,7 +47,7 @@ function PickerAndroid({
   selectedValue,
   onValueChange,
   values = [],
-  style = { height: 180 },
+  style,
   itemStyle = {},
   roundRectType = 'all',
 }: Props) {

@@ -8,6 +8,8 @@ import ReportButton from './ReportButton'
 import Section from './Section'
 import Profile from './Profile'
 import LabelWithIcon from './LabelWithIcon'
+import IntelligentGreetingModal from './IntelligentGreetingModal'
+import SetGreetingModal from './SetGreetingModal'
 
 export const TalentDetailOptions: StackNavigationOptions = {
   title: '',
@@ -77,6 +79,8 @@ export default function TalentDetail() {
         />
       </ScrollView>
       <GradientButton style={styles.button} title="立即沟通" />
+      <IntelligentGreetingModal visible={false} />
+      <SetGreetingModal visible={true} />
     </View>
   )
 }

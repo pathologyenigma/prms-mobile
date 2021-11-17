@@ -37,17 +37,18 @@ class App extends Component {
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
           <Stack.Screen
-            key="TipCandidate"
-            name="TipCandidate"
-            component={TipCandidate}
-            options={TipCandidateOptions}
-          />
-          <Stack.Screen
             key="TalentDetail"
             name="TalentDetail"
             component={TalentDetail}
             options={TalentDetailOptions}
           />
+          <Stack.Screen
+            key="TipCandidate"
+            name="TipCandidate"
+            component={TipCandidate}
+            options={TipCandidateOptions}
+          />
+
           <Stack.Screen
             key="PostJob"
             name="PostJob"
