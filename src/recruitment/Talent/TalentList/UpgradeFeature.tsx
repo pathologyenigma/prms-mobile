@@ -12,10 +12,10 @@ export default function UpgradeFeature() {
       <GradientButton
         hitSlop={{ top: 8, bottom: 8, left: 0, right: 0 }}
         style={styles.button}
-        textStyle={styles.buttonText}
+        titleStyle={styles.buttonText}
         linearGradientStyle={styles.buttonLinearGradient}
         colors={['#FFEFC0', '#FFD56F']}
-        text="升级"
+        title="升级"
       />
     </View>
   )

@@ -3,7 +3,7 @@ import { Image, ImageRequireSource } from 'react-native'
 
 import Talent from '../Talent'
 import Msg from '../Msg'
-import Me from '../Me'
+import Me from '../Hr/Me'
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 const Tabs = createBottomTabNavigator()
@@ -75,16 +75,16 @@ const icons: {
   }
 } = {
   Talent: {
-    selected: require('./rencai-selected.png'),
-    unselected: require('./rencai.png'),
+    selected: require('./images/rencai-selected.png'),
+    unselected: require('./images/rencai.png'),
   },
   Msg: {
-    selected: require('./xiaoxi-selected.png'),
-    unselected: require('./xiaoxi.png'),
+    selected: require('./images/xiaoxi-selected.png'),
+    unselected: require('./images/xiaoxi.png'),
   },
   Me: {
-    selected: require('./wode-selected.png'),
-    unselected: require('./wode.png'),
+    selected: require('./images/wode-selected.png'),
+    unselected: require('./images/wode.png'),
   },
 }
 

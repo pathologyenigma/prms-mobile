@@ -50,7 +50,7 @@ function PostJob() {
       <GradientButton title="立即发布" style={styles.postButton} />
       <JobNatureModal visible={false} />
       <JobAdmissionModal visible={false} />
-      <JobLabelModal visible={true} />
+      <JobLabelModal visible={false} />
       <RechargeModal visible={false} />
     </KeyboardAwareScrollView>
   )

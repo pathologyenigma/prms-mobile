@@ -38,7 +38,11 @@ export default function NavBar() {
           icon={require('./guanli.png')}
           onPress={() => navigation.navigate('PostJob')}
         />
-        <IconButton icon={require('./sousuo.png')} style={{ marginRight: 8 }} />
+        <IconButton
+          icon={require('./sousuo.png')}
+          style={{ marginRight: 8 }}
+          iconStyle={styles.iconStyle}
+        />
       </View>
     </LinearGradient>
   )
@@ -74,5 +78,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'normal',
     lineHeight: navigationBarHeight(),
+  },
+  iconStyle: {
+    width: 36,
+    height: 36,
   },
 })
