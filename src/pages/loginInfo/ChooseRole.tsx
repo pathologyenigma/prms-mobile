@@ -68,7 +68,6 @@ class ChooseRole extends Component<IProps, IState> {
     chooseRole(targetIdentity, role, (error, result) => {
       RootLoading.hide()
       if (!error && result) {
-        const { navigation } = this.props
         // 此处将状态全局存储起来后,再回到导航首页进行判断身份跳转
         AsyncStorage.multiSet([[Login_Identity, targetIdentity], [Login_Token, result.UserChooseOrSwitchIdentity]], (error) => {
           if (!error) {
@@ -81,7 +80,6 @@ class ChooseRole extends Component<IProps, IState> {
                 ],
               })
             )
-
           } else {
             RootLoading.fail('请重试或联系客服')
           }

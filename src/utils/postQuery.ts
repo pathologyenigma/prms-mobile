@@ -15,13 +15,12 @@ import { getMainDefinition } from '@apollo/client/utilities';
 let apolloClientShare: ApolloClient<any>
 
 const initApolloClient = (Authorization: string) => {
-  console.log('Authorization: ', Authorization)
   const ws = new WebSocketLink({
     uri: wssUri,
     options: {
       reconnect: true,
       connectionParams: {
-        Authorization: Authorization || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMiwidXNlcm5hbWUiOiLlhrflhagiLCJpZGVudGl0eSI6eyJyb2xlIjoiSFIiLCJpZGVudGl0eSI6IkVudGVycHJpc2VVc2VyIiwiZW50TmFtZSI6ImVudF8zIn0sImRlYWRUaW1lIjoiMTYzNzE2NTA0NDc3Mzg2NDAwMDAwIiwiaWF0IjoxNjM3MTY1MDQ0LCJleHAiOjE2MzcxNjg2NDR9.aMsmVczKlvyVu_9xHj7tT9TBrdBicDLmIx0IH-yNl3A',
+        Authorization: Authorization,
       }
     },
   });
@@ -29,7 +28,7 @@ const initApolloClient = (Authorization: string) => {
   const http = new HttpLink({
     uri: hostUri,
     headers: {
-      Authorization: Authorization || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMiwidXNlcm5hbWUiOiLlhrflhagiLCJpZGVudGl0eSI6eyJyb2xlIjoiSFIiLCJpZGVudGl0eSI6IkVudGVycHJpc2VVc2VyIiwiZW50TmFtZSI6ImVudF8zIn0sImRlYWRUaW1lIjoiMTYzNzE2NTA0NDc3Mzg2NDAwMDAwIiwiaWF0IjoxNjM3MTY1MDQ0LCJleHAiOjE2MzcxNjg2NDR9.aMsmVczKlvyVu_9xHj7tT9TBrdBicDLmIx0IH-yNl3A',
+      Authorization: Authorization,
     }
   })
 
@@ -45,9 +44,6 @@ const initApolloClient = (Authorization: string) => {
     // uri: hostUri,
     link: newLink,
     cache: new InMemoryCache(),
-    // headers: {
-    //   Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMiwidXNlcm5hbWUiOiLlhrflhagiLCJpZGVudGl0eSI6eyJyb2xlIjoiSFIiLCJpZGVudGl0eSI6IkVudGVycHJpc2VVc2VyIiwiZW50TmFtZSI6ImVudF8zIn0sImRlYWRUaW1lIjoiMTYzNzE2NTA0NDc3Mzg2NDAwMDAwIiwiaWF0IjoxNjM3MTY1MDQ0LCJleHAiOjE2MzcxNjg2NDR9.aMsmVczKlvyVu_9xHj7tT9TBrdBicDLmIx0IH-yNl3A'
-    // }
   })
   return apolloClientShare
 }

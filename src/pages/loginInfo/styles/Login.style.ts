@@ -109,8 +109,8 @@ export default StyleSheet.create({
     marginRight: 3,
   },
   passwordHideImg: {
-    width: 19,
-    height: 9,
+    width: 21,
+    height: 12,
   },
   forgetView: {
     flexDirection: 'row',

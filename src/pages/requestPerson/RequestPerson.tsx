@@ -6,6 +6,7 @@ import * as actions from '../../action/loginAction'
 import { Login_Identity, Login_Token } from '../../utils/constant'
 import { CommonActions } from '@react-navigation/native'
 import AsyncStorage from '@react-native-community/async-storage'
+import RootLoading from '../../utils/rootLoading'
 
 class RequestPerson extends Component {
   render() {
@@ -14,9 +15,10 @@ class RequestPerson extends Component {
         <TouchableOpacity
           style={{ alignItems: 'center' }}
           onPress={() => {
+            RootLoading.loading()
             this.props.chooseRole('PersonalUser', 'PersonalUser', (error: any, result: any) => {
+              RootLoading.hide()
               if (!error && result) {
-                // 此处将状态全局存储起来后,再回到导航首页进行判断身份跳转
                 AsyncStorage.multiSet([[Login_Identity, 'PersonalUser'], [Login_Token, result.UserChooseOrSwitchIdentity]], (error) => {
                   if (!error) {
                     this.props.navigation.dispatch(

@@ -148,7 +148,12 @@ class LoginScreen extends Component<IProps, IState> {
           >
             <Image
               style={styles.passwordHideImg}
-              source={require('../../assets/password_hide.png')}
+              resizeMode="center"
+              source={
+                passwordShow
+                  ? require('../../assets/loginPages/eye-open.png')
+                  : require('../../assets/loginPages/eye-close.png')
+              }
             />
           </NextTouchableOpacity>
         </View>

@@ -28,33 +28,6 @@ const update_kv = (key: string, value: string) => {
   }
 }
 
-const loginMobile1 = (account: string, password: string, callback: (error: any, result?: any) => void) => {
-  return (dispatch: Dispatch<AnyAction>) => {
-    apolloClientShare.query({
-      query: testGql,
-      variables: {
-        currency: 'CNY'
-      }
-    })
-      .then((res) => {
-        console.log('res: ', res)
-        // if (res && res.data) {
-        //   // dispatch(update_user_info('UserLogIn', res.data.UserLogIn))
-        //   if (callback) {
-        //     callback(undefined, res.data)
-        //   }
-        // }
-      })
-      .catch((error) => {
-        // TODO:此处由于登录接口错误,会返回错误的结果,实际参数是正确的.注意后续流程复测
-        console.log('error: ', error)
-        // if (callback) {
-        //   callback(error)
-        // }
-      })
-  }
-}
-
 const loginMobile = (account: string, password: string, callback: (error: any, result?: any) => void) => {
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
@@ -260,19 +233,17 @@ const chooseRole = (
   targetIdentity: string,
   role: string,
   callback: (error: any, result?: any) => void) => {
-  console.log('chooseRole: ', targetIdentity, role)
-  console.log('apolloClientShare: ', apolloClientShare)
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.mutate({
       mutation: chooseOrSwitchIdentityGql,
       variables: {
-        targetIdentity: "EnterpriseUser",
-        role: "HR"
+        targetIdentity: targetIdentity,
+        role: role
       }
     })
       .then((res) => {
-        console.log('res: ', res)
         if (res && res.data) {
+          dispatch(update_kv('UpdateToken', res.data.UserChooseOrSwitchIdentity))
           if (callback) {
             callback(undefined, res.data)
           }
