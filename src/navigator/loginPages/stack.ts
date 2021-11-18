@@ -8,6 +8,7 @@ import ChooseRole from '../../pages/loginInfo/ChooseRole'
 import AgreementPrivacy from '../../pages/loginInfo/AgreementPrivacy'
 import InputVerifyCode from '../../pages/loginInfo/InputVerifyCode'
 import SetPassword from '../../pages/loginInfo/SetPassword'
+import { TOperationType } from '../../utils/types/PropsType'
 
 // import RequestJob from '../requestPerson/index'
 // import AppRouter from '../../navigator'
@@ -17,8 +18,8 @@ type TRouterParams = {
   ForgetPassword: any,
   ChooseRole: any,
   AgreementPrivacy: { pageType: number } // 1: 用户协议 2: 隐私政策
-  InputVerifyCode: any
-  SetPassword: any
+  InputVerifyCode: { phone: string, operation: TOperationType } // operation:用于重置哪个接口的验证码
+  SetPassword: { operation: TOperationType }
   // RequestJob: any,
   // AppRouter: any,
 }

@@ -2,6 +2,11 @@ type IuserInfoState = 'userInfo/reset_reducer' | 'userInfo/update_kv'
 
 export interface IUserInfoState {
   userInfo: {
+    UserLogIn: {
+      username: string,
+      token: string,
+      createdAt: string,
+    },
     id: string,
     avatar: string,
     username: string,
@@ -20,6 +25,11 @@ export interface IUserInfoState {
 
 const initState: IUserInfoState = {
   userInfo: {
+    UserLogIn: {
+      username: '',
+      token: '',
+      createdAt: ''
+    },
     id: '',
     avatar: '',
     username: '',

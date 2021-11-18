@@ -1,21 +1,31 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView, StatusBar } from 'react-native'
+import { Text, View, Image, ScrollView, StatusBar, DeviceEventEmitter } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import RootLoading from '../../../utils/rootLoading'
 import GradientButton from '../../components/GradientButton'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import styles from './styles/Jobs.style'
 import LinearGradient from 'react-native-linear-gradient'
-import { gradienViewRightGreenColor, greenColor } from '../../../utils/constant'
+import { gradienViewRightGreenColor, greenColor, Log_Out } from '../../../utils/constant'
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { Carousel } from '@ant-design/react-native'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import JobCell from '../../components/JobCell'
 import { GenProps } from '../../../navigator/requestJob/stack'
+import { connect } from 'react-redux'
+import { bindActionCreators, Dispatch, AnyAction } from 'redux'
+import * as actions from '../../../action/loginAction'
+import {
+  Query
+} from "@apollo/client/react/components"
+import {
+  gql
+} from "@apollo/client"
+import { getENTEditEnterpriseBasicInfo } from '../../../action/loginAction'
+import { CommonActions } from '@react-navigation/native';
+import AsyncStorage from '@react-native-community/async-storage'
 
-type IProps = GenProps<'Jobs'> & {
-
-}
+type IProps = GenProps<'Jobs'> & ReturnType<typeof mapDispatchToProps>
 
 type IState = {
   videoSource: [],
@@ -24,7 +34,7 @@ type IState = {
   selectCondition: number
 }
 
-export default class Jobs extends Component<IProps, IState> {
+class Jobs extends Component<IProps, IState> {
   constructor(props: any) {
     super(props)
     console.log('111111112props: ', props)
@@ -75,6 +85,15 @@ export default class Jobs extends Component<IProps, IState> {
 
   loadData() {
     // 获取视频和列表数据
+    // AsyncStorage.getAllKeys((error, result) => {
+    //   console.log('AsyncStorage: ', error, result)
+    // })
+    // 测试订阅
+    console.log('111111111: loadData ')
+    this.props.subscriptionMessage((error, result) => {
+      console.log('subscriptionMessage: ', error, result)
+      RootLoading.info(`收到新消息 :${result.data.newMessage.messageContent}`)
+    })
   }
 
   renderNavBar() {
@@ -102,12 +121,36 @@ export default class Jobs extends Component<IProps, IState> {
             ref={'barScrollView'}
             style={styles.naviBarScrollview}
           >
-            <Text style={[styles.naviBarText, {
-              fontSize: 20,
-              fontWeight: '400'
-            }]}>
-              项目经理
-            </Text>
+            <NextTouchableOpacity
+              onPress={() => {
+                // 测试携带 token 情况
+                const info = {
+                  enterpriseName: "String",
+                  abbreviation: "String",
+                  enterpriseLocation: ["String"],
+                  enterprisecCoordinate: [1],
+                  enterpriseNature: "String",
+                  enterpriseIndustry: ["String"],
+                  enterpriseFinancing: "String",
+                  enterpriseSize: "String",
+                  enterpriseProfile: "String",
+                  logo: "String",
+                  establishedDate: "String",
+                  homepage: "String",
+                  tel: "String",
+                }
+                getENTEditEnterpriseBasicInfo(info, (error, result) => {
+
+                })
+              }}
+            >
+              <Text style={[styles.naviBarText, {
+                fontSize: 20,
+                fontWeight: '400'
+              }]}>
+                项目经理
+              </Text>
+            </NextTouchableOpacity>
             <Text style={styles.naviBarText}>
               UE设计师
             </Text>
@@ -342,6 +385,29 @@ export default class Jobs extends Component<IProps, IState> {
   renderList() {
     const { refreshState, listDataSource } = this.state
     return (
+      //   <Query
+      //     query={gql`
+      //   {
+      //     rates(currency: "USD") {
+      //       currency
+      //       rate
+      //     }
+      //   }
+      // `}
+      //   >
+      //     {
+      //       ({ loading, error, data }) => {
+      //         console.log('222222222: ', loading, error, data)
+      //         if (loading) return <Text>Loading...</Text>;
+      //         if (error) return <Text>Error :(</Text>;
+
+      //         return data.rates.map(({ currency, rate }) => (
+      //           <View key={currency}>
+      //             <Text>{currency}: {rate}</Text>
+      //           </View>
+      //         ));
+      //       }
+      //     }
       <RefreshListView
         style={styles.listView}
         onHeaderRefresh={() => this.handleRefresh()}
@@ -355,6 +421,7 @@ export default class Jobs extends Component<IProps, IState> {
         footerRefreshingText="加载更多"
         footerNoMoreDataText="没有更多了"
       />
+      // </Query>
     )
   }
 
@@ -373,3 +440,15 @@ export default class Jobs extends Component<IProps, IState> {
     )
   }
 }
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
+  return bindActionCreators({
+    reset_reducer: actions.reset_reducer,
+    update_kv: actions.update_kv,
+    loginMobile: actions.loginMobile,
+    userNumberCheck: actions.userNumberCheck,
+    subscriptionMessage: actions.subscriptionMessage,
+  }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(Jobs)

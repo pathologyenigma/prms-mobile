@@ -7,13 +7,16 @@ import ForgetPassword from '../../pages/loginInfo/ForgetPassword'
 import ChooseRole from '../../pages/loginInfo/ChooseRole'
 import InputVerifyCode from '../../pages/loginInfo/InputVerifyCode'
 import SetPassword from '../../pages/loginInfo/SetPassword'
+import AgreementPrivacy from '../../pages/loginInfo/AgreementPrivacy'
+import { TOperationType } from '../../utils/types/PropsType'
 
 type TRouterParams = {
   LoginScreen: any,
   ForgetPassword: any,
   ChooseRole: any
-  InputVerifyCode: any
-  SetPassword: any
+  InputVerifyCode: { phone: string, operation: TOperationType } // operation:用于重置哪个接口的验证码
+  SetPassword: { operation: TOperationType }
+  AgreementPrivacy: { pageType: number } // 1: 用户协议 2: 隐私政策
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -34,5 +37,6 @@ export default class RouterStacks {
       ChooseRole,
       InputVerifyCode,
       SetPassword,
+      AgreementPrivacy,
     }
 }

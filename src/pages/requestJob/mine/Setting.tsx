@@ -3,13 +3,14 @@ import NavBar, { EButtonType } from '../../components/NavBar'
 import styles from './styles/Setting.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import RootLoading from '../../../utils/rootLoading'
-import { Text, View, Image, StatusBar, AsyncStorage } from 'react-native'
+import { Text, View, Image, StatusBar } from 'react-native'
 import { versionCode } from '../../../utils/config'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import { ActivityIndicator } from '@ant-design/react-native'
 import AlertContentModal from '../../components/AlertContentModal'
 import { CommonActions } from '@react-navigation/native';
 import * as CacheManager from 'react-native-http-cache';
+import AsyncStorage from '@react-native-community/async-storage'
 
 type IProps = GenProps<'Setting'> & {
 

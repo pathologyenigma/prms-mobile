@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, StatusBar } from 'react-native'
+import { Text, View, Image, ScrollView, BackHandler, Platform, TextInput, DeviceEventEmitter, StatusBar } from 'react-native'
 import styles from './styles/Login.style'
 import { GenProps } from '../../navigator/router/stack'
 import { connect } from 'react-redux'
@@ -14,49 +14,50 @@ import WhiteContentModal from '../components/WhiteContentModal'
 import GradientButton from '../components/GradientButton'
 import SystemHelper from '../../utils/system'
 import { CommonActions } from '@react-navigation/native'
-import AsyncStorage from '@react-native-community/async-storage'
-import { Login_type } from '../../utils/constant'
+import { numberRegex } from '../../utils/regex'
 
-type IProps = GenProps<'LoginScreen'> & {
-  email: string,
-  password: string,
-  number: string,
-  reset_reducer: () => void,
-  update_kv: (key: string, value: string | number) => void,
-  loginMobile: any
-}
+type IProps = GenProps<'LoginScreen'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 interface IState {
   loginType: number,
   passwordShow: boolean,
   showRegisterTips: boolean,
   showPrivacyTips: boolean,
-  phone: string
-  password: string
 }
 
 class LoginScreen extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
-      loginType: 2, // 0 : 一键登录 1: 账号密码登录 2: 验证码登录
+      loginType: 1, // 0 : 一键登录 1: 账号密码登录 2: 验证码登录
       passwordShow: false, // 是否隐藏密码(以*进行展示)
       showRegisterTips: false,
       showPrivacyTips: false,
-      phone: '',
-      password: ''
     }
   }
 
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
+  }
+
+  onBackAndroid = () => {
+    // 安卓返回按钮弹出退出确认框
+    const { navigation } = this.props
+    if (navigation.getState().index === 0) {
+      return true
+    }
+    return false
+  }
+
   componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid)
     const { reset_reducer } = this.props
     reset_reducer()
   }
 
   requestLogin() {
-    const { phone } = this.state
-    if (!phone) {
-      RootLoading.fail('请先输入手机号码')
+    if (!this.props.phone) {
+      RootLoading.fail('请先输入账户名')
       return
     }
     // TODO 哪些场景会弹出 用户协议和隐私政策 的提示 modal
@@ -64,8 +65,6 @@ class LoginScreen extends Component<IProps, IState> {
   }
 
   renderOneClickLogin() {
-    const { dispatch, update_kv } = this.props
-    const { phone } = this.state
     return (
       <View style={styles.oneClickLoginView}>
         <Image
@@ -77,10 +76,10 @@ class LoginScreen extends Component<IProps, IState> {
           cellStyle={styles.oneClickLoginStyle}
           title="+86"
           inputProps={{
-            value: phone,
+            value: this.props.phone,
             placeholder: '请输入您的手机号码',
             onChangeText: (value) => {
-              this.setState({ phone: value })
+              this.props.update_kv('phone', value)
             },
           }}
         />
@@ -106,8 +105,8 @@ class LoginScreen extends Component<IProps, IState> {
   }
 
   renderPasswordLogin() {
-    const { passwordShow, phone, password } = this.state
-    const { navigation } = this.props
+    const { passwordShow } = this.state
+    const { navigation, loginMobile, phone, update_kv, password, subscriptionMessage } = this.props
     return (
       <View>
         <Text style={styles.accountLoginTitle}>密码登录</Text>
@@ -121,7 +120,8 @@ class LoginScreen extends Component<IProps, IState> {
             placeholder="请输入手机号或邮箱"
             value={phone}
             onChangeText={(value) => {
-              this.setState({ phone: value })
+              update_kv('phone', value)
+              // this.setState({ account: value })
             }}
           />
         </View>
@@ -137,7 +137,7 @@ class LoginScreen extends Component<IProps, IState> {
             placeholder="请输入密码"
             value={password}
             onChangeText={(value) => {
-              this.setState({ password: value })
+              update_kv('password', value)
             }}
           />
           <NextTouchableOpacity
@@ -148,15 +148,29 @@ class LoginScreen extends Component<IProps, IState> {
           >
             <Image
               style={styles.passwordHideImg}
-              source={require('../../assets/password_hide.png')}
+              resizeMode="center"
+              source={
+                passwordShow
+                  ? require('../../assets/loginPages/eye-open.png')
+                  : require('../../assets/loginPages/eye-close.png')
+              }
             />
           </NextTouchableOpacity>
         </View>
         <NextTouchableOpacity
-          style={[styles.loginBtn, { marginTop: 108 }]}
+          style={[styles.loginBtn, { marginTop: 108 }, (!phone || !password) && { opacity: 0.8 }]}
+          disabled={!phone || !password}
           onPress={() => {
-            // RootLoading.info('登录')
-            navigation.push('ChooseRole')
+            RootLoading.loading()
+            // RootLoading.success('登录成功')
+            // navigation.push('ChooseRole')
+            // return
+            loginMobile(phone, password, (error, result) => {
+              if (!error && result) {
+                RootLoading.success('登录成功')
+                navigation.push('ChooseRole')
+              }
+            })
           }}
         >
           <Text style={styles.loginText}>登录</Text>
@@ -165,8 +179,9 @@ class LoginScreen extends Component<IProps, IState> {
           <NextTouchableOpacity
             style={styles.passwordLogin}
             onPress={() => {
-              this.setState({ loginType: 2 })
-              RootLoading.info('验证码登录/注册')
+              this.setState({
+                loginType: 2,
+              })
             }}
           >
             <Text style={styles.passwordLoginText}>验证码登录/注册</Text>
@@ -174,8 +189,14 @@ class LoginScreen extends Component<IProps, IState> {
           <NextTouchableOpacity
             style={styles.passwordLogin}
             onPress={() => {
-              // navigation.push('ForgetPassword')
-              navigation.push('InputVerifyCode')
+              if (numberRegex.test(phone)) {
+                navigation.push('InputVerifyCode', {
+                  phone: phone,
+                  operation: 'UserResetPassword'
+                })
+              } else {
+                RootLoading.info('请输入正确的手机号以接收验证码!')
+              }
             }}
           >
             <Text style={styles.passwordLoginText}>忘记密码</Text>
@@ -186,6 +207,7 @@ class LoginScreen extends Component<IProps, IState> {
   }
 
   renderVerifyCodeLogin() {
+    const { phone, update_kv } = this.props
     return (
       <View>
         <View style={styles.verifyCodeLoginView}>
@@ -194,17 +216,21 @@ class LoginScreen extends Component<IProps, IState> {
             cellStyle={[styles.oneClickLoginStyle, { marginTop: 31 }]}
             title="+86"
             inputProps={{
+              value: phone,
               placeholder: '请输入您的手机号码',
               onChangeText: (value) => {
-                this.setState({ phone: value })
+                update_kv('phone', value)
               },
             }}
           />
           <NextTouchableOpacity
             style={[styles.loginBtn, { marginTop: 44 }]}
             onPress={() => {
-              RootLoading.info('下一步')
-              this.requestLogin()
+              if (numberRegex.test(phone)) {
+                this.requestLogin()
+              } else {
+                RootLoading.info('请输入正确的手机号以接收验证码!')
+              }
             }}
           >
             <Text style={styles.loginText}>下一步</Text>
@@ -283,7 +309,7 @@ class LoginScreen extends Component<IProps, IState> {
   }
 
   renderRegisterTipView() {
-    const { phone } = this.state
+    const { phone } = this.props
     return (
       <View style={styles.registerTipView}>
         <Text style={styles.registerTipTitle}>
@@ -302,23 +328,28 @@ class LoginScreen extends Component<IProps, IState> {
             containerStyle={styles.registerTipRightBtn}
             text="注册"
             onPress={() => {
-              AsyncStorage.setItem(Login_type, '1', (error) => {
-                console.log('1111111111: ', error)
-                if (!error) {
-                  const { navigation } = this.props
-                  navigation.dispatch(
-                    CommonActions.reset({
-                      index: 1,
-                      routes: [
-                        { name: 'Dummy' },
-                      ],
-                    })
-                  )
-
-                } else {
-                  RootLoading.fail('请重试或联系客服')
-                }
+              const { navigation } = this.props
+              navigation.push('InputVerifyCode', {
+                phone: phone,
+                operation: 'UserRegister'
               })
+              //   AsyncStorage.setItem(Login_Identity, '1', (error) => {
+              //     console.log('1111111111: ', error)
+              //     if (!error) {
+              //       const { navigation } = this.props
+              //       navigation.dispatch(
+              //         CommonActions.reset({
+              //           index: 1,
+              //           routes: [
+              //             { name: 'Dummy' },
+              //           ],
+              //         })
+              //       )
+
+              //     } else {
+              //       RootLoading.fail('请重试或联系客服')
+              //     }
+              //   })
             }}
           />
         </View>
@@ -327,6 +358,7 @@ class LoginScreen extends Component<IProps, IState> {
   }
 
   renderPrivacyView() {
+    const { navigation, phone } = this.props
     return (
       <View style={styles.privacyModal}>
         <Text style={styles.privacyModalTitle}>
@@ -336,7 +368,7 @@ class LoginScreen extends Component<IProps, IState> {
           <NextTouchableOpacity
             onPress={() => {
               this.setState({ showPrivacyTips: false }, () => {
-                RootLoading.info('用户协议,敬请期待')
+                navigation.push('AgreementPrivacy', { pageType: 1 })
               })
             }}
           >
@@ -345,7 +377,7 @@ class LoginScreen extends Component<IProps, IState> {
           <NextTouchableOpacity
             onPress={() => {
               this.setState({ showPrivacyTips: false }, () => {
-                RootLoading.info('隐私政策,敬请期待')
+                navigation.push('AgreementPrivacy', { pageType: 2 })
               })
             }}
           >
@@ -368,7 +400,25 @@ class LoginScreen extends Component<IProps, IState> {
             text="同意并继续"
             onPress={() => {
               this.setState({ showPrivacyTips: false }, () => {
-                this.setState({ showRegisterTips: true })
+                RootLoading.loading()
+                const { userNumberCheck } = this.props
+                userNumberCheck(phone, (error, result) => {
+                  console.log('sssssssssssSS: ', error, result)
+                  RootLoading.hide()
+                  if (!error && result) {
+                    if (result.UserNumberCheck) {
+                      // 该手机号是否可用(是否已经注册过)- true : 未注册过
+                      this.setState({ showRegisterTips: true })
+                    } else {
+                      navigation.push('InputVerifyCode', {
+                        phone: phone,
+                        operation: 'UserLogIn'
+                      })
+                    }
+                  } else {
+                    RootLoading.fail(error)
+                  }
+                })
               })
             }}
           />
@@ -450,6 +500,8 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
     reset_reducer: actions.reset_reducer,
     update_kv: actions.update_kv,
     loginMobile: actions.loginMobile,
+    userNumberCheck: actions.userNumberCheck,
+    subscriptionMessage: actions.subscriptionMessage
   }, dispatch)
 }
 
