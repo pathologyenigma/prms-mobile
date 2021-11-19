@@ -15,6 +15,7 @@ interface TextButtonProps {
   hitSlop?: ViewProps['hitSlop']
   style?: StyleProp<ViewStyle>
   textStyle?: StyleProp<TextStyle>
+  disabled?: boolean
 }
 
 export default function TextButton({
@@ -23,11 +24,14 @@ export default function TextButton({
   style,
   title,
   textStyle,
+  disabled,
 }: TextButtonProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[styles.button, style]}
+      activeOpacity={0.75}
+      disabled={disabled}
       hitSlop={{ left: 8, right: 8, top: 8, bottom: 8, ...hitSlop }}>
       <Text style={[styles.text, textStyle]}>{title}</Text>
     </TouchableOpacity>

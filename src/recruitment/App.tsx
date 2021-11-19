@@ -27,7 +27,17 @@ import RechargeFeekback, {
 } from './Job/RechargeFeekback'
 import TalentDetail, { TalentDetailOptions } from './Talent/TalentDetail'
 import TipCandidate, { TipCandidateOptions } from './Talent/TipCandidate'
-import Me, { MeOptions } from './Hr/Me'
+import HrProfile, { HrProfileOptions } from './Hr/HrProfile'
+import EditHrTitle, { EditHrTitleOptions } from './Hr/EditHrTitle'
+import EditHrPhoneNumber, {
+  EditHrPhoneNumberOptions,
+} from './Hr/EditHrPhoneNumber'
+import EditHrNameDisplay, {
+  EditHrNameDisplayOptions,
+} from './Hr/EditHrNameDisplay'
+import EditCompanyEmail, {
+  EditCompanyEmailOptions,
+} from './Hr/EditCompanyEmail'
 
 const Stack = createStackNavigator()
 
@@ -38,6 +48,36 @@ class App extends Component {
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
           <Stack.Screen
+            key="EditCompanyEmail"
+            name="EditCompanyEmail"
+            component={EditCompanyEmail}
+            options={EditCompanyEmailOptions}
+          />
+          <Stack.Screen
+            key="EditHrNameDisplay"
+            name="EditHrNameDisplay"
+            component={EditHrNameDisplay}
+            options={EditHrNameDisplayOptions}
+          />
+          <Stack.Screen
+            key="EditHrPhoneNumber"
+            name="EditHrPhoneNumber"
+            component={EditHrPhoneNumber}
+            options={EditHrPhoneNumberOptions}
+          />
+          <Stack.Screen
+            key="EditHrTitle"
+            name="EditHrTitle"
+            component={EditHrTitle}
+            options={EditHrTitleOptions}
+          />
+          <Stack.Screen
+            key="HrProfile"
+            name="HrProfile"
+            component={HrProfile}
+            options={HrProfileOptions}
+          />
+          <Stack.Screen
             key="Home"
             name="Home"
             component={Home}
@@ -45,6 +85,7 @@ class App extends Component {
               header: () => null,
             }}
           />
+
           <Stack.Screen
             key="TalentDetail"
             name="TalentDetail"

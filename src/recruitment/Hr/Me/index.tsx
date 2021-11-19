@@ -8,11 +8,15 @@ import {
   StatusBar,
   TouchableWithoutFeedback,
 } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
+import {
+  StackNavigationOptions,
+  StackNavigationProp,
+} from '@react-navigation/stack'
 import IconButton from '../../components/IconButton'
 import Avatar from './Avatar'
 import Tab from './Tab'
 import Cell from './Cell'
+import { useNavigation } from '@react-navigation/native'
 
 export const MeOptions: StackNavigationOptions = {
   title: '',
@@ -20,6 +24,8 @@ export const MeOptions: StackNavigationOptions = {
 }
 
 export default function Me() {
+  const navigation = useNavigation<StackNavigationProp<any>>()
+
   const renderHeader = () => {
     return (
       <View style={styles.header}>
@@ -44,14 +50,11 @@ export default function Me() {
 
   const renderProfile = () => {
     return (
-      <TouchableWithoutFeedback onPress={() => console.log('hr 个人信息')}>
-        <View style={styles.profile}>
+      <TouchableWithoutFeedback
+        onPress={() => navigation.navigate('HrProfile')}>
+        <View style={styles.hr}>
           <Avatar />
-          <View
-            style={{
-              justifyContent: 'center',
-              marginLeft: 14,
-            }}>
+          <View style={styles.meta}>
             <Text style={styles.name}>李小冉</Text>
             <Text style={styles.company}>猎德科技有限公司</Text>
             <Text style={styles.job}>人事主管</Text>
@@ -108,14 +111,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   header: {
-    aspectRatio: 375 / 280,
+    aspectRatio: 375 / 278,
   },
   bg: {
     position: 'absolute',
     width: '110%',
-    left: -8,
-    top: -8,
-    bottom: -8,
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
   },
   head: {
     position: 'absolute',
@@ -129,11 +133,15 @@ const styles = StyleSheet.create({
     top: 55,
     right: 11,
   },
-  profile: {
+  hr: {
     marginTop: 86,
     flexDirection: 'row',
     marginHorizontal: 11,
     alignItems: 'center',
+  },
+  meta: {
+    justifyContent: 'center',
+    marginLeft: 14,
   },
   name: {
     color: '#FDFDFD',
