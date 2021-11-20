@@ -6,6 +6,7 @@ import {
   StyleSheet,
   StyleProp,
   ViewStyle,
+  TextStyle,
 } from 'react-native'
 import TextButton from './TextButton'
 
@@ -13,7 +14,11 @@ interface AlertModalProps {
   visible: boolean
   title?: string
   msg?: string
+  positiveText?: string
+  titleStyle?: StyleProp<TextStyle>
+  msgStyle?: StyleProp<TextStyle>
   modalContentStyle?: StyleProp<ViewStyle>
+  positiveTextStyle?: StyleProp<TextStyle>
   onNegativePress?: () => void
   onPositivePress?: () => void
 }
@@ -21,6 +26,10 @@ interface AlertModalProps {
 export default function AlertModal({
   visible,
   modalContentStyle,
+  titleStyle,
+  msgStyle,
+  positiveTextStyle,
+  positiveText,
   title,
   msg,
   onNegativePress,
@@ -35,10 +44,8 @@ export default function AlertModal({
       animationType="fade">
       <View style={styles.modal}>
         <View style={[styles.content, modalContentStyle]}>
-          <View style={styles.main}>
-            {!!title && <Text style={styles.title}>{title}</Text>}
-            {!!msg && <Text style={styles.msg}>{msg}</Text>}
-          </View>
+          {!!title && <Text style={[styles.title, titleStyle]}>{title}</Text>}
+          {!!msg && <Text style={[styles.msg, msgStyle]}>{msg}</Text>}
           <View style={styles.buttons}>
             <TextButton
               onPress={onNegativePress}
@@ -50,8 +57,8 @@ export default function AlertModal({
             <TextButton
               onPress={onPositivePress}
               style={styles.button}
-              textStyle={styles.positiveText}
-              title="确定"
+              textStyle={[styles.positiveText, positiveTextStyle]}
+              title={positiveText ?? '确定'}
             />
           </View>
         </View>
@@ -75,24 +82,21 @@ const styles = StyleSheet.create({
     minHeight: 170,
     overflow: 'hidden',
   },
-  main: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-  },
   title: {
     color: '#333333',
     fontSize: 20,
-    lineHeight: 40,
-    fontWeight: '500',
-    marginTop: -12,
+    fontWeight: 'bold',
+    marginTop: 24,
   },
   msg: {
     fontSize: 15,
     lineHeight: 21,
     color: '#666666',
     fontWeight: '500',
+    marginTop: 12,
+    marginBottom: 20,
+    marginHorizontal: 28,
+    textAlign: 'center',
   },
   buttons: {
     width: '100%',
@@ -117,6 +121,5 @@ const styles = StyleSheet.create({
   positiveText: {
     color: '#57DE9E',
     fontSize: 16,
-    fontWeight: '500',
   },
 })

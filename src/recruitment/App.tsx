@@ -26,7 +26,9 @@ import RechargeFeekback, {
   RechargeFeekbackOptions,
 } from './Job/RechargeFeekback'
 import TalentDetail, { TalentDetailOptions } from './Talent/TalentDetail'
-import TipCandidate, { TipCandidateOptions } from './Talent/TipCandidate'
+import ComplaintCandidate, {
+  ComplaintCandidateOptions,
+} from './Talent/ComplaintCandidate'
 import HrProfile, { HrProfileOptions } from './Hr/HrProfile'
 import EditHrTitle, { EditHrTitleOptions } from './Hr/EditHrTitle'
 import EditHrPhoneNumber, {
@@ -41,6 +43,9 @@ import EditCompanyEmail, {
 import TalentListWithTalks, {
   TalentListwithTalksOptions,
 } from './Talent/TalentListWithTalks'
+import TalentDetailWithJudgment, {
+  TalentDetailWithJudgmentOptions,
+} from './Talent/TalentDetailWithJudgment'
 
 const Stack = createStackNavigator()
 
@@ -50,6 +55,18 @@ class App extends Component {
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            key="TalentDetailWithJudgment"
+            name="TalentDetailWithJudgment"
+            component={TalentDetailWithJudgment}
+            options={TalentDetailWithJudgmentOptions}
+          />
+          <Stack.Screen
+            key="TalentDetail"
+            name="TalentDetail"
+            component={TalentDetail}
+            options={TalentDetailOptions}
+          />
           <Stack.Screen
             key="TalentListWithTalks"
             name="TalentListWithTalks"
@@ -94,17 +111,12 @@ class App extends Component {
             component={HrProfile}
             options={HrProfileOptions}
           />
+
           <Stack.Screen
-            key="TalentDetail"
-            name="TalentDetail"
-            component={TalentDetail}
-            options={TalentDetailOptions}
-          />
-          <Stack.Screen
-            key="TipCandidate"
-            name="TipCandidate"
-            component={TipCandidate}
-            options={TipCandidateOptions}
+            key="ComplaintCandidate"
+            name="ComplaintCandidate"
+            component={ComplaintCandidate}
+            options={ComplaintCandidateOptions}
           />
 
           <Stack.Screen

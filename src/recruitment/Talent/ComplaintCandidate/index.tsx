@@ -7,7 +7,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import ImagePickView from '../../components/ImagePickerView'
 import RadioWithLabel from './RadioWithLabel'
 
-export const TipCandidateOptions: StackNavigationOptions = {
+export const ComplaintCandidateOptions: StackNavigationOptions = {
   title: '举报',
 }
 
@@ -19,7 +19,7 @@ const types = [
   '其他原因',
 ]
 
-export default function TipCandidate() {
+export default function ComplaintCandidate() {
   const [images, setImages] = useState<Array<string>>([])
 
   const [selectedIndex, setSelectedIndex] = useState(0)

@@ -9,7 +9,11 @@ export default function Profile() {
     <View style={styles.container}>
       <Text style={styles.name}>李小冉</Text>
       <Text style={styles.title}>UI设计师·广东智慧网络</Text>
-      <Avatar style={styles.avatar} gender="female" />
+      <Avatar
+        style={styles.avatar}
+        genderStyle={styles.genderStyle}
+        gender="female"
+      />
       <View style={styles.divider} />
     </View>
   )
@@ -28,6 +32,10 @@ const styles = StyleSheet.create({
     bottom: 16,
     height: 65,
     width: 65,
+  },
+  genderStyle: {
+    width: 18,
+    height: 18,
   },
   divider: {
     backgroundColor: '#ECECEC',

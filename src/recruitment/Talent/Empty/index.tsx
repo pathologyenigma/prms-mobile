@@ -8,7 +8,7 @@ export function Empty() {
       <Image source={require('./404.png')} />
       <Text style={styles.title}>您还没有发布职位</Text>
       <Text style={styles.detail}>发布职位后，可以获取精准的人才推荐</Text>
-      <GradientButton text="发布职位" style={styles.button} />
+      <GradientButton title="发布职位" style={styles.button} />
     </View>
   )
 }
