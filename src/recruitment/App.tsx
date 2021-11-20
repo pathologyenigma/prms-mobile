@@ -46,6 +46,13 @@ import TalentListWithTalks, {
 import TalentDetailWithJudgment, {
   TalentDetailWithJudgmentOptions,
 } from './Talent/TalentDetailWithJudgment'
+import InterviewSchedule, {
+  InterviewScheduleOptions,
+} from './Interview/InterviewSchedule'
+import AllInterview, { AllInterviewOptions } from './Interview/AllInterview'
+import InterviewDetail, {
+  InterviewDetailOptions,
+} from './Interview/InterviewDetail'
 
 const Stack = createStackNavigator()
 
@@ -55,6 +62,25 @@ class App extends Component {
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            key="InterviewDetail"
+            name="InterviewDetail"
+            component={InterviewDetail}
+            options={InterviewDetailOptions}
+          />
+          <Stack.Screen
+            key="InterviewSchedule"
+            name="InterviewSchedule"
+            component={InterviewSchedule}
+            options={InterviewScheduleOptions}
+          />
+          <Stack.Screen
+            key="AllInterview"
+            name="AllInterview"
+            component={AllInterview}
+            options={AllInterviewOptions}
+          />
+
           <Stack.Screen
             key="TalentDetailWithJudgment"
             name="TalentDetailWithJudgment"
