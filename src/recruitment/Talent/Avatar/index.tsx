@@ -15,26 +15,22 @@ interface AvatarProps {
   genderStyle?: StyleProp<ImageStyle>
 }
 
-function defaultAvatarForGender(gender: 'male' | 'female') {
-  return gender === 'male' ? require('./male.png') : require('./female.png')
-}
-
 export default function Avatar({
   gender,
   uri,
-  style,
+  style = { width: 48, height: 48 },
   genderStyle,
 }: AvatarProps) {
   return (
     <View style={style}>
       <Image
         style={styles.avatar}
-        source={uri ? uri : defaultAvatarForGender(gender)}
+        source={uri ? uri : require('../../assets/avatar_default.png')}
         resizeMode="cover"
       />
       <Image
         style={[styles.icon, genderStyle]}
-        source={gender === 'male' ? require('./nv.png') : require('./nv.png')}
+        source={gender === 'male' ? require('./nan.png') : require('./nv.png')}
         resizeMode="contain"
       />
     </View>
@@ -50,5 +46,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     bottom: 0,
+    width: 13,
+    height: 13,
   },
 })

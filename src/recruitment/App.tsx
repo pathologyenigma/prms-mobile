@@ -38,6 +38,9 @@ import EditHrNameDisplay, {
 import EditCompanyEmail, {
   EditCompanyEmailOptions,
 } from './Hr/EditCompanyEmail'
+import TalentListWithTalks, {
+  TalentListwithTalksOptions,
+} from './Talent/TalentListWithTalks'
 
 const Stack = createStackNavigator()
 
@@ -47,6 +50,20 @@ class App extends Component {
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            key="TalentListWithTalks"
+            name="TalentListWithTalks"
+            component={TalentListWithTalks}
+            options={TalentListwithTalksOptions}
+          />
+          <Stack.Screen
+            key="Home"
+            name="Home"
+            component={Home}
+            options={{
+              header: () => null,
+            }}
+          />
           <Stack.Screen
             key="EditCompanyEmail"
             name="EditCompanyEmail"
@@ -77,15 +94,6 @@ class App extends Component {
             component={HrProfile}
             options={HrProfileOptions}
           />
-          <Stack.Screen
-            key="Home"
-            name="Home"
-            component={Home}
-            options={{
-              header: () => null,
-            }}
-          />
-
           <Stack.Screen
             key="TalentDetail"
             name="TalentDetail"
