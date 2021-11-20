@@ -230,6 +230,15 @@ class Jobs extends Component<IProps, IState> {
         <View style={styles.videoTopView}>
           <NextTouchableOpacity
             style={styles.videoBtn}
+            onPress={() => {
+              const { navigation } = this.props
+              navigation.push('JobSelectCity', {
+                selectJobCityCallback: (e: any) => {
+                  console.log('eeeee: ', e)
+                  RootLoading.info(e.title || e)
+                }
+              })
+            }}
           >
             {this.renderVideoTag()}
             <Text style={styles.videoText}>在招职场系列直播</Text>

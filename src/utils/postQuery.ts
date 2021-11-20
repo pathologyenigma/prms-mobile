@@ -125,6 +125,21 @@ const chooseOrSwitchIdentityGql = gql`
   }
 `
 
+const getAllRegionGql = gql`
+  query StaticGetAllRegion{
+    StaticGetAllRegion{
+    __typename
+    data{
+      Cities{
+        name
+        city_id
+      }
+      name
+    }
+  }
+}
+`
+
 const getUserEditPersonalDataGql = gql`
   mutation UserEditPersonalData($info:BasicData!){
     UserEditPersonalData(info:$info)
@@ -150,5 +165,6 @@ export {
   checkUserVerifyCodeConsumeGql,
   subscriptionGqlServerGql,
   testGql,
-  chooseOrSwitchIdentityGql
+  chooseOrSwitchIdentityGql,
+  getAllRegionGql
 }

@@ -4,6 +4,7 @@ import RootLoading from "./rootLoading"
 
 function errorHandler(error: any) {
   console.log('errorMsg: ', error)
+  console.log('errorMsg1: ', error.errors)
   let errorMsg = '请求失败'
   switch (error.toString()) {
     case 'Error: user not found':
@@ -25,6 +26,10 @@ function errorHandler(error: any) {
       }, 1000);
       break
     case 'Error: token invalid':
+      errorMsg = '您还没有该身份信息,无法切换'
+      break
+    case 'Error: bad input':
+      // 切换角色,当没有该角色时会报错,具体错误暂不处理
       errorMsg = '您还没有该身份信息,无法切换'
       break
     default:

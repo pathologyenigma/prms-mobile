@@ -4,8 +4,8 @@ import { initApolloClient } from "../utils/postQuery"
 
 const initState = {
   email: '',
-  phone: '',
-  password: '',
+  phone: '18800001011',
+  password: 'word_11',
   verifyCode: '',
   loginType: 1,
   UserLogIn: ''

@@ -3,6 +3,9 @@ import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, De
 import styles from './styles/JobSelectCity.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
+import * as actions from '../../../action/jobsAction'
+import { IStoreState } from '../../../reducer'
+import { connect } from 'react-redux'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import RootLoading from '../../../utils/rootLoading'
 import NavBar, { EButtonType } from '../../components/NavBar'
@@ -12,9 +15,7 @@ import { site_address } from '../../../utils/address'
 import GradientButton from '../../components/GradientButton'
 import SystemHelper from '../../../utils/system'
 
-type IProps = GenProps<'JobSelectCity'> & {
-
-}
+type IProps = GenProps<'JobSelectCity'> & ReturnType<typeof mapDispatchToProps>
 
 interface IState {
   dataSource: [],
@@ -28,7 +29,7 @@ interface IState {
   selectedZhen: any           // 确定的乡镇
 }
 
-export default class JobSelectCity extends Component<IProps, IState> {
+class JobSelectCity extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
@@ -49,6 +50,35 @@ export default class JobSelectCity extends Component<IProps, IState> {
   }
 
   loadData() {
+    RootLoading.loading()
+    const { getAllRegion, navigation } = this.props
+    getAllRegion((error, result) => {
+      console.log('getAll:" ', error, result)
+      RootLoading.hide()
+      if (!error && result) {
+        // this.setState({})
+        if (result.StaticGetAllRegion
+          && result.StaticGetAllRegion.data
+        ) {
+          if (result.StaticGetAllRegion.data.length === 0) {
+            RootLoading.info('城市列表为空,请重试或联系客服')
+            setTimeout(() => {
+              navigation.goBack()
+            }, 1000)
+          } else {
+            // TODO:此处将数据设置到页面中进行展示
+          }
+        } else {
+          RootLoading.fail('城市列表数据异常,请重试或联系客服')
+        }
+      } else {
+        RootLoading.fail('城市列表加载失败,请重试')
+        navigation.goBack()
+      }
+    })
+  }
+
+  loadData1() {
     const dataSource = [
       {
         id: 0,
@@ -460,7 +490,14 @@ export default class JobSelectCity extends Component<IProps, IState> {
   }
 
   render() {
-    const { isSelectDetailArea } = this.state
+    const { isSelectDetailArea, dataSource } = this.state
+    if (!dataSource || dataSource.length === 0) {
+      return (
+        <View style={styles.container}>
+          {this.renderNavBar()}
+        </View>
+      )
+    }
     return (
       <View style={styles.container}>
         {this.renderNavBar()}
@@ -474,3 +511,11 @@ export default class JobSelectCity extends Component<IProps, IState> {
     )
   }
 }
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
+  return bindActionCreators({
+    getAllRegion: actions.getAllRegion
+  }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(JobSelectCity)
