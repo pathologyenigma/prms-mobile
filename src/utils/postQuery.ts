@@ -152,6 +152,59 @@ const getENTEditEnterpriseBasicInfoGql = gql`
   }
 `
 
+const getCandidateGetAllJobExpectationsGql = gql`
+  query CandidateGetAllJobExpectations{
+    CandidateGetAllJobExpectations{
+      job_category
+      aimed_city
+      min_salary_expectation
+      max_salary_expectation
+    }
+  }
+`
+
+
+const getCandidateGetJobListByExpectationGql = gql`
+  query CandidateGetJobListByExpectation(
+    $jobCategory:[String]!,
+    $page:Int,
+    $pageSize:Int
+  ){
+    CandidateGetJobListByExpectation(
+      jobCategory:$jobCategory,
+      page:$page,
+      pageSize:$pageSize
+    ){
+      page
+      pageSize
+      count
+      data {
+        tags
+        hr_pos
+        comp_size
+        id
+        logo
+        title
+        ontop
+        job_id
+        comp_financing
+        min_experience
+        full_time_job
+        min_education
+        __typename
+        expired_at
+        max_salary
+        min_salary
+        comp_size
+        comp_name
+        adress_coordinate
+        hr_name
+        category
+      }
+    }
+  }
+`
+
 export {
   apolloClientShare,
   initApolloClient,
@@ -166,5 +219,7 @@ export {
   subscriptionGqlServerGql,
   testGql,
   chooseOrSwitchIdentityGql,
-  getAllRegionGql
+  getAllRegionGql,
+  getCandidateGetAllJobExpectationsGql,
+  getCandidateGetJobListByExpectationGql
 }

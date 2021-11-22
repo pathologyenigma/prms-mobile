@@ -20,6 +20,7 @@ function errorHandler(error: any) {
       }, 1000);
       break
     case 'Error: token expired':
+    case `'Error: Cannot read properties of undefined (reading 'user_id')'`:
       errorMsg = '登录已过期,请重新登录'
       setTimeout(() => {
         DeviceEventEmitter.emit(Log_Out)
@@ -34,6 +35,12 @@ function errorHandler(error: any) {
       break
     default:
 
+  }
+  if (encodeURIComponent(error) === `Error%3A%20Cannot%20read%20properties%20of%20undefined%20(reading%20'user_id')`) {
+    errorMsg = '登录已过期,请重新登录'
+    setTimeout(() => {
+      DeviceEventEmitter.emit(Log_Out)
+    }, 1000);
   }
   RootLoading.fail(errorMsg)
 }

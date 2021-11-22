@@ -15,6 +15,7 @@ import { GenProps } from '../../../navigator/requestJob/stack'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import * as actions from '../../../action/loginAction'
+import * as jobActions from '../../../action/jobsAction'
 import {
   Query
 } from "@apollo/client/react/components"
@@ -24,6 +25,7 @@ import {
 import { getENTEditEnterpriseBasicInfo } from '../../../action/loginAction'
 import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage'
+import JobCellData from '../../components/JobCellData'
 
 type IProps = GenProps<'Jobs'> & ReturnType<typeof mapDispatchToProps>
 
@@ -31,7 +33,9 @@ type IState = {
   videoSource: [],
   listDataSource: [],
   refreshState: RefreshState.HeaderRefreshing,
-  selectCondition: number
+  selectCondition: number,
+  selectJobsArray: [],
+  selectJobIndex: number
 }
 
 class Jobs extends Component<IProps, IState> {
@@ -76,11 +80,45 @@ class Jobs extends Component<IProps, IState> {
       }],
       refreshState: RefreshState.Idle,
       selectCondition: 1, // 1:推荐; 2: 最新; 3:附近
+      selectJobsArray: [],
+      selectJobIndex: 0
     }
   }
 
   componentDidMount() {
-    this.loadData()
+    this.loadJobExpections()
+  }
+
+  loadJobExpections() {
+    this.props.getCandidateGetAllJobExpectations((error, result) => {
+      console.log('getCandidateGetAllJobExpectations1: ', error, result)
+      if (!error && result && result.CandidateGetAllJobExpectations) {
+        this.setState({ selectJobsArray: result.CandidateGetAllJobExpectations }, () => {
+          this.lodJobList()
+        })
+      } else {
+        RootLoading.fail('职位加载失败,请重试')
+      }
+    })
+  }
+
+  lodJobList() {
+    this.props.getCandidateGetJobListByExpectation(
+      [
+        "互联网/通信及硬件",
+        "软件研发",
+        "Perl"
+      ],
+      1,
+      10,
+      (error, result) => {
+        console.log('getCandidateGetJobListByExpectation: ', error, result)
+        if (!error && result && result.CandidateGetJobListByExpectation && result.CandidateGetJobListByExpectation.data) {
+          this.setState({ listDataSource: result.CandidateGetJobListByExpectation.data })
+        } else {
+          RootLoading.fail('职位加载失败,请重试')
+        }
+      })
   }
 
   loadData() {
@@ -100,6 +138,8 @@ class Jobs extends Component<IProps, IState> {
     const start = { x: 0, y: 0.5 }
     const end = { x: 1, y: 0.5 }
     const { navigation } = this.props
+    const { selectJobsArray, selectJobIndex } = this.state
+    console.log('selectJobsArray: ', selectJobsArray)
     return (
       <LinearGradient
         start={start}
@@ -121,42 +161,24 @@ class Jobs extends Component<IProps, IState> {
             ref={'barScrollView'}
             style={styles.naviBarScrollview}
           >
-            <NextTouchableOpacity
-              onPress={() => {
-                // 测试携带 token 情况
-                const info = {
-                  enterpriseName: "String",
-                  abbreviation: "String",
-                  enterpriseLocation: ["String"],
-                  enterprisecCoordinate: [1],
-                  enterpriseNature: "String",
-                  enterpriseIndustry: ["String"],
-                  enterpriseFinancing: "String",
-                  enterpriseSize: "String",
-                  enterpriseProfile: "String",
-                  logo: "String",
-                  establishedDate: "String",
-                  homepage: "String",
-                  tel: "String",
-                }
-                getENTEditEnterpriseBasicInfo(info, (error, result) => {
-
-                })
-              }}
-            >
-              <Text style={[styles.naviBarText, {
-                fontSize: 20,
-                fontWeight: '400'
-              }]}>
-                项目经理
-              </Text>
-            </NextTouchableOpacity>
-            <Text style={styles.naviBarText}>
-              UE设计师
-            </Text>
-            <Text style={styles.naviBarText}>
-              APP设计师
-            </Text>
+            {selectJobsArray && selectJobsArray.length > 0 && (
+              selectJobsArray.map((item: any, index) => {
+                return (
+                  <NextTouchableOpacity
+                    onPress={() => {
+                      this.setState({ selectJobIndex: index })
+                    }}
+                  >
+                    <Text style={[styles.naviBarText, selectJobIndex === index && {
+                      fontSize: 20,
+                      fontWeight: '400'
+                    }]}>
+                      {item.job_category[item.job_category.length - 1]}
+                    </Text>
+                  </NextTouchableOpacity>
+                )
+              })
+            )}
           </ScrollView>
           <NextTouchableOpacity
             style={{ marginLeft: 40, marginRight: 10 }}
@@ -263,7 +285,7 @@ class Jobs extends Component<IProps, IState> {
   renderItem(item: any) {
     const { navigation } = this.props
     return (
-      <JobCell
+      <JobCellData
         key={item.id.toString()}
         cellItem={item}
         onPress={() => {
@@ -457,6 +479,8 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
     loginMobile: actions.loginMobile,
     userNumberCheck: actions.userNumberCheck,
     subscriptionMessage: actions.subscriptionMessage,
+    getCandidateGetAllJobExpectations: jobActions.getCandidateGetAllJobExpectations,
+    getCandidateGetJobListByExpectation: jobActions.getCandidateGetJobListByExpectation,
   }, dispatch)
 }
 
