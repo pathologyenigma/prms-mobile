@@ -9,11 +9,11 @@ import {
 } from 'react-native'
 import { StackNavigationOptions } from '@react-navigation/stack'
 
-export const EditJobNameOptions: StackNavigationOptions = {
-  title: '职位名称',
+export const PageTempleteOptions: StackNavigationOptions = {
+  title: '页面模版',
 }
 
-export default function EditJobName() {
+export default function PageTemplete() {
   return <View style={styles.container}></View>
 }
 

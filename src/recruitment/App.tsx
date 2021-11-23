@@ -54,6 +54,7 @@ import InterviewDetail, {
   InterviewDetailOptions,
 } from './Interview/InterviewDetail'
 import JobAdmin, { JobAdminOptions } from './Job/JobAdmin'
+import JobDescription, { JobDescriptionOptions } from './Job/JobDescription'
 
 const Stack = createStackNavigator()
 
@@ -63,6 +64,12 @@ class App extends Component {
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            key="JobDescription"
+            name="JobDescription"
+            component={JobDescription}
+            options={JobDescriptionOptions}
+          />
           <Stack.Screen
             key="JobAdmin"
             name="JobAdmin"
