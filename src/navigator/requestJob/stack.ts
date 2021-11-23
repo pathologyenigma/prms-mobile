@@ -104,7 +104,7 @@ type TRouterParams = {
   JobSearch: any
   JobSearchResult: any
   FilterView: { filterMode: number, filterResultCallback: (res: any) => void }
-  JobDetail: any,
+  JobDetail: { jobid: number },
   CompanyDetail: any,
   ReportComplaints: any,
   ReportComplaintsDetail: { type: string },

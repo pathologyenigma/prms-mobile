@@ -31,11 +31,12 @@ type IProps = GenProps<'Jobs'> & ReturnType<typeof mapDispatchToProps>
 
 type IState = {
   videoSource: [],
-  listDataSource: [],
+  listDataSource: any,
   refreshState: RefreshState.HeaderRefreshing,
   selectCondition: number,
-  selectJobsArray: [],
-  selectJobIndex: number
+  selectJobsArray: any,
+  selectJobIndex: number,
+  page: number
 }
 
 class Jobs extends Component<IProps, IState> {
@@ -44,44 +45,12 @@ class Jobs extends Component<IProps, IState> {
     console.log('111111112props: ', props)
     this.state = {
       videoSource: [],
-      listDataSource: [{
-        id: 1,
-        name: '项目经理',
-        company: '深圳市酷魅科技有限公司',
-        financing: '融资未公开',
-        staffAmount: '1-49人',
-        experience: '3-4年',
-        education: '大专及以上',
-        location: '深圳·宝安区',
-        salary: '15K-30K',
-        interviewer: '李女士·产品线HRBP'
-      }, {
-        id: 2,
-        name: '项目经理',
-        company: '深圳市酷魅科技有限公司',
-        financing: '融资未公开',
-        staffAmount: '1-49人',
-        experience: '3-4年',
-        education: '大专及以上',
-        location: '深圳·宝安区',
-        salary: '15K-30K',
-        interviewer: '陈先生·技术总监'
-      }, {
-        id: 3,
-        name: '项目经理',
-        company: '深圳市酷魅科技有限公司',
-        financing: '融资未公开',
-        staffAmount: '1-49人',
-        experience: '3-4年',
-        education: '大专及以上',
-        location: '深圳·宝安区',
-        salary: '15K-30K',
-        interviewer: '陈先生·技术总监'
-      }],
+      listDataSource: [],
       refreshState: RefreshState.Idle,
       selectCondition: 1, // 1:推荐; 2: 最新; 3:附近
       selectJobsArray: [],
-      selectJobIndex: 0
+      selectJobIndex: 0,
+      page: 0
     }
   }
 
@@ -103,19 +72,33 @@ class Jobs extends Component<IProps, IState> {
   }
 
   lodJobList() {
+    const { selectJobsArray, selectJobIndex, listDataSource, page } = this.state
+    if (!selectJobsArray) {
+      // 没有筛选条件，直接展示空列表
+      this.setState({
+        listDataSource: [],
+        refreshState: 3
+      })
+      return
+    }
+    RootLoading.loading()
+    console.log('selectJobsArray[selectJobIndex]: ', selectJobsArray[selectJobIndex])
     this.props.getCandidateGetJobListByExpectation(
-      [
-        "互联网/通信及硬件",
-        "软件研发",
-        "Perl"
-      ],
-      1,
+      selectJobsArray[selectJobIndex].job_category,
+      page,
       10,
       (error, result) => {
+        RootLoading.hide()
         console.log('getCandidateGetJobListByExpectation: ', error, result)
         if (!error && result && result.CandidateGetJobListByExpectation && result.CandidateGetJobListByExpectation.data) {
-          this.setState({ listDataSource: result.CandidateGetJobListByExpectation.data })
+          this.setState({
+            listDataSource: listDataSource.concat(result.CandidateGetJobListByExpectation.data),
+            refreshState: result.CandidateGetJobListByExpectation.data.length === 10 ? 0 : 3
+          })
         } else {
+          this.setState({
+            refreshState: 4
+          })
           RootLoading.fail('职位加载失败,请重试')
         }
       })
@@ -139,7 +122,6 @@ class Jobs extends Component<IProps, IState> {
     const end = { x: 1, y: 0.5 }
     const { navigation } = this.props
     const { selectJobsArray, selectJobIndex } = this.state
-    console.log('selectJobsArray: ', selectJobsArray)
     return (
       <LinearGradient
         start={start}
@@ -162,11 +144,16 @@ class Jobs extends Component<IProps, IState> {
             style={styles.naviBarScrollview}
           >
             {selectJobsArray && selectJobsArray.length > 0 && (
-              selectJobsArray.map((item: any, index) => {
+              selectJobsArray.map((item: any, index: number) => {
                 return (
                   <NextTouchableOpacity
+                    key={index.toString()}
                     onPress={() => {
-                      this.setState({ selectJobIndex: index })
+                      this.setState({
+                        selectJobIndex: index,
+                      }, () => {
+                        this.handleRefresh()
+                      })
                     }}
                   >
                     <Text style={[styles.naviBarText, selectJobIndex === index && {
@@ -207,11 +194,22 @@ class Jobs extends Component<IProps, IState> {
   }
 
   handleRefresh() {
-
+    this.setState({
+      page: 0,
+      refreshState: 1,
+      listDataSource: [],
+    }, () => {
+      this.lodJobList()
+    })
   }
 
   handleEndReached() {
-
+    this.setState({
+      page: this.state.page + 1,
+      refreshState: 2
+    }, () => {
+      this.lodJobList()
+    })
   }
 
   renderVideoTag() {
@@ -289,7 +287,7 @@ class Jobs extends Component<IProps, IState> {
         key={item.id.toString()}
         cellItem={item}
         onPress={() => {
-          navigation.push('JobDetail')
+          navigation.push('JobDetail', { jobid: item.job_id })
         }}
       />
     )
@@ -415,6 +413,7 @@ class Jobs extends Component<IProps, IState> {
 
   renderList() {
     const { refreshState, listDataSource } = this.state
+    console.log('listDataSource: ', listDataSource)
     return (
       //   <Query
       //     query={gql`
@@ -447,7 +446,7 @@ class Jobs extends Component<IProps, IState> {
         data={listDataSource}
         ListHeaderComponent={this.renderHeader}
         renderItem={({ item }: any) => this.renderItem(item)}
-        onFooterRefresh={() => this.handleEndReached}
+        onFooterRefresh={() => this.handleEndReached()}
         keyExtractor={(item: any) => item.id.toString()}
         footerRefreshingText="加载更多"
         footerNoMoreDataText="没有更多了"

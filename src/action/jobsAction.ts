@@ -2,7 +2,7 @@ import { get, getWithToken, post, postWithToken } from '../utils/http'
 import { Dispatch } from 'react'
 import { AnyAction } from 'redux'
 import AsyncStorage from '@react-native-community/async-storage'
-import { apolloClientShare, getAllRegionGql, getCandidateGetAllJobExpectationsGql, getCandidateGetJobListByExpectationGql, loginGql } from '../utils/postQuery'
+import { apolloClientShare, getAllRegionGql, getCandidateGetAllJobExpectationsGql, getCandidateGetJobListByExpectationGql, getJobDetailGql, loginGql } from '../utils/postQuery'
 import errorHandler from '../utils/errorhandler'
 
 const reset_reducer = () => {
@@ -127,6 +127,29 @@ const getCandidateGetJobListByExpectation = (jobCategory: any, page: number, pag
   }
 }
 
+const getJobDetail = (jobid: number, callback: (error: any, result?: any) => void) => {
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.query({
+      query: getJobDetailGql,
+      variables: {
+        jobid,
+      }
+    })
+      .then((res) => {
+        console.log('res: ', res)
+        if (res && res.data) {
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error) => {
+        console.log('error: ', error)
+        errorHandler(error)
+      })
+  }
+}
+
 export {
   reset_reducer,
   update_kv,
@@ -134,4 +157,5 @@ export {
   getAllRegion,
   getCandidateGetAllJobExpectations,
   getCandidateGetJobListByExpectation,
+  getJobDetail,
 }

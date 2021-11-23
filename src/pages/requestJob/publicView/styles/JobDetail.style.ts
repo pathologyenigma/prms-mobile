@@ -93,7 +93,6 @@ export default StyleSheet.create({
   headerJobView: {
     flexDirection: 'row',
     marginTop: 11,
-    height: 14,
     alignItems: 'center'
   },
   headerExperience: {

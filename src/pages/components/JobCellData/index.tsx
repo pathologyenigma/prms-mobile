@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
+import { reformComFinancing, reformCompanySize, reformEducation } from '../../../utils/utils'
 import NextTouchableOpacity from '../NextTouchableOpacity'
 import styles from './styles'
 
@@ -62,16 +63,21 @@ export default class JobCellData extends PureComponent<ICell> {
     // isStop ? 0 : 
     const { cellItem: {
       isUrgent,
-      isPartimeJob,
       isHotjob,
       isStop,
+      full_time_job,
     } } = this.props
-    const basicView = [isPartimeJob
-      ? (this.renderLinerView(4, '兼职'))
-      : (this.renderLinerView(2, '全职'))]
-    if (isUrgent) {
-      basicView.unshift(this.renderLinerView(1, '急聘'))
+    const basicView = []
+    if (full_time_job === 'PartTime') {
+      basicView.unshift(this.renderLinerView(4, '兼职'))
+    } else if (full_time_job === 'InternShip') {
+      basicView.unshift(this.renderLinerView(2, '实习'))
     }
+    // 应该是字段 enmergency ,但接口会报错,待沟通解决
+    // if (isUrgent) {
+    //   basicView.unshift(this.renderLinerView(1, '急聘'))
+    // }
+    // 热门字段没找到
     if (isHotjob) {
       basicView.unshift(this.renderLinerView(3, '热门'))
     }
@@ -120,21 +126,26 @@ export default class JobCellData extends PureComponent<ICell> {
             {cellItem.comp_name}
           </Text>
           <Text style={styles.cellCompany}>
-            {cellItem.financing}
+            {reformComFinancing(cellItem.comp_financing)}
           </Text>
           <Text style={styles.cellCompany}>
-            {cellItem.comp_size}
+            {reformCompanySize(cellItem.comp_size)}
           </Text>
         </View>
         <View style={[styles.cellJobView, showCellTime && { borderBottomWidth: 0, paddingBottom: 0, }]}>
           <Text style={styles.cellExperience}>
             {`${cellItem.min_experience}年及以上`}
           </Text>
+          {cellItem.min_education
+            && cellItem.min_education !== 'Null'
+            && (
+              <Text style={styles.cellExperience}>
+                {reformEducation(cellItem.min_education)}
+              </Text>
+            )
+          }
           <Text style={styles.cellExperience}>
-            {cellItem.min_education}
-          </Text>
-          <Text style={styles.cellExperience}>
-            {cellItem.adress_coordinate}
+            {cellItem && cellItem.adress_coordinate && cellItem.adress_coordinate.substring(0, cellItem.adress_coordinate.length / 6)}
           </Text>
         </View>
         <View style={styles.interviewerView}>

@@ -191,7 +191,6 @@ const getCandidateGetJobListByExpectationGql = gql`
         min_experience
         full_time_job
         min_education
-        __typename
         expired_at
         max_salary
         min_salary
@@ -200,7 +199,25 @@ const getCandidateGetJobListByExpectationGql = gql`
         adress_coordinate
         hr_name
         category
+        # enmergency
       }
+    }
+  }
+`
+
+const getJobDetailGql = gql`
+  query CandidateGetJob($jobid:Int!){
+    CandidateGetJob(jobid:$jobid) {
+      JobTitle
+      WorkingAddress
+      experience
+      JobDetail
+      education
+      requiredNum
+      isFullTime
+      tags
+      createdAt
+      updatedAt
     }
   }
 `
@@ -221,5 +238,6 @@ export {
   chooseOrSwitchIdentityGql,
   getAllRegionGql,
   getCandidateGetAllJobExpectationsGql,
-  getCandidateGetJobListByExpectationGql
+  getCandidateGetJobListByExpectationGql,
+  getJobDetailGql,
 }

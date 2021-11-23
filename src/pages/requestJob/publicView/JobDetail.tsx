@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList, StatusBar } from 'react-native'
 import styles from './styles/JobDetail.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
+import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import RootLoading from '../../../utils/rootLoading'
@@ -15,16 +16,16 @@ import JobCell from '../../components/JobCell'
 import SystemHelper from '../../../utils/system'
 import InterviewerFooter from '../../components/InterviewerFooter'
 import ShareModal from '../../components/ShareModal'
+import * as jobActions from '../../../action/jobsAction'
 
-type IProps = GenProps<'JobDetail'> & {
-
-}
+type IProps = GenProps<'JobDetail'> & ReturnType<typeof mapDispatchToProps>
 
 interface IState {
   dataSource: any,
   showAddScore: boolean,
   selectLikesTabs: number,
-  shareVisible: boolean
+  shareVisible: boolean,
+  jobid: number
 }
 
 const recommendListData = [
@@ -165,10 +166,12 @@ const recommendListData = [
   },
 ]
 
-export default class JobDetail extends Component<IProps, IState> {
+class JobDetail extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
+    const { route: { params: { jobid } } } = props
     this.state = {
+      jobid,
       dataSource: undefined,
       showAddScore: false,
       selectLikesTabs: 0,
@@ -181,6 +184,12 @@ export default class JobDetail extends Component<IProps, IState> {
   }
 
   loadData() {
+    const { jobid } = this.state
+    const { getJobDetail } = this.props
+    getJobDetail(jobid, (error, result) => {
+      console.log('getJobDetail: ', error, result)
+    })
+
     RootLoading.loading()
     setTimeout(() => {
       RootLoading.hide()
@@ -310,7 +319,11 @@ export default class JobDetail extends Component<IProps, IState> {
           </Text>
         </View>
         <View style={styles.headerJobView}>
-          <Image style={styles.location} source={require('../../../assets/requestJobs/location-icon.png')} />
+          <Image
+            style={styles.location}
+            source={require('../../../assets/requestJobs/location-icon.png')}
+            resizeMode="center"
+          />
           <Text style={styles.locationText}>
             {dataSource.location}
           </Text>
@@ -602,3 +615,11 @@ export default class JobDetail extends Component<IProps, IState> {
     )
   }
 }
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
+  return bindActionCreators({
+    getJobDetail: jobActions.getJobDetail,
+  }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(JobDetail)
