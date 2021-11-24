@@ -10,6 +10,7 @@ import {
   ImageSourcePropType,
   TouchableWithoutFeedback,
 } from 'react-native'
+import CollaboratorModal from '../CollaboratorModal'
 
 interface CollaboratorProps {
   coAvatars?: ImageSourcePropType[]
@@ -18,6 +19,8 @@ interface CollaboratorProps {
 // require('../../../assets/avatar_default.png')
 
 export default function Collaborator({ coAvatars = [] }: CollaboratorProps) {
+  const [modalVisible, setModalVisible] = useState(false)
+
   if (coAvatars.length > 0) {
     return (
       <TouchableWithoutFeedback onPress={() => console.log('邀请同事')}>
@@ -34,13 +37,19 @@ export default function Collaborator({ coAvatars = [] }: CollaboratorProps) {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={() => console.log('邀请同事')}>
-      <View style={styles.container}>
-        <Text style={styles.title}>邀请同事一起招聘效果更好</Text>
-        <Text style={styles.detail}>去邀请</Text>
-        <Image source={require('./indicator.png')} />
-      </View>
-    </TouchableWithoutFeedback>
+    <>
+      <TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
+        <View style={styles.container}>
+          <Text style={styles.title}>邀请同事一起招聘效果更好</Text>
+          <Text style={styles.detail}>去邀请</Text>
+          <Image source={require('./indicator.png')} />
+        </View>
+      </TouchableWithoutFeedback>
+      <CollaboratorModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+      />
+    </>
   )
 }
 

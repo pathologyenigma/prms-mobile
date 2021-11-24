@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
-  StatusBar,
-} from 'react-native'
+import { StyleSheet, Text, View, Image, ScrollView } from 'react-native'
 import { StackNavigationOptions } from '@react-navigation/stack'
 
 export const PageTempleteOptions: StackNavigationOptions = {
@@ -14,12 +7,19 @@ export const PageTempleteOptions: StackNavigationOptions = {
 }
 
 export default function PageTemplete() {
-  return <View style={styles.container}></View>
+  return (
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}></ScrollView>
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  content: {
+    flexGrow: 1,
     backgroundColor: '#FFFFFF',
   },
 })

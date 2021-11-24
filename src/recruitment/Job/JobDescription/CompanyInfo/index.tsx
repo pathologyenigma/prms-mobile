@@ -17,7 +17,7 @@ export default function CompanyInfo() {
     <View style={styles.container}>
       <Text style={styles.title}>公司信息</Text>
       <View style={styles.meta}>
-        <Image source={{}} style={styles.logo} />
+        <Image source={require('./company_default.png')} style={styles.logo} />
         <Text style={styles.name}>深圳智慧网络有限公司</Text>
         <Image style={styles.authn} source={require('./authn.png')} />
         <Image style={styles.indicator} source={require('./indicator.png')} />

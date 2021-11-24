@@ -15,9 +15,10 @@ interface AlertModalProps {
   title?: string
   msg?: string
   positiveText?: string
+  style?: StyleProp<ViewStyle>
+  contentStyle?: StyleProp<ViewStyle>
   titleStyle?: StyleProp<TextStyle>
   msgStyle?: StyleProp<TextStyle>
-  modalContentStyle?: StyleProp<ViewStyle>
   positiveTextStyle?: StyleProp<TextStyle>
   onNegativePress?: () => void
   onPositivePress?: () => void
@@ -25,7 +26,8 @@ interface AlertModalProps {
 
 export default function AlertModal({
   visible,
-  modalContentStyle,
+  style,
+  contentStyle,
   titleStyle,
   msgStyle,
   positiveTextStyle,
@@ -35,6 +37,8 @@ export default function AlertModal({
   onNegativePress,
   onPositivePress,
 }: AlertModalProps) {
+  const both = !!title && !!msg
+
   return (
     <Modal
       visible={visible}
@@ -42,10 +46,30 @@ export default function AlertModal({
       statusBarTranslucent
       presentationStyle="overFullScreen"
       animationType="fade">
-      <View style={styles.modal}>
-        <View style={[styles.content, modalContentStyle]}>
-          {!!title && <Text style={[styles.title, titleStyle]}>{title}</Text>}
-          {!!msg && <Text style={[styles.msg, msgStyle]}>{msg}</Text>}
+      <View style={styles.bezel}>
+        <View style={[styles.modal, style]}>
+          <View style={[styles.content, contentStyle]}>
+            {!!title && (
+              <Text
+                style={[
+                  styles.title,
+                  { marginTop: 24, marginBottom: both ? 0 : 24 },
+                  titleStyle,
+                ]}>
+                {title}
+              </Text>
+            )}
+            {!!msg && (
+              <Text
+                style={[
+                  styles.msg,
+                  { marginTop: both ? 12 : 24, marginBottom: 24 },
+                  msgStyle,
+                ]}>
+                {msg}
+              </Text>
+            )}
+          </View>
           <View style={styles.buttons}>
             <TextButton
               onPress={onNegativePress}
@@ -68,33 +92,34 @@ export default function AlertModal({
 }
 
 const styles = StyleSheet.create({
-  modal: {
+  bezel: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#00000088',
   },
-  content: {
+  modal: {
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
     width: 280,
     alignItems: 'center',
-    minHeight: 170,
     overflow: 'hidden',
+    justifyContent: 'flex-end',
+  },
+  content: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     color: '#333333',
     fontSize: 20,
     fontWeight: 'bold',
-    marginTop: 24,
   },
   msg: {
     fontSize: 15,
     lineHeight: 21,
     color: '#666666',
     fontWeight: '500',
-    marginTop: 12,
-    marginBottom: 20,
     marginHorizontal: 28,
     textAlign: 'center',
   },
