@@ -77,10 +77,10 @@ export default class JobCellData extends PureComponent<ICell> {
     // if (isUrgent) {
     //   basicView.unshift(this.renderLinerView(1, '急聘'))
     // }
-    // 热门字段没找到
-    if (isHotjob) {
-      basicView.unshift(this.renderLinerView(3, '热门'))
-    }
+    // 热门字段没找到 -- 经沟通后 隐藏 热门 属性
+    // if (isHotjob) {
+    //   basicView.unshift(this.renderLinerView(3, '热门'))
+    // }
 
     return (
       <View style={styles.tagView}>

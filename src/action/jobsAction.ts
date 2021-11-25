@@ -51,14 +51,15 @@ const loginMobile = (account: string, password: string, callback: (error: any, r
 
 const getAllRegion = (callback: (error: any, result?: any) => void) => {
   return (dispatch: Dispatch<AnyAction>) => {
-    apolloClientShare.query({
-      query: getAllRegionGql,
-    })
+    // 临时使用json形式获取数据后进行逻辑展示
+
+
+    get('https://be.chenzaozhao.com/preludeDatas/regions.json')
       .then((res) => {
         console.log('res: ', res)
-        if (res && res.data) {
+        if (res) {
           if (callback) {
-            callback(undefined, res.data)
+            callback(undefined, res)
           }
         }
       })
@@ -67,6 +68,23 @@ const getAllRegion = (callback: (error: any, result?: any) => void) => {
         console.log('error: ', error)
         errorHandler(error)
       })
+
+    // apolloClientShare.query({
+    //   query: getAllRegionGql,
+    // })
+    //   .then((res) => {
+    //     console.log('res: ', res)
+    //     if (res && res.data) {
+    //       if (callback) {
+    //         callback(undefined, res.data)
+    //       }
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     // TODO:此处由于登录接口错误,会返回错误的结果,实际参数是正确的.注意后续流程复测
+    //     console.log('error: ', error)
+    //     errorHandler(error)
+    //   })
   }
 }
 

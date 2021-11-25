@@ -47,7 +47,7 @@ class Jobs extends Component<IProps, IState> {
       videoSource: [],
       listDataSource: [],
       refreshState: RefreshState.Idle,
-      selectCondition: 1, // 1:推荐; 2: 最新; 3:附近
+      selectCondition: 2, // 1:推荐; 2: 最新; 3:附近
       selectJobsArray: [],
       selectJobIndex: 0,
       page: 0
@@ -55,6 +55,8 @@ class Jobs extends Component<IProps, IState> {
   }
 
   componentDidMount() {
+    this.loadData()
+    RootLoading.loading()
     this.loadJobExpections()
   }
 
@@ -81,7 +83,6 @@ class Jobs extends Component<IProps, IState> {
       })
       return
     }
-    RootLoading.loading()
     console.log('selectJobsArray[selectJobIndex]: ', selectJobsArray[selectJobIndex])
     this.props.getCandidateGetJobListByExpectation(
       selectJobsArray[selectJobIndex].job_category,
@@ -299,7 +300,7 @@ class Jobs extends Component<IProps, IState> {
     return (
       <View style={styles.conditionView}>
         <View style={styles.conditionLeftView}>
-          <NextTouchableOpacity
+          {/* <NextTouchableOpacity
             style={styles.conditionLeftBtn}
             onPress={() => {
               this.setState({ selectCondition: 1 })
@@ -310,7 +311,7 @@ class Jobs extends Component<IProps, IState> {
                 color: greenColor, fontWeight: '500'
               }]}
             >推荐</Text>
-          </NextTouchableOpacity>
+          </NextTouchableOpacity> */}
           <NextTouchableOpacity
             style={styles.conditionLeftBtn}
             onPress={() => {

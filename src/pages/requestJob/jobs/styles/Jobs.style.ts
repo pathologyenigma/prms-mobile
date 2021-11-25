@@ -66,7 +66,6 @@ export default StyleSheet.create({
     marginTop: 14
   },
   conditionLeftBtn: {
-    height: 13,
     marginRight: 15
   },
   conditionLeftText: {

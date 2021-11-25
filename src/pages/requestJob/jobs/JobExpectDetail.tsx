@@ -15,23 +15,15 @@ import SystemHelper from '../../../utils/system'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import { greenColor } from '../../../utils/constant'
 
-type IProps = GenProps<'JobExpectDetail'> & {
-  email: string,
-  password: string,
-  number: string,
-}
+type IProps = GenProps<'JobExpectDetail'>
 
 interface IState {
-  email: string
-  phone: string
-  password: string
-  verifyCode: string
-  countTime: number
   selectJobIndustry: []
   selectJobType: string
   selectJobNatureVisible: boolean
   selectJobNature: string
   selectJobSalary: string
+  selectJobCity: string
 }
 
 class JobExpectDetail extends Component<IProps, IState> {
@@ -42,6 +34,8 @@ class JobExpectDetail extends Component<IProps, IState> {
       selectJobType: '',
       selectJobNatureVisible: false,
       selectJobNature: '',
+      selectJobSalary: '',
+      selectJobCity: ''
     }
   }
 
@@ -140,6 +134,7 @@ class JobExpectDetail extends Component<IProps, IState> {
   }
 
   renderQiWangCity() {
+    const { selectJobCity } = this.state
     return (
       <View style={styles.cellView}>
         <NextTouchableOpacity
@@ -149,7 +144,7 @@ class JobExpectDetail extends Component<IProps, IState> {
             navigation.push('JobSelectCity', {
               selectJobCityCallback: (e: any) => {
                 console.log('eeeee: ', e)
-                RootLoading.info(e.title || e)
+                this.setState({ selectJobCity: e })
               }
             })
           }}
@@ -162,7 +157,7 @@ class JobExpectDetail extends Component<IProps, IState> {
             source={require('../../../assets/requestJobs/next-gray.png')}
           />
         </NextTouchableOpacity>
-        <Text style={styles.cellViewDetail}>如: 北京</Text>
+        <Text style={styles.cellViewDetail}>{selectJobCity || '如: 北京'}</Text>
       </View>
     )
   }
