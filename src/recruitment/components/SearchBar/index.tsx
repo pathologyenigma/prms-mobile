@@ -1,7 +1,7 @@
 import React from 'react'
+import { useState } from 'react'
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   TextInput,
@@ -13,18 +13,27 @@ import IconButton from '../IconButton'
 
 interface SearchBarProps {
   style?: StyleProp<ViewStyle>
-  value?: string
   placeholder?: TextInputProps['placeholder']
   onChangeText?: TextInputProps['onChangeText']
-  onClear?: () => void
 }
 
 export default function SearchBar({
   style,
-  value,
   onChangeText,
   placeholder,
 }: SearchBarProps) {
+  const [value, setValue] = useState('')
+
+  const handleCleanPress = () => {
+    onChangeText && onChangeText('')
+    setValue('')
+  }
+
+  const handleTextChange = (text: string) => {
+    onChangeText && onChangeText(text)
+    setValue(text)
+  }
+
   return (
     <View style={[styles.container, style]}>
       <Image
@@ -37,18 +46,18 @@ export default function SearchBar({
         value={value}
         placeholder={placeholder}
         placeholderTextColor="#888888"
-        onChangeText={onChangeText}
+        onChangeText={handleTextChange}
         autoFocus={false}
         autoCorrect={false}
         autoCapitalize="none"
       />
-      <IconButton
-        onPress={() => {
-          onChangeText && onChangeText('')
-        }}
-        style={styles.close}
-        icon={require('./close.png')}
-      />
+      {!!value && (
+        <IconButton
+          onPress={handleCleanPress}
+          style={styles.close}
+          icon={require('./close.png')}
+        />
+      )}
     </View>
   )
 }
@@ -57,6 +66,7 @@ const styles = StyleSheet.create({
   container: {
     height: 33,
     borderRadius: 16.5,
+    flex: 1,
     backgroundColor: '#EEEEEE',
     flexDirection: 'row',
     alignItems: 'center',
@@ -73,5 +83,10 @@ const styles = StyleSheet.create({
     width: 44,
     height: 20,
   },
-  close: {},
+  close: {
+    width: 32,
+    height: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 })

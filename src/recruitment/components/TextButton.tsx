@@ -13,7 +13,7 @@ interface TextButtonProps {
   title: string
   onPress?: () => void
   hitSlop?: ViewProps['hitSlop']
-  style?: StyleProp<ViewStyle>
+  style?: StyleProp<TextStyle>
   textStyle?: StyleProp<TextStyle>
   disabled?: boolean
 }

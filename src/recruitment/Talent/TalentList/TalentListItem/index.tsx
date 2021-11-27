@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, StyleSheet, Text, Image } from 'react-native'
+import Avatar from '../../Avatar'
 
 export default function TalentListItem() {
   return (
@@ -27,8 +28,7 @@ export default function TalentListItem() {
           适应能力及学习摸索能力，对工作有较强的上进心哈哈哈哈
         </Text>
       </View>
-      <Image style={styles.avatar} source={require('./avatar.png')} />
-      <Image style={styles.gender} source={require('./nv.png')} />
+      <Avatar style={styles.avatar} gender="male" />
       <View style={styles.divider}></View>
     </View>
   )
@@ -119,13 +119,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 21.5,
     right: 12.5,
-  },
-  gender: {
-    width: 13,
-    height: 13,
-    position: 'absolute',
-    top: 56.5,
-    right: 11,
   },
   divider: {
     height: 5,

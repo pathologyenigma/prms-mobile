@@ -58,6 +58,10 @@ import JobDescription, { JobDescriptionOptions } from './Job/JobDescription'
 import RecruitCoordination, {
   RecruitCoordinationOptions,
 } from './Job/RecruitCoordination'
+import CandidateSearch, {
+  CandidateSearchOptions,
+} from './Talent/CandidateSearch'
+import CandidateCity, { CandidateCityOptions } from './Talent/CandidateCity'
 
 const Stack = createStackNavigator()
 
@@ -67,6 +71,18 @@ class App extends Component {
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            key="CandidateCity"
+            name="CandidateCity"
+            component={CandidateCity}
+            options={CandidateCityOptions}
+          />
+          <Stack.Screen
+            key="CandidateSearch"
+            name="CandidateSearch"
+            component={CandidateSearch}
+            options={CandidateSearchOptions}
+          />
           <Stack.Screen
             key="RecruitCoordination"
             name="RecruitCoordination"
