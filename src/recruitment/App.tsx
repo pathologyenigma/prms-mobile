@@ -62,6 +62,14 @@ import CandidateSearch, {
   CandidateSearchOptions,
 } from './Talent/CandidateSearch'
 import CandidateCity, { CandidateCityOptions } from './Talent/CandidateCity'
+import CandidateFilter, {
+  CandidateFilterOptions,
+} from './Talent/CandidateFilter'
+import JobCategory, {
+  JobCategoryOptions,
+} from './Talent/CandidateFilter/JobCategory'
+import JobCity, { JobCityOptions } from './Talent/CandidateFilter/JobCity'
+import JobTrade, { JobTradeOptions } from './Talent/CandidateFilter/JobTrade'
 
 const Stack = createStackNavigator()
 
@@ -72,10 +80,10 @@ class App extends Component {
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
           <Stack.Screen
-            key="CandidateCity"
-            name="CandidateCity"
-            component={CandidateCity}
-            options={CandidateCityOptions}
+            key="CandidateFilter"
+            name="CandidateFilter"
+            component={CandidateFilter}
+            options={CandidateFilterOptions}
           />
           <Stack.Screen
             key="CandidateSearch"
@@ -83,6 +91,33 @@ class App extends Component {
             component={CandidateSearch}
             options={CandidateSearchOptions}
           />
+
+          <Stack.Screen
+            key="JobTrade"
+            name="JobTrade"
+            component={JobTrade}
+            options={JobTradeOptions}
+          />
+          <Stack.Screen
+            key="JobCity"
+            name="JobCity"
+            component={JobCity}
+            options={JobCityOptions}
+          />
+          <Stack.Screen
+            key="JobCategory"
+            name="JobCategory"
+            component={JobCategory}
+            options={JobCategoryOptions}
+          />
+
+          <Stack.Screen
+            key="CandidateCity"
+            name="CandidateCity"
+            component={CandidateCity}
+            options={CandidateCityOptions}
+          />
+
           <Stack.Screen
             key="RecruitCoordination"
             name="RecruitCoordination"

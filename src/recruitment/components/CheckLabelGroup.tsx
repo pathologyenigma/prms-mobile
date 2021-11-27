@@ -5,7 +5,6 @@ import {
   Text,
   Image,
   StyleSheet,
-  Dimensions,
   StyleProp,
   TextStyle,
   ViewStyle,
@@ -50,6 +49,20 @@ export default function CheckLabelGroup({
           title={label.title}
           checked={label.checked}
           onCheckedChange={checked => {
+            const isSingleChecked = limit === 1
+            if (isSingleChecked) {
+              if (checked) {
+                onValuesChange &&
+                  onValuesChange(
+                    labels.map(l => {
+                      l.checked = l.title === label.title
+                      return l
+                    }),
+                  )
+              }
+              return
+            }
+
             const count = labels.filter(l => l.checked).length
             if (checked) {
               if (count < limit) {

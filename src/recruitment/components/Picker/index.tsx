@@ -46,6 +46,7 @@ export default function Picker({
       itemStyle={itemStyle}
       values={values}
       selectedValue={selectedValue}
+      onValueChange={onValueChange}
       roundRectType={roundRectType}
     />
   )

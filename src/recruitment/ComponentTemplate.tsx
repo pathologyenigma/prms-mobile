@@ -7,7 +7,6 @@ import {
   Text,
   View,
   Image,
-  ScrollView,
 } from 'react-native'
 
 export default function ComponseView() {

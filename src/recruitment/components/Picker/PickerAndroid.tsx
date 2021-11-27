@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef } from 'react'
 import {
   requireNativeComponent,
   StyleProp,
@@ -9,7 +9,6 @@ import {
 
 interface HBDPickerViewProps extends ViewProps {
   onItemSelected: (event: Event) => void
-  onValueChange?: (itemValue: any, itemIndex: number) => void
   selectedIndex: number
   cyclic: boolean
   items: string[]
@@ -51,20 +50,33 @@ function PickerAndroid({
   itemStyle = {},
   roundRectType = 'all',
 }: Props) {
-  const handleItemSelected = useCallback((event: Event) => {
-    const selectedIndex = event.nativeEvent.selectedIndex
-    if (onValueChange && values.length > selectedIndex) {
-      onValueChange(values[selectedIndex], selectedIndex)
-    }
-  }, [])
+  const ref = useRef<any>(null)
 
   const selectedIndex = values.findIndex(v => v === selectedValue)
+
+  const handleItemSelected = useCallback(
+    (event: Event) => {
+      const index = event.nativeEvent.selectedIndex
+      if (onValueChange && values.length > index) {
+        onValueChange(values[index], index)
+      }
+      if (selectedIndex !== index) {
+        ref.current &&
+          ref.current.setNativeProps({
+            selectedIndex,
+          })
+      }
+    },
+    [onValueChange, values, selectedIndex],
+  )
+
   const s = StyleSheet.flatten(itemStyle)
   const fontSize = s.fontSize ?? 15
   const color = s.color && typeof s.color === 'string' ? s.color : undefined
 
   return (
     <HBDPickerView
+      ref={ref}
       onItemSelected={handleItemSelected}
       selectedIndex={selectedIndex === -1 ? 0 : selectedIndex}
       cyclic={false}

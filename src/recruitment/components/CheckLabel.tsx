@@ -48,5 +48,6 @@ const styles = StyleSheet.create({
   checked: {
     color: '#79D398',
     backgroundColor: '#E7FEF1',
+    fontWeight: 'bold',
   },
 })
