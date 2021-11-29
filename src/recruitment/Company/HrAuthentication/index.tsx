@@ -76,6 +76,7 @@ function LabelAndInput({
         value={value}
         onChangeText={onValueChange}
         keyboardType={keyboardType}
+        autoCapitalize="none"
       />
     </View>
   )
@@ -121,6 +122,7 @@ const styles = StyleSheet.create({
     height: 36,
     flex: 1,
     color: '#666666',
+    fontSize: 15,
   },
   next: {
     marginTop: 138,

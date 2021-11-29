@@ -70,6 +70,12 @@ import JobCategory, {
 } from './Talent/CandidateFilter/JobCategory'
 import JobCity, { JobCityOptions } from './Talent/CandidateFilter/JobCity'
 import JobTrade, { JobTradeOptions } from './Talent/CandidateFilter/JobTrade'
+import HrAuthentication, {
+  HrAuthenticationOptions,
+} from './Company/HrAuthentication'
+import CompanyAuthentication, {
+  CompanyAuthenticationOptions,
+} from './Company/CompanyAuthentication'
 
 const Stack = createStackNavigator()
 
@@ -79,6 +85,18 @@ class App extends Component {
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            key="CompanyAuthentication"
+            name="CompanyAuthentication"
+            component={CompanyAuthentication}
+            options={CompanyAuthenticationOptions}
+          />
+          <Stack.Screen
+            key="HrAuthentication"
+            name="HrAuthentication"
+            component={HrAuthentication}
+            options={HrAuthenticationOptions}
+          />
           <Stack.Screen
             key="CandidateFilter"
             name="CandidateFilter"
