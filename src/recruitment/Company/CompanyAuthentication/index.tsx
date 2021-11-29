@@ -7,11 +7,18 @@ import {
   TouchableWithoutFeedback,
   TextInput,
 } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
+import {
+  StackNavigationOptions,
+  StackNavigationProp,
+} from '@react-navigation/stack'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import IconButton from '../../components/IconButton'
 import GradientButton from '../../components/GradientButton'
 import TextButton from '../../components/TextButton'
+import { useNavigation } from '@react-navigation/native'
+import CompanyAddressModal from '../CompanyAddressModal'
+import CompanyCategoryModal from '../CompanyCategoryModal'
+import { useState } from 'react'
 
 export const CompanyAuthenticationOptions: StackNavigationOptions = {
   title: '公司认证',
@@ -24,6 +31,11 @@ export const CompanyAuthenticationOptions: StackNavigationOptions = {
 }
 
 export default function CompanyAuthentication() {
+  const navigation = useNavigation<StackNavigationProp<any>>()
+
+  const [addressModalVisible, setAddressModalVisible] = useState(false)
+  const [categoryModalVisible, setCategoryModalVisible] = useState(false)
+
   return (
     <KeyboardAwareScrollView
       automaticallyAdjustContentInsets={false}
@@ -41,6 +53,7 @@ export default function CompanyAuthentication() {
       <TitleAndDetail
         title="公司全称"
         placeholder="请输入公司全称"
+        onPress={() => navigation.navigate('CompanyFullName')}
         renderHint={() => (
           <>
             <Image
@@ -51,8 +64,16 @@ export default function CompanyAuthentication() {
           </>
         )}
       />
-      <TitleAndDetail title="公司所在地" placeholder="请选择公司所在地" />
-      <TitleAndDetail title="公司类型" placeholder="请选择公司类型" />
+      <TitleAndDetail
+        title="公司所在地"
+        placeholder="请选择公司所在地"
+        onPress={() => setAddressModalVisible(true)}
+      />
+      <TitleAndDetail
+        title="公司类型"
+        placeholder="请选择公司类型"
+        onPress={() => setCategoryModalVisible(true)}
+      />
       <TitleAndDetail
         title="您的职务"
         renderDetail={() => (
@@ -83,6 +104,14 @@ export default function CompanyAuthentication() {
           title="拨打客服热线"
         />
       </View>
+      <CompanyAddressModal
+        visible={addressModalVisible}
+        onCancel={() => setAddressModalVisible(false)}
+      />
+      <CompanyCategoryModal
+        visible={categoryModalVisible}
+        onCancel={() => setCategoryModalVisible(false)}
+      />
     </KeyboardAwareScrollView>
   )
 }

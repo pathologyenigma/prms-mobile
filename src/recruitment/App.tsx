@@ -76,6 +76,9 @@ import HrAuthentication, {
 import CompanyAuthentication, {
   CompanyAuthenticationOptions,
 } from './Company/CompanyAuthentication'
+import CompanyFullName, {
+  CompanyFullNameOptions,
+} from './Company/CompanyFullName'
 
 const Stack = createStackNavigator()
 
@@ -91,6 +94,13 @@ class App extends Component {
             component={CompanyAuthentication}
             options={CompanyAuthenticationOptions}
           />
+          <Stack.Screen
+            key="CompanyFullName"
+            name="CompanyFullName"
+            component={CompanyFullName}
+            options={CompanyFullNameOptions}
+          />
+
           <Stack.Screen
             key="HrAuthentication"
             name="HrAuthentication"
