@@ -79,6 +79,9 @@ import CompanyAuthentication, {
 import CompanyFullName, {
   CompanyFullNameOptions,
 } from './Company/CompanyFullName'
+import CompanyAuthenticationMethod, {
+  CompanyAuthenticationMethodOptions,
+} from './Company/CompanyAuthenticationMethod'
 
 const Stack = createStackNavigator()
 
@@ -89,11 +92,18 @@ class App extends Component {
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
           <Stack.Screen
+            key="CompanyAuthenticationMethod"
+            name="CompanyAuthenticationMethod"
+            component={CompanyAuthenticationMethod}
+            options={CompanyAuthenticationMethodOptions}
+          />
+          <Stack.Screen
             key="CompanyAuthentication"
             name="CompanyAuthentication"
             component={CompanyAuthentication}
             options={CompanyAuthenticationOptions}
           />
+
           <Stack.Screen
             key="CompanyFullName"
             name="CompanyFullName"

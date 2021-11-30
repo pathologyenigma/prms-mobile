@@ -19,6 +19,7 @@ import { useNavigation } from '@react-navigation/native'
 import CompanyAddressModal from '../CompanyAddressModal'
 import CompanyCategoryModal from '../CompanyCategoryModal'
 import { useState } from 'react'
+import Hotline from '../Hotline'
 
 export const CompanyAuthenticationOptions: StackNavigationOptions = {
   title: '公司认证',
@@ -91,19 +92,12 @@ export default function CompanyAuthentication() {
         title="下一步"
         style={styles.next}
         linearGradientStyle={{ borderRadius: 8 }}
+        onPress={() => navigation.navigate('CompanyAuthenticationMethod')}
       />
       <Text style={styles.nextHint}>
         根据法规要求，在您注册成为经办人前需应确保您所提交的相关认证材料的真实性、合法性、有效性及来源于公司的授权使用，授权目的包括但不限于注册、使用公司名下的招聘者账号
       </Text>
-      <View style={styles.helpRow}>
-        <Image style={styles.helpIcon} source={require('./kefu.png')} />
-        <Text style={styles.helpHint}>认证遇到问题？</Text>
-        <TextButton
-          style={styles.helpButton}
-          textStyle={styles.helpButtonText}
-          title="拨打客服热线"
-        />
-      </View>
+      <Hotline style={styles.hotline} />
       <CompanyAddressModal
         visible={addressModalVisible}
         onCancel={() => setAddressModalVisible(false)}
@@ -239,25 +233,8 @@ const styles = StyleSheet.create({
     color: '#888888',
     fontSize: 11,
   },
-  helpRow: {
-    flexDirection: 'row',
-    marginHorizontal: 21,
-    alignItems: 'center',
+  hotline: {
     marginTop: 30,
-  },
-  helpIcon: {},
-  helpHint: {
-    marginLeft: 8,
-    color: '#888888',
-    fontSize: 12,
-  },
-  helpButton: {
-    marginLeft: 22,
-  },
-  helpButtonText: {
-    color: '#57D693',
-    fontSize: 12,
-    fontWeight: 'bold',
   },
   input: {
     padding: 0,
