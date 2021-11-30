@@ -82,6 +82,15 @@ import CompanyFullName, {
 import CompanyAuthenticationMethod, {
   CompanyAuthenticationMethodOptions,
 } from './Company/CompanyAuthenticationMethod'
+import CompanyAuthenticationByColleague, {
+  CompanyAuthenticationByColleagueOptions,
+} from './Company/CompanyAuthenticationByColleague'
+import CompanyAuthenticationByColleagueWithSmsInput, {
+  CompanyAuthenticationByColleagueWithSmsInputOptions,
+} from './Company/CompanyAuthenticationByColleagueWithSmsInput'
+import CompanyAuthenticationByLicense, {
+  CompanyAuthenticationByLicenseOptions,
+} from './Company/CompanyAuthenticationByLicense'
 
 const Stack = createStackNavigator()
 
@@ -92,11 +101,31 @@ class App extends Component {
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
           <Stack.Screen
+            key="CompanyAuthenticationByColleague"
+            name="CompanyAuthenticationByColleague"
+            component={CompanyAuthenticationByColleague}
+            options={CompanyAuthenticationByColleagueOptions}
+          />
+          <Stack.Screen
+            key="CompanyAuthenticationByColleagueWithSmsInput"
+            name="CompanyAuthenticationByColleagueWithSmsInput"
+            component={CompanyAuthenticationByColleagueWithSmsInput}
+            options={CompanyAuthenticationByColleagueWithSmsInputOptions}
+          />
+
+          <Stack.Screen
+            key="CompanyAuthenticationByLicense"
+            name="CompanyAuthenticationByLicense"
+            component={CompanyAuthenticationByLicense}
+            options={CompanyAuthenticationByLicenseOptions}
+          />
+          <Stack.Screen
             key="CompanyAuthenticationMethod"
             name="CompanyAuthenticationMethod"
             component={CompanyAuthenticationMethod}
             options={CompanyAuthenticationMethodOptions}
           />
+
           <Stack.Screen
             key="CompanyAuthentication"
             name="CompanyAuthentication"

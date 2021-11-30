@@ -38,14 +38,16 @@ export default function CompanyAuthenticationMethod() {
           title="同事协助认证"
           detail="向同事发送验证码进行认证"
           recommended
-          onPress={() => navigation.navigate('')}
+          onPress={() =>
+            navigation.navigate('CompanyAuthenticationByColleague')
+          }
         />
       </Card>
       <Card style={[styles.cardStyle, { marginTop: 21 }]}>
         <AuthenticationItem
           title="证照原件认证"
           detail="需上传「营业执照」照片"
-          onPress={() => navigation.navigate('')}
+          onPress={() => navigation.navigate('CompanyAuthenticationByLicense')}
         />
       </Card>
       <Hotline style={styles.hotline} />

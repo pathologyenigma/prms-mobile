@@ -20,6 +20,7 @@ import CompanyAddressModal from '../CompanyAddressModal'
 import CompanyCategoryModal from '../CompanyCategoryModal'
 import { useState } from 'react'
 import Hotline from '../Hotline'
+import PrimaryButton from '../../components/PrimaryButton'
 
 export const CompanyAuthenticationOptions: StackNavigationOptions = {
   title: '公司认证',
@@ -88,10 +89,9 @@ export default function CompanyAuthentication() {
           </View>
         )}
       />
-      <GradientButton
+      <PrimaryButton
         title="下一步"
         style={styles.next}
-        linearGradientStyle={{ borderRadius: 8 }}
         onPress={() => navigation.navigate('CompanyAuthenticationMethod')}
       />
       <Text style={styles.nextHint}>
