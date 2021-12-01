@@ -12,14 +12,46 @@ import {
   ApolloProvider,
 } from "@apollo/client"
 import { initApolloClient } from './src/utils/postQuery'
+import { Login_Token } from './src/utils/constant'
+import AsyncStorage from '@react-native-community/async-storage'
+import RootLoading from './src/utils/rootLoading'
 
-console.log('store: ', store)
-class App extends Component {
+interface IProps {
+
+}
+interface IStates {
+  localToken: string | undefined,
+}
+
+class App extends Component<IProps, IStates> {
+  constructor(props: any) {
+    super(props)
+    this.state = ({
+      localToken: undefined
+    })
+  }
+
+  componentDidMount() {
+    AsyncStorage.getItem(Login_Token)
+      .then((result: any) => {
+        if (result) {
+          this.setState({ localToken: result })
+        } else {
+          this.setState({ localToken: '' })
+        }
+      })
+      .catch((error) => {
+        this.setState({ localToken: '' })
+      })
+  }
   render() {
+    if (this.state.localToken === undefined) {
+      return null
+    }
     return (
       <NavigationContainer>
         <AntProvider>
-          <ApolloProvider client={initApolloClient('')}>
+          <ApolloProvider client={initApolloClient(this.state.localToken)}>
             <Provider store={store}>
               <Navigator />
             </Provider>

@@ -163,18 +163,9 @@ const getCandidateGetAllJobExpectationsGql = gql`
   }
 `
 
-
-const getCandidateGetJobListByExpectationGql = gql`
-  query CandidateGetJobListByExpectation(
-    $jobCategory:[String]!,
-    $page:Int,
-    $pageSize:Int
-  ){
-    CandidateGetJobListByExpectation(
-      jobCategory:$jobCategory,
-      page:$page,
-      pageSize:$pageSize
-    ){
+const getCandidateGetJobListGql = gql`
+  query CandidateGetJobList($info:JobFilter!){
+    CandidateGetJobList(info:$info){
       page
       pageSize
       count
@@ -199,7 +190,7 @@ const getCandidateGetJobListByExpectationGql = gql`
         adress_coordinate
         hr_name
         category
-        # enmergency
+        emergency
       }
     }
   }
@@ -238,6 +229,6 @@ export {
   chooseOrSwitchIdentityGql,
   getAllRegionGql,
   getCandidateGetAllJobExpectationsGql,
-  getCandidateGetJobListByExpectationGql,
+  getCandidateGetJobListGql,
   getJobDetailGql,
 }

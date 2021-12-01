@@ -55,12 +55,13 @@ class Jobs extends Component<IProps, IState> {
   }
 
   componentDidMount() {
-    this.loadData()
+    // this.loadData()
     RootLoading.loading()
     this.loadJobExpections()
   }
 
   loadJobExpections() {
+    // 加载个人职位类型
     this.props.getCandidateGetAllJobExpectations((error, result) => {
       console.log('getCandidateGetAllJobExpectations1: ', error, result)
       if (!error && result && result.CandidateGetAllJobExpectations) {
@@ -74,6 +75,7 @@ class Jobs extends Component<IProps, IState> {
   }
 
   lodJobList() {
+    // 根据个人类型加载列表
     const { selectJobsArray, selectJobIndex, listDataSource, page } = this.state
     if (!selectJobsArray) {
       // 没有筛选条件，直接展示空列表
@@ -84,13 +86,14 @@ class Jobs extends Component<IProps, IState> {
       return
     }
     console.log('selectJobsArray[selectJobIndex]: ', selectJobsArray[selectJobIndex])
-    this.props.getCandidateGetJobListByExpectation(
-      selectJobsArray[selectJobIndex].job_category,
+    const filter = {
       page,
-      10,
+      pageSize: 10
+    }
+    this.props.getCandidateGetJobList(filter,
       (error, result) => {
         RootLoading.hide()
-        console.log('getCandidateGetJobListByExpectation: ', error, result)
+        console.log('getCandidateGetJobList: ', error, result)
         if (!error && result && result.CandidateGetJobListByExpectation && result.CandidateGetJobListByExpectation.data) {
           this.setState({
             listDataSource: listDataSource.concat(result.CandidateGetJobListByExpectation.data),
@@ -480,7 +483,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
     userNumberCheck: actions.userNumberCheck,
     subscriptionMessage: actions.subscriptionMessage,
     getCandidateGetAllJobExpectations: jobActions.getCandidateGetAllJobExpectations,
-    getCandidateGetJobListByExpectation: jobActions.getCandidateGetJobListByExpectation,
+    getCandidateGetJobList: jobActions.getCandidateGetJobList,
   }, dispatch)
 }
 

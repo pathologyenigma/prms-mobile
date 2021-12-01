@@ -65,26 +65,6 @@ class ChooseRole extends Component<IProps, IState> {
 
   chooseOrSwitchIdentity(targetIdentity: string, role: string) {
     const { chooseRole } = this.props
-
-    // TODO:选择角色会报错,临时通过
-    const { navigation } = this.props
-    AsyncStorage.multiSet([[Login_Identity, targetIdentity]], (error) => {
-      if (!error) {
-        const { navigation } = this.props
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 1,
-            routes: [
-              { name: 'Dummy' },
-            ],
-          })
-        )
-      } else {
-        RootLoading.fail('请重试或联系客服')
-      }
-    })
-    return
-
     chooseRole(targetIdentity, role, (error, result) => {
       RootLoading.hide()
       if (!error && result) {

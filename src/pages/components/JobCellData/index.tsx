@@ -65,6 +65,7 @@ export default class JobCellData extends PureComponent<ICell> {
       isUrgent,
       isHotjob,
       isStop,
+      emergency,
       full_time_job,
     } } = this.props
     const basicView = []
@@ -73,10 +74,9 @@ export default class JobCellData extends PureComponent<ICell> {
     } else if (full_time_job === 'InternShip') {
       basicView.unshift(this.renderLinerView(2, '实习'))
     }
-    // 应该是字段 enmergency ,但接口会报错,待沟通解决
-    // if (isUrgent) {
-    //   basicView.unshift(this.renderLinerView(1, '急聘'))
-    // }
+    if (emergency) {
+      basicView.unshift(this.renderLinerView(1, '急聘'))
+    }
     // 热门字段没找到 -- 经沟通后 隐藏 热门 属性
     // if (isHotjob) {
     //   basicView.unshift(this.renderLinerView(3, '热门'))
