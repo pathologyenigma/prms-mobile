@@ -50,7 +50,6 @@ export default function Colleagues({ style }: ColleaguesProps) {
           style={styles.button}
           linearGradientStyle={styles.buttonGradientStyle}
           titleStyle={styles.buttonTextStyle}
-          disabled
         />
       </View>
     )

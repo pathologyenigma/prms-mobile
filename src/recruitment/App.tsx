@@ -101,10 +101,10 @@ class App extends Component {
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
           <Stack.Screen
-            key="CompanyAuthenticationByColleague"
-            name="CompanyAuthenticationByColleague"
-            component={CompanyAuthenticationByColleague}
-            options={CompanyAuthenticationByColleagueOptions}
+            key="CompanyAuthenticationByLicense"
+            name="CompanyAuthenticationByLicense"
+            component={CompanyAuthenticationByLicense}
+            options={CompanyAuthenticationByLicenseOptions}
           />
           <Stack.Screen
             key="CompanyAuthenticationByColleagueWithSmsInput"
@@ -112,12 +112,11 @@ class App extends Component {
             component={CompanyAuthenticationByColleagueWithSmsInput}
             options={CompanyAuthenticationByColleagueWithSmsInputOptions}
           />
-
           <Stack.Screen
-            key="CompanyAuthenticationByLicense"
-            name="CompanyAuthenticationByLicense"
-            component={CompanyAuthenticationByLicense}
-            options={CompanyAuthenticationByLicenseOptions}
+            key="CompanyAuthenticationByColleague"
+            name="CompanyAuthenticationByColleague"
+            component={CompanyAuthenticationByColleague}
+            options={CompanyAuthenticationByColleagueOptions}
           />
           <Stack.Screen
             key="CompanyAuthenticationMethod"

@@ -1,26 +1,19 @@
 import React from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableWithoutFeedback,
-  TextInput,
-} from 'react-native'
+import { StyleSheet, Text, View, Image, TextInput } from 'react-native'
 import {
   StackNavigationOptions,
   StackNavigationProp,
 } from '@react-navigation/stack'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import IconButton from '../../components/IconButton'
-import GradientButton from '../../components/GradientButton'
-import TextButton from '../../components/TextButton'
 import { useNavigation } from '@react-navigation/native'
 import CompanyAddressModal from '../CompanyAddressModal'
 import CompanyCategoryModal from '../CompanyCategoryModal'
 import { useState } from 'react'
 import Hotline from '../Hotline'
 import PrimaryButton from '../../components/PrimaryButton'
+import TitleAndDetail from '../TitleAndDetail'
+import Hint from './Hint'
 
 export const CompanyAuthenticationOptions: StackNavigationOptions = {
   title: '公司认证',
@@ -47,11 +40,7 @@ export default function CompanyAuthentication() {
       showsVerticalScrollIndicator={false}
       style={styles.container}
       contentContainerStyle={styles.content}>
-      <View style={styles.hintContainer}>
-        <Text style={styles.hint}>
-          你所提供的信息将得到绝对保护，仅限审核使用
-        </Text>
-      </View>
+      <Hint />
       <TitleAndDetail
         title="公司全称"
         placeholder="请输入公司全称"
@@ -60,7 +49,7 @@ export default function CompanyAuthentication() {
           <>
             <Image
               style={styles.titleHintIcon}
-              source={require('./warning.png')}
+              source={require('../images/warning.png')}
             />
             <Text style={styles.titleHint}>必须与公司营业执照的名称一致</Text>
           </>
@@ -110,55 +99,6 @@ export default function CompanyAuthentication() {
   )
 }
 
-interface TitleAndDetailProps {
-  title: string
-  placeholder?: string
-  value?: string
-  onPress?: () => void
-  renderHint?: () => JSX.Element
-  renderDetail?: () => JSX.Element
-}
-
-function TitleAndDetail({
-  title,
-  placeholder,
-  value,
-  onPress,
-  renderHint,
-  renderDetail,
-}: TitleAndDetailProps) {
-  const hasValue = !!value
-
-  const _renderDetail = () => {
-    if (renderDetail) {
-      return renderDetail()
-    }
-    return (
-      <TouchableWithoutFeedback onPress={onPress}>
-        <View style={styles.detailRow}>
-          <Text style={hasValue ? styles.detail : styles.placeholder}>
-            {hasValue ? value : placeholder}
-          </Text>
-          <Image
-            style={styles.indicator}
-            source={require('../../assets/indicator.png')}
-          />
-        </View>
-      </TouchableWithoutFeedback>
-    )
-  }
-
-  return (
-    <View style={styles.titleAndDetail}>
-      <View style={styles.titleRow}>
-        <Text style={styles.title}>{title}</Text>
-        {renderHint && renderHint()}
-      </View>
-      {_renderDetail()}
-    </View>
-  )
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -168,51 +108,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingBottom: 30,
   },
-  hintContainer: {
-    height: 50,
-    marginLeft: 11,
-    width: 300,
-    justifyContent: 'center',
-  },
-  hint: {
-    color: '#888888',
-    fontSize: 13,
-    lineHeight: 17,
-  },
-  titleAndDetail: {
-    height: 80,
-    paddingHorizontal: 11,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#ECECEC',
-    justifyContent: 'flex-end',
-  },
-  titleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  title: {
-    color: '#666666',
-    fontSize: 13,
-  },
-  placeholder: {
-    color: '#CCCCCC',
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
   detailRow: {
     flexDirection: 'row',
     alignItems: 'center',
     height: 42,
     marginTop: 2,
-  },
-  detail: {
-    color: '#333333',
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-  indicator: {
-    position: 'absolute',
-    right: 0,
   },
   titleHint: {
     color: '#AAAAAA',

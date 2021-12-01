@@ -8,24 +8,17 @@ import {
   StyleProp,
   ImageStyle,
   TouchableOpacity,
+  ImageSourcePropType,
 } from 'react-native'
 import {
   launchImageLibrary,
+  launchCamera,
   ErrorCode,
   ImagePickerResponse,
 } from 'react-native-image-picker'
 import { withImageLibraryPermission } from './permission'
 import AlertModal from '../AlertModal'
 import { openSettings } from 'react-native-permissions'
-
-interface ImagePickerProps {
-  style?: StyleProp<ViewStyle>
-  imageStyle?: StyleProp<ImageStyle>
-  uri?: string
-  onImageUriChange?: (uri: string) => void
-}
-
-const defaultImage = require('./add_pic.png')
 
 function pickImageFromImageLibrary(): Promise<string | null> {
   return new Promise((resolve, reject) => {
@@ -72,9 +65,24 @@ function messageForErrorCode(errorCode: ErrorCode) {
   }
 }
 
+type ImagePickerSourceType = 'camera' | 'library' | 'both'
+
+interface ImagePickerProps {
+  style?: StyleProp<ViewStyle>
+  imageStyle?: StyleProp<ImageStyle>
+  sourceType?: ImagePickerSourceType
+  placeholder?: ImageSourcePropType
+  uri?: string
+  onImageUriChange?: (uri: string) => void
+}
+
+const defaultImage = require('./add_pic.png')
+
 export default function ImagePicker({
   style,
   imageStyle,
+  sourceType = 'both',
+  placeholder = defaultImage,
   uri,
   onImageUriChange,
 }: ImagePickerProps) {
@@ -109,7 +117,7 @@ export default function ImagePicker({
         />
         <Image
           style={[styles.image, imageStyle]}
-          source={uri ? { uri } : defaultImage}
+          source={uri ? { uri } : placeholder}
           resizeMode="cover"
         />
       </View>
@@ -118,14 +126,7 @@ export default function ImagePicker({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: 101,
-    height: 101,
-  },
-  content: {
-    flex: 1,
-  },
-  image: {
-    flex: 1,
-  },
+  container: { flex: 1 },
+  content: { flex: 1 },
+  image: { width: '100%', height: '100%' },
 })
