@@ -9,6 +9,7 @@ import {
   ImageStyle,
   TouchableOpacity,
   ImageSourcePropType,
+  Platform,
 } from 'react-native'
 import {
   launchImageLibrary,
@@ -16,9 +17,14 @@ import {
   ErrorCode,
   ImagePickerResponse,
 } from 'react-native-image-picker'
-import { withImageLibraryPermission } from './permission'
+import {
+  withCameraPermission,
+  withImageLibraryPermission,
+  PermissionError,
+} from './permission'
 import AlertModal from '../AlertModal'
 import { openSettings } from 'react-native-permissions'
+import ActionSheet from '../ActionSheet'
 
 function pickImageFromImageLibrary(): Promise<string | null> {
   return new Promise((resolve, reject) => {
@@ -29,7 +35,20 @@ function pickImageFromImageLibrary(): Promise<string | null> {
         quality: 1,
         includeBase64: false,
       },
-      response => hanldeResponse(response, resolve, reject),
+      response => hanldeResponse(response, resolve, reject, 'library'),
+    )
+  })
+}
+
+function takePhotoFromCamera(): Promise<string | null> {
+  return new Promise((resolve, reject) => {
+    launchCamera(
+      {
+        mediaType: 'photo',
+        quality: 1,
+        includeBase64: false,
+      },
+      response => hanldeResponse(response, resolve, reject, 'camera'),
     )
   })
 }
@@ -38,11 +57,12 @@ function hanldeResponse(
   response: ImagePickerResponse,
   resolve: (uri: string | null) => void,
   reject: (e: any) => void,
+  sourceType: 'camera' | 'library',
 ) {
   const { assets, errorCode, didCancel } = response
 
   if (errorCode) {
-    reject(new Error(messageForErrorCode(errorCode)))
+    reject(errorForErrorCode(errorCode, sourceType))
     return
   }
 
@@ -54,15 +74,52 @@ function hanldeResponse(
   resolve(assets[0].uri!)
 }
 
-function messageForErrorCode(errorCode: ErrorCode) {
+function errorForErrorCode(
+  errorCode: ErrorCode,
+  sourceType: 'camera' | 'library',
+) {
   switch (errorCode) {
     case 'camera_unavailable':
-      return '设备不可用'
+      return new Error('相机不可用')
     case 'permission':
-      return '没有访问相册的权限'
+      if (sourceType === 'camera') {
+        return new PermissionError('没有访问相机的权限')
+      }
+      return new PermissionError('没有访问相册的权限')
     case 'others':
-      return '选择图片失败'
+      return new Error('未知错误')
   }
+}
+
+function alertMsgFromErrorMessage(error: Error | null) {
+  if (!error) {
+    return ''
+  }
+
+  if (error instanceof PermissionError) {
+    return error.message
+  }
+  return ''
+}
+
+function alertTitleFromErrorMessage(error: Error | null) {
+  if (!error) {
+    return ''
+  }
+
+  if (error instanceof PermissionError) {
+    if (error.message.includes('相机')) {
+      return '请打开相机权限'
+    } else {
+      if (Platform.OS === 'ios') {
+        return '请打开相册权限'
+      } else {
+        return '请打开文件存储权限'
+      }
+    }
+  }
+
+  return error.message
 }
 
 type ImagePickerSourceType = 'camera' | 'library' | 'both'
@@ -86,42 +143,81 @@ export default function ImagePicker({
   uri,
   onImageUriChange,
 }: ImagePickerProps) {
-  const [error, setError] = useState('')
+  const [error, setError] = useState<Error | null>(null)
+  const [showsActionSheet, setShowsActionSheet] = useState(false)
 
-  const handlePress = async () => {
+  const pickImage = async () => {
     try {
       const uri = await withImageLibraryPermission(pickImageFromImageLibrary)()
       if (uri !== null) {
         onImageUriChange && onImageUriChange(uri)
       }
     } catch (e) {
-      setError(e.message)
+      setError(e)
+    }
+  }
+
+  const takePhoto = async () => {
+    try {
+      const uri = await withCameraPermission(takePhotoFromCamera)()
+      if (uri !== null) {
+        console.log(uri)
+        onImageUriChange && onImageUriChange(uri)
+      }
+    } catch (e) {
+      setError(e)
+    }
+  }
+
+  const handlePress = () => {
+    if (sourceType === 'library') {
+      pickImage()
+    } else if (sourceType === 'camera') {
+      takePhoto()
+    } else {
+      setShowsActionSheet(true)
     }
   }
 
   return (
-    <TouchableOpacity
-      onPress={handlePress}
-      activeOpacity={0.75}
-      style={[styles.container, style]}>
-      <View style={styles.content}>
-        <AlertModal
-          visible={!!error}
-          title="请打开相册权限"
-          msg={error}
-          onNegativePress={() => setError('')}
-          onPositivePress={() => {
-            setError('')
-            openSettings()
-          }}
-        />
-        <Image
-          style={[styles.image, imageStyle]}
-          source={uri ? { uri } : placeholder}
-          resizeMode="cover"
-        />
-      </View>
-    </TouchableOpacity>
+    <>
+      <TouchableOpacity
+        onPress={handlePress}
+        activeOpacity={0.75}
+        style={[styles.container, style]}>
+        <View style={styles.content}>
+          <Image
+            style={[styles.image, imageStyle]}
+            source={uri ? { uri } : placeholder}
+            resizeMode="cover"
+          />
+        </View>
+      </TouchableOpacity>
+      <ActionSheet
+        visible={showsActionSheet}
+        onDismiss={() => setShowsActionSheet(false)}
+        actions={[
+          {
+            title: '拍照',
+            onPress: takePhoto,
+          },
+          {
+            title: '手机相册',
+            onPress: pickImage,
+          },
+        ]}
+      />
+      <AlertModal
+        visible={!!error}
+        title={alertTitleFromErrorMessage(error)}
+        msg={alertMsgFromErrorMessage(error)}
+        onNegativePress={() => setError(null)}
+        onPositivePress={() => {
+          setError(null)
+          openSettings()
+        }}
+      />
+    </>
   )
 }
 

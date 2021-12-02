@@ -1,7 +1,7 @@
 import { Platform } from 'react-native'
 import { PERMISSIONS, request, check, RESULTS } from 'react-native-permissions'
 
-class PermissionError extends Error {
+export class PermissionError extends Error {
   constructor(message: string) {
     super(message)
   }
@@ -53,6 +53,54 @@ function withImageLibraryPermissionIOS<T>(fn: Callback<T>) {
       }
     } else {
       throw new Error('设备不可用')
+    }
+  }
+}
+
+export function withCameraPermission<T>(fn: Callback<T>) {
+  if (Platform.OS === 'ios') {
+    return withCameraPermissionIOS(fn)
+  } else {
+    return withCameraPermissionAndroid(fn)
+  }
+}
+
+function withCameraPermissionAndroid<T>(fn: Callback<T>) {
+  return async function () {
+    const result = await check(PERMISSIONS.ANDROID.CAMERA)
+    if (result === RESULTS.GRANTED || result === RESULTS.LIMITED) {
+      return fn()
+    } else if (result === RESULTS.BLOCKED) {
+      throw new PermissionError('没有访问相机的权限')
+    } else if (result === RESULTS.DENIED) {
+      const response = await request(PERMISSIONS.ANDROID.CAMERA)
+      if (response === RESULTS.GRANTED || response === RESULTS.LIMITED) {
+        return fn()
+      } else {
+        throw new PermissionError('没有访问相机的权限')
+      }
+    } else {
+      throw new Error('相机不可用')
+    }
+  }
+}
+
+function withCameraPermissionIOS<T>(fn: Callback<T>) {
+  return async function () {
+    const result = await check(PERMISSIONS.IOS.CAMERA)
+    if (result === RESULTS.GRANTED || result === RESULTS.LIMITED) {
+      return fn()
+    } else if (result === RESULTS.BLOCKED) {
+      throw new PermissionError('没有访问相机的权限')
+    } else if (result === RESULTS.DENIED) {
+      const response = await request(PERMISSIONS.IOS.CAMERA)
+      if (response === RESULTS.GRANTED || response === RESULTS.LIMITED) {
+        return fn()
+      } else {
+        throw new PermissionError('没有访问相机的权限')
+      }
+    } else {
+      throw new Error('相机不可用')
     }
   }
 }
