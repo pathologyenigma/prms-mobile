@@ -21,6 +21,7 @@ function errorHandler(error: any) {
       break
     case 'Error: token expired':
     case `'Error: Cannot read properties of undefined (reading 'user_id')'`:
+    case 'Error: need resume and job expectation for this operation':
       errorMsg = '登录已过期,请重新登录'
       setTimeout(() => {
         DeviceEventEmitter.emit(Log_Out)

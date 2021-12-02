@@ -196,6 +196,7 @@ export default StyleSheet.create({
     color: '#333333',
     fontSize: 14,
     marginTop: 22,
+    lineHeight: 18,
   },
   jobContent: {
     color: '#666666',
@@ -203,15 +204,9 @@ export default StyleSheet.create({
     fontSize: 13,
     lineHeight: 18,
   },
-  addScoreBtn: {
-    flexDirection: 'row',
-    marginTop: 22,
-  },
-  addScoreText: {
-    color: '#333333',
-    fontSize: 14,
-  },
-  showAddScoreText: {
+  showMoreText: {
+    marginBottom: -4,
+    lineHeight: 18,
     color: '#57DE9E',
     fontSize: 13,
     fontWeight: 'bold'

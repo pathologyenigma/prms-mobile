@@ -128,7 +128,6 @@ const chooseOrSwitchIdentityGql = gql`
 const getAllRegionGql = gql`
   query StaticGetAllRegion{
     StaticGetAllRegion{
-    __typename
     data{
       Cities{
         name
@@ -164,8 +163,8 @@ const getCandidateGetAllJobExpectationsGql = gql`
 `
 
 const getCandidateGetJobListGql = gql`
-  query CandidateGetJobList($info:JobFilter!){
-    CandidateGetJobList(info:$info){
+  query CandidateGetJobList($filter:JobFilter!){
+    CandidateGetJobList(filter:$filter){
       page
       pageSize
       count
@@ -187,7 +186,7 @@ const getCandidateGetJobListGql = gql`
         min_salary
         comp_size
         comp_name
-        adress_coordinate
+        address_coordinate
         hr_name
         category
         emergency
@@ -196,21 +195,75 @@ const getCandidateGetJobListGql = gql`
   }
 `
 
-const getJobDetailGql = gql`
-  query CandidateGetJob($jobid:Int!){
-    CandidateGetJob(jobid:$jobid) {
-      JobTitle
-      WorkingAddress
-      experience
-      JobDetail
-      education
-      requiredNum
-      isFullTime
-      tags
-      createdAt
-      updatedAt
+
+/**
+ * 公司详情页的公司基本信息
+ */
+const getGetEnterpriseGql = gql`
+  query CandidateGetEnterpriseDetail_EntInfo($entId:Int!){
+    CandidateGetEnterpriseDetail_EntInfo(entId:$entId) {
+        enterprise_name
+        business_nature
+        industry_involved
+        enterprise_profile
+        enterprise_financing
+        enterprise_size
+        enterprise_welfare
+        enterprise_logo
+        tags
+        enterprise_coordinates
+        enterprise_loc_detail
+        extra_attribute
+        rest_rule
+        overtime_work_degree
+        homepage
+        established_time
+        tel
+        work_time
+        createdAt
     }
   }
+`
+
+/**
+ * 获取职位详情
+ */
+const getJobDetailGql = gql`
+ query CandidateGetJob($jobid:Int!){
+    CandidateGetJob(jobid:$jobid) {
+        job{
+            id
+            title
+            category
+            detail
+            address_coordinate
+      #       adress_description
+            salaryExpected
+            experience
+            education
+            required_num
+            full_time_job
+            tags
+            updatedAt
+          }
+        hr{
+          id
+          name
+          pos
+          last_log_out_time
+          # logo
+        }
+        company{
+          id
+          name
+          address_coordinates
+          address_description
+    #       industry_involved
+          business_nature
+    #       enterprise_logo
+        }
+  }
+ }
 `
 
 export {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList, StatusBar } from 'react-native'
+import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList, StatusBar, RefreshControl } from 'react-native'
 import styles from './styles/JobDetail.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import { connect } from 'react-redux'
@@ -17,15 +17,17 @@ import SystemHelper from '../../../utils/system'
 import InterviewerFooter from '../../components/InterviewerFooter'
 import ShareModal from '../../components/ShareModal'
 import * as jobActions from '../../../action/jobsAction'
+import { reformFullTime } from '../../../utils/utils'
 
 type IProps = GenProps<'JobDetail'> & ReturnType<typeof mapDispatchToProps>
 
 interface IState {
   dataSource: any,
-  showAddScore: boolean,
+  showMoreDetail: boolean,
   selectLikesTabs: number,
   shareVisible: boolean,
-  jobid: number
+  jobid: number,
+  refreshing: boolean
 }
 
 const recommendListData = [
@@ -173,9 +175,10 @@ class JobDetail extends Component<IProps, IState> {
     this.state = {
       jobid,
       dataSource: undefined,
-      showAddScore: false,
+      showMoreDetail: false,
       selectLikesTabs: 0,
-      shareVisible: false
+      shareVisible: false,
+      refreshing: true
     }
   }
 
@@ -184,39 +187,50 @@ class JobDetail extends Component<IProps, IState> {
   }
 
   loadData() {
+    RootLoading.loading()
     const { jobid } = this.state
     const { getJobDetail } = this.props
     getJobDetail(jobid, (error, result) => {
       console.log('getJobDetail: ', error, result)
+      RootLoading.hide()
+      if (!error && result) {
+        this.setState({
+          refreshing: false,
+          dataSource: result.CandidateGetJob
+        })
+      } else {
+        this.setState({ refreshing: false })
+        RootLoading.fail('加载失败,请下拉刷新重试')
+      }
     })
 
-    RootLoading.loading()
-    setTimeout(() => {
-      RootLoading.hide()
-      this.setState({
-        dataSource: {
-          id: 1,
-          name: '项目经理',
-          salary: '15K-30K',
-          jobNature: '全职',
-          jobQuantity: 2,
-          experience: '5-10年',
-          education: '本科及以上',
-          location: '深圳·宝安区·大学城',
-          company: '深圳市创意智慧有限公司',
-          interviewer: '廖女士·人事经理',
-          onlineTime: '1小时前在线',
-          companyTag: '技术管理,硬件设施,产品设计,需求采集,产品开发,产品验收,产品内部评审',
-          jobContent: '1、项目管理:统筹并管理项目，规划和跟踪项目范围、成本、质量、风险等;组织项目各关键节点评审，总结和评定项目阶段性成果，优化项目流程和方法，提升团队工作效率和执行力;\n2、预研阶段:评估项目可行性，选择更优的组配件降低成本，制定和执行项目预算和项目计划;\n3、研发阶段:沟通和实现需求，跟进项目进度确保迭代顺利\n4、打样阶段:确认产品结构、电路等可行性和产品总体成本分析核对;\n5、量产阶段:督促供应商按时按量完成预定生产计划，跟进和解决项目量产后的技术问题，优化升级产品并总结经验。',
-          jobRequire: '1、统招本科及以上学历，2~5年以上工作经验;\n2、2年以上智能硬件/智能家居等项目管理经验;',
-          jobAddPoints: '1、从事过区块链相关行业;\n2、从事过软件开发行业',
-          companyXingzhi: '创业公司',
-          companyAmount: '少于50人',
-          companyIndustry: '计算机软件',
-          recommendList: recommendListData,
-        },
-      })
-    }, 300);
+    // RootLoading.loading()
+    // setTimeout(() => {
+    //   RootLoading.hide()
+    //   this.setState({
+    //     dataSource: {
+    //       id: 1,
+    //       name: '项目经理',
+    //       salary: '15K-30K',
+    //       jobNature: '全职',
+    //       jobQuantity: 2,
+    //       experience: '5-10年',
+    //       education: '本科及以上',
+    //       location: '深圳·宝安区·大学城',
+    //       company: '深圳市创意智慧有限公司',
+    //       interviewer: '廖女士·人事经理',
+    //       onlineTime: '1小时前在线',
+    //       companyTag: '技术管理,硬件设施,产品设计,需求采集,产品开发,产品验收,产品内部评审',
+    //       jobContent: '1、项目管理:统筹并管理项目，规划和跟踪项目范围、成本、质量、风险等;组织项目各关键节点评审，总结和评定项目阶段性成果，优化项目流程和方法，提升团队工作效率和执行力;\n2、预研阶段:评估项目可行性，选择更优的组配件降低成本，制定和执行项目预算和项目计划;\n3、研发阶段:沟通和实现需求，跟进项目进度确保迭代顺利\n4、打样阶段:确认产品结构、电路等可行性和产品总体成本分析核对;\n5、量产阶段:督促供应商按时按量完成预定生产计划，跟进和解决项目量产后的技术问题，优化升级产品并总结经验。',
+    //       jobRequire: '1、统招本科及以上学历，2~5年以上工作经验;\n2、2年以上智能硬件/智能家居等项目管理经验;',
+    //       jobAddPoints: '1、从事过区块链相关行业;\n2、从事过软件开发行业',
+    //       companyXingzhi: '创业公司',
+    //       companyAmount: '少于50人',
+    //       companyIndustry: '计算机软件',
+    //       recommendList: recommendListData,
+    //     },
+    //   })
+    // }, 300);
   }
 
   renderNavBar() {
@@ -291,32 +305,51 @@ class JobDetail extends Component<IProps, IState> {
   }
 
   renderHeader() {
-    const { dataSource } = this.state
+    const {
+      dataSource: {
+        job: {
+          id,
+          title,
+          category,
+          detail,
+          address_coordinate,
+          adress_description = '--',
+          salaryExpected,
+          experience,
+          education,
+          required_num,
+          full_time_job,
+          tags,
+          updatedAt,
+        } } } = this.state
     return (
       <View
         style={styles.headerView}
       >
         <View style={styles.headerTitleView}>
           <Text style={styles.headerTitle}>
-            {dataSource.name}
+            {title}
           </Text>
           <Text style={styles.headerSalary}>
-            {dataSource.salary}
+            {/* {salaryExpected.length === 2 ? `${salaryExpected[0] || ''}-${salaryExpected[1] || ''}` : ''} */}
+            {`${salaryExpected[0] || ''}-${salaryExpected[1] || ''}`}
           </Text>
         </View>
         <View style={styles.headerCompanyView}>
           <Text style={styles.headerCompany}>
-            {dataSource.jobNature}
+            {reformFullTime(full_time_job)}
           </Text>
           <Text style={styles.headerCompany}>
-            {`招${dataSource.jobQuantity}人`}
+            {`招${required_num}人`}
           </Text>
           <Text style={styles.headerCompany}>
-            {dataSource.experience}
+            {`${experience}年及以上`}
           </Text>
-          <Text style={styles.headerCompany}>
-            {dataSource.education}
-          </Text>
+          {education && (
+            <Text style={styles.headerCompany}>
+              {`${education}及以上`}
+            </Text>
+          )}
         </View>
         <View style={styles.headerJobView}>
           <Image
@@ -325,7 +358,7 @@ class JobDetail extends Component<IProps, IState> {
             resizeMode="center"
           />
           <Text style={styles.locationText}>
-            {dataSource.location}
+            {adress_description}
           </Text>
         </View>
       </View>
@@ -333,7 +366,14 @@ class JobDetail extends Component<IProps, IState> {
   }
 
   renderInterviewer() {
-    const { dataSource } = this.state
+    const { dataSource: {
+      company: {
+        name: companyName
+      },
+      hr: {
+        id, name, pos, last_log_out_time = '',
+        logo,
+      } } } = this.state
     return (
       <NextTouchableOpacity
         style={styles.interviewerView}
@@ -346,14 +386,18 @@ class JobDetail extends Component<IProps, IState> {
         <View style={styles.interviewerInfo}>
           <View style={styles.interviewerTitleView}>
             <Text style={styles.interviewerTitle}>
-              {dataSource.interviewer}
+              {`${name} · ${pos}`}
             </Text>
-            <View style={styles.dot} />
-            <Text style={styles.interviewerOnline}>
-              {dataSource.onlineTime}
-            </Text>
+            {last_log_out_time &&
+              <>
+                <View style={styles.dot} />
+                <Text style={styles.interviewerOnline}>
+                  {last_log_out_time}
+                </Text>
+              </>
+            }
           </View>
-          <Text style={styles.interviewerCompany}>{dataSource.company}</Text>
+          <Text style={styles.interviewerCompany}>{companyName}</Text>
         </View>
         <Image
           style={styles.nextBtn}
@@ -364,13 +408,29 @@ class JobDetail extends Component<IProps, IState> {
   }
 
   renderJobInfo() {
-    const { dataSource, showAddScore } = this.state
-    const tagArray = (dataSource.companyTag && dataSource.companyTag.split(',')) || []
+    const { dataSource, showMoreDetail } = this.state
+    const {
+      dataSource: {
+        job: {
+          id,
+          title,
+          category,
+          detail,
+          address_coordinate,
+          adress_description = '--',
+          salaryExpected,
+          experience,
+          education,
+          required_num,
+          full_time_job,
+          tags,
+          updatedAt,
+        } } } = this.state
     return (
       <View style={[styles.headerView, { minHeight: 100 }]}>
         <Text style={styles.jobInfoTitle}>职位介绍</Text>
         <View style={styles.jobInfoTagView}>
-          {tagArray.map((item: any, index: number) => {
+          {tags.map((item: any, index: number) => {
             return (
               <Text key={index.toString()} style={styles.jobInfoTagItem}>
                 {item}
@@ -378,11 +438,23 @@ class JobDetail extends Component<IProps, IState> {
             )
           })}
         </View>
-        <Text style={styles.jobInfoDetail}>岗位职责</Text>
+        <Text style={styles.jobInfoDetail}>
+          {showMoreDetail ? detail : detail.substring(0, 199)}
+          {detail.length > 200 && !showMoreDetail && (
+            <NextTouchableOpacity
+              onPress={() => {
+                this.setState({ showMoreDetail: true })
+              }}
+            >
+              <Text style={styles.showMoreText}> ...查看全部</Text>
+            </NextTouchableOpacity>
+          )}
+        </Text>
+        {/* <Text style={styles.jobInfoDetail}>岗位职责</Text>
         <Text style={styles.jobContent}>{dataSource.jobContent}</Text>
         <Text style={styles.jobInfoDetail}>任职资格</Text>
-        <Text style={styles.jobContent}>{dataSource.jobRequire}</Text>
-        {showAddScore ? (
+        <Text style={styles.jobContent}>{dataSource.jobRequire}</Text> */}
+        {/* {showMoreDetail ? (
           <View style={{ marginTop: 22 }}>
             <Text style={styles.addScoreText}>加分项</Text>
             <Text style={styles.jobContent}>{dataSource.jobAddPoints}</Text>
@@ -391,19 +463,29 @@ class JobDetail extends Component<IProps, IState> {
           <NextTouchableOpacity
             style={styles.addScoreBtn}
             onPress={() => {
-              this.setState({ showAddScore: true })
+              this.setState({ showMoreDetail: true })
             }}
           >
             <Text style={styles.addScoreText}>加分项</Text>
-            <Text style={styles.showAddScoreText}>...查看全部</Text>
+            <Text style={styles.showMoreDetailText}>...查看全部</Text>
           </NextTouchableOpacity>
-        )}
+        )} */}
       </View>
     )
   }
 
   renderCompanyInfo() {
-    const { dataSource } = this.state
+    const { dataSource: {
+      company: {
+        id,
+        name,
+        address_coordinates,
+        address_description,
+        industry_involved = '',
+        business_nature,
+        enterprise_logo = '',
+      }
+    } } = this.state
     return (
       <View
         style={styles.headerView}
@@ -417,7 +499,7 @@ class JobDetail extends Component<IProps, IState> {
           style={styles.companyInfo}>
           <View style={styles.companyIcon} />
           <View style={styles.companyTitle}>
-            <Text style={styles.companyName}>{dataSource.company}</Text>
+            <Text style={styles.companyName}>{name}</Text>
             <Image style={styles.jobRenzheng}
               source={require('../../../assets/requestJobs/job-renzheng.png')}
             />
@@ -429,13 +511,13 @@ class JobDetail extends Component<IProps, IState> {
         </NextTouchableOpacity>
         <View style={styles.companyTag}>
           <Text style={styles.companyTagItem}>
-            {dataSource.companyXingzhi}
+            {business_nature}
           </Text>
           <Text style={styles.companyTagItem}>
-            {dataSource.companyAmount}
+            {industry_involved || ''}
           </Text>
           <Text style={styles.companyTagItem}>
-            {dataSource.companyIndustry}
+            {industry_involved || ''}
           </Text>
         </View>
         <View style={styles.map} />
@@ -560,14 +642,15 @@ class JobDetail extends Component<IProps, IState> {
   }
 
   renderInterviewerFooter() {
-    const { dataSource } = this.state
-    if (!dataSource) {
-      return null
-    }
+    const { dataSource: {
+      hr: {
+        id, name, pos, last_log_out_time = '',
+        logo,
+      } } } = this.state
     return (
       <InterviewerFooter
-        name="廖女士"
-        job="人事经理"
+        name={name}
+        job={pos}
         clickChat={() => {
           RootLoading.info('聊一聊')
         }}
@@ -579,7 +662,7 @@ class JobDetail extends Component<IProps, IState> {
   }
 
   render() {
-    const { dataSource, shareVisible } = this.state
+    const { refreshing, dataSource, shareVisible } = this.state
     return (
       <View style={styles.container}>
         <StatusBar
@@ -592,6 +675,13 @@ class JobDetail extends Component<IProps, IState> {
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={{ paddingBottom: 20 }}
+          refreshControl={(
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => this.loadData()
+              }
+            />
+          )}
         >
           {dataSource ? (
             <View style={{ flex: 1, }}>
@@ -599,19 +689,21 @@ class JobDetail extends Component<IProps, IState> {
               {this.renderInterviewer()}
               {this.renderJobInfo()}
               {this.renderCompanyInfo()}
-              {this.renderGuessJobs()}
+              {/* {this.renderGuessJobs()} */}
               {this.rendeJobrTips()}
             </View>
           ) : null}
         </ScrollView>
-        {this.renderInterviewerFooter()}
+        {dataSource && (
+          this.renderInterviewerFooter()
+        )}
         <ShareModal
           visible={shareVisible}
           cancelOnpress={() => {
             this.setState({ shareVisible: false })
           }}
         />
-      </View>
+      </View >
     )
   }
 }

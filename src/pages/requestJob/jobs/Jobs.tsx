@@ -90,14 +90,14 @@ class Jobs extends Component<IProps, IState> {
       page,
       pageSize: 10
     }
+    console.log('filter:', filter)
     this.props.getCandidateGetJobList(filter,
       (error, result) => {
         RootLoading.hide()
-        console.log('getCandidateGetJobList: ', error, result)
-        if (!error && result && result.CandidateGetJobListByExpectation && result.CandidateGetJobListByExpectation.data) {
+        if (!error && result && result.CandidateGetJobList && result.CandidateGetJobList.data) {
           this.setState({
-            listDataSource: listDataSource.concat(result.CandidateGetJobListByExpectation.data),
-            refreshState: result.CandidateGetJobListByExpectation.data.length === 10 ? 0 : 3
+            listDataSource: listDataSource.concat(result.CandidateGetJobList.data),
+            refreshState: result.CandidateGetJobList.data.length === 10 ? 0 : 3
           })
         } else {
           this.setState({
@@ -286,9 +286,10 @@ class Jobs extends Component<IProps, IState> {
 
   renderItem(item: any) {
     const { navigation } = this.props
+    console.log('item: ', item)
     return (
       <JobCellData
-        key={item.id.toString()}
+        key={item.job_id.toString()}
         cellItem={item}
         onPress={() => {
           navigation.push('JobDetail', { jobid: item.job_id })

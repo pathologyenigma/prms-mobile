@@ -140,6 +140,23 @@ const reformComFinancing = (comp_financing: string) => {
   return showComp_financing
 }
 
+const reformFullTime = (full_time_job: string) => {
+  if (!full_time_job) {
+    return ''
+  }
+  switch (full_time_job) {
+    case 'PartTime':
+      return '兼职'
+    case 'FullTime':
+      return '全职'
+    case 'InternShip':
+      return '实习'
+    default:
+      break;
+  }
+  return ''
+}
+
 export {
   formatHintsIndex,
   calculateTime,
@@ -147,4 +164,5 @@ export {
   reformEducation,
   reformCompanySize,
   reformComFinancing,
+  reformFullTime
 }
