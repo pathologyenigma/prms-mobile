@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   StyleSheet,
   Text,
@@ -19,6 +19,8 @@ import { useNavigation } from '@react-navigation/native'
 import PrimaryButton from '../../components/PrimaryButton'
 import Hint from '../CompanyAuthentication/Hint'
 import ImagePicker from '../../components/ImagePicker'
+import ActionSheet from '../../components/ActionSheet'
+import AlertModal from '../../components/AlertModal'
 
 export const CompanyAuthenticationByLicenseOptions: StackNavigationOptions = {
   title: '证照原件认证',
@@ -32,6 +34,20 @@ export const CompanyAuthenticationByLicenseOptions: StackNavigationOptions = {
 
 export default function CompanyAuthenticationByLicense() {
   const navigation = useNavigation<StackNavigationProp<any>>()
+  const [actionSheetVisible, setActionSheetVisible] = useState(false)
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false)
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <IconButton
+          onPress={() => setActionSheetVisible(true)}
+          icon={require('../images/more.png')}
+          style={{ marginRight: 11 }}
+        />
+      ),
+    })
+  }, [navigation])
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -71,6 +87,20 @@ export default function CompanyAuthenticationByLicense() {
       </View>
       <PrimaryButton style={styles.primaryButton} title="提交认证" />
       <Hotline style={styles.hotline} />
+      <ActionSheet
+        visible={actionSheetVisible}
+        onDismiss={() => setActionSheetVisible(false)}
+        actions={[
+          { title: '切换身份' },
+          { title: '退出登录', onPress: () => setLogoutModalVisible(true) },
+        ]}
+      />
+      <AlertModal
+        visible={logoutModalVisible}
+        title="是否退出登录"
+        onNegativePress={() => setLogoutModalVisible(false)}
+        onPositivePress={() => setLogoutModalVisible(false)}
+      />
     </ScrollView>
   )
 }

@@ -1,14 +1,5 @@
-import React, { useState } from 'react'
-import {
-  ViewStyle,
-  StyleProp,
-  TextStyle,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-} from 'react-native'
+import React from 'react'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { getBottomSpace } from 'react-native-iphone-x-helper'
 import BottomModal from './BottomModal'
 
@@ -31,9 +22,12 @@ export default function ActionSheet({
   const renderActionButton = (action: ActionButton, index: number) => {
     const { title, onPress } = action
     const handlePress = () => {
-      onPress && onPress()
       onDismiss && onDismiss()
+      setTimeout(() => {
+        onPress?.()
+      }, 410)
     }
+
     const shouldRenderDivider = index < actions.length - 1
     return (
       <TouchableOpacity
@@ -57,8 +51,9 @@ export default function ActionSheet({
   return (
     <BottomModal
       visible={visible}
+      onRequestClose={onDismiss}
       contentStyle={{
-        minHeight: (actions.length + 1) * 60 + 5 + getBottomSpace(),
+        height: (actions.length + 1) * 60 + 5 + getBottomSpace(),
       }}>
       {actions.map(renderActionButton)}
       <View style={styles.seperator} />

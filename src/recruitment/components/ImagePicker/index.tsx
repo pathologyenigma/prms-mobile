@@ -214,7 +214,9 @@ export default function ImagePicker({
         onNegativePress={() => setError(null)}
         onPositivePress={() => {
           setError(null)
-          openSettings()
+          if (error instanceof PermissionError) {
+            openSettings()
+          }
         }}
       />
     </>
