@@ -25,7 +25,7 @@ interface TabBarProps {
   style?: StyleProp<ViewStyle>
   tabStyle?: StyleProp<ViewStyle>
   tabLabelStyle?: StyleProp<TextStyle>
-  selelctedTabLabelStyle?: StyleProp<TextStyle>
+  selectedTabLabelStyle?: StyleProp<TextStyle>
   indicatorStyle?: StyleProp<ViewStyle>
   tabSpace?: number
 }
@@ -40,7 +40,7 @@ export default function TabBar({
   style,
   tabStyle,
   tabLabelStyle,
-  selelctedTabLabelStyle,
+  selectedTabLabelStyle,
   indicatorStyle,
   tabSpace = 18,
 }: PropsWithChildren<TabBarProps>) {
@@ -87,18 +87,20 @@ export default function TabBar({
             index={index}
             style={tabStyle}
             textStyle={tabLabelStyle}
-            selectedTextStyle={selelctedTabLabelStyle}
+            selectedTextStyle={selectedTabLabelStyle}
             onTabLayout={onTabLayout}
             checked={selectedIndex === index}
             onPress={() => onTabPress?.(index)}
           />
-          <View
-            key={tab + '-spacer'}
-            style={{
-              width: index < tabs.length - 1 ? tabSpace : 0,
-              height: '100%',
-            }}
-          />
+          {tabSpace > 0 && (
+            <View
+              key={tab + '-spacer'}
+              style={{
+                width: index < tabs.length - 1 ? tabSpace : 0,
+                height: '100%',
+              }}
+            />
+          )}
         </>
       ))}
       <Animated.View

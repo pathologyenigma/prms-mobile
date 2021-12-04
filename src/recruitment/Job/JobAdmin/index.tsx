@@ -37,7 +37,7 @@ export default function JobAdmin() {
         tabStyle={styles.tab}
         tabLabelStyle={styles.tabText}
         tabSpace={0}
-        selelctedTabLabelStyle={styles.selectedTabText}
+        selectedTabLabelStyle={styles.selectedTabText}
         indicatorStyle={styles.indicator}
       />
       <AnimatedPagerView

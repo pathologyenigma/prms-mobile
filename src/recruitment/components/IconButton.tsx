@@ -34,7 +34,7 @@ export default function IconButton({
       style={style}
       onPress={onPress}
       hitSlop={hitSlop}
-      activeOpacity={0.75}>
+      activeOpacity={0.5}>
       <Image source={icon} style={iconStyle} resizeMode="center" />
     </TouchableOpacity>
   )

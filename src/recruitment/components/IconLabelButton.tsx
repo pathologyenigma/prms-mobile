@@ -28,7 +28,7 @@ export default function IconLabelButton({
   onPress,
 }: IconLabelButtonProps) {
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.75}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.5}>
       <View style={[styles.container, style]}>
         <Image source={icon} style={[styles.icon, iconStyle]} />
         <Text style={[styles.label, labelStyle]}>{label}</Text>

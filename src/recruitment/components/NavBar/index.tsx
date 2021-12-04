@@ -1,20 +1,9 @@
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import React, { PropsWithChildren, useState } from 'react'
-import {
-  ViewStyle,
-  StyleProp,
-  TextStyle,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableWithoutFeedback,
-  TouchableOpacity,
-} from 'react-native'
+import React, { PropsWithChildren } from 'react'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { headerHeight, navigationBarHeight, statusBarHeight } from '../../theme'
 import BackImage from '../BackImage'
-import IconButton from '../IconButton'
 
 interface NavBarProps {
   headerLeft?: () => JSX.Element
@@ -37,7 +26,7 @@ export default function NavBar({
     if (navigation.canGoBack()) {
       return (
         <TouchableOpacity
-          style={styles.backButton}
+          activeOpacity={0.5}
           onPress={() => navigation.goBack()}>
           <BackImage />
         </TouchableOpacity>
@@ -48,18 +37,14 @@ export default function NavBar({
 
   const renderHeaderRight = () => {
     if (headerRight) {
-      return headerHeight()
+      return headerRight()
     }
     return null
   }
 
   const renderTitle = () => {
     if (title) {
-      return (
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>{title}</Text>
-        </View>
-      )
+      return <Text style={styles.title}>{title}</Text>
     }
     return null
   }
@@ -78,8 +63,8 @@ export default function NavBar({
     return (
       <View style={styles.nav}>
         {renderTitle()}
-        {renderHeaderLeft()}
-        {renderHeaderRight()}
+        <View style={styles.headerLeft}>{renderHeaderLeft()}</View>
+        <View style={styles.headerRight}>{renderHeaderRight()}</View>
       </View>
     )
   }
@@ -97,11 +82,14 @@ const styles = StyleSheet.create({
     height: navigationBarHeight(),
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  backButton: {},
-  titleContainer: {
+  headerLeft: {
     position: 'absolute',
     left: 0,
+  },
+  headerRight: {
+    position: 'absolute',
     right: 0,
   },
   title: {

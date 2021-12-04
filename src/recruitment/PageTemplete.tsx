@@ -4,13 +4,17 @@ import { StackNavigationOptions } from '@react-navigation/stack'
 
 export const PageTempleteOptions: StackNavigationOptions = {
   title: '页面模版',
+  headerShown: false,
 }
 
 export default function PageTemplete() {
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}></ScrollView>
+    <View style={styles.container}>
+      <NavBar title="标题" />
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}></ScrollView>
+    </View>
   )
 }
 

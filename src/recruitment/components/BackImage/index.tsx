@@ -7,7 +7,7 @@ export default function BackImage() {
       <Image
         source={require('./back.png')}
         resizeMode="contain"
-        style={Platform.OS === 'ios' ? styles.icon : undefined}
+        style={styles.icon}
       />
     </View>
   )

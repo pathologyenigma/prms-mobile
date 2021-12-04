@@ -27,7 +27,7 @@ export const JobFairSearchOptions: StackNavigationOptions = {
 }
 
 const histories = ['500强招聘', '暨南山智园人才招聘会']
-const hots = ['2021年青年人才招聘会', '欢聚人才招聘会', '欢聚人才招聘会']
+const hots = ['2021年青年人才招聘会', '欢聚人才招聘会', '小鹅通专场招聘会']
 const results = ['a', 'b']
 
 export default function JobFairSearch() {
@@ -60,6 +60,7 @@ export default function JobFairSearch() {
           <View style={styles.tags}>
             {histories.map(v => (
               <TextButton
+                onPress={() => navigation.navigate('JobFairDetail')}
                 style={styles.tag}
                 textStyle={styles.tagText}
                 title={v}
@@ -78,7 +79,7 @@ export default function JobFairSearch() {
           </View>
           <View style={styles.tags}>
             {hots.map((v, index) => (
-              <TouchableOpacity style={styles.tag} activeOpacity={0.75}>
+              <TouchableOpacity key={v} style={styles.tag} activeOpacity={0.5}>
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.rank}>{index + 1}</Text>
                   <Text style={styles.tagText}>{v}</Text>
