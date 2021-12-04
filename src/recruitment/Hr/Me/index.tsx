@@ -71,16 +71,24 @@ export default function Me() {
   const renderBar = () => {
     return (
       <View style={styles.bar}>
-        <Tab count={156} category="沟通过" />
+        <Tab
+          count={156}
+          category="沟通过"
+          onPress={() => navigation.navigate('TalentListWithTalks')}
+        />
         <View style={styles.hdivider} />
-        <Tab count={3} category="待面试" />
+        <Tab
+          count={3}
+          category="待面试"
+          onPress={() => navigation.navigate('InterviewSchedule')}
+        />
         <View style={styles.hdivider} />
         <Tab count={8} category="新简历" />
         <View style={styles.hdivider} />
         <Tab
           count={20}
           category="在线职位"
-          onPress={() => console.log('职位管理')}
+          onPress={() => navigation.navigate('JobAdmin')}
         />
       </View>
     )

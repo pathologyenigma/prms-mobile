@@ -41,6 +41,7 @@ export default function CompanyAuthenticationByLicense() {
     navigation.setOptions({
       headerRight: () => (
         <IconButton
+          hitSlop={{ left: 8, right: 8, top: 20, bottom: 20 }}
           onPress={() => setActionSheetVisible(true)}
           icon={require('../images/more.png')}
           style={{ marginRight: 11 }}

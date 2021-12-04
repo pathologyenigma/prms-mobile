@@ -91,6 +91,9 @@ import CompanyAuthenticationByColleagueWithSmsInput, {
 import CompanyAuthenticationByLicense, {
   CompanyAuthenticationByLicenseOptions,
 } from './Company/CompanyAuthenticationByLicense'
+import CompanyAuditResult, {
+  CompanyAuditResultOptions,
+} from './Company/CompanyAuditResult'
 
 const Stack = createStackNavigator()
 
@@ -100,6 +103,12 @@ class App extends Component {
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            key="CompanyAuditResult"
+            name="CompanyAuditResult"
+            component={CompanyAuditResult}
+            options={CompanyAuditResultOptions}
+          />
           <Stack.Screen
             key="CompanyAuthenticationByLicense"
             name="CompanyAuthenticationByLicense"
