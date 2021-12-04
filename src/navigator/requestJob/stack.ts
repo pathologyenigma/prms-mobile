@@ -164,7 +164,7 @@ type TRouterParams = {
   GreetEdit: { greetItem: any }
   HomeLocation: any
   MapLocate: any
-  HrPersonalInfo: any
+  HrPersonalInfo: { hrId: number }
   FindSearch: { searchType: number } // 0-找公司; 1-找招聘会
   FindSearchResult: any
   JobfairDetail: any

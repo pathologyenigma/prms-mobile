@@ -41,7 +41,7 @@ const reformEducation = (education: string) => {
   if (!education) {
     return ''
   }
-  let showEducation = ''
+  let showEducation = education
   switch (education) {
     case 'LessThanPrime':
       showEducation = '无要求'

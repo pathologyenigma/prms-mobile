@@ -17,7 +17,7 @@ import SystemHelper from '../../../utils/system'
 import InterviewerFooter from '../../components/InterviewerFooter'
 import ShareModal from '../../components/ShareModal'
 import * as jobActions from '../../../action/jobsAction'
-import { reformFullTime } from '../../../utils/utils'
+import { reformFullTime, reformCompanySize } from '../../../utils/utils'
 
 type IProps = GenProps<'JobDetail'> & ReturnType<typeof mapDispatchToProps>
 
@@ -203,34 +203,6 @@ class JobDetail extends Component<IProps, IState> {
         RootLoading.fail('加载失败,请下拉刷新重试')
       }
     })
-
-    // RootLoading.loading()
-    // setTimeout(() => {
-    //   RootLoading.hide()
-    //   this.setState({
-    //     dataSource: {
-    //       id: 1,
-    //       name: '项目经理',
-    //       salary: '15K-30K',
-    //       jobNature: '全职',
-    //       jobQuantity: 2,
-    //       experience: '5-10年',
-    //       education: '本科及以上',
-    //       location: '深圳·宝安区·大学城',
-    //       company: '深圳市创意智慧有限公司',
-    //       interviewer: '廖女士·人事经理',
-    //       onlineTime: '1小时前在线',
-    //       companyTag: '技术管理,硬件设施,产品设计,需求采集,产品开发,产品验收,产品内部评审',
-    //       jobContent: '1、项目管理:统筹并管理项目，规划和跟踪项目范围、成本、质量、风险等;组织项目各关键节点评审，总结和评定项目阶段性成果，优化项目流程和方法，提升团队工作效率和执行力;\n2、预研阶段:评估项目可行性，选择更优的组配件降低成本，制定和执行项目预算和项目计划;\n3、研发阶段:沟通和实现需求，跟进项目进度确保迭代顺利\n4、打样阶段:确认产品结构、电路等可行性和产品总体成本分析核对;\n5、量产阶段:督促供应商按时按量完成预定生产计划，跟进和解决项目量产后的技术问题，优化升级产品并总结经验。',
-    //       jobRequire: '1、统招本科及以上学历，2~5年以上工作经验;\n2、2年以上智能硬件/智能家居等项目管理经验;',
-    //       jobAddPoints: '1、从事过区块链相关行业;\n2、从事过软件开发行业',
-    //       companyXingzhi: '创业公司',
-    //       companyAmount: '少于50人',
-    //       companyIndustry: '计算机软件',
-    //       recommendList: recommendListData,
-    //     },
-    //   })
-    // }, 300);
   }
 
   renderNavBar() {
@@ -313,7 +285,7 @@ class JobDetail extends Component<IProps, IState> {
           category,
           detail,
           address_coordinate,
-          adress_description = '--',
+          address_description,
           salaryExpected,
           experience,
           education,
@@ -358,7 +330,7 @@ class JobDetail extends Component<IProps, IState> {
             resizeMode="center"
           />
           <Text style={styles.locationText}>
-            {adress_description}
+            {`${address_description[0] || ''} ${address_description[1] || ''} ${address_description[2] || ''}`}
           </Text>
         </View>
       </View>
@@ -379,7 +351,7 @@ class JobDetail extends Component<IProps, IState> {
         style={styles.interviewerView}
         onPress={() => {
           const { navigation } = this.props
-          navigation.push('HrPersonalInfo')
+          navigation.push('HrPersonalInfo', { hrId: id, })
         }}
       >
         <View style={styles.interviewerIcon} />
@@ -417,7 +389,7 @@ class JobDetail extends Component<IProps, IState> {
           category,
           detail,
           address_coordinate,
-          adress_description = '--',
+          address_description,
           salaryExpected,
           experience,
           education,
@@ -482,6 +454,7 @@ class JobDetail extends Component<IProps, IState> {
         address_coordinates,
         address_description,
         industry_involved = '',
+        enterprise_size,
         business_nature,
         enterprise_logo = '',
       }
@@ -514,7 +487,7 @@ class JobDetail extends Component<IProps, IState> {
             {business_nature}
           </Text>
           <Text style={styles.companyTagItem}>
-            {industry_involved || ''}
+            {reformCompanySize(enterprise_size) || ''}
           </Text>
           <Text style={styles.companyTagItem}>
             {industry_involved || ''}

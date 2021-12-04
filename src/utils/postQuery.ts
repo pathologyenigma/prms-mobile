@@ -237,7 +237,7 @@ const getJobDetailGql = gql`
             category
             detail
             address_coordinate
-      #       adress_description
+            address_description
             salaryExpected
             experience
             education
@@ -258,12 +258,59 @@ const getJobDetailGql = gql`
           name
           address_coordinates
           address_description
-    #       industry_involved
+          industry_involved
+          enterprise_size
           business_nature
     #       enterprise_logo
         }
   }
  }
+`
+
+const getHrBasicInfoGql = gql`
+   query CandidateGetHRDetail_HRInfo($hrId: Int!){
+    CandidateGetHRDetail_HRInfo(hrId: $hrId){
+      name
+      pos
+      last_log_out_time
+      company_belonged
+      logo
+    }
+  }
+`
+
+const getHrMatchJobListGql = gql`
+   query CandidateGetHRDetail_RecommendationsList($hrId: Int!){
+    CandidateGetHRDetail_RecommendationsList(hrId: $hrId){
+      data{
+        id
+        title
+        loc
+        experience
+        education
+        salary
+        createdAt
+      }
+      count
+    }
+  }
+`
+
+const getHrMoreJobListGql = gql`
+   query CandidateGetHRDetail_JobListPageView($hrId: Int!,$pageSize: Int!,$page: Int!){
+    CandidateGetHRDetail_JobListPageView(hrId: $hrId, pageSize:$pageSize,page:$page){
+      data{
+        id
+        title
+        loc
+        experience
+        education
+        salary
+        createdAt
+      }
+      count
+    }
+  }
 `
 
 export {
@@ -284,4 +331,7 @@ export {
   getCandidateGetAllJobExpectationsGql,
   getCandidateGetJobListGql,
   getJobDetailGql,
+  getHrBasicInfoGql,
+  getHrMatchJobListGql,
+  getHrMoreJobListGql,
 }

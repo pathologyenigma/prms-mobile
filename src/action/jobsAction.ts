@@ -2,7 +2,7 @@ import { get, getWithToken, post, postWithToken } from '../utils/http'
 import { Dispatch } from 'react'
 import { AnyAction } from 'redux'
 import AsyncStorage from '@react-native-community/async-storage'
-import { apolloClientShare, getAllRegionGql, getCandidateGetAllJobExpectationsGql, getCandidateGetJobListGql, getJobDetailGql, loginGql } from '../utils/postQuery'
+import { apolloClientShare, getAllRegionGql, getCandidateGetAllJobExpectationsGql, getCandidateGetJobListGql, getHrBasicInfoGql, getHrMatchJobListGql, getHrMoreJobListGql, getJobDetailGql, loginGql } from '../utils/postQuery'
 import errorHandler from '../utils/errorhandler'
 
 const reset_reducer = () => {
@@ -166,6 +166,77 @@ const getJobDetail = (jobid: number, callback: (error: any, result?: any) => voi
   }
 }
 
+const getHrBasicInfo = (hrId: number, callback: (error: any, result?: any) => void) => {
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.query({
+      query: getHrBasicInfoGql,
+      variables: {
+        hrId,
+      }
+    })
+      .then((res) => {
+        console.log('res: ', res)
+        if (res && res.data) {
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error) => {
+        console.log('error: ', error)
+        errorHandler(error)
+      })
+  }
+}
+
+const getHrMatchJobList = (hrId: number, callback: (error: any, result?: any) => void) => {
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.query({
+      query: getHrMatchJobListGql,
+      variables: {
+        hrId,
+      }
+    })
+      .then((res) => {
+        console.log('res: ', res)
+        if (res && res.data) {
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error) => {
+        console.log('error: ', error)
+        errorHandler(error)
+      })
+  }
+}
+
+const getHrMoreJobList = (hrId: number, page: number, callback: (error: any, result?: any) => void) => {
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.query({
+      query: getHrMoreJobListGql,
+      variables: {
+        hrId,
+        pageSize: 10,
+        page,
+      }
+    })
+      .then((res) => {
+        console.log('res: ', res)
+        if (res && res.data) {
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error) => {
+        console.log('error: ', error)
+        errorHandler(error)
+      })
+  }
+}
+
 export {
   reset_reducer,
   update_kv,
@@ -174,4 +245,7 @@ export {
   getCandidateGetAllJobExpectations,
   getCandidateGetJobList,
   getJobDetail,
+  getHrBasicInfo,
+  getHrMatchJobList,
+  getHrMoreJobList,
 }

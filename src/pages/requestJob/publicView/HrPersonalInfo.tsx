@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { SafeAreaView, StatusBar, ImageBackground, Image, ScrollView, View, Text } from 'react-native'
+import { SafeAreaView, StatusBar, ImageBackground, Image, ScrollView, View, Text, RefreshControl } from 'react-native'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import styles from './styles/HrPersonalInfo.style'
 import RootLoading from '../../../utils/rootLoading'
@@ -8,23 +8,37 @@ import CompanyJobCell from './CompanyJobCell'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import ShareModal from '../../components/ShareModal'
+import { connect } from 'react-redux'
+import { bindActionCreators, Dispatch, AnyAction } from 'redux'
+import * as jobActions from '../../../action/jobsAction'
 
-type IProps = GenProps<'HrPersonalInfo'> & {
-
-}
+type IProps = GenProps<'HrPersonalInfo'> & ReturnType<typeof mapDispatchToProps>
 
 type IState = {
-  moreJobs: any,
-  shareVisible: boolean
+  shareVisible: boolean,
+  hrId: number,
+  hrInfo: any
+  refreshing: boolean
+  matchJobsList: any
+  moreJobsLis: any
+  moreListPage: number
+  jobRefreshState: any
 }
 
-export default class HrPersonalInfo extends Component<IProps, IState> {
+class HrPersonalInfo extends Component<IProps, IState> {
   constructor(props: any) {
     super(props)
     console.log('props: ', props)
+    const { route: { params: { hrId } } } = props
     this.state = {
-      moreJobs: undefined,
-      shareVisible: false
+      hrId,
+      hrInfo: undefined,
+      moreJobsLis: [],
+      matchJobsList: [],
+      shareVisible: false,
+      refreshing: true,
+      moreListPage: 0,
+      jobRefreshState: 0
     }
   }
 
@@ -32,39 +46,72 @@ export default class HrPersonalInfo extends Component<IProps, IState> {
     this.loadData()
   }
 
+  getHrInfo() {
+    const { hrId } = this.state
+    const { getHrBasicInfo } = this.props
+    getHrBasicInfo(hrId, (error, result) => {
+      if (!error && result) {
+        this.setState({
+          refreshing: false,
+          hrInfo: result.CandidateGetHRDetail_HRInfo
+        })
+      } else {
+        this.setState({ refreshing: false })
+        RootLoading.fail('加载失败,请下拉刷新重试')
+      }
+    })
+  }
+
+  getMatchList() {
+    const { hrId } = this.state
+    const { getHrMatchJobList } = this.props
+    getHrMatchJobList(hrId, (error, result) => {
+      if (!error && result) {
+        this.setState({
+          refreshing: false,
+          matchJobsList: result.CandidateGetHRDetail_RecommendationsList.data
+        })
+      } else {
+        this.setState({ refreshing: false })
+        RootLoading.fail('加载失败,请下拉刷新重试')
+      }
+    })
+  }
+
+  loadMoreList() {
+    const { hrId, moreListPage, moreJobsLis = [] } = this.state
+    const { getHrMoreJobList } = this.props
+    getHrMoreJobList(hrId, moreListPage, (error, result) => {
+      if (!error && result) {
+        this.setState({
+          refreshing: false,
+          moreJobsLis: moreJobsLis.concat(result.CandidateGetHRDetail_JobListPageView.data),
+          jobRefreshState: result.CandidateGetHRDetail_JobListPageView.data.length === 10 ? 0 : 3
+        })
+      } else {
+        this.setState({ refreshing: false, jobRefreshState: 4 })
+        RootLoading.fail('加载失败,请下拉刷新重试')
+      }
+    })
+  }
+
   loadData() {
-    setTimeout(() => {
-      this.setState({
-        moreJobs: [{
-          id: 1,
-          name: '运营视觉设计师',
-          publishTime: '2021-08-03',
-          experience: '3-4年',
-          education: '大专及以上',
-          location: '深圳·宝安区',
-          salary: '15K-30K',
-        }, {
-          id: 2,
-          name: '运营视觉设计师',
-          publishTime: '2021-08-03',
-          experience: '3-4年',
-          education: '大专及以上',
-          location: '深圳·宝安区',
-          salary: '15K-30K',
-        }, {
-          id: 3,
-          name: '运营视觉设计师',
-          publishTime: '2021-08-03',
-          experience: '3-4年',
-          education: '大专及以上',
-          location: '深圳·宝安区',
-          salary: '15K-30K',
-        }]
-      })
-    }, 500);
+    this.getHrInfo()
+    this.getMatchList()
+    this.loadMoreList()
   }
 
   renderIconView() {
+    const { hrInfo } = this.state
+    if (!hrInfo) {
+      return
+    }
+    const {
+      name,
+      pos,
+      last_log_out_time,
+      company_belonged,
+      logo } = hrInfo
     return (
       <View style={styles.iconView}>
         <NextTouchableOpacity
@@ -86,7 +133,7 @@ export default class HrPersonalInfo extends Component<IProps, IState> {
         <View style={styles.nameView}>
           <View style={styles.hrNameView}>
             <Text style={styles.nameTitle}>
-              李小冉
+              {name}
             </Text>
             <Image
               source={require('../../../assets/requestJobs/hr-renzheng.png')}
@@ -99,10 +146,10 @@ export default class HrPersonalInfo extends Component<IProps, IState> {
             </NextTouchableOpacity>
           </View>
           <Text style={styles.detailInfo}>
-            产品经理·一小时活跃
+            {`${pos}${last_log_out_time ? `·${last_log_out_time}` : ''}`}
           </Text>
           <Text style={styles.companyInfo}>
-            认证公司：深圳智慧网络有限公司
+            {`认证公司：${company_belonged}`}
           </Text>
         </View>
       </View>
@@ -162,14 +209,9 @@ export default class HrPersonalInfo extends Component<IProps, IState> {
   }
 
   renderMatchView() {
-    const item = {
-      id: 1,
-      name: '运营视觉设计师',
-      publishTime: '2021-08-03',
-      experience: '3-4年',
-      education: '大专及以上',
-      location: '深圳·宝安区',
-      salary: '15K-30K',
+    const { matchJobsList } = this.state
+    if (!matchJobsList) {
+      return null
     }
     return (
       <View style={styles.matchJobView}>
@@ -190,8 +232,35 @@ export default class HrPersonalInfo extends Component<IProps, IState> {
             和您匹配
           </Text>
         </View>
+        {matchJobsList.map((item: any, index: number) => {
+          return (
+            <CompanyJobCell
+              key={index.toString()}
+              cellStyle={styles.matchJobCell}
+              cellItem={item}
+              onDeliveryPress={() => {
+                RootLoading.info('投递')
+              }}
+              onPress={() => {
+
+              }}
+            />
+          )
+        })}
+      </View>
+    )
+  }
+
+  renderJobCell(item: any, index: number) {
+    console.log('index: ', index)
+    return (
+      <>
+        {index === 0 && (
+          < Text style={styles.moreJobTitle}> 更多职位</Text >
+        )}
         <CompanyJobCell
-          cellStyle={styles.matchJobCell}
+          cellStyle={styles.moreJobCell}
+          onDeliveryStyle={{ bottom: 20, }}
           cellItem={item}
           onDeliveryPress={() => {
             RootLoading.info('投递')
@@ -200,43 +269,48 @@ export default class HrPersonalInfo extends Component<IProps, IState> {
 
           }}
         />
-      </View>
+      </>
     )
   }
 
-  renderJobCell(item: any) {
-    return (
-      <CompanyJobCell
-        cellStyle={styles.moreJobCell}
-        onDeliveryStyle={{ bottom: 20, }}
-        cellItem={item}
-        onDeliveryPress={() => {
-          RootLoading.info('投递')
-        }}
-        onPress={() => {
+  handleEndReached() {
+    this.setState({
+      moreListPage: this.state.moreListPage + 1,
+      jobRefreshState: 2
+    }, () => {
+      this.loadMoreList()
+    })
+  }
 
-        }}
-      />
-    )
+  onRefresh() {
+    console.log('onRefresh')
+    this.setState({
+      matchJobsList: [],
+      moreJobsLis: [],
+      refreshing: true,
+      jobRefreshState: 1
+    }, () => {
+      this.loadData()
+    })
   }
 
   renderList() {
-    const { moreJobs } = this.state
-    if (!moreJobs || moreJobs.length === 0) {
+    const { moreJobsLis, jobRefreshState } = this.state
+    if (!moreJobsLis || moreJobsLis.length === 0) {
       return null
     }
     return (
       <View style={styles.moreJobView}>
-        <Text style={styles.moreJobTitle}>更多职位</Text>
         <RefreshListView
           style={styles.listView}
-          // onHeaderRefresh={() => this.handleJobListRefresh()}
-          // refreshState={jobRefreshState}
+          ListHeaderComponent={this.renderMatchView()}
+          onHeaderRefresh={() => this.onRefresh()}
+          refreshState={jobRefreshState}
           automaticallyAdjustContentInsets={false}
-          data={moreJobs}
-          renderItem={({ item }: any) => this.renderJobCell(item)}
-          // onFooterRefresh={() => this.handleJobEndReached}
-          keyExtractor={item => item.id.toString()}
+          data={moreJobsLis}
+          renderItem={({ item, index }: any,) => this.renderJobCell(item, index)}
+          onFooterRefresh={() => this.handleEndReached()}
+          keyExtractor={({ id }: any) => id.toString()}
           // ItemSeparatorComponent={() => this.renderItemSeparatorComponent()}
           footerRefreshingText="加载更多"
           footerNoMoreDataText="没有更多了"
@@ -246,7 +320,7 @@ export default class HrPersonalInfo extends Component<IProps, IState> {
   }
 
   render() {
-    const { shareVisible } = this.state
+    const { shareVisible, refreshing } = this.state
     console.log('shareVisible: ', shareVisible)
     return (
       <SafeAreaView style={styles.container}>
@@ -254,14 +328,20 @@ export default class HrPersonalInfo extends Component<IProps, IState> {
           translucent={true}
           barStyle="light-content"
           animated />
-        <ScrollView
+        <View
           style={styles.scrollview}
-          contentContainerStyle={styles.contentContainerStyle}
+        // contentContainerStyle={styles.contentContainerStyle}
+        // refreshControl={(
+        //   <RefreshControl
+        //     refreshing={refreshing}
+        //     onRefresh={() => this.onRefresh()
+        //     }
+        //   />
+        // )}
         >
           {this.renderNavBar()}
-          {this.renderMatchView()}
           {this.renderList()}
-        </ScrollView>
+        </View>
         <ShareModal
           visible={shareVisible}
           cancelOnpress={() => {
@@ -272,3 +352,13 @@ export default class HrPersonalInfo extends Component<IProps, IState> {
     )
   }
 }
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
+  return bindActionCreators({
+    getHrBasicInfo: jobActions.getHrBasicInfo,
+    getHrMatchJobList: jobActions.getHrMatchJobList,
+    getHrMoreJobList: jobActions.getHrMoreJobList
+  }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(HrPersonalInfo)
