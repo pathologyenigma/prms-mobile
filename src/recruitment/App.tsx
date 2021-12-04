@@ -94,6 +94,7 @@ import CompanyAuthenticationByLicense, {
 import CompanyAuditResult, {
   CompanyAuditResultOptions,
 } from './Company/CompanyAuditResult'
+import JobFairList, { JobFairListOptions } from './JobFair/JobFairList'
 
 const Stack = createStackNavigator()
 
@@ -103,6 +104,12 @@ class App extends Component {
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            key="JobFairList"
+            name="JobFairList"
+            component={JobFairList}
+            options={JobFairListOptions}
+          />
           <Stack.Screen
             key="CompanyAuditResult"
             name="CompanyAuditResult"

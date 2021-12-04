@@ -98,7 +98,11 @@ export default function Me() {
     <ScrollView style={styles.container}>
       {renderHeader()}
       <View style={styles.cells}>
-        <Cell icon={require('./images/woshou.png')} title="线下招聘会" />
+        <Cell
+          icon={require('./images/woshou.png')}
+          title="线下招聘会"
+          onPress={() => navigation.navigate('JobFairList')}
+        />
         <Cell icon={require('./images/company.png')} title="我的公司" />
         <Cell icon={require('./images/invite.png')} title="邀请同事" />
         <Cell
