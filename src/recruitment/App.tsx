@@ -95,6 +95,7 @@ import CompanyAuditResult, {
   CompanyAuditResultOptions,
 } from './Company/CompanyAuditResult'
 import JobFairList, { JobFairListOptions } from './JobFair/JobFairList'
+import JobFairSearch, { JobFairSearchOptions } from './JobFair/JobFairSearch'
 
 const Stack = createStackNavigator()
 
@@ -104,6 +105,12 @@ class App extends Component {
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            key="JobFairSearch"
+            name="JobFairSearch"
+            component={JobFairSearch}
+            options={JobFairSearchOptions}
+          />
           <Stack.Screen
             key="JobFairList"
             name="JobFairList"
@@ -375,7 +382,7 @@ const screenOptions: StackNavigationOptions = {
   },
   headerTitleStyle: {
     color: '#333333',
-    fontWeight: '500',
+    fontWeight: 'bold',
     fontSize: 18,
   },
   headerTitleAlign: 'center',

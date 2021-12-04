@@ -66,7 +66,6 @@ export default function SearchJobAddress() {
       <View style={styles.header}>
         <View style={styles.nav}>
           <SearchBar
-            value={text}
             onChangeText={setText}
             style={styles.search}
             placeholder="请输入上班地址"
