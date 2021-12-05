@@ -21,6 +21,7 @@ export default function DetailWebView() {
         source={{ uri: 'https://www.todoit.tech' }}
         cacheEnabled={false}
         style={styles.webview}
+        containerStyle={styles.content}
       />
     </View>
   )
@@ -29,5 +30,9 @@ export default function DetailWebView() {
 const styles = StyleSheet.create({
   webview: {
     flex: 1,
+  },
+  content: {
+    flexGrow: 1,
+    backgroundColor: '#FFFFFF',
   },
 })

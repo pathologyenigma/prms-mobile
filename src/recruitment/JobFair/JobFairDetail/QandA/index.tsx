@@ -47,6 +47,7 @@ export default function QandA() {
 
   return (
     <FlatList
+      listKey="qanda"
       nestedScrollEnabled
       alwaysBounceVertical={false}
       keyExtractor={item => item}
@@ -61,10 +62,9 @@ export default function QandA() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexShrink: 1,
   },
   content: {
-    flexShrink: 1,
+    flexGrow: 1,
     backgroundColor: '#FFFFFF',
   },
   item: {

@@ -12,7 +12,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 
 interface GradientButtonProps {
-  title: string
+  title?: string
   onPress?: () => void
   disabled?: boolean
   colors?: string[]
@@ -21,6 +21,7 @@ interface GradientButtonProps {
   containerStyle?: StyleProp<ViewStyle>
   linearGradientStyle?: StyleProp<ViewStyle>
   titleStyle?: StyleProp<TextStyle>
+  renderContent?: () => JSX.Element
 }
 
 export default function GradientButton({
@@ -30,8 +31,9 @@ export default function GradientButton({
   colors = ['#57D693', '#83E3AE'],
   style,
   linearGradientStyle,
-  title,
+  title = '',
   titleStyle,
+  renderContent,
 }: GradientButtonProps) {
   return (
     <TouchableOpacity
@@ -50,7 +52,11 @@ export default function GradientButton({
             linearGradientStyle,
             disabled ? linearGradientStyle : undefined,
           ]}>
-          <Text style={[styles.text, titleStyle]}>{title}</Text>
+          {renderContent ? (
+            renderContent()
+          ) : (
+            <Text style={[styles.text, titleStyle]}>{title}</Text>
+          )}
         </LinearGradient>
       </View>
     </TouchableOpacity>

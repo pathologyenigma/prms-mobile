@@ -1,13 +1,22 @@
 import React from 'react'
-import { View, Text, StyleSheet, Image, TextInput } from 'react-native'
-import IconButton from '../../../../components/IconButton'
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TextInput,
+  StyleProp,
+  ViewStyle,
+} from 'react-native'
+import IconButton from '../IconButton'
 
 interface StepProps {
   value?: number
   onValueChange: (value: number) => void
+  style?: StyleProp<ViewStyle>
 }
 
-export default function Step({ value = 1, onValueChange }: StepProps) {
+export default function Step({ style, value = 1, onValueChange }: StepProps) {
   function handleMinus() {
     if (value - 1 > 0) {
       onValueChange(value - 1)
@@ -26,7 +35,7 @@ export default function Step({ value = 1, onValueChange }: StepProps) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <IconButton
         onPress={handleMinus}
         hitSlop={{ top: 12, left: 12, right: 0, bottom: 12 }}

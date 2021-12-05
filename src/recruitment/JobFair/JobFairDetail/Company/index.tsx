@@ -53,7 +53,8 @@ export default function Company() {
 
   return (
     <FlatList
-      nestedScrollEnabled
+      listKey="compnay"
+      nestedScrollEnabled={false}
       alwaysBounceVertical={false}
       keyExtractor={item => item}
       data={companies}
@@ -66,10 +67,10 @@ export default function Company() {
 
 const styles = StyleSheet.create({
   container: {
-    flexShrink: 1,
+    flex: 1,
   },
   content: {
-    flexShrink: 1,
+    flexGrow: 1,
     backgroundColor: '#FFFFFF',
   },
   item: {

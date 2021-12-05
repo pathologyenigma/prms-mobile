@@ -97,6 +97,7 @@ import CompanyAuditResult, {
 import JobFairList, { JobFairListOptions } from './JobFair/JobFairList'
 import JobFairSearch, { JobFairSearchOptions } from './JobFair/JobFairSearch'
 import JobFairDetail, { JobFairDetailOptions } from './JobFair/JobFairDetail'
+import JobFairEnroll, { JobFairEnrollOptions } from './JobFair/JobFairEnroll'
 
 const Stack = createStackNavigator()
 
@@ -107,16 +108,22 @@ class App extends Component {
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
           <Stack.Screen
-            key="JobFairSearch"
-            name="JobFairSearch"
-            component={JobFairSearch}
-            options={JobFairSearchOptions}
-          />
-          <Stack.Screen
             key="JobFairDetail"
             name="JobFairDetail"
             component={JobFairDetail}
             options={JobFairDetailOptions}
+          />
+          <Stack.Screen
+            key="JobFairEnroll"
+            name="JobFairEnroll"
+            component={JobFairEnroll}
+            options={JobFairEnrollOptions}
+          />
+          <Stack.Screen
+            key="JobFairSearch"
+            name="JobFairSearch"
+            component={JobFairSearch}
+            options={JobFairSearchOptions}
           />
 
           <Stack.Screen

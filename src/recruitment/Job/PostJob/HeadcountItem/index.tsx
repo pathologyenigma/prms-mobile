@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
-import Step from './Step'
+import Step from '../../../components/Step'
 
 export default function HeadcountItem() {
   const [count, setCount] = useState(1)
