@@ -103,7 +103,11 @@ export default function Me() {
           title="线下招聘会"
           onPress={() => navigation.navigate('JobFairList')}
         />
-        <Cell icon={require('./images/company.png')} title="我的公司" />
+        <Cell
+          icon={require('./images/company.png')}
+          title="我的公司"
+          onPress={() => navigation.navigate('CompanyDetail')}
+        />
         <Cell icon={require('./images/invite.png')} title="邀请同事" />
         <Cell
           icon={require('./images/switch.png')}

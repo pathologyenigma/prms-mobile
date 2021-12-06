@@ -10,13 +10,17 @@ import {
 } from 'react-native'
 import IconButton from '../IconButton'
 
-interface StepProps {
+interface StepperProps {
   value?: number
   onValueChange: (value: number) => void
   style?: StyleProp<ViewStyle>
 }
 
-export default function Step({ style, value = 1, onValueChange }: StepProps) {
+export default function Stepper({
+  style,
+  value = 1,
+  onValueChange,
+}: StepperProps) {
   function handleMinus() {
     if (value - 1 > 0) {
       onValueChange(value - 1)

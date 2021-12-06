@@ -9,13 +9,13 @@ import {
   Image,
 } from 'react-native'
 
-interface StarsProps {
+interface RatingProps {
   limit?: number
   score?: number
   style?: StyleProp<ViewStyle>
 }
 
-export default function Stars({ style, limit = 5, score = 1 }: StarsProps) {
+export default function Rating({ style, limit = 5, score = 1 }: RatingProps) {
   const stars = Array(limit)
     .fill('')
     .map((_, index) => index)
@@ -24,7 +24,10 @@ export default function Stars({ style, limit = 5, score = 1 }: StarsProps) {
       {stars.map(index => (
         <Image
           key={index}
-          style={{ marginRight: index < limit - 1 ? 5 : 0 }}
+          style={{
+            marginRight: index < limit - 1 ? 5 : 0,
+            tintColor: index < score ? '#FFB900' : '#DDDDDE',
+          }}
           source={
             index < score ? require('./star_active.png') : require('./star.png')
           }

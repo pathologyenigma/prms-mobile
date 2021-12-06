@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image, FlatList } from 'react-native'
-import Stars from './Stars'
+import Rating from '../../../components/Rating'
 
 const companies = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
 
@@ -30,7 +30,7 @@ export default function Company() {
             </View>
             <View style={styles.row}>
               <Text style={styles.score}>面试评分：</Text>
-              <Stars style={styles.stars} score={4} />
+              <Rating style={styles.stars} score={4} />
               <Text style={styles.headcount}>在招职位545</Text>
             </View>
             <View style={styles.labels}>

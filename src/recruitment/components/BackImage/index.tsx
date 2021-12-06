@@ -1,11 +1,19 @@
 import React from 'react'
-import { Image, Platform, StyleSheet, View } from 'react-native'
+import { StatusBarProps, Image, Platform, StyleSheet, View } from 'react-native'
 
-export default function BackImage() {
+interface BackImageProps {
+  barStyle: StatusBarProps['barStyle']
+}
+
+export default function BackImage({ barStyle }: BackImageProps) {
   return (
     <View style={styles.button}>
       <Image
-        source={require('./back.png')}
+        source={
+          barStyle === 'dark-content'
+            ? require('./back.png')
+            : require('./back_white.png')
+        }
         resizeMode="contain"
         style={styles.icon}
       />

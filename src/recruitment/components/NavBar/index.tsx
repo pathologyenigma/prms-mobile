@@ -1,14 +1,25 @@
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import React, { PropsWithChildren } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import {
+  StyleSheet,
+  StyleProp,
+  Text,
+  View,
+  TouchableOpacity,
+  ViewStyle,
+  StatusBarProps,
+} from 'react-native'
 import { headerHeight, navigationBarHeight, statusBarHeight } from '../../theme'
 import BackImage from '../BackImage'
+import FocusAwareStatusBar from '../FocusAwareStatusBar'
 
 interface NavBarProps {
   headerLeft?: () => JSX.Element
   headerRight?: () => JSX.Element
   title?: string
+  style?: StyleProp<ViewStyle>
+  barStyle?: StatusBarProps['barStyle']
 }
 
 export default function NavBar({
@@ -16,6 +27,8 @@ export default function NavBar({
   headerRight,
   title,
   children,
+  style,
+  barStyle = 'dark-content',
 }: PropsWithChildren<NavBarProps>) {
   const navigation = useNavigation<StackNavigationProp<any>>()
 
@@ -28,7 +41,7 @@ export default function NavBar({
         <TouchableOpacity
           activeOpacity={0.5}
           onPress={() => navigation.goBack()}>
-          <BackImage />
+          <BackImage barStyle={barStyle} />
         </TouchableOpacity>
       )
     }
@@ -69,7 +82,12 @@ export default function NavBar({
     )
   }
 
-  return <View style={styles.header}>{renderNavBar()}</View>
+  return (
+    <View style={[styles.header, style]}>
+      <FocusAwareStatusBar barStyle={barStyle} />
+      {renderNavBar()}
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -86,11 +104,11 @@ const styles = StyleSheet.create({
   },
   headerLeft: {
     position: 'absolute',
-    left: 0,
+    left: 11,
   },
   headerRight: {
     position: 'absolute',
-    right: 0,
+    right: 11,
   },
   title: {
     color: '#333333',

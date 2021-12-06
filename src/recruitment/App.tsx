@@ -99,6 +99,8 @@ import JobFairSearch, { JobFairSearchOptions } from './JobFair/JobFairSearch'
 import JobFairDetail, { JobFairDetailOptions } from './JobFair/JobFairDetail'
 import JobFairEnroll, { JobFairEnrollOptions } from './JobFair/JobFairEnroll'
 
+import CompanyDetail, { CompanyDetailOptions } from './Company/CompanyDetail'
+
 const Stack = createStackNavigator()
 
 class App extends Component {
@@ -107,6 +109,12 @@ class App extends Component {
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            key="CompanyDetail"
+            name="CompanyDetail"
+            component={CompanyDetail}
+            options={CompanyDetailOptions}
+          />
           <Stack.Screen
             key="JobFairDetail"
             name="JobFairDetail"
@@ -402,7 +410,7 @@ const screenOptions: StackNavigationOptions = {
   },
   headerTitleAlign: 'center',
   headerBackTitleVisible: false,
-  headerBackImage: () => <BackImage />,
+  headerBackImage: () => <BackImage barStyle="dark-content" />,
   headerPressColorAndroid: '#00000000',
 }
 

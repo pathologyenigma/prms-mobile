@@ -5,7 +5,7 @@ import NavBar from '../../components/NavBar'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import GradientButton from '../../components/GradientButton'
 import { isIphoneX } from 'react-native-iphone-x-helper'
-import Step from '../../components/Step'
+import Stepper from '../../components/Stepper'
 
 export const JobFairEnrollOptions: StackNavigationOptions = {
   title: '页面模版',
@@ -40,7 +40,7 @@ export default function JobFairEnroll() {
         <View style={styles.item}>
           <Text style={styles.title}>同行人数</Text>
           <Text style={styles.required}>{'  '}*</Text>
-          <Step style={styles.step} value={count} onValueChange={setCount} />
+          <Stepper style={styles.step} value={count} onValueChange={setCount} />
         </View>
         <View style={styles.item}>
           <Text style={styles.title}>报名成员</Text>

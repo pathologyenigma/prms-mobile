@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
-import Step from '../../../components/Step'
+import Stepper from '../../../components/Stepper'
 
 export default function HeadcountItem() {
   const [count, setCount] = useState(1)
@@ -8,7 +8,7 @@ export default function HeadcountItem() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>招聘人数</Text>
-      <Step value={count} onValueChange={setCount} />
+      <Stepper value={count} onValueChange={setCount} />
       <View style={styles.diviver} />
     </View>
   )
