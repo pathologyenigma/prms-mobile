@@ -1,7 +1,6 @@
 import React, { useRef } from 'react'
 import { StyleSheet, View, Animated } from 'react-native'
 import { StackNavigationOptions } from '@react-navigation/stack'
-
 import PagerView from 'react-native-pager-view'
 import Page from './Page'
 import usePagerView from '../../hooks/usePagerView'
@@ -35,14 +34,15 @@ export default function JobAdmin() {
         onTabPress={index => ref.current?.setPageWithoutAnimation(index)}
         style={styles.tabbar}
         tabStyle={styles.tab}
-        tabLabelStyle={styles.tabText}
-        tabSpace={0}
-        selectedTabLabelStyle={styles.selectedTabText}
+        labelStyle={styles.tabText}
+        tabSpacing={0}
+        selectedLabelStyle={styles.selectedTabText}
         indicatorStyle={styles.indicator}
       />
       <AnimatedPagerView
         ref={ref}
         style={styles.pages}
+        initialPage={selectedIndex}
         onPageScroll={onPageScroll}
         onPageSelected={onPageSelected}>
         {tabs.map((tab: string, index: number) => (

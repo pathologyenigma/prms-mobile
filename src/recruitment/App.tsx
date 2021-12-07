@@ -100,6 +100,9 @@ import JobFairDetail, { JobFairDetailOptions } from './JobFair/JobFairDetail'
 import JobFairEnroll, { JobFairEnrollOptions } from './JobFair/JobFairEnroll'
 
 import CompanyDetail, { CompanyDetailOptions } from './Company/CompanyDetail'
+import InterviewGrading, {
+  InterviewGradingOptions,
+} from './Interview/InterviewGrading'
 
 const Stack = createStackNavigator()
 
@@ -110,11 +113,18 @@ class App extends Component {
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
           <Stack.Screen
+            key="InterviewGrading"
+            name="InterviewGrading"
+            component={InterviewGrading}
+            options={InterviewGradingOptions}
+          />
+          <Stack.Screen
             key="CompanyDetail"
             name="CompanyDetail"
             component={CompanyDetail}
             options={CompanyDetailOptions}
           />
+
           <Stack.Screen
             key="JobFairDetail"
             name="JobFairDetail"

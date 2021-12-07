@@ -90,7 +90,7 @@ export default function JobFairDetail() {
         <TabBar
           style={styles.tabbar}
           tabStyle={styles.tab}
-          tabSpace={0}
+          tabSpacing={0}
           tabs={tabs}
           selectedIndex={selectedIndex}
           scrollOffsetAnimatedValue={scrollOffsetAnimatedValue}

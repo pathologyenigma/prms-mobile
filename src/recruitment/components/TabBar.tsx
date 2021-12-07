@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, useCallback, useRef, useState } from 'react'
+import { useEffect } from 'react'
 import { StyleProp, TextStyle, ViewStyle } from 'react-native'
 import {
   StyleSheet,
@@ -19,15 +20,17 @@ interface Layout {
 interface TabBarProps {
   tabs: string[]
   selectedIndex: number
-  onTabPress?: (index: number) => void
   scrollOffsetAnimatedValue: Animated.Value
   positionAnimatedValue: Animated.Value
+  onTabPress?: (index: number) => void
+  onTabsLayout?: (layouts: Array<Layout>) => void
   style?: StyleProp<ViewStyle>
   tabStyle?: StyleProp<ViewStyle>
-  tabLabelStyle?: StyleProp<TextStyle>
-  selectedTabLabelStyle?: StyleProp<TextStyle>
+  selectedTabStyle?: StyleProp<ViewStyle>
+  labelStyle?: StyleProp<TextStyle>
+  selectedLabelStyle?: StyleProp<TextStyle>
   indicatorStyle?: StyleProp<ViewStyle>
-  tabSpace?: number
+  tabSpacing?: number
 }
 
 export default function TabBar({
@@ -35,14 +38,16 @@ export default function TabBar({
   positionAnimatedValue,
   selectedIndex,
   onTabPress,
+  onTabsLayout,
   tabs,
   children,
   style,
+  tabSpacing = 18,
   tabStyle,
-  tabLabelStyle,
-  selectedTabLabelStyle,
+  selectedTabStyle,
+  labelStyle,
+  selectedLabelStyle,
   indicatorStyle,
-  tabSpace = 18,
 }: PropsWithChildren<TabBarProps>) {
   const layouts = useRef<Array<Layout>>([]).current
 
@@ -52,22 +57,26 @@ export default function TabBar({
     inputRange.map(() => indicatorWidth / 2),
   )
 
-  const onTabLayout = useCallback((index: number, layout: Layout) => {
-    layouts[index] = layout
-    const frames = layouts.filter(layout => layout.width > 0)
+  const onTabLayout = useCallback(
+    (index: number, layout: Layout) => {
+      layouts[index] = layout
+      const frames = layouts.filter(layout => layout.width > 0)
 
-    if (frames.length === tabs.length) {
-      const range: Array<number> = []
-      for (let index = 0; index < frames.length; index++) {
-        const { x, width } = frames[index]
-        range.push(x + width / 2 - indicatorWidth / 2)
-        if (index === frames.length - 1) {
-          range.push(x + width)
+      if (frames.length === tabs.length) {
+        const range: Array<number> = []
+        for (let index = 0; index < frames.length; index++) {
+          const { x, width } = frames[index]
+          range.push(x + width / 2 - indicatorWidth / 2)
+          if (index === frames.length - 1) {
+            range.push(x + width)
+          }
         }
+        setOutputRange(range)
+        onTabsLayout?.(layouts)
       }
-      setOutputRange(range)
-    }
-  }, [])
+    },
+    [onTabsLayout],
+  )
 
   const scrollX = Animated.add(
     scrollOffsetAnimatedValue,
@@ -80,28 +89,18 @@ export default function TabBar({
   return (
     <View style={[styles.tabbar, style]}>
       {tabs.map((tab: string, index: number) => (
-        <>
-          <Tab
-            key={tab}
-            title={tab}
-            index={index}
-            style={tabStyle}
-            textStyle={tabLabelStyle}
-            selectedTextStyle={selectedTabLabelStyle}
-            onTabLayout={onTabLayout}
-            checked={selectedIndex === index}
-            onPress={() => onTabPress?.(index)}
-          />
-          {tabSpace > 0 && (
-            <View
-              key={tab + '-spacer'}
-              style={{
-                width: index < tabs.length - 1 ? tabSpace : 0,
-                height: '100%',
-              }}
-            />
-          )}
-        </>
+        <Tab
+          key={tab}
+          title={tab}
+          index={index}
+          style={[tabStyle, { marginLeft: index === 0 ? 0 : tabSpacing }]}
+          selectedStyle={selectedTabStyle}
+          labelStyle={labelStyle}
+          selectedLabelStyle={selectedLabelStyle}
+          onTabLayout={onTabLayout}
+          checked={selectedIndex === index}
+          onPress={() => onTabPress?.(index)}
+        />
       ))}
       <Animated.View
         key={'indicator'}
@@ -130,8 +129,9 @@ interface TabProps {
   onPress?: () => void
   onTabLayout?: (index: number, layout: Layout) => void
   style?: StyleProp<ViewStyle>
-  textStyle?: StyleProp<TextStyle>
-  selectedTextStyle?: StyleProp<TextStyle>
+  selectedStyle?: StyleProp<ViewStyle>
+  labelStyle?: StyleProp<TextStyle>
+  selectedLabelStyle?: StyleProp<TextStyle>
 }
 
 function Tab({
@@ -141,8 +141,9 @@ function Tab({
   onTabLayout,
   index,
   style,
-  textStyle,
-  selectedTextStyle,
+  selectedStyle,
+  labelStyle,
+  selectedLabelStyle,
 }: TabProps) {
   const onLayout = (event: LayoutChangeEvent) => {
     const layout = event.nativeEvent.layout
@@ -151,11 +152,13 @@ function Tab({
 
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-      <View style={[styles.tab, style]} onLayout={onLayout}>
+      <View
+        style={[styles.tab, style, checked ? selectedStyle : undefined]}
+        onLayout={onLayout}>
         <Text
           style={[
-            [styles.tabText, textStyle],
-            checked ? [styles.selectedTabText, selectedTextStyle] : undefined,
+            [styles.label, labelStyle],
+            checked ? [styles.selectedLabel, selectedLabelStyle] : undefined,
           ]}>
           {title}
         </Text>
@@ -177,12 +180,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 11,
   },
-  selectedTabText: {
+  selectedLabel: {
     color: '#333333',
     fontSize: 16,
     fontWeight: 'bold',
   },
-  tabText: {
+  label: {
     color: '#666666',
     fontSize: 16,
   },
