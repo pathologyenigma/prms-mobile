@@ -30,7 +30,8 @@ const initState: IUserInfoState = {
       token: '',
       createdAt: ''
     },
-    id: '',
+    // TODO: 临时代码
+    id: '48',
     avatar: '',
     username: '',
     mobileNumber: '',

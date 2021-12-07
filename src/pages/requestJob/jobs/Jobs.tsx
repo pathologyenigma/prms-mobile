@@ -26,8 +26,10 @@ import { getENTEditEnterpriseBasicInfo } from '../../../action/loginAction'
 import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage'
 import JobCellData from '../../components/JobCellData'
+import { IStoreState } from '../../../reducer'
+import { urlToHttpOptions } from 'http'
 
-type IProps = GenProps<'Jobs'> & ReturnType<typeof mapDispatchToProps>
+type IProps = GenProps<'Jobs'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 type IState = {
   videoSource: [],
@@ -55,7 +57,6 @@ class Jobs extends Component<IProps, IState> {
   }
 
   componentDidMount() {
-    // this.loadData()
     RootLoading.loading()
     this.loadJobExpections()
   }
@@ -65,6 +66,7 @@ class Jobs extends Component<IProps, IState> {
     this.props.getCandidateGetAllJobExpectations((error, result) => {
       console.log('getCandidateGetAllJobExpectations1: ', error, result)
       if (!error && result && result.CandidateGetAllJobExpectations) {
+        this.loadData()
         this.setState({ selectJobsArray: result.CandidateGetAllJobExpectations }, () => {
           this.lodJobList()
         })
@@ -117,7 +119,14 @@ class Jobs extends Component<IProps, IState> {
     console.log('111111111: loadData ')
     this.props.subscriptionMessage((error, result) => {
       console.log('subscriptionMessage: ', error, result)
-      RootLoading.info(`收到新消息 :${result.data.newMessage.messageContent}`)
+      if (!error
+        && result
+        && result.data
+        && result.data.newMessage
+        && result.data.newMessage.to.toString() === this.props.userInfo.userInfo.id.toString()
+      ) {
+        RootLoading.info(`收到新消息 :${result.data.newMessage.messageContent}`)
+      }
     })
   }
 
@@ -476,6 +485,12 @@ class Jobs extends Component<IProps, IState> {
   }
 }
 
+const mapStateToProps = (state: IStoreState) => {
+  return {
+    userInfo: state.userInfo
+  }
+}
+
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   return bindActionCreators({
     reset_reducer: actions.reset_reducer,
@@ -488,4 +503,4 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   }, dispatch)
 }
 
-export default connect(null, mapDispatchToProps)(Jobs)
+export default connect(mapStateToProps, mapDispatchToProps)(Jobs)

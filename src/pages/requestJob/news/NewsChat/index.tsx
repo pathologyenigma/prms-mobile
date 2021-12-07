@@ -14,8 +14,11 @@ import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 import JobCell from '../../../components/JobCell'
 import { Tabs } from '@ant-design/react-native'
 import ListEmptyComponent from '../../../components/ListEmptyComponent'
+import { bindActionCreators, Dispatch, AnyAction } from 'redux'
+import * as actions from '../../../../action/newsAction'
+import { connect } from 'react-redux'
 
-type TProps = GenProps<'News'>
+type TProps = GenProps<'News'> & ReturnType<typeof mapDispatchToProps>
 
 interface IState {
   refreshState: RefreshState,
@@ -30,7 +33,7 @@ interface IState {
   notificationDataSource: any,
 }
 
-export default class NewsChat extends Component<TProps, IState> {
+class NewsChat extends Component<TProps, IState> {
   private openKey: any = undefined
   constructor(props: TProps) {
     super(props)
@@ -43,7 +46,7 @@ export default class NewsChat extends Component<TProps, IState> {
       selectType: 0,
       searchStr: '',
       dataSource: [{
-        id: 1,
+        id: 12,
         name: '李女士',
         company: '深圳市猎优管理咨询有限公司',
         time: '19:20',
@@ -344,6 +347,13 @@ export default class NewsChat extends Component<TProps, IState> {
                 rowMap[this.openKey].closeRow()
               }
               RootLoading.info('消息置顶')
+              this.props.userSendMessage({
+                messageType: 'Normal',
+                messageContent: "Send to you 12",
+                to: 12,
+              }, (error, result) => {
+                console.log('error: ', error, result)
+              })
             }}
           >
             <Text style={styles.hideBtnText}>置顶</Text>
@@ -365,8 +375,9 @@ export default class NewsChat extends Component<TProps, IState> {
         <MessageCell
           cellItem={item.item}
           onPress={() => {
+            console.log('item: ', item)
             const { navigation } = this.props
-            navigation.push('MessagePage')
+            navigation.push('MessagePage', { targetId: item.item.id })
           }}
         />
       </SwipeRow >
@@ -556,3 +567,11 @@ export default class NewsChat extends Component<TProps, IState> {
     )
   }
 }
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
+  return bindActionCreators({
+    userSendMessage: actions.userSendMessage,
+  }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(NewsChat)

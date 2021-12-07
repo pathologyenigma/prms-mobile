@@ -176,7 +176,7 @@ type TRouterParams = {
   AllMessages: any
   ChooseRole: any
   VideoComponent: { videoUri: string, closeCallback: () => void }
-  MessagePage: any
+  MessagePage: { targetId: number }
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {

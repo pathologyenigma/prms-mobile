@@ -1,6 +1,7 @@
 import {
   ApolloClient,
   InMemoryCache,
+  NormalizedCache,
   ApolloProvider,
   useQuery,
   gql,
@@ -113,7 +114,29 @@ const checkUserVerifyCodeConsumeGql = gql`
 const subscriptionGqlServerGql = gql`
   subscription newMessage{
     newMessage{
+      from
+      messageType
       messageContent
+      to
+      uuid
+    }
+  }
+`
+
+// 获取和某人的消息记录
+const userGetMessagesGql = gql`
+  query UserGetMessages($targetId: Int!, $page: Int!, $pageSize: Int!){
+    UserGetMessages(targetId:$targetId,page:$page,pageSize:$pageSize){
+        messages{
+        from
+        messageType
+        messageContent
+        to
+        uuid
+      }
+      count
+      page
+      pageSize
     }
   }
 `
@@ -313,6 +336,13 @@ const getHrMoreJobListGql = gql`
   }
 `
 
+// send message
+const sendMessageGql = gql`
+  mutation UserSendMessage($info: SendMessage!){
+    UserSendMessage(info: $info)
+  }
+`
+
 export {
   apolloClientShare,
   initApolloClient,
@@ -334,4 +364,6 @@ export {
   getHrBasicInfoGql,
   getHrMatchJobListGql,
   getHrMoreJobListGql,
+  sendMessageGql,
+  userGetMessagesGql,
 }

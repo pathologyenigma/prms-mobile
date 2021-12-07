@@ -19,9 +19,14 @@ import SystemHelper from '../../../utils/system'
 import JobCell from '../../components/JobCell'
 import AlertContentModal from '../../components/AlertContentModal'
 import WhiteContentModal from '../../components/WhiteContentModal'
+import * as actions from '../../../action/newsAction'
 
 type IProps = GenProps<'MessagePage'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 interface IState {
+  targetId: number,
+  page: number,
+  pageSize: number,
+  listDataSource: any,
   dataSource: any,
   refreshState: RefreshState,
   content: string,
@@ -53,8 +58,14 @@ class MessagePage extends Component<IProps, IState> {
   private inputRef: any
   constructor(props: IProps) {
     super(props)
+    const { route: { params: { targetId } } } = props
+    console.log('targetId: ', targetId)
     this.state = {
+      targetId,
+      page: 0,
+      pageSize: 10,
       content: '',
+      listDataSource: [],
       dataSource: [],
       RefreshState: 1,
       showCommonWord: false,
@@ -85,6 +96,22 @@ class MessagePage extends Component<IProps, IState> {
   }
 
   loadData() {
+    const { targetId, pageSize, page, listDataSource } = this.state
+    if (targetId === undefined) {
+      RootLoading.fail('参数获取失败,请重启或联系客服')
+      return
+    }
+    this.props.userGetMessages(targetId, page, pageSize, (error, result) => {
+      console.log('userGetMessages: ', error, result)
+      if (!error && result) {
+        if (result.UserGetMessages
+          && result.UserGetMessages.messages
+          && result.UserGetMessages.messages.length > 0) {
+          const newsList = [...result.UserGetMessages.messages]
+          this.setState({ listDataSource: listDataSource.concat(newsList.reverse()) })
+        }
+      }
+    })
     this.setState({
       dataSource: [{
         id: 1,
@@ -268,11 +295,13 @@ class MessagePage extends Component<IProps, IState> {
   renderTextMessage(item: any) {
     const { userInfo } = this.props
     const isSend = userInfo.userInfo.username !== item.launch
-    if (isSend) {
+    console.log('userInfo: ', userInfo)
+    if (userInfo.userInfo.id.toString() === item.from.toString()) {
+      // 发送方
       return (
-        <View style={styles.cellSendMessage}>
+        <View key={item.uuid.toString()} style={styles.cellSendMessage}>
           <Text style={styles.cellSendContent}>
-            {item.content}
+            {item.messageContent}
           </Text>
           <Image
             source={{ uri: 'https://alifei03.cfp.cn/creative/vcg/veer/800/new/VCG41N113145561.jpg' }}
@@ -281,14 +310,15 @@ class MessagePage extends Component<IProps, IState> {
         </View >
       )
     }
+    // 接收方
     return (
-      <View style={styles.cellReceiveMessage}>
+      <View key={item.uuid.toString()} style={styles.cellReceiveMessage}>
         <Image
           source={{ uri: 'https://alifei03.cfp.cn/creative/vcg/veer/800/new/VCG41N113145561.jpg' }}
           style={styles.icon}
         />
         <Text style={styles.cellReceiveContent}>
-          {item.content}
+          {item.messageContent}
         </Text>
       </View>
     )
@@ -454,14 +484,14 @@ class MessagePage extends Component<IProps, IState> {
       // 打招呼简历
       return (
         <JobCell
-          key={item.id.toString()}
+          key={item.uuid.toString()}
           cellItem={item}
           showCellTime={true}
           launchText={userInfo.userInfo.username === item.launch ? '由招聘官发起的通知' : '由你发起的通知'}
         />
       )
     }
-    if (item.type === 'message') {
+    if (item.messageType === 'Normal') {
       // 文字消息
       return this.renderTextMessage(item)
     }
@@ -482,7 +512,7 @@ class MessagePage extends Component<IProps, IState> {
   }
 
   renderList() {
-    const { dataSource } = this.state
+    const { dataSource, listDataSource } = this.state
     return (
       <RefreshListView
         style={styles.listView}
@@ -490,10 +520,10 @@ class MessagePage extends Component<IProps, IState> {
         // onHeaderRefresh={() => this.handleRefresh()}
         // refreshState={refreshState}
         automaticallyAdjustContentInsets={false}
-        data={dataSource}
+        data={listDataSource}
         renderItem={({ item }: any) => this.renderCellItem(item)}
         // onFooterRefresh={() => this.handleEndReached}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.uuid.toString()}
         footerRefreshingText="加载更多"
         footerNoMoreDataText="没有更多了"
       />
@@ -922,7 +952,7 @@ const mapStateToProps = (state: IStoreState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   return bindActionCreators({
-
+    userGetMessages: actions.userGetMessages,
   }, dispatch)
 }
 
