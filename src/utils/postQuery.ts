@@ -222,7 +222,7 @@ const getCandidateGetJobListGql = gql`
 /**
  * 公司详情页的公司基本信息
  */
-const getGetEnterpriseGql = gql`
+const candidateGetEnterpriseDetail_EntInfoGql = gql`
   query CandidateGetEnterpriseDetail_EntInfo($entId:Int!){
     CandidateGetEnterpriseDetail_EntInfo(entId:$entId) {
         enterprise_name
@@ -246,6 +246,52 @@ const getGetEnterpriseGql = gql`
         createdAt
     }
   }
+`
+
+/**
+ * 公司详情页的公司基本信息
+ */
+const candidateGetEnterpriseDetail_HRListGql = gql`
+  query CandidateGetEnterpriseDetail_HRList($entId:Int!){
+    CandidateGetEnterpriseDetail_HRList(entId:$entId) {
+      id
+      name
+      logo
+      pos
+   }
+ }
+`
+
+/**
+ * 公司详情页的公司热门招聘官信息
+ */
+const candidateGetEnterpriseDetail_InterviewRecommentGql = gql`
+  query CandidateGetEnterpriseDetail_InterviewRecomment($entId:Int!){
+    CandidateGetEnterpriseDetail_InterviewRecomment(entId:$entId) {
+      total
+      description
+      comp_env
+      HR
+      count
+      recommends {
+        score
+        tags
+        thumbs
+        user_name
+      }
+   }
+ }
+`
+
+/**
+ * 公司详情页的公司问答
+ */
+const candidateGetEnterpriseDetail_QAGql = gql`
+  query CandidateGetEnterpriseDetail_QA($entId:Int!){
+    CandidateGetEnterpriseDetail_QA(entId:$entId) {
+      questionCount answerCount question  answer
+   }
+ }
 `
 
 /**
@@ -366,4 +412,8 @@ export {
   getHrMoreJobListGql,
   sendMessageGql,
   userGetMessagesGql,
+  candidateGetEnterpriseDetail_EntInfoGql,
+  candidateGetEnterpriseDetail_HRListGql,
+  candidateGetEnterpriseDetail_InterviewRecommentGql,
+  candidateGetEnterpriseDetail_QAGql,
 }

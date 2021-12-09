@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView, StatusBar, ImageSourcePropType, Modal, ActivityIndicator } from 'react-native'
+import { Text, View, Image, ScrollView, StatusBar, ImageSourcePropType, Modal, ActivityIndicator, RefreshControl } from 'react-native'
 import styles from './styles/CompanyDetail.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -14,10 +14,13 @@ import BottomContentModal from '../../components/BottomContentModal'
 // @ts-ignore
 import Video from 'react-native-video'
 import ImageViewer from 'react-native-image-zoom-viewer'
+import { bindActionCreators, Dispatch, AnyAction } from 'redux'
+import { IStoreState } from '../../../reducer'
+import * as jobActions from '../../../action/jobsAction'
+import { connect } from 'react-redux'
+import { reformComFinancing, reformCompanySize } from '../../../utils/utils'
 
-type IProps = GenProps<'CompanyDetail'> & {
-
-}
+type IProps = GenProps<'CompanyDetail'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 interface IState {
   dataSource: any,
@@ -32,6 +35,11 @@ interface IState {
   isFirstLoadVideo: boolean
   imageModalVisible: boolean
   imageSelectIndex: number
+  basicData: any
+  refreshing: boolean
+  hrList: any
+  recommentList: any
+  qaList: any
 }
 
 const commentList = [
@@ -162,10 +170,11 @@ const commentList = [
   },
 ]
 
-export default class CompanyDetail extends Component<IProps, IState> {
+class CompanyDetail extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
+      basicData: undefined,
       dataSource: undefined,
       showAddScore: false,
       selectLikesTabs: 0,
@@ -177,7 +186,11 @@ export default class CompanyDetail extends Component<IProps, IState> {
       videoPlaying: true,
       isFirstLoadVideo: true,
       imageModalVisible: false,
-      imageSelectIndex: 0
+      imageSelectIndex: 0,
+      refreshing: true,
+      hrList: undefined,
+      recommentList: undefined,
+      qaList: undefined,
     }
   }
 
@@ -194,6 +207,22 @@ export default class CompanyDetail extends Component<IProps, IState> {
   }
 
   loadData() {
+    this.getHrListData()
+    this.loadtRecommentListData()
+    this.loadQaData()
+    this.props.getCandidateGetEnterpriseDetail_EntInfo(1, (error, result) => {
+      console.log('getCandidateGetEnterpriseDetail_EntInfo: ', error, result)
+      if (!error && result) {
+        this.setState({
+          basicData: result.CandidateGetEnterpriseDetail_EntInfo,
+          refreshing: false
+        })
+      } else {
+        this.setState({ refreshing: false })
+        RootLoading.fail('公司信息获取失败,请重试')
+      }
+    })
+
     RootLoading.loading()
     setTimeout(() => {
       RootLoading.hide()
@@ -253,6 +282,51 @@ export default class CompanyDetail extends Component<IProps, IState> {
     }, 300);
   }
 
+  getHrListData() {
+    this.props.getCandidateGetEnterpriseDetail_HRList(1, (error, result) => {
+      console.log('getCandidateGetEnterpriseDetail_HRList ', error, result)
+      if (!error && result) {
+        this.setState({
+          hrList: result.CandidateGetEnterpriseDetail_HRList,
+          refreshing: false
+        })
+      } else {
+        this.setState({ refreshing: false })
+        RootLoading.fail('热门招聘官信息获取失败,请重试')
+      }
+    })
+  }
+
+  loadtRecommentListData() {
+    this.props.getCandidateGetEnterpriseDetail_InterviewRecomment(1, (error, result) => {
+      console.log('getCandidateGetEnterpriseDetail_InterviewRecomment ', error, result)
+      if (!error && result) {
+        this.setState({
+          recommentList: result.CandidateGetEnterpriseDetail_InterviewRecomment,
+          refreshing: false
+        })
+      } else {
+        this.setState({ refreshing: false })
+        RootLoading.fail('面试评价信息获取失败,请重试')
+      }
+    })
+  }
+
+  loadQaData() {
+    this.props.getCandidateGetEnterpriseDetail_QA(1, (error, result) => {
+      console.log('getCandidateGetEnterpriseDetail_QA ', error, result)
+      if (!error && result) {
+        this.setState({
+          qaList: result.CandidateGetEnterpriseDetail_QA,
+          refreshing: false
+        })
+      } else {
+        this.setState({ refreshing: false })
+        RootLoading.fail('公司问答获取失败,请重试')
+      }
+    })
+  }
+
   renderNavBar() {
     const { navigation } = this.props
     return (
@@ -302,7 +376,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
   }
 
   renderCompayRules() {
-    const { dataSource } = this.state
+    const { basicData } = this.state
     return (
       <View
         style={styles.compayRulesView}
@@ -314,16 +388,31 @@ export default class CompanyDetail extends Component<IProps, IState> {
               this.setState({ welfareVisible: true })
             }}
           >
-            <View style={styles.rulesView}>
-              <Image
-                style={styles.rulesIcon}
-                resizeMode="center"
-                source={require('../../../assets/requestJobs/shijian.png')}
-              />
-              <Text style={styles.rulesDetail}>
-                {dataSource.jobTime}
-              </Text>
-            </View>
+            {basicData.work_time && (
+              <View style={styles.rulesView}>
+                <Image
+                  style={styles.rulesIcon}
+                  resizeMode="center"
+                  source={require('../../../assets/requestJobs/shijian.png')}
+                />
+                <Text style={styles.rulesDetail}>
+                  {basicData.work_time}
+                </Text>
+              </View>
+            )}
+            {basicData.enterprise_welfare && (
+              // 
+              <View style={styles.rulesView}>
+                <Image
+                  style={styles.rulesIcon}
+                  resizeMode="center"
+                  source={require('../../../assets/requestJobs/shuangxiu.png')}
+                />
+                <Text style={styles.rulesDetail}>
+                  {basicData.jobRest}
+                </Text>
+              </View>
+            )}
             <View style={styles.rulesView}>
               <Image
                 style={styles.rulesIcon}
@@ -331,7 +420,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
                 source={require('../../../assets/requestJobs/shuangxiu.png')}
               />
               <Text style={styles.rulesDetail}>
-                {dataSource.jobRest}
+                {basicData.jobRest}
               </Text>
             </View>
             <View style={styles.rulesView}>
@@ -341,7 +430,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
                 source={require('../../../assets/requestJobs/tanxinggongzuo.png')}
               />
               <Text style={styles.rulesDetail}>
-                {dataSource.isFlexibleWork}
+                {basicData.isFlexibleWork}
               </Text>
             </View>
           </NextTouchableOpacity>
@@ -363,7 +452,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
           showsHorizontalScrollIndicator={false}
           style={styles.jobFuliScrollview}
         >
-          {dataSource.isWuxianyijin && (
+          {basicData.isWuxianyijin && (
             <View style={styles.fuliView}>
               <Image
                 style={styles.fuliIcon}
@@ -375,7 +464,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
               </Text>
             </View>
           )}
-          {dataSource.isNianzhongjiang && (
+          {basicData.isNianzhongjiang && (
             <View style={styles.fuliView}>
               <Image
                 style={styles.fuliIcon}
@@ -387,7 +476,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
               </Text>
             </View>
           )}
-          {dataSource.isCanbu && (
+          {basicData.isCanbu && (
             <View style={styles.fuliView}>
               <Image
                 style={styles.fuliIcon}
@@ -399,7 +488,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
               </Text>
             </View>
           )}
-          {dataSource.isJiaotongbuzhu && (
+          {basicData.isJiaotongbuzhu && (
             <View style={styles.fuliView}>
               <Image
                 style={styles.fuliIcon}
@@ -417,7 +506,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
   }
 
   renderCompany() {
-    const { dataSource } = this.state
+    const { dataSource, basicData } = this.state
     return (
       <View style={styles.companyXinxi}>
         <Text style={styles.companyXinxiTitle}>公司介绍</Text>
@@ -425,9 +514,9 @@ export default class CompanyDetail extends Component<IProps, IState> {
           style={styles.companyXinxiDetail}
           numberOfLines={4}
         >
-          深圳智慧网络有限公司是一家新兴崛起的高科技企业，专为通信、互联网、电子商务、移动平台等领域的客户提供计算机软件技术的开发、测试、维护和咨询服务。总部位于环境优美、交通便捷的深圳科技园区内，在上海设有分公司,可以远程办公,薪资丰厚,欢迎加入呀!
+          {basicData.extra_attribute || ''}
         </Text>
-        <Text style={styles.showMore}>查看展开</Text>
+        {/* <Text style={styles.showMore}>查看展开</Text> */}
         <NextTouchableOpacity
           onPress={() => {
             const { navigation } = this.props
@@ -443,7 +532,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
                 style={styles.locationIcon}
                 source={require('../../../assets/requestJobs/company-location.png')}
               />
-              <Text style={styles.companyXinxiCompany}>{dataSource.location}</Text>
+              <Text style={styles.companyXinxiCompany}>{basicData.enterprise_loc_detail || ''}</Text>
             </View>
             <Image
               style={styles.nextIcon}
@@ -456,18 +545,20 @@ export default class CompanyDetail extends Component<IProps, IState> {
   }
 
   renderCompanyInfo() {
-    const { dataSource } = this.state
+    const { basicData } = this.state
+    const showFinancing = basicData.industry_involved.length > 0 ? basicData.industry_involved[basicData.industry_involved.length - 1] : ''
     return (
       <View>
         <View style={styles.companyInfo}>
           <View style={styles.companyTitleView}>
             <View style={styles.companyTitle}>
-              <Text style={styles.companyName}>{dataSource.company}</Text>
+              <Text style={styles.companyName}>{basicData.enterprise_name}</Text>
               <Image style={styles.jobRenzheng}
                 source={require('../../../assets/requestJobs/job-renzheng.png')}
               />
             </View>
-            <Text style={styles.companySummary}>{`${dataSource.financing}·${dataSource.staffAmount}·${dataSource.feature}`}</Text>
+            <Text style={styles.companySummary}>{
+              `${reformComFinancing(basicData.enterprise_financing)}·${reformCompanySize(basicData.enterprise_size)}·${showFinancing}`}</Text>
           </View>
           <View style={styles.companyIcon} />
         </View>
@@ -579,6 +670,10 @@ export default class CompanyDetail extends Component<IProps, IState> {
   }
 
   renderHotReviewer() {
+    const { hrList } = this.state
+    if (!hrList) {
+      return null
+    }
     return (
       <View style={styles.companyPhotoView}>
         <Text style={styles.companyPhotoText}>热门招聘官</Text>
@@ -587,29 +682,19 @@ export default class CompanyDetail extends Component<IProps, IState> {
           showsHorizontalScrollIndicator={false}
           style={styles.reviewerScrollview}
         >
-          <NextTouchableOpacity
-            style={styles.reviewerItem}
-          >
-            <View style={styles.reviewerIcon} />
-            <Text style={styles.reviewerName}>江良华</Text>
-            <Text style={styles.reviewerJob} numberOfLines={1}>技术总监</Text>
+          {hrList.map((item: any, index: number) => {
+            return (
+              <NextTouchableOpacity
+                key={index.toString()}
+                style={styles.reviewerItem}
+              >
+                <View style={styles.reviewerIcon} />
+                <Text style={styles.reviewerName}>{item.name}</Text>
+                <Text style={styles.reviewerJob} numberOfLines={1}>{item.pos}</Text>
 
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
-            style={styles.reviewerItem}
-          >
-            <View style={styles.reviewerIcon} />
-            <Text style={styles.reviewerName}>徐海燕</Text>
-            <Text style={styles.reviewerJob} numberOfLines={1}>运营总监兼人事总监兼人事</Text>
-
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
-            style={styles.reviewerItem}
-          >
-            <View style={styles.reviewerIcon} />
-            <Text style={styles.reviewerName}>黄小军</Text>
-            <Text style={styles.reviewerJob} numberOfLines={1}>招聘专员</Text>
-          </NextTouchableOpacity>
+              </NextTouchableOpacity>
+            )
+          })}
         </ScrollView>
       </View>
     )
@@ -668,24 +753,23 @@ export default class CompanyDetail extends Component<IProps, IState> {
   }
 
   renderReviewerEvaluation() {
-    const score = 4.4
-    const star = 4
+    const { recommentList } = this.state
     return (
       <View style={styles.interviewView}>
         <Text style={styles.companyPhotoText}>面试评价</Text>
         <View style={styles.reviewerContainer}>
           <View style={styles.reviewerContainerLeft}>
             <View style={styles.scoreView}>
-              <Text style={styles.scoreText}>{score}</Text>
+              <Text style={styles.scoreText}>{recommentList.total}</Text>
               <Text style={styles.scoreUnit}>分</Text>
             </View>
-            {this.renderStar(star)}
+            {this.renderStar(Number(recommentList.total))}
           </View>
           <View style={styles.line} />
           <View style={styles.reviewerContainerRight}>
-            {this.renderLinearGradient('职位描述：', 0.8)}
-            {this.renderLinearGradient('公司情况：', 0.7)}
-            {this.renderLinearGradient('面试官：', 0.88)}
+            {this.renderLinearGradient('职位描述：', recommentList.description / 5)}
+            {this.renderLinearGradient('公司情况：', recommentList.comp_env / 5)}
+            {this.renderLinearGradient('面试官：', recommentList.HR / 5)}
           </View>
         </View>
       </View>
@@ -726,17 +810,17 @@ export default class CompanyDetail extends Component<IProps, IState> {
   }
 
   renderCommentList() {
-    const { dataSource, commentRefresh, showAllComment } = this.state
-    if (!dataSource || !dataSource.commentList) {
+    const { dataSource, commentRefresh, showAllComment, recommentList } = this.state
+    if (!recommentList) {
       return null
     }
     let showDs: any = []
-    if (dataSource.commentList.length > 2) {
+    if (recommentList.recommends.length > 2) {
       if (!showAllComment) {
-        showDs.push(dataSource.commentList[0])
-        showDs.push(dataSource.commentList[1])
+        showDs.push(recommentList.recommends[0])
+        showDs.push(recommentList.recommends[1])
       } else {
-        showDs = dataSource.commentList
+        showDs = recommentList.recommends
       }
     }
     return (
@@ -916,7 +1000,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
   }
 
   render() {
-    const { dataSource, shieldVisible, welfareVisible, imageModalVisible } = this.state
+    const { dataSource, shieldVisible, welfareVisible, refreshing, basicData } = this.state
     return (
       <View style={styles.container}>
         <StatusBar
@@ -929,8 +1013,15 @@ export default class CompanyDetail extends Component<IProps, IState> {
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={{ paddingBottom: 20 }}
+          refreshControl={(
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => this.loadData()
+              }
+            />
+          )}
         >
-          {dataSource ? (
+          {(dataSource && basicData) ? (
             <View style={{ flex: 1, }}>
               {this.renderCompanyInfo()}
               {this.renderCompayRules()}
@@ -968,3 +1059,20 @@ export default class CompanyDetail extends Component<IProps, IState> {
     )
   }
 }
+
+const mapStateToProps = (state: IStoreState) => {
+  return {
+    userInfo: state.userInfo
+  }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
+  return bindActionCreators({
+    getCandidateGetEnterpriseDetail_EntInfo: jobActions.getCandidateGetEnterpriseDetail_EntInfo,
+    getCandidateGetEnterpriseDetail_HRList: jobActions.getCandidateGetEnterpriseDetail_HRList,
+    getCandidateGetEnterpriseDetail_InterviewRecomment: jobActions.getCandidateGetEnterpriseDetail_InterviewRecomment,
+    getCandidateGetEnterpriseDetail_QA: jobActions.getCandidateGetEnterpriseDetail_QA
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CompanyDetail)

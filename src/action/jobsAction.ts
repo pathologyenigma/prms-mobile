@@ -2,7 +2,7 @@ import { get, getWithToken, post, postWithToken } from '../utils/http'
 import { Dispatch } from 'react'
 import { AnyAction } from 'redux'
 import AsyncStorage from '@react-native-community/async-storage'
-import { apolloClientShare, getAllRegionGql, getCandidateGetAllJobExpectationsGql, getCandidateGetJobListGql, getHrBasicInfoGql, getHrMatchJobListGql, getHrMoreJobListGql, getJobDetailGql, loginGql } from '../utils/postQuery'
+import { apolloClientShare, candidateGetEnterpriseDetail_EntInfoGql, candidateGetEnterpriseDetail_HRListGql, candidateGetEnterpriseDetail_InterviewRecommentGql, candidateGetEnterpriseDetail_QAGql, getAllRegionGql, getCandidateGetAllJobExpectationsGql, getCandidateGetJobListGql, getHrBasicInfoGql, getHrMatchJobListGql, getHrMoreJobListGql, getJobDetailGql, loginGql } from '../utils/postQuery'
 import errorHandler from '../utils/errorhandler'
 
 const reset_reducer = () => {
@@ -237,6 +237,102 @@ const getHrMoreJobList = (hrId: number, page: number, callback: (error: any, res
   }
 }
 
+// 获取公司信息
+const getCandidateGetEnterpriseDetail_EntInfo = (entId: number, callback: (error: any, result?: any) => void) => {
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.query({
+      query: candidateGetEnterpriseDetail_EntInfoGql,
+      variables: {
+        entId,
+      }
+    })
+      .then((res) => {
+        console.log('res: ', res)
+        if (res && res.data) {
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error) => {
+        console.log('error: ', error)
+        errorHandler(error)
+      })
+  }
+}
+
+// 获取公司详情界面hr list
+const getCandidateGetEnterpriseDetail_HRList = (entId: number, callback: (error: any, result?: any) => void) => {
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.query({
+      query: candidateGetEnterpriseDetail_HRListGql,
+      variables: {
+        entId,
+      }
+    })
+      .then((res) => {
+        console.log('res: ', res)
+        if (res && res.data) {
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error) => {
+        console.log('error: ', error)
+        errorHandler(error)
+      })
+  }
+}
+
+// 获取公司详情面试评价(注意:和面试评价详情页数据不同)
+const getCandidateGetEnterpriseDetail_InterviewRecomment = (entId: number, callback: (error: any, result?: any) => void) => {
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.query({
+      query: candidateGetEnterpriseDetail_InterviewRecommentGql,
+      variables: {
+        entId,
+      }
+    })
+      .then((res) => {
+        console.log('res: ', res)
+        if (res && res.data) {
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error) => {
+        console.log('error: ', error)
+        errorHandler(error)
+      })
+  }
+}
+
+// 获取公司详情问答数据
+const getCandidateGetEnterpriseDetail_QA = (entId: number, callback: (error: any, result?: any) => void) => {
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.query({
+      query: candidateGetEnterpriseDetail_QAGql,
+      variables: {
+        entId,
+      }
+    })
+      .then((res) => {
+        console.log('res: ', res)
+        if (res && res.data) {
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error) => {
+        console.log('error: ', error)
+        errorHandler(error)
+      })
+  }
+}
+
 export {
   reset_reducer,
   update_kv,
@@ -248,4 +344,8 @@ export {
   getHrBasicInfo,
   getHrMatchJobList,
   getHrMoreJobList,
+  getCandidateGetEnterpriseDetail_EntInfo,
+  getCandidateGetEnterpriseDetail_HRList,
+  getCandidateGetEnterpriseDetail_InterviewRecomment,
+  getCandidateGetEnterpriseDetail_QA,
 }
