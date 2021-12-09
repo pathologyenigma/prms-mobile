@@ -71,9 +71,7 @@ export default function InterviewGrading() {
             selectedIndex={selectedIndex}
             scrollOffsetAnimatedValue={scrollOffsetAnimatedValue}
             positionAnimatedValue={positionAnimatedValue}
-            onTabPress={index =>
-              pagerRef.current?.setPageWithoutAnimation(index)
-            }
+            onTabPress={index => pagerRef.current?.setPage(index)}
             onTabsLayout={onTabsLayout}
           />
         </ScrollView>
