@@ -104,6 +104,8 @@ import InterviewGrading, {
   InterviewGradingOptions,
 } from './Interview/InterviewGrading'
 
+import ChangeCompany, { ChangeCompanyOptions } from './Company/ChangeCompany'
+
 const Stack = createStackNavigator()
 
 class App extends Component {
@@ -112,6 +114,12 @@ class App extends Component {
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            key="ChangeCompany"
+            name="ChangeCompany"
+            component={ChangeCompany}
+            options={ChangeCompanyOptions}
+          />
           <Stack.Screen
             key="InterviewGrading"
             name="InterviewGrading"

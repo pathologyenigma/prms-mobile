@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import TextButton from '../../components/TextButton'
-import useAnimatedKeyboard from '../../hooks/useAnimatedKeyboard'
+import useKeyboardAccessory from '../../hooks/useKeyboardAccessory'
 import InterviewAssessment from './InterviewAssessment'
 
 interface GradingPageProps {
@@ -23,7 +23,7 @@ export default function GradingPage({}: GradingPageProps) {
   const inputRef = useRef<TextInput>(null)
 
   const { keyboardAccessoryStyle, keyboardShown, showKeyboard } =
-    useAnimatedKeyboard(inputRef)
+    useKeyboardAccessory(inputRef)
 
   const renderItem: ListRenderItem<string> = ({ item, index }) => {
     return <InterviewAssessment onReply={showKeyboard} />

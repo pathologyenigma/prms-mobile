@@ -123,6 +123,7 @@ export default function CompanyDetail() {
             <TextButton
               title="切换公司"
               textStyle={{ color: '#FFFFFF', fontSize: 15 }}
+              onPress={() => navigation.navigate('ChangeCompany')}
             />
           )}
         />
