@@ -28,7 +28,5 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
-  icon: {
-    marginLeft: 11,
-  },
+  icon: {},
 })

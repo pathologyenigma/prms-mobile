@@ -106,6 +106,11 @@ import InterviewGrading, {
 
 import ChangeCompany, { ChangeCompanyOptions } from './Company/ChangeCompany'
 
+import SettingMain, { SettingMainOptions } from './Settings/SettingMain'
+import GreetingSetting, {
+  GreetingSettingOptions,
+} from './Settings/GreetingSetting'
+
 const Stack = createStackNavigator()
 
 class App extends Component {
@@ -114,6 +119,18 @@ class App extends Component {
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
         <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen
+            key="SettingMain"
+            name="SettingMain"
+            component={SettingMain}
+            options={SettingMainOptions}
+          />
+          <Stack.Screen
+            key="GreetingSetting"
+            name="GreetingSetting"
+            component={GreetingSetting}
+            options={GreetingSettingOptions}
+          />
           <Stack.Screen
             key="ChangeCompany"
             name="ChangeCompany"
