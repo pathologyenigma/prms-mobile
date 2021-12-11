@@ -112,11 +112,15 @@ export default function Me() {
         <Cell
           icon={require('./images/switch.png')}
           title="切换身份"
-          onPress={() => console.log('切换身份')}
+          onPress={() => navigation.navigate('ChangeRole')}
         />
         <Cell icon={require('./images/feekback.png')} title="帮助与反馈" />
         <Cell icon={require('./images/about.png')} title="关于我们" />
-        <Cell icon={require('./images/settings.png')} title="设置" />
+        <Cell
+          icon={require('./images/settings.png')}
+          title="设置"
+          onPress={() => navigation.navigate('SettingMain')}
+        />
       </View>
     </ScrollView>
   )

@@ -110,6 +110,7 @@ import SettingMain, { SettingMainOptions } from './Settings/SettingMain'
 import GreetingSetting, {
   GreetingSettingOptions,
 } from './Settings/GreetingSetting'
+import ChangeRole, { ChangeRoleOptions } from './Settings/ChangeRole'
 
 const Stack = createStackNavigator()
 
@@ -118,7 +119,13 @@ class App extends Component {
     return (
       <NavigationContainer>
         <StatusBar translucent backgroundColor="transparent" animated />
-        <Stack.Navigator screenOptions={screenOptions}>
+        <Stack.Navigator screenOptions={screenOptions} initialRouteName="Home">
+          <Stack.Screen
+            key="ChangeRole"
+            name="ChangeRole"
+            component={ChangeRole}
+            options={ChangeRoleOptions}
+          />
           <Stack.Screen
             key="SettingMain"
             name="SettingMain"

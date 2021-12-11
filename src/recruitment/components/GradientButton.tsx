@@ -45,7 +45,7 @@ export default function GradientButton({
       <View style={{ flex: 1, opacity: disabled ? 0.6 : 1 }}>
         <LinearGradient
           start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
+          end={{ x: 1, y: 1 }}
           colors={colors}
           style={[
             styles.linearGradient,
