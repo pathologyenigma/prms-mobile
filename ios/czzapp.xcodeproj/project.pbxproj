@@ -15,6 +15,9 @@
 		6365532FFCB362523D8E9821 /* libPods-czzapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 394229B277C888E5021DE7A9 /* libPods-czzapp.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		84926B14269DCE85003CBC47 /* SystemModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 84926B12269DCE85003CBC47 /* SystemModule.m */; };
+		912A457227677E91005E79FA /* SplashModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 912A457127677E91005E79FA /* SplashModule.m */; };
+		912A457527678123005E79FA /* SplashWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 912A457427678123005E79FA /* SplashWindow.m */; };
+		912A457827679BE6005E79FA /* void.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912A457727679BE6005E79FA /* void.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +38,12 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = czzapp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		84926B12269DCE85003CBC47 /* SystemModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SystemModule.m; sourceTree = "<group>"; };
 		84926B13269DCE85003CBC47 /* SystemModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemModule.h; sourceTree = "<group>"; };
+		912A457027677E91005E79FA /* SplashModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SplashModule.h; sourceTree = "<group>"; };
+		912A457127677E91005E79FA /* SplashModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SplashModule.m; sourceTree = "<group>"; };
+		912A457327678123005E79FA /* SplashWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SplashWindow.h; sourceTree = "<group>"; };
+		912A457427678123005E79FA /* SplashWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SplashWindow.m; sourceTree = "<group>"; };
+		912A457627679BE5005E79FA /* czzapp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "czzapp-Bridging-Header.h"; sourceTree = "<group>"; };
+		912A457727679BE6005E79FA /* void.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = void.swift; sourceTree = "<group>"; };
 		C5644585ACE6D93F3D737EAA /* Pods-czzapp-czzappTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-czzapp-czzappTests.debug.xcconfig"; path = "Target Support Files/Pods-czzapp-czzappTests/Pods-czzapp-czzappTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E3B5C1987CA36F2B54C7A6B6 /* Pods-czzapp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-czzapp.debug.xcconfig"; path = "Target Support Files/Pods-czzapp/Pods-czzapp.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -72,6 +81,7 @@
 		13B07FAE1A68108700A75B9A /* czzapp */ = {
 			isa = PBXGroup;
 			children = (
+				912A456F27677E6F005E79FA /* splash */,
 				84926B11269DCE85003CBC47 /* system */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -79,6 +89,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				912A457727679BE6005E79FA /* void.swift */,
+				912A457627679BE5005E79FA /* czzapp-Bridging-Header.h */,
 			);
 			name = czzapp;
 			sourceTree = "<group>";
@@ -153,6 +165,17 @@
 			path = system;
 			sourceTree = "<group>";
 		};
+		912A456F27677E6F005E79FA /* splash */ = {
+			isa = PBXGroup;
+			children = (
+				912A457027677E91005E79FA /* SplashModule.h */,
+				912A457127677E91005E79FA /* SplashModule.m */,
+				912A457327678123005E79FA /* SplashWindow.h */,
+				912A457427678123005E79FA /* SplashWindow.m */,
+			);
+			path = splash;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -186,7 +209,7 @@
 				LastUpgradeCheck = 1310;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1310;
 					};
 				};
 			};
@@ -300,9 +323,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				912A457527678123005E79FA /* SplashWindow.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				84926B14269DCE85003CBC47 /* SystemModule.m in Sources */,
+				912A457227677E91005E79FA /* SplashModule.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				912A457827679BE6005E79FA /* void.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,6 +356,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.czzapp;
 				PRODUCT_NAME = czzapp;
+				SWIFT_OBJC_BRIDGING_HEADER = "czzapp-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -356,6 +383,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.czzapp;
 				PRODUCT_NAME = czzapp;
+				SWIFT_OBJC_BRIDGING_HEADER = "czzapp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

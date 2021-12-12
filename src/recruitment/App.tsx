@@ -111,10 +111,15 @@ import GreetingSetting, {
   GreetingSettingOptions,
 } from './Settings/GreetingSetting'
 import ChangeRole, { ChangeRoleOptions } from './Settings/ChangeRole'
+import splash from '../bridge/splash'
 
 const Stack = createStackNavigator()
 
 class App extends Component {
+  componentDidMount() {
+    splash.hide()
+  }
+
   render() {
     return (
       <NavigationContainer>
