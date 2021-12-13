@@ -24,10 +24,11 @@ export default function SecondaryButton({
   onPress,
 }: SecondaryButtonProps) {
   return (
-    <TouchableOpacity activeOpacity={0.75} onPress={onPress}>
-      <View style={[styles.container, style]}>
-        <Text style={[styles.title, titleStyle]}>{title}</Text>
-      </View>
+    <TouchableOpacity
+      activeOpacity={0.5}
+      onPress={onPress}
+      style={[styles.container, style]}>
+      <Text style={[styles.title, titleStyle]}>{title}</Text>
     </TouchableOpacity>
   )
 }

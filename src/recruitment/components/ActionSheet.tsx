@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import { getBottomSpace } from 'react-native-iphone-x-helper'
+import { isIphoneX } from 'react-native-iphone-x-helper'
 import BottomModal from './BottomModal'
 
 export interface ActionButton {
@@ -12,12 +12,14 @@ export interface ActionSheetProps {
   visible?: boolean
   onDismiss?: () => void
   actions?: ActionButton[]
+  renderHeader?: () => JSX.Element
 }
 
 export default function ActionSheet({
   visible,
   onDismiss = () => {},
   actions = [],
+  renderHeader,
 }: ActionSheetProps) {
   const renderActionButton = (action: ActionButton, index: number) => {
     const { title, onPress } = action
@@ -49,12 +51,8 @@ export default function ActionSheet({
   }
 
   return (
-    <BottomModal
-      visible={visible}
-      onRequestClose={onDismiss}
-      contentStyle={{
-        height: (actions.length + 1) * 60 + 5 + getBottomSpace(),
-      }}>
+    <BottomModal visible={visible} onRequestClose={onDismiss} contentStyle={{}}>
+      {renderHeader?.()}
       {actions.map(renderActionButton)}
       <View style={styles.seperator} />
       {renderActionButton(
@@ -63,6 +61,7 @@ export default function ActionSheet({
         },
         actions.length,
       )}
+      <View style={styles.bottom}></View>
     </BottomModal>
   )
 }
@@ -86,5 +85,8 @@ const styles = StyleSheet.create({
     height: 5,
     width: '100%',
     backgroundColor: '#F7F7F7',
+  },
+  bottom: {
+    height: isIphoneX() ? 15 : 0,
   },
 })

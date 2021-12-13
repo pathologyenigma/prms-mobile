@@ -12,7 +12,8 @@ import CheckLabel from '../../components/CheckLabel'
 import GradientButton from '../../components/GradientButton'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import NavBar from '../../components/NavBar'
-
+import { StackNavigationProp } from '@react-navigation/stack'
+import { useNavigation } from '@react-navigation/native'
 interface ItemProps {
   title: string
   detail: string
@@ -36,6 +37,7 @@ const Item = ({ title, detail, onPress }: ItemProps) => {
 }
 
 export default function HrProfile() {
+  const navigation = useNavigation<StackNavigationProp<any>>()
   return (
     <View style={styles.container}>
       <NavBar title="个人资料" />
@@ -44,7 +46,11 @@ export default function HrProfile() {
         contentContainerStyle={styles.content}>
         <View style={styles.head}>
           <Text style={styles.detail}>头像</Text>
-          <Image source={require('../../assets/avatar_default.png')} />
+
+          <TouchableWithoutFeedback
+            onPress={() => navigation.navigate('AvatarViewer')}>
+            <Image source={require('../../assets/avatar_default.png')} />
+          </TouchableWithoutFeedback>
         </View>
         <Item title="名称显示" detail="李小冉" />
         <Item title="名称显示" detail="李小冉" onPress={() => {}} />
