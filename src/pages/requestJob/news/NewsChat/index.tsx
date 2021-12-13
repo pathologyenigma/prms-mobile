@@ -45,13 +45,14 @@ class NewsChat extends Component<TProps, IState> {
       newsRefresh: true,
       selectType: 0,
       searchStr: '',
-      dataSource: [{
-        id: 12,
-        name: '李女士',
-        company: '深圳市猎优管理咨询有限公司',
-        time: '19:20',
-        message: '您好，我们公司正在招聘这个职位，有兴趣来么？',
-      }],
+      dataSource: [],
+      // dataSource: [{
+      //   id: 12,
+      //   name: '李女士',
+      //   company: '深圳市猎优管理咨询有限公司',
+      //   time: '19:20',
+      //   message: '您好，我们公司正在招聘这个职位，有兴趣来么？',
+      // }],
       seeMeDataSource: [{
         id: 1,
         name: '项目经理',
@@ -144,15 +145,29 @@ class NewsChat extends Component<TProps, IState> {
   }
 
   loadData() {
+    this.props.getUserGetContractList((error, result) => {
+      console.log('error: ', error, result)
+      if (!error && result) {
+        this.setState({
+          dataSource: result.UserGetContractList,
+          refreshing: false,
+        })
+      } else {
+        this.setState({
+          dataSource: result.UserGetContractList,
+          refreshing: false,
+        })
+      }
+    })
     // RootLoading.loading()
-    setTimeout(() => {
-      // RootLoading.hide()
-      this.setState({
-        refreshState: RefreshState.Idle,
-        notificationRefreshState: RefreshState.Idle,
-        refreshing: false,
-      })
-    }, 1000);
+    // setTimeout(() => {
+    //   // RootLoading.hide()
+    //   this.setState({
+    //     refreshState: RefreshState.Idle,
+    //     notificationRefreshState: RefreshState.Idle,
+    //     refreshing: false,
+    //   })
+    // }, 1000);
   }
 
   renderHiddenItem(item, rowMap) {
@@ -498,8 +513,12 @@ class NewsChat extends Component<TProps, IState> {
   }
 
   renderEmptyListImage() {
+    const { newsRefresh, dataSource } = this.state
+    if (newsRefresh || dataSource.length > 0) {
+      return null
+    }
     return (
-      <Text>
+      <Text style={styles.noMoreText}>
         没有更多了
       </Text>
     )
@@ -570,6 +589,7 @@ class NewsChat extends Component<TProps, IState> {
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   return bindActionCreators({
+    getUserGetContractList: actions.getUserGetContractList,
     userSendMessage: actions.userSendMessage,
   }, dispatch)
 }

@@ -10,7 +10,7 @@ import {
   ApolloError,
   gql
 } from "@apollo/client"
-import { apolloClientShare, checkUserVerifyCodeConsumeGql, chooseOrSwitchIdentityGql, getENTEditEnterpriseBasicInfoGql, getUserEditPersonalDataGql, initApolloClient, loginGql, numberCheckGql, registerGql, resetPasswordGql, sendMessageGql, sendSMSGql, subscriptionGqlServerGql, testGql, userGetMessagesGql } from '../utils/postQuery'
+import { apolloClientShare, checkUserVerifyCodeConsumeGql, chooseOrSwitchIdentityGql, getENTEditEnterpriseBasicInfoGql, getUserEditPersonalDataGql, initApolloClient, loginGql, numberCheckGql, registerGql, resetPasswordGql, sendMessageGql, sendSMSGql, subscriptionGqlServerGql, testGql, userGetContractListGql, userGetMessagesGql } from '../utils/postQuery'
 import errorHandler from '../utils/errorhandler'
 
 const reset_reducer = () => {
@@ -103,10 +103,30 @@ const userSendMessage = (
   }
 }
 
+const getUserGetContractList = (
+  callback?: (error: any, result?: any) => void) => {
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare.query({
+      query: userGetContractListGql,
+    })
+      .then((res) => {
+        if (res && res.data) {
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error: ApolloError) => {
+        errorHandler(error)
+      })
+  }
+}
+
 export {
   reset_reducer,
   update_kv,
   subscriptionMessage,
+  getUserGetContractList,
   userSendMessage,
   userGetMessages
 }

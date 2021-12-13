@@ -223,8 +223,8 @@ const getCandidateGetJobListGql = gql`
  * 公司详情页的公司基本信息
  */
 const candidateGetEnterpriseDetail_EntInfoGql = gql`
-  query CandidateGetEnterpriseDetail_EntInfo($entId:Int!){
-    CandidateGetEnterpriseDetail_EntInfo(entId:$entId) {
+  query UserGetEnterpriseDetail_EntInfo($entId:Int!){
+    UserGetEnterpriseDetail_EntInfo(entId:$entId) {
         enterprise_name
         business_nature
         industry_involved
@@ -274,10 +274,15 @@ const candidateGetEnterpriseDetail_InterviewRecommentGql = gql`
       HR
       count
       recommends {
-        score
-        tags
-        thumbs
+        id
         user_name
+        score
+        job_name
+        tags
+        content
+        thumbs
+        createdAt
+        logo
       }
    }
  }
@@ -389,6 +394,15 @@ const sendMessageGql = gql`
   }
 `
 
+const userGetContractListGql = gql`
+  query UserGetContractList{
+    UserGetContractList{
+      id name pos ent last_msg last_msg_time
+      # logo
+    }
+  }
+`
+
 export {
   apolloClientShare,
   initApolloClient,
@@ -416,4 +430,5 @@ export {
   candidateGetEnterpriseDetail_HRListGql,
   candidateGetEnterpriseDetail_InterviewRecommentGql,
   candidateGetEnterpriseDetail_QAGql,
+  userGetContractListGql,
 }

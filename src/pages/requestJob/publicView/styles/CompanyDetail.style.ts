@@ -95,8 +95,12 @@ export default StyleSheet.create({
     lineHeight: 20,
     marginTop: 28,
   },
-  showMore: {
-    color: greenColor,
+  showMoreText: {
+    marginBottom: -5,
+    lineHeight: 18,
+    color: '#57DE9E',
+    fontSize: 13,
+    fontWeight: 'bold'
   },
   companyXinxiView: {
     marginTop: 25,
@@ -234,6 +238,7 @@ export default StyleSheet.create({
   },
   compayRulesView: {
     width: SystemHelper.width,
+    backgroundColor: 'red',
   },
   rulesContainer: {
     flexDirection: 'row',
@@ -433,7 +438,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginTop: 19,
   },
-  showMoreText: {
+  showMoreCommentText: {
     color: '#57DE9E',
     fontSize: 14,
     fontWeight: 'bold'

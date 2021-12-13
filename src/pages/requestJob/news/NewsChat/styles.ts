@@ -13,6 +13,11 @@ export default StyleSheet.create({
   },
   contentStyle: {
   },
+  noMoreText: {
+    alignSelf: 'center',
+    marginTop: 100,
+    color: '#333',
+  },
   tipsView: {
     width: SystemHelper.width,
     height: 79,
