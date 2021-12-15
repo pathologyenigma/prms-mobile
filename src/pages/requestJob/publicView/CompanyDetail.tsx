@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView, StatusBar, ImageSourcePropType, Modal, ActivityIndicator } from 'react-native'
+import { Text, View, Image, ScrollView, StatusBar, ImageSourcePropType, Modal, ActivityIndicator, RefreshControl } from 'react-native'
 import styles from './styles/CompanyDetail.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -14,10 +14,13 @@ import BottomContentModal from '../../components/BottomContentModal'
 // @ts-ignore
 import Video from 'react-native-video'
 import ImageViewer from 'react-native-image-zoom-viewer'
+import { bindActionCreators, Dispatch, AnyAction } from 'redux'
+import { IStoreState } from '../../../reducer'
+import * as jobActions from '../../../action/jobsAction'
+import { connect } from 'react-redux'
+import { reformComFinancing, reformCompanySize } from '../../../utils/utils'
 
-type IProps = GenProps<'CompanyDetail'> & {
-
-}
+type IProps = GenProps<'CompanyDetail'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 interface IState {
   dataSource: any,
@@ -32,6 +35,12 @@ interface IState {
   isFirstLoadVideo: boolean
   imageModalVisible: boolean
   imageSelectIndex: number
+  basicData: any
+  refreshing: boolean
+  hrList: any
+  recommentList: any
+  qaList: any
+  showMoreDetail: boolean
 }
 
 const commentList = [
@@ -162,10 +171,11 @@ const commentList = [
   },
 ]
 
-export default class CompanyDetail extends Component<IProps, IState> {
+class CompanyDetail extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
+      basicData: undefined,
       dataSource: undefined,
       showAddScore: false,
       selectLikesTabs: 0,
@@ -177,7 +187,12 @@ export default class CompanyDetail extends Component<IProps, IState> {
       videoPlaying: true,
       isFirstLoadVideo: true,
       imageModalVisible: false,
-      imageSelectIndex: 0
+      imageSelectIndex: 0,
+      refreshing: true,
+      hrList: undefined,
+      recommentList: undefined,
+      qaList: undefined,
+      showMoreDetail: false
     }
   }
 
@@ -194,6 +209,24 @@ export default class CompanyDetail extends Component<IProps, IState> {
   }
 
   loadData() {
+    this.getHrListData()
+    this.loadtRecommentListData()
+    this.loadQaData()
+    console.log('11111111111')
+    this.props.getCandidateGetEnterpriseDetail_EntInfo(1, (error, result) => {
+      console.log('getCandidateGetEnterpriseDetail_EntInfo: ', error, result)
+      if (!error && result) {
+        this.setState({
+          basicData: result.UserGetEnterpriseDetail_EntInfo,
+          refreshing: false
+        })
+      } else {
+        this.setState({ refreshing: false })
+        RootLoading.fail('公司信息获取失败,请重试')
+      }
+    })
+    return
+
     RootLoading.loading()
     setTimeout(() => {
       RootLoading.hide()
@@ -253,6 +286,51 @@ export default class CompanyDetail extends Component<IProps, IState> {
     }, 300);
   }
 
+  getHrListData() {
+    this.props.getCandidateGetEnterpriseDetail_HRList(1, (error, result) => {
+      console.log('getCandidateGetEnterpriseDetail_HRList ', error, result)
+      if (!error && result) {
+        this.setState({
+          hrList: result.CandidateGetEnterpriseDetail_HRList,
+          refreshing: false
+        })
+      } else {
+        this.setState({ refreshing: false })
+        RootLoading.fail('热门招聘官信息获取失败,请重试')
+      }
+    })
+  }
+
+  loadtRecommentListData() {
+    this.props.getCandidateGetEnterpriseDetail_InterviewRecomment(1, (error, result) => {
+      console.log('getCandidateGetEnterpriseDetail_InterviewRecomment ', error, result)
+      if (!error && result) {
+        this.setState({
+          recommentList: result.CandidateGetEnterpriseDetail_InterviewRecomment,
+          refreshing: false
+        })
+      } else {
+        this.setState({ refreshing: false })
+        RootLoading.fail('面试评价信息获取失败,请重试')
+      }
+    })
+  }
+
+  loadQaData() {
+    this.props.getCandidateGetEnterpriseDetail_QA(1, (error, result) => {
+      console.log('getCandidateGetEnterpriseDetail_QA ', error, result)
+      if (!error && result) {
+        this.setState({
+          qaList: result.CandidateGetEnterpriseDetail_QA,
+          refreshing: false
+        })
+      } else {
+        this.setState({ refreshing: false })
+        RootLoading.fail('公司问答获取失败,请重试')
+      }
+    })
+  }
+
   renderNavBar() {
     const { navigation } = this.props
     return (
@@ -302,132 +380,169 @@ export default class CompanyDetail extends Component<IProps, IState> {
   }
 
   renderCompayRules() {
-    const { dataSource } = this.state
+    const { basicData } = this.state
     return (
       <View
         style={styles.compayRulesView}
       >
-        <View style={styles.rulesContainer}>
-          <NextTouchableOpacity
-            style={styles.rulesInfoContainer}
-            onPress={() => {
-              this.setState({ welfareVisible: true })
-            }}
+        {(basicData.rest_rule
+          || basicData.work_time
+          || basicData.overtime_work_degree
+        ) && (
+            <View style={styles.rulesContainer}>
+              <NextTouchableOpacity
+                style={styles.rulesInfoContainer}
+                onPress={() => {
+                  this.setState({ welfareVisible: true })
+                }}
+              >
+                {basicData.work_time && (
+                  <View style={styles.rulesView}>
+                    <Image
+                      style={styles.rulesIcon}
+                      resizeMode="center"
+                      source={require('../../../assets/requestJobs/shijian.png')}
+                    />
+                    <Text style={styles.rulesDetail}>
+                      {basicData.work_time}
+                    </Text>
+                  </View>
+                )}
+                {basicData.overtime_work_degree && (
+                  // 
+                  <View style={styles.rulesView}>
+                    <Image
+                      style={styles.rulesIcon}
+                      resizeMode="center"
+                      source={require('../../../assets/requestJobs/shuangxiu.png')}
+                    />
+                    <Text style={styles.rulesDetail}>
+                      {basicData.jobRest}
+                    </Text>
+                  </View>
+                )}
+                {basicData.rest_rule && (
+                  <View style={styles.rulesView}>
+                    <Image
+                      style={styles.rulesIcon}
+                      resizeMode="center"
+                      source={require('../../../assets/requestJobs/shuangxiu.png')}
+                    />
+                    <Text style={styles.rulesDetail}>
+                      {basicData.rest_rule}
+                    </Text>
+                  </View>
+                )}
+                <View style={styles.rulesView}>
+                  <Image
+                    style={styles.rulesIcon}
+                    resizeMode="center"
+                    source={require('../../../assets/requestJobs/tanxinggongzuo.png')}
+                  />
+                  <Text style={styles.rulesDetail}>
+                    {basicData.isFlexibleWork}
+                  </Text>
+                </View>
+              </NextTouchableOpacity>
+              <NextTouchableOpacity
+                style={styles.nextBtn}
+                onPress={() => {
+                  RootLoading.info('公司制度')
+                }}
+              >
+                <Image
+                  style={styles.nextIcon}
+                  resizeMode="center"
+                  source={require('../../../assets/requestJobs/white-next.png')}
+                />
+              </NextTouchableOpacity>
+            </View>
+          )}
+        {basicData.enterprise_welfare && (
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            style={styles.jobFuliScrollview}
           >
-            <View style={styles.rulesView}>
-              <Image
-                style={styles.rulesIcon}
-                resizeMode="center"
-                source={require('../../../assets/requestJobs/shijian.png')}
-              />
-              <Text style={styles.rulesDetail}>
-                {dataSource.jobTime}
-              </Text>
-            </View>
-            <View style={styles.rulesView}>
-              <Image
-                style={styles.rulesIcon}
-                resizeMode="center"
-                source={require('../../../assets/requestJobs/shuangxiu.png')}
-              />
-              <Text style={styles.rulesDetail}>
-                {dataSource.jobRest}
-              </Text>
-            </View>
-            <View style={styles.rulesView}>
-              <Image
-                style={styles.rulesIcon}
-                resizeMode="center"
-                source={require('../../../assets/requestJobs/tanxinggongzuo.png')}
-              />
-              <Text style={styles.rulesDetail}>
-                {dataSource.isFlexibleWork}
-              </Text>
-            </View>
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
-            style={styles.nextBtn}
-            onPress={() => {
-              RootLoading.info('公司制度')
-            }}
-          >
-            <Image
-              style={styles.nextIcon}
-              resizeMode="center"
-              source={require('../../../assets/requestJobs/white-next.png')}
-            />
-          </NextTouchableOpacity>
-        </View>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          style={styles.jobFuliScrollview}
-        >
-          {dataSource.isWuxianyijin && (
-            <View style={styles.fuliView}>
-              <Image
-                style={styles.fuliIcon}
-                resizeMode="center"
-                source={require('../../../assets/requestJobs/wuxianyijin.png')}
-              />
-              <Text style={styles.fuliDetail}>
-                五险一金
-              </Text>
-            </View>
-          )}
-          {dataSource.isNianzhongjiang && (
-            <View style={styles.fuliView}>
-              <Image
-                style={styles.fuliIcon}
-                resizeMode="center"
-                source={require('../../../assets/requestJobs/nianzhongjiang.png')}
-              />
-              <Text style={styles.fuliDetail}>
-                年终奖
-              </Text>
-            </View>
-          )}
-          {dataSource.isCanbu && (
-            <View style={styles.fuliView}>
-              <Image
-                style={styles.fuliIcon}
-                resizeMode="center"
-                source={require('../../../assets/requestJobs/canbu.png')}
-              />
-              <Text style={styles.fuliDetail}>
-                餐补
-              </Text>
-            </View>
-          )}
-          {dataSource.isJiaotongbuzhu && (
-            <View style={styles.fuliView}>
-              <Image
-                style={styles.fuliIcon}
-                resizeMode="center"
-                source={require('../../../assets/requestJobs/jiaotong.png')}
-              />
-              <Text style={styles.fuliDetail}>
-                交通补助
-              </Text>
-            </View>
-          )}
-        </ScrollView>
+            {basicData.isWuxianyijin && (
+              <View style={styles.fuliView}>
+                <Image
+                  style={styles.fuliIcon}
+                  resizeMode="center"
+                  source={require('../../../assets/requestJobs/wuxianyijin.png')}
+                />
+                <Text style={styles.fuliDetail}>
+                  五险一金
+                </Text>
+              </View>
+            )}
+            {basicData.isNianzhongjiang && (
+              <View style={styles.fuliView}>
+                <Image
+                  style={styles.fuliIcon}
+                  resizeMode="center"
+                  source={require('../../../assets/requestJobs/nianzhongjiang.png')}
+                />
+                <Text style={styles.fuliDetail}>
+                  年终奖
+                </Text>
+              </View>
+            )}
+            {basicData.isCanbu && (
+              <View style={styles.fuliView}>
+                <Image
+                  style={styles.fuliIcon}
+                  resizeMode="center"
+                  source={require('../../../assets/requestJobs/canbu.png')}
+                />
+                <Text style={styles.fuliDetail}>
+                  餐补
+                </Text>
+              </View>
+            )}
+            {basicData.isJiaotongbuzhu && (
+              <View style={styles.fuliView}>
+                <Image
+                  style={styles.fuliIcon}
+                  resizeMode="center"
+                  source={require('../../../assets/requestJobs/jiaotong.png')}
+                />
+                <Text style={styles.fuliDetail}>
+                  交通补助
+                </Text>
+              </View>
+            )}
+          </ScrollView>
+        )}
       </View >
     )
   }
 
   renderCompany() {
-    const { dataSource } = this.state
+    const { showMoreDetail, basicData } = this.state
+    const detail = basicData.extra_attribute || '深圳'
     return (
       <View style={styles.companyXinxi}>
         <Text style={styles.companyXinxiTitle}>公司介绍</Text>
-        <Text
+        <Text style={styles.companyXinxiDetail}>
+          {showMoreDetail ? detail : detail.substring(0, 90)}
+          {detail.length > 100 && !showMoreDetail && (
+            <NextTouchableOpacity
+              onPress={() => {
+                this.setState({ showMoreDetail: true })
+              }}
+            >
+              <Text style={styles.showMoreText}> ...查看展开</Text>
+            </NextTouchableOpacity>
+          )}
+        </Text>
+        {/* <Text
           style={styles.companyXinxiDetail}
           numberOfLines={4}
         >
-          深圳智慧网络有限公司是一家新兴崛起的高科技企业，专为通信、互联网、电子商务、移动平台等领域的客户提供计算机软件技术的开发、测试、维护和咨询服务。总部位于环境优美、交通便捷的深圳科技园区内，在上海设有分公司,可以远程办公,薪资丰厚,欢迎加入呀!
+          {basicData.extra_attribute || '深圳智慧网络有限公司是一家新兴崛起的高科技企业，专为通信、互联网、电子商务、移动平台等领域的客户提供计算机软件技术的开发、测试、维护和咨询服务。总部位于环境优美、交通便捷的深圳科技园区内，在上海设有分公司,而且卡商贷就奥斯卡阿萨德静安寺按实际的按商家等客户阿机审打回按实际的看按时接电话按理说肯德基回案例时间肯定爱空间'}
         </Text>
-        <Text style={styles.showMore}>查看展开</Text>
+        <Text style={styles.showMore}>查看展开</Text> */}
         <NextTouchableOpacity
           onPress={() => {
             const { navigation } = this.props
@@ -443,7 +558,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
                 style={styles.locationIcon}
                 source={require('../../../assets/requestJobs/company-location.png')}
               />
-              <Text style={styles.companyXinxiCompany}>{dataSource.location}</Text>
+              <Text style={styles.companyXinxiCompany}>{basicData.enterprise_loc_detail && basicData.enterprise_loc_detail[0] || '- -'}</Text>
             </View>
             <Image
               style={styles.nextIcon}
@@ -456,18 +571,20 @@ export default class CompanyDetail extends Component<IProps, IState> {
   }
 
   renderCompanyInfo() {
-    const { dataSource } = this.state
+    const { basicData } = this.state
+    const showFinancing = basicData.industry_involved.length > 0 ? basicData.industry_involved[basicData.industry_involved.length - 1] : ''
     return (
       <View>
         <View style={styles.companyInfo}>
           <View style={styles.companyTitleView}>
             <View style={styles.companyTitle}>
-              <Text style={styles.companyName}>{dataSource.company}</Text>
+              <Text style={styles.companyName}>{basicData.enterprise_name}</Text>
               <Image style={styles.jobRenzheng}
                 source={require('../../../assets/requestJobs/job-renzheng.png')}
               />
             </View>
-            <Text style={styles.companySummary}>{`${dataSource.financing}·${dataSource.staffAmount}·${dataSource.feature}`}</Text>
+            <Text style={styles.companySummary}>{
+              `${reformComFinancing(basicData.enterprise_financing)}·${reformCompanySize(basicData.enterprise_size)}·${showFinancing}`}</Text>
           </View>
           <View style={styles.companyIcon} />
         </View>
@@ -505,7 +622,10 @@ export default class CompanyDetail extends Component<IProps, IState> {
 
   renderCompanyPhoto() {
     const { navigation } = this.props
-    const { videoPlaying, dataSource } = this.state
+    const { videoPlaying, basicData: { enterprise_logo } } = this.state
+    if (!enterprise_logo) {
+      return null
+    }
     return (
       <View style={styles.companyPhotoView}>
         <Text style={styles.companyPhotoText}>公司相册</Text>
@@ -554,7 +674,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
               }}
             />
           </NextTouchableOpacity>
-          {dataSource.imageList.map((e: any, index: number) => {
+          {enterprise_logo.map((e: any, index: number) => {
             return (
               <NextTouchableOpacity
                 onPress={() => {
@@ -579,6 +699,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
   }
 
   renderHotReviewer() {
+    const { hrList } = this.state
     return (
       <View style={styles.companyPhotoView}>
         <Text style={styles.companyPhotoText}>热门招聘官</Text>
@@ -587,29 +708,19 @@ export default class CompanyDetail extends Component<IProps, IState> {
           showsHorizontalScrollIndicator={false}
           style={styles.reviewerScrollview}
         >
-          <NextTouchableOpacity
-            style={styles.reviewerItem}
-          >
-            <View style={styles.reviewerIcon} />
-            <Text style={styles.reviewerName}>江良华</Text>
-            <Text style={styles.reviewerJob} numberOfLines={1}>技术总监</Text>
+          {hrList.map((item: any, index: number) => {
+            return (
+              <NextTouchableOpacity
+                key={index.toString()}
+                style={styles.reviewerItem}
+              >
+                <View style={styles.reviewerIcon} />
+                <Text style={styles.reviewerName}>{item.name}</Text>
+                <Text style={styles.reviewerJob} numberOfLines={1}>{item.pos}</Text>
 
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
-            style={styles.reviewerItem}
-          >
-            <View style={styles.reviewerIcon} />
-            <Text style={styles.reviewerName}>徐海燕</Text>
-            <Text style={styles.reviewerJob} numberOfLines={1}>运营总监兼人事总监兼人事</Text>
-
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
-            style={styles.reviewerItem}
-          >
-            <View style={styles.reviewerIcon} />
-            <Text style={styles.reviewerName}>黄小军</Text>
-            <Text style={styles.reviewerJob} numberOfLines={1}>招聘专员</Text>
-          </NextTouchableOpacity>
+              </NextTouchableOpacity>
+            )
+          })}
         </ScrollView>
       </View>
     )
@@ -668,33 +779,33 @@ export default class CompanyDetail extends Component<IProps, IState> {
   }
 
   renderReviewerEvaluation() {
-    const score = 4.4
-    const star = 4
+    const { recommentList } = this.state
     return (
       <View style={styles.interviewView}>
         <Text style={styles.companyPhotoText}>面试评价</Text>
         <View style={styles.reviewerContainer}>
           <View style={styles.reviewerContainerLeft}>
             <View style={styles.scoreView}>
-              <Text style={styles.scoreText}>{score}</Text>
+              <Text style={styles.scoreText}>{recommentList.total}</Text>
               <Text style={styles.scoreUnit}>分</Text>
             </View>
-            {this.renderStar(star)}
+            {this.renderStar(Number(recommentList.total))}
           </View>
           <View style={styles.line} />
           <View style={styles.reviewerContainerRight}>
-            {this.renderLinearGradient('职位描述：', 0.8)}
-            {this.renderLinearGradient('公司情况：', 0.7)}
-            {this.renderLinearGradient('面试官：', 0.88)}
+            {this.renderLinearGradient('职位描述：', recommentList.description / 5)}
+            {this.renderLinearGradient('公司情况：', recommentList.comp_env / 5)}
+            {this.renderLinearGradient('面试官：', recommentList.HR / 5)}
           </View>
         </View>
       </View>
     )
   }
 
-  renderCommetCell(item: any) {
+  renderCommetCell(item: any, index: number) {
     return (
       <CompanyCommentCell
+        key={index.toString()}
         cellItem={item}
         likePress={() => {
           RootLoading.info('点赞了~')
@@ -718,7 +829,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
           navigation.push('InterviewEvaluation')
         }}
       >
-        <Text style={styles.showMoreText}>
+        <Text style={styles.showMoreCommentText}>
           {`全部${allComment}条面试评价`}
         </Text>
       </NextTouchableOpacity>
@@ -726,17 +837,15 @@ export default class CompanyDetail extends Component<IProps, IState> {
   }
 
   renderCommentList() {
-    const { dataSource, commentRefresh, showAllComment } = this.state
-    if (!dataSource || !dataSource.commentList) {
+    const { commentRefresh, showAllComment, recommentList } = this.state
+    if (!recommentList) {
       return null
     }
-    let showDs: any = []
-    if (dataSource.commentList.length > 2) {
+    let showDs = recommentList.recommends
+    if (recommentList.recommends.length > 2) {
       if (!showAllComment) {
-        showDs.push(dataSource.commentList[0])
-        showDs.push(dataSource.commentList[1])
-      } else {
-        showDs = dataSource.commentList
+        showDs.push(recommentList.recommends[0])
+        showDs.push(recommentList.recommends[1])
       }
     }
     return (
@@ -745,20 +854,17 @@ export default class CompanyDetail extends Component<IProps, IState> {
         refreshState={commentRefresh}
         automaticallyAdjustContentInsets={false}
         data={showDs}
-        renderItem={({ item }: any) => this.renderCommetCell(item)}
-        keyExtractor={(item: any) => item.id.toString()}
-        ListFooterComponent={this.renderFooterView(showAllComment, dataSource.commentList.length)}
+        renderItem={({ item, index }: any) => this.renderCommetCell(item, index)}
+        ListFooterComponent={this.renderFooterView(showAllComment, recommentList.recommends.length)}
+        keyExtractor={(item: any, index: number) => index.toString()}
         footerNoMoreDataText="没有更多了"
       />
     )
   }
 
   renderCompanyQuestion() {
-    const { dataSource } = this.state
+    const { qaList } = this.state
     const { navigation } = this.props
-    if (!dataSource || !dataSource.companyQuestion) {
-      return null
-    }
     return (
       <View style={styles.interviewView}>
         <NextTouchableOpacity
@@ -769,7 +875,14 @@ export default class CompanyDetail extends Component<IProps, IState> {
         >
           <Text style={styles.companyPhotoText}>公司问答</Text>
         </NextTouchableOpacity>
-        {dataSource.companyQuestion.map((item: any, index: number) => {
+        <CompanyQuestionCell
+          // key={index.toString()}
+          cellItem={qaList}
+          onPress={() => {
+            navigation.push('SubmitCompanyQuestion')
+          }}
+        />
+        {/* {dataSource.companyQuestion.map((item: any, index: number) => {
           return (
             <CompanyQuestionCell
               key={index.toString()}
@@ -779,7 +892,7 @@ export default class CompanyDetail extends Component<IProps, IState> {
               }}
             />
           )
-        })}
+        })} */}
         <NextTouchableOpacity
           style={styles.askQuestionBtn}
           onPress={() => {
@@ -916,7 +1029,8 @@ export default class CompanyDetail extends Component<IProps, IState> {
   }
 
   render() {
-    const { dataSource, shieldVisible, welfareVisible, imageModalVisible } = this.state
+    const { hrList, shieldVisible, welfareVisible, qaList,
+      refreshing, basicData, recommentList } = this.state
     return (
       <View style={styles.container}>
         <StatusBar
@@ -929,20 +1043,39 @@ export default class CompanyDetail extends Component<IProps, IState> {
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={{ paddingBottom: 20 }}
+          refreshControl={(
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => this.loadData()
+              }
+            />
+          )}
         >
-          {dataSource ? (
-            <View style={{ flex: 1, }}>
-              {this.renderCompanyInfo()}
-              {this.renderCompayRules()}
-              {this.renderCompany()}
-              {this.renderCompanyPhoto()}
-              {this.renderHotReviewer()}
-              {this.renderReviewerEvaluation()}
-              {this.renderCommentList()}
-              {this.renderCompanyQuestion()}
-              {this.renderImageModal()}
-            </View>
-          ) : null}
+          {/* {(dataSource && basicData) ? ( */}
+          <View style={{ flex: 1, }}>
+            {basicData && (
+              <>
+                {this.renderCompanyInfo()}
+                {this.renderCompayRules()}
+                {this.renderCompany()}
+                {this.renderCompanyPhoto()}
+              </>
+            )}
+            {hrList && (
+              this.renderHotReviewer()
+            )}
+            {recommentList && (
+              <>
+                {this.renderReviewerEvaluation()}
+                {this.renderCommentList()}
+              </>
+            )}
+            {qaList && (
+              this.renderCompanyQuestion()
+            )}
+          </View>
+          {/* {this.renderImageModal()} */}
+          {/* ) : null} */}
         </ScrollView>
         {this.renderCompanyFooter()}
         <AlertContentModal
@@ -968,3 +1101,20 @@ export default class CompanyDetail extends Component<IProps, IState> {
     )
   }
 }
+
+const mapStateToProps = (state: IStoreState) => {
+  return {
+    userInfo: state.userInfo
+  }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
+  return bindActionCreators({
+    getCandidateGetEnterpriseDetail_EntInfo: jobActions.getCandidateGetEnterpriseDetail_EntInfo,
+    getCandidateGetEnterpriseDetail_HRList: jobActions.getCandidateGetEnterpriseDetail_HRList,
+    getCandidateGetEnterpriseDetail_InterviewRecomment: jobActions.getCandidateGetEnterpriseDetail_InterviewRecomment,
+    getCandidateGetEnterpriseDetail_QA: jobActions.getCandidateGetEnterpriseDetail_QA
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CompanyDetail)

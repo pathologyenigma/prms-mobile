@@ -104,7 +104,7 @@ type TRouterParams = {
   JobSearch: any
   JobSearchResult: any
   FilterView: { filterMode: number, filterResultCallback: (res: any) => void }
-  JobDetail: any,
+  JobDetail: { jobid: number },
   CompanyDetail: any,
   ReportComplaints: any,
   ReportComplaintsDetail: { type: string },
@@ -164,7 +164,7 @@ type TRouterParams = {
   GreetEdit: { greetItem: any }
   HomeLocation: any
   MapLocate: any
-  HrPersonalInfo: any
+  HrPersonalInfo: { hrId: number }
   FindSearch: { searchType: number } // 0-找公司; 1-找招聘会
   FindSearchResult: any
   JobfairDetail: any
@@ -176,7 +176,7 @@ type TRouterParams = {
   AllMessages: any
   ChooseRole: any
   VideoComponent: { videoUri: string, closeCallback: () => void }
-  MessagePage: any
+  MessagePage: { targetId: number }
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {

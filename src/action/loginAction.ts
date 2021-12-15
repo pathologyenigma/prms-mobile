@@ -7,6 +7,7 @@ import {
   Query
 } from "@apollo/client/react/components"
 import {
+  ApolloError,
   gql
 } from "@apollo/client"
 import { apolloClientShare, checkUserVerifyCodeConsumeGql, chooseOrSwitchIdentityGql, getENTEditEnterpriseBasicInfoGql, getUserEditPersonalDataGql, initApolloClient, loginGql, numberCheckGql, registerGql, resetPasswordGql, sendSMSGql, subscriptionGqlServerGql, testGql } from '../utils/postQuery'
@@ -249,7 +250,7 @@ const chooseRole = (
           }
         }
       })
-      .catch((error) => {
+      .catch((error: ApolloError) => {
         errorHandler(error)
       })
   }

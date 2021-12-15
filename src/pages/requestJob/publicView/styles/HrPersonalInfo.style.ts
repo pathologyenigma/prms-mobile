@@ -158,8 +158,7 @@ export default StyleSheet.create({
   },
   matchJobView: {
     backgroundColor: '#fff',
-    marginHorizontal: 11,
-    marginTop: -30,
+    // marginHorizontal: 11,
     borderRadius: 8,
     justifyContent: 'space-between',
     paddingHorizontal: 11,
@@ -169,6 +168,7 @@ export default StyleSheet.create({
     shadowRadius: 5,
     shadowOpacity: 0.5,
     shadowOffset: { width: 0, height: 3 },
+    marginBottom: 15,
   },
   matchTitle: {
     color: '#333333',
@@ -223,14 +223,16 @@ export default StyleSheet.create({
     borderRadius: 12,
     flex: 1,
     backgroundColor: '#fff',
-    paddingBottom: 20,
   },
   moreJobTitle: {
-    marginLeft: 10,
-    marginTop: 19,
+    paddingLeft: 10,
+    paddingTop: 19,
     fontSize: 18,
     color: '#333333',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    backgroundColor: '#ffffff',
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
   },
   moreJobCell: {
     borderRadius: 0,
@@ -244,6 +246,11 @@ export default StyleSheet.create({
     paddingBottom: 20,
   },
   listView: {
-    flex: 1
+    flex: 1,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    marginTop: -30,
+    // paddingHorizontal: 11,
+    backgroundColor: '#F9F9F9',
   }
 })

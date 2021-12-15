@@ -1,5 +1,7 @@
+import { format } from 'date-fns'
 import React, { PureComponent } from 'react'
 import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 'react-native'
+import { reformEducation } from '../../../../utils/utils'
 import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
 import styles from './styles'
 
@@ -28,25 +30,29 @@ export default class CompanyJobCell extends PureComponent<ICell> {
       >
         <View style={styles.cellTitleView}>
           <Text style={styles.cellTitle}>
-            {cellItem.name}
+            {cellItem.title || cellItem.name}
           </Text>
           <Text style={styles.cellSalary}>
-            {cellItem.salary}
+            {cellItem.salary ? (
+              `${cellItem.salary[0] || ''}-${cellItem.salary[1] || ''}`
+            ) : cellItem.salary}
           </Text>
         </View>
         <View style={styles.cellJobView}>
           <Text style={styles.cellExperience}>
-            {cellItem.location}
+            {cellItem.loc || cellItem.location}
           </Text>
           <Text style={styles.cellExperience}>
-            {cellItem.experience}
+            {`${cellItem.experience}年及以上`}
           </Text>
           <Text style={styles.cellExperience}>
-            {cellItem.education}
+            {reformEducation(cellItem.education)}
           </Text>
         </View>
         <Text style={styles.publishTime}>
-          {`发布时间: ${cellItem.publishTime}`}
+          {`发布时间: ${cellItem.createdAt ? (
+            format(Number(cellItem.createdAt), 'yyyy-MM-dd')
+          ) : cellItem.publishTime}`}
         </Text>
         {onDeliveryPress && (
           <NextTouchableOpacity

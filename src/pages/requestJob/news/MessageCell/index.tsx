@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import React, { PureComponent } from 'react'
 import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -76,15 +77,17 @@ export default class MessageCell extends PureComponent<ICell> {
               {cellItem.company === '官方' ? (
                 this.renderOfficialTag()
               ) : (
-                <Text style={styles.companyText}>{cellItem.company}</Text>
+                <Text style={styles.companyText}>{cellItem.ent}</Text>
               )}
             </View>
-            <Text style={styles.timeText}>{cellItem.time}</Text>
+            {cellItem.last_msg_time && (
+              <Text style={styles.timeText}>{format(new Date(cellItem.last_msg_time), 'MM-dd HH:mm')}</Text>
+            )}
           </View>
           <Text
             style={styles.messageText}
             numberOfLines={1}
-          >{cellItem.message}</Text>
+          >{cellItem.last_msg}</Text>
         </View>
       </NextTouchableOpacity>
     )

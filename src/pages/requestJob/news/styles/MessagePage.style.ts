@@ -215,7 +215,8 @@ export default StyleSheet.create({
     marginTop: 2
   },
   cellSendMessage: {
-    marginTop: 25,
+    marginTop: 15,
+    marginBottom: 10,
     flexDirection: 'row',
     justifyContent: 'flex-end'
   },
@@ -258,7 +259,8 @@ export default StyleSheet.create({
     marginLeft: 6
   },
   cellReceiveMessage: {
-    marginTop: 25,
+    marginTop: 15,
+    marginBottom: 10,
     flexDirection: 'row',
   },
   cellReceiveContent: {
