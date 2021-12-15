@@ -6,7 +6,7 @@ import GradientButton from '../../components/GradientButton'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import styles from './styles/Jobs.style'
 import LinearGradient from 'react-native-linear-gradient'
-import { gradienViewRightGreenColor, greenColor, Log_Out } from '../../../utils/constant'
+import { gradienViewRightGreenColor, greenColor, Log_Out, Receive_Message } from '../../../utils/constant'
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { Carousel } from '@ant-design/react-native'
 import NavBar, { EButtonType } from '../../components/NavBar'
@@ -123,9 +123,10 @@ class Jobs extends Component<IProps, IState> {
         && result
         && result.data
         && result.data.newMessage
-        && result.data.newMessage.to.toString() === this.props.userInfo.userInfo.id.toString()
+        // && result.data.newMessage.to.toString() === this.props.userInfo.userInfo.id.toString()
       ) {
         RootLoading.info(`收到新消息 :${result.data.newMessage.messageContent}`)
+        DeviceEventEmitter.emit(Receive_Message, result.data)
       }
     })
   }

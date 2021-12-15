@@ -30,8 +30,8 @@ const initState: IUserInfoState = {
       token: '',
       createdAt: ''
     },
-    // TODO: 临时代码
-    id: '48',
+    // TODO: 临时代码 , 对应账号 18800001012 /  word_12
+    id: '49',
     avatar: '',
     username: '',
     mobileNumber: '',

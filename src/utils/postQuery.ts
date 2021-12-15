@@ -143,7 +143,7 @@ const userGetMessagesGql = gql`
 
 // 选择身份
 const chooseOrSwitchIdentityGql = gql`
-  mutation UserChooseOrSwitchIdentity($targetIdentity:String!,$role:String!){
+  mutation UserChooseOrSwitchIdentity($targetIdentity:Identity!,$role:EnterpriseRole!){
     UserChooseOrSwitchIdentity(targetIdentity:$targetIdentity,role:$role)
   }
 `

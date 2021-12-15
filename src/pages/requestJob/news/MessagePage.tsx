@@ -6,12 +6,12 @@ import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import RootLoading from '../../../utils/rootLoading'
 import { IStoreState } from '../../../reducer'
-import { Text, View, Image, StatusBar, TextInput } from 'react-native'
+import { Text, View, Image, StatusBar, TextInput, DeviceEventEmitter, FlatList } from 'react-native'
 import { versionCode } from '../../../utils/config'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import GradientButton from '../../components/GradientButton'
 import LinearGradient from 'react-native-linear-gradient'
-import { gradienRightGreenColor, greenColor } from '../../../utils/constant'
+import { gradienRightGreenColor, greenColor, Receive_Message } from '../../../utils/constant'
 import { ScrollView } from 'react-native-gesture-handler'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
@@ -56,12 +56,14 @@ const inappropriateArray = [
 
 class MessagePage extends Component<IProps, IState> {
   private inputRef: any
+  private newMessaheListner: any
+  private messageListRef: any
   constructor(props: IProps) {
     super(props)
     const { route: { params: { targetId } } } = props
     console.log('targetId: ', targetId)
     this.state = {
-      targetId,
+      targetId: 1,
       page: 0,
       pageSize: 10,
       content: '',
@@ -89,10 +91,45 @@ class MessagePage extends Component<IProps, IState> {
         content: '你好，我的姓名是,方便沟通么?'
       }]
     }
+    this.reformNewMessage = this.reformNewMessage.bind(this)
+    this.newMessaheListner = DeviceEventEmitter.addListener(Receive_Message, this.reformNewMessage)
   }
 
   componentDidMount() {
     this.loadData()
+  }
+
+  componentWillUnmount() {
+    if (this.newMessaheListner) {
+      this.newMessaheListner.remove()
+    }
+  }
+
+  reformNewMessage(message: any) {
+    console.log('message: ', message)
+    if (message) {
+      this.setState({
+        listDataSource: this.state.listDataSource.concat(message.newMessage)
+      }, () => {
+        console.log('this.messageListRef: ', this.messageListRef)
+        this.messageListRef && this.messageListRef.scrollToEnd({ animated: true })
+      })
+    }
+  }
+
+  listScrollToEnd() {
+    console.log('11111111111')
+    if (!this.messageListRef) {
+      console.log('111111111112')
+      setTimeout(() => {
+        this.listScrollToEnd()
+      }, 300);
+    } else {
+      console.log('111111111113')
+      setTimeout(() => {
+        this.messageListRef.scrollToEnd({ animated: true })
+      }, 300);
+    }
   }
 
   loadData() {
@@ -108,7 +145,7 @@ class MessagePage extends Component<IProps, IState> {
           && result.UserGetMessages.messages
           && result.UserGetMessages.messages.length > 0) {
           const newsList = [...result.UserGetMessages.messages]
-          this.setState({ listDataSource: listDataSource.concat(newsList.reverse()) })
+          this.setState({ listDataSource: listDataSource.concat(newsList.reverse()) }, () => this.listScrollToEnd())
         }
       }
     })
@@ -295,7 +332,6 @@ class MessagePage extends Component<IProps, IState> {
   renderTextMessage(item: any) {
     const { userInfo } = this.props
     const isSend = userInfo.userInfo.username !== item.launch
-    console.log('userInfo: ', userInfo)
     if (userInfo.userInfo.id.toString() === item.from.toString()) {
       // 发送方
       return (
@@ -511,14 +547,18 @@ class MessagePage extends Component<IProps, IState> {
     return null
   }
 
+  handleRefresh() {
+
+  }
+
   renderList() {
-    const { dataSource, listDataSource } = this.state
+    const { refreshState, listDataSource } = this.state
     return (
       <RefreshListView
+        listRef={(e: any) => { this.messageListRef = e }}
         style={styles.listView}
-        contentContainerStyle={{ paddingBottom: 100, }}
-        // onHeaderRefresh={() => this.handleRefresh()}
-        // refreshState={refreshState}
+        onHeaderRefresh={() => this.handleRefresh()}
+        refreshState={refreshState}
         automaticallyAdjustContentInsets={false}
         data={listDataSource}
         renderItem={({ item }: any) => this.renderCellItem(item)}

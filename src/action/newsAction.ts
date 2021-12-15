@@ -60,6 +60,7 @@ const userGetMessages = (
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: userGetMessagesGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         targetId, page, pageSize
       }
