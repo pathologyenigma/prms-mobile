@@ -9,44 +9,54 @@ import {
   NavigationContainer,
 } from '@react-navigation/native'
 import {
-  ApolloClient,
-  InMemoryCache,
   ApolloProvider,
-  useQuery,
-  gql
 } from "@apollo/client"
+import { initApolloClient } from './src/utils/postQuery'
+import { Login_Token } from './src/utils/constant'
+import AsyncStorage from '@react-native-community/async-storage'
+import RootLoading from './src/utils/rootLoading'
 
-const client = new ApolloClient({
-  uri: 'https://48p1r2roz4.sse.codesandbox.io',
-  cache: new InMemoryCache()
-})
+interface IProps {
 
-// const client = ...
+}
+interface IStates {
+  localToken: string | undefined,
+}
 
-client
-  .query({
-    query: gql`
-      query GetRates {
-        rates(currency: "USD") {
-          currency
+class App extends Component<IProps, IStates> {
+  constructor(props: any) {
+    super(props)
+    this.state = ({
+      localToken: undefined
+    })
+  }
+
+  componentDidMount() {
+    AsyncStorage.getItem(Login_Token)
+      .then((result: any) => {
+        if (result) {
+          this.setState({ localToken: result })
+        } else {
+          this.setState({ localToken: '' })
         }
-      }
-    `
-  })
-  .then(result => console.log('111111111111: ', result));
-
-
-class App extends Component {
+      })
+      .catch((error) => {
+        this.setState({ localToken: '' })
+      })
+  }
   render() {
+    if (this.state.localToken === undefined) {
+      return null
+    }
     return (
       <NavigationContainer>
-        <ApolloProvider client={client}>
-          <AntProvider>
+        <AntProvider>
+          <ApolloProvider client={initApolloClient(this.state.localToken)}>
             <Provider store={store}>
               <Navigator />
             </Provider>
-          </AntProvider>
-        </ApolloProvider>
+          </ApolloProvider>
+        </AntProvider>
       </NavigationContainer>
     )
   }

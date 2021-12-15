@@ -44,7 +44,7 @@ export default class CompanyQuestionCell extends PureComponent<ICell> {
             {cellItem.answer}
           </Text>
         </View>
-        <Text style={[styles.info, isWhiteMode && { color: '#333333' }]}>{`${cellItem.answerAmount}回答  ${cellItem.focus}关注`}</Text>
+        <Text style={[styles.info, isWhiteMode && { color: '#333333' }]}>{`${cellItem.answerCount}回答  ${cellItem.questionCount}关注`}</Text>
       </NextTouchableOpacity>
     )
   }

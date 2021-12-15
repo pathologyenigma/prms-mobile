@@ -66,7 +66,6 @@ export default StyleSheet.create({
     marginTop: 14
   },
   conditionLeftBtn: {
-    height: 13,
     marginRight: 15
   },
   conditionLeftText: {
@@ -153,6 +152,7 @@ export default StyleSheet.create({
     color: '#333333',
     fontSize: 16,
     fontWeight: 'bold',
+    lineHeight: 18,
     flex: 1
   },
   videoDetail: {

@@ -1,86 +1,141 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView, StatusBar } from 'react-native'
+import { Text, View, Image, ScrollView, StatusBar, DeviceEventEmitter } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import RootLoading from '../../../utils/rootLoading'
 import GradientButton from '../../components/GradientButton'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import styles from './styles/Jobs.style'
 import LinearGradient from 'react-native-linear-gradient'
-import { gradienViewRightGreenColor, greenColor } from '../../../utils/constant'
+import { gradienViewRightGreenColor, greenColor, Log_Out, Receive_Message } from '../../../utils/constant'
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { Carousel } from '@ant-design/react-native'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import JobCell from '../../components/JobCell'
 import { GenProps } from '../../../navigator/requestJob/stack'
+import { connect } from 'react-redux'
+import { bindActionCreators, Dispatch, AnyAction } from 'redux'
+import * as actions from '../../../action/loginAction'
+import * as jobActions from '../../../action/jobsAction'
+import {
+  Query
+} from "@apollo/client/react/components"
+import {
+  gql
+} from "@apollo/client"
+import { getENTEditEnterpriseBasicInfo } from '../../../action/loginAction'
+import { CommonActions } from '@react-navigation/native';
+import AsyncStorage from '@react-native-community/async-storage'
+import JobCellData from '../../components/JobCellData'
+import { IStoreState } from '../../../reducer'
+import { urlToHttpOptions } from 'http'
 
-type IProps = GenProps<'Jobs'> & {
-
-}
+type IProps = GenProps<'Jobs'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 type IState = {
   videoSource: [],
-  listDataSource: [],
+  listDataSource: any,
   refreshState: RefreshState.HeaderRefreshing,
-  selectCondition: number
+  selectCondition: number,
+  selectJobsArray: any,
+  selectJobIndex: number,
+  page: number
 }
 
-export default class Jobs extends Component<IProps, IState> {
+class Jobs extends Component<IProps, IState> {
   constructor(props: any) {
     super(props)
     console.log('111111112props: ', props)
     this.state = {
       videoSource: [],
-      listDataSource: [{
-        id: 1,
-        name: '项目经理',
-        company: '深圳市酷魅科技有限公司',
-        financing: '融资未公开',
-        staffAmount: '1-49人',
-        experience: '3-4年',
-        education: '大专及以上',
-        location: '深圳·宝安区',
-        salary: '15K-30K',
-        interviewer: '李女士·产品线HRBP'
-      }, {
-        id: 2,
-        name: '项目经理',
-        company: '深圳市酷魅科技有限公司',
-        financing: '融资未公开',
-        staffAmount: '1-49人',
-        experience: '3-4年',
-        education: '大专及以上',
-        location: '深圳·宝安区',
-        salary: '15K-30K',
-        interviewer: '陈先生·技术总监'
-      }, {
-        id: 3,
-        name: '项目经理',
-        company: '深圳市酷魅科技有限公司',
-        financing: '融资未公开',
-        staffAmount: '1-49人',
-        experience: '3-4年',
-        education: '大专及以上',
-        location: '深圳·宝安区',
-        salary: '15K-30K',
-        interviewer: '陈先生·技术总监'
-      }],
+      listDataSource: [],
       refreshState: RefreshState.Idle,
-      selectCondition: 1, // 1:推荐; 2: 最新; 3:附近
+      selectCondition: 2, // 1:推荐; 2: 最新; 3:附近
+      selectJobsArray: [],
+      selectJobIndex: 0,
+      page: 0
     }
   }
 
   componentDidMount() {
-    this.loadData()
+    RootLoading.loading()
+    this.loadJobExpections()
+  }
+
+  loadJobExpections() {
+    // 加载个人职位类型
+    this.props.getCandidateGetAllJobExpectations((error, result) => {
+      console.log('getCandidateGetAllJobExpectations1: ', error, result)
+      if (!error && result && result.CandidateGetAllJobExpectations) {
+        this.loadData()
+        this.setState({ selectJobsArray: result.CandidateGetAllJobExpectations }, () => {
+          this.lodJobList()
+        })
+      } else {
+        RootLoading.fail('职位加载失败,请重试')
+      }
+    })
+  }
+
+  lodJobList() {
+    // 根据个人类型加载列表
+    const { selectJobsArray, selectJobIndex, listDataSource, page } = this.state
+    if (!selectJobsArray) {
+      // 没有筛选条件，直接展示空列表
+      this.setState({
+        listDataSource: [],
+        refreshState: 3
+      })
+      return
+    }
+    console.log('selectJobsArray[selectJobIndex]: ', selectJobsArray[selectJobIndex])
+    const filter = {
+      page,
+      pageSize: 10
+    }
+    console.log('filter:', filter)
+    this.props.getCandidateGetJobList(filter,
+      (error, result) => {
+        RootLoading.hide()
+        if (!error && result && result.CandidateGetJobList && result.CandidateGetJobList.data) {
+          this.setState({
+            listDataSource: listDataSource.concat(result.CandidateGetJobList.data),
+            refreshState: result.CandidateGetJobList.data.length === 10 ? 0 : 3
+          })
+        } else {
+          this.setState({
+            refreshState: 4
+          })
+          RootLoading.fail('职位加载失败,请重试')
+        }
+      })
   }
 
   loadData() {
     // 获取视频和列表数据
+    // AsyncStorage.getAllKeys((error, result) => {
+    //   console.log('AsyncStorage: ', error, result)
+    // })
+    // 测试订阅
+    console.log('111111111: loadData ')
+    this.props.subscriptionMessage((error, result) => {
+      console.log('subscriptionMessage: ', error, result)
+      if (!error
+        && result
+        && result.data
+        && result.data.newMessage
+        // && result.data.newMessage.to.toString() === this.props.userInfo.userInfo.id.toString()
+      ) {
+        RootLoading.info(`收到新消息 :${result.data.newMessage.messageContent}`)
+        DeviceEventEmitter.emit(Receive_Message, result.data)
+      }
+    })
   }
 
   renderNavBar() {
     const start = { x: 0, y: 0.5 }
     const end = { x: 1, y: 0.5 }
     const { navigation } = this.props
+    const { selectJobsArray, selectJobIndex } = this.state
     return (
       <LinearGradient
         start={start}
@@ -102,18 +157,29 @@ export default class Jobs extends Component<IProps, IState> {
             ref={'barScrollView'}
             style={styles.naviBarScrollview}
           >
-            <Text style={[styles.naviBarText, {
-              fontSize: 20,
-              fontWeight: '400'
-            }]}>
-              项目经理
-            </Text>
-            <Text style={styles.naviBarText}>
-              UE设计师
-            </Text>
-            <Text style={styles.naviBarText}>
-              APP设计师
-            </Text>
+            {selectJobsArray && selectJobsArray.length > 0 && (
+              selectJobsArray.map((item: any, index: number) => {
+                return (
+                  <NextTouchableOpacity
+                    key={index.toString()}
+                    onPress={() => {
+                      this.setState({
+                        selectJobIndex: index,
+                      }, () => {
+                        this.handleRefresh()
+                      })
+                    }}
+                  >
+                    <Text style={[styles.naviBarText, selectJobIndex === index && {
+                      fontSize: 20,
+                      fontWeight: '400'
+                    }]}>
+                      {item.job_category[item.job_category.length - 1]}
+                    </Text>
+                  </NextTouchableOpacity>
+                )
+              })
+            )}
           </ScrollView>
           <NextTouchableOpacity
             style={{ marginLeft: 40, marginRight: 10 }}
@@ -142,11 +208,22 @@ export default class Jobs extends Component<IProps, IState> {
   }
 
   handleRefresh() {
-
+    this.setState({
+      page: 0,
+      refreshState: 1,
+      listDataSource: [],
+    }, () => {
+      this.lodJobList()
+    })
   }
 
   handleEndReached() {
-
+    this.setState({
+      page: this.state.page + 1,
+      refreshState: 2
+    }, () => {
+      this.lodJobList()
+    })
   }
 
   renderVideoTag() {
@@ -187,6 +264,15 @@ export default class Jobs extends Component<IProps, IState> {
         <View style={styles.videoTopView}>
           <NextTouchableOpacity
             style={styles.videoBtn}
+            onPress={() => {
+              const { navigation } = this.props
+              navigation.push('JobSelectCity', {
+                selectJobCityCallback: (e: any) => {
+                  console.log('eeeee: ', e)
+                  RootLoading.info(e.title || e)
+                }
+              })
+            }}
           >
             {this.renderVideoTag()}
             <Text style={styles.videoText}>在招职场系列直播</Text>
@@ -210,12 +296,13 @@ export default class Jobs extends Component<IProps, IState> {
 
   renderItem(item: any) {
     const { navigation } = this.props
+    console.log('item: ', item)
     return (
-      <JobCell
-        key={item.id.toString()}
+      <JobCellData
+        key={item.job_id.toString()}
         cellItem={item}
         onPress={() => {
-          navigation.push('JobDetail')
+          navigation.push('JobDetail', { jobid: item.job_id })
         }}
       />
     )
@@ -227,7 +314,7 @@ export default class Jobs extends Component<IProps, IState> {
     return (
       <View style={styles.conditionView}>
         <View style={styles.conditionLeftView}>
-          <NextTouchableOpacity
+          {/* <NextTouchableOpacity
             style={styles.conditionLeftBtn}
             onPress={() => {
               this.setState({ selectCondition: 1 })
@@ -238,7 +325,7 @@ export default class Jobs extends Component<IProps, IState> {
                 color: greenColor, fontWeight: '500'
               }]}
             >推荐</Text>
-          </NextTouchableOpacity>
+          </NextTouchableOpacity> */}
           <NextTouchableOpacity
             style={styles.conditionLeftBtn}
             onPress={() => {
@@ -341,7 +428,31 @@ export default class Jobs extends Component<IProps, IState> {
 
   renderList() {
     const { refreshState, listDataSource } = this.state
+    console.log('listDataSource: ', listDataSource)
     return (
+      //   <Query
+      //     query={gql`
+      //   {
+      //     rates(currency: "USD") {
+      //       currency
+      //       rate
+      //     }
+      //   }
+      // `}
+      //   >
+      //     {
+      //       ({ loading, error, data }) => {
+      //         console.log('222222222: ', loading, error, data)
+      //         if (loading) return <Text>Loading...</Text>;
+      //         if (error) return <Text>Error :(</Text>;
+
+      //         return data.rates.map(({ currency, rate }) => (
+      //           <View key={currency}>
+      //             <Text>{currency}: {rate}</Text>
+      //           </View>
+      //         ));
+      //       }
+      //     }
       <RefreshListView
         style={styles.listView}
         onHeaderRefresh={() => this.handleRefresh()}
@@ -350,11 +461,12 @@ export default class Jobs extends Component<IProps, IState> {
         data={listDataSource}
         ListHeaderComponent={this.renderHeader}
         renderItem={({ item }: any) => this.renderItem(item)}
-        onFooterRefresh={() => this.handleEndReached}
+        onFooterRefresh={() => this.handleEndReached()}
         keyExtractor={(item: any) => item.id.toString()}
         footerRefreshingText="加载更多"
         footerNoMoreDataText="没有更多了"
       />
+      // </Query>
     )
   }
 
@@ -373,3 +485,23 @@ export default class Jobs extends Component<IProps, IState> {
     )
   }
 }
+
+const mapStateToProps = (state: IStoreState) => {
+  return {
+    userInfo: state.userInfo
+  }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
+  return bindActionCreators({
+    reset_reducer: actions.reset_reducer,
+    update_kv: actions.update_kv,
+    loginMobile: actions.loginMobile,
+    userNumberCheck: actions.userNumberCheck,
+    subscriptionMessage: actions.subscriptionMessage,
+    getCandidateGetAllJobExpectations: jobActions.getCandidateGetAllJobExpectations,
+    getCandidateGetJobList: jobActions.getCandidateGetJobList,
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Jobs)

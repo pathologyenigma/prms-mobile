@@ -3,18 +3,19 @@ import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, De
 import styles from './styles/JobSelectCity.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
+import * as actions from '../../../action/jobsAction'
+import { IStoreState } from '../../../reducer'
+import { connect } from 'react-redux'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import RootLoading from '../../../utils/rootLoading'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import { greenColor } from '../../../utils/constant'
 
-import { site_address } from '../../../utils/address'
+// import { site_address } from '../../../utils/address'
 import GradientButton from '../../components/GradientButton'
 import SystemHelper from '../../../utils/system'
 
-type IProps = GenProps<'JobSelectCity'> & {
-
-}
+type IProps = GenProps<'JobSelectCity'> & ReturnType<typeof mapDispatchToProps>
 
 interface IState {
   dataSource: [],
@@ -25,10 +26,9 @@ interface IState {
   selectArea: any             // 选定的区域 (区域、地铁、附近、家附近)
   selectQu: any               // 选定的区
   selectZhen: any             // 选定的乡镇
-  selectedZhen: any           // 确定的乡镇
 }
 
-export default class JobSelectCity extends Component<IProps, IState> {
+class JobSelectCity extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
@@ -39,16 +39,48 @@ export default class JobSelectCity extends Component<IProps, IState> {
       isSelectDetailArea: false,
       selectQu: undefined,
       selectZhen: undefined,
-      selectedZhen: undefined
     }
   }
 
   componentDidMount() {
     this.loadData()
-    console.log('cityList: ', site_address)
+    // console.log('cityList: ', site_address)
   }
 
   loadData() {
+    RootLoading.loading()
+    const { getAllRegion, navigation } = this.props
+    getAllRegion((error, result) => {
+      console.log('getAll:" ', error, result)
+      RootLoading.hide()
+      if (!error && result) {
+        this.setState({
+          dataSource: result,
+          selectItem: result[0],
+          selectItemSecond: result[0].Cities,
+        })
+        // if (result.StaticGetAllRegion
+        //   && result.StaticGetAllRegion.data
+        // ) {
+        //   if (result.StaticGetAllRegion.data.length === 0) {
+        //     RootLoading.info('城市列表为空,请重试或联系客服')
+        //     setTimeout(() => {
+        //       navigation.goBack()
+        //     }, 1000)
+        //   } else {
+        //     // TODO:此处将数据设置到页面中进行展示
+        //   }
+        // } else {
+        //   RootLoading.fail('城市列表数据异常,请重试或联系客服')
+        // }
+      } else {
+        RootLoading.fail('城市列表加载失败,请重试')
+        navigation.goBack()
+      }
+    })
+  }
+
+  loadData1() {
     const dataSource = [
       {
         id: 0,
@@ -232,8 +264,8 @@ export default class JobSelectCity extends Component<IProps, IState> {
   }
 
   renderNavBar() {
-    const { navigation, route: { params: { selectJobCityCallback } } } = this.props
     const { selectedCity, isSelectDetailArea } = this.state
+    console.log('isSelectDetailArea: ', isSelectDetailArea, selectedCity)
     return (
       <NavBar
         statusBarTheme="dark-content"
@@ -241,7 +273,7 @@ export default class JobSelectCity extends Component<IProps, IState> {
           borderBottomWidth: 0,
           elevation: 0,
         }}
-        title={isSelectDetailArea ? (selectedCity && selectedCity.title) || '请先选择城市' : '切换城市'}
+        title={isSelectDetailArea ? ((selectedCity && selectedCity.name)) || '切换城市' : '请先选择城市'}
         left={{
           type: EButtonType.IMAGE,
           value: require('../../../assets/requestJobs/job-select-back.png'),
@@ -254,15 +286,12 @@ export default class JobSelectCity extends Component<IProps, IState> {
           value: isSelectDetailArea ? '切换城市' : '',
           style: styles.saveBtn,
           act: () => {
-            if (isSelectDetailArea) {
-              this.setState({ isSelectDetailArea: false })
-            }
-            // if (!selectedCity || selectedCity.length === 0) {
-            //   RootLoading.info('请选择城市')
-            // } else if (selectJobCityCallback) {
-            //   selectJobCityCallback(selectedCity)
-            //   navigation.goBack()
-            // }
+            this.setState({
+              selectedCity: undefined,
+              isSelectDetailArea: false,
+              selectQu: undefined,
+              selectZhen: undefined,
+            })
           }
         }}
       />
@@ -281,7 +310,7 @@ export default class JobSelectCity extends Component<IProps, IState> {
             return (
               <NextTouchableOpacity
                 style={[styles.detailSecondBtn,
-                selectItem.id === e.id && {
+                selectItem.province_id === e.province_id && {
                   borderLeftColor: greenColor,
                 }
                 ]}
@@ -289,18 +318,18 @@ export default class JobSelectCity extends Component<IProps, IState> {
                 onPress={() => {
                   this.setState({
                     selectItem: e,
-                    selectItemSecond: e.sublist,
+                    selectItemSecond: e.Cities,
                   })
                 }}
               >
-                <Text style={[styles.detailSecondText, selectItem.id === e.id && { color: greenColor, fontWeight: 'bold' }]}>{e.title}</Text>
+                <Text style={[styles.detailSecondText, selectItem.province_id === e.province_id && { color: greenColor, fontWeight: 'bold' }]}>{e.name}</Text>
               </NextTouchableOpacity>
             )
           })}
         </ScrollView>
         <ScrollView style={styles.detailThirdView}>
           {selectItemSecond.map((e: any, index: number) => {
-            const isSelected = selectedCity && (selectedCity.id === e.id)
+            const isSelected = selectedCity && (selectedCity.city_id === e.city_id)
             return (
               <NextTouchableOpacity
                 style={styles.detailThirdBtn}
@@ -308,13 +337,13 @@ export default class JobSelectCity extends Component<IProps, IState> {
                 onPress={() => {
                   this.setState({
                     selectedCity: e,
-                    selectZhen: e.sublist[0]
+                    selectZhen: e.Counties[0]
                   })
                 }}
               >
                 <Text style={
                   [styles.detailSecondText, isSelected && { color: greenColor, fontWeight: 'bold', flex: 1 }]
-                }>{e.title}</Text>
+                }>{e.name}</Text>
                 {isSelected ? (
                   <Image
                     style={styles.selectTag}
@@ -330,7 +359,7 @@ export default class JobSelectCity extends Component<IProps, IState> {
   }
 
   renderDetailView() {
-    const { selectItem, selectedZhen, selectArea, selectedCity, selectZhen } = this.state
+    const { selectItem, selectArea, selectedCity, selectQu, selectZhen } = this.state
     if (!selectItem || selectItem.length === 0) {
       return null
     }
@@ -382,7 +411,7 @@ export default class JobSelectCity extends Component<IProps, IState> {
           })}
         </ScrollView>
         <ScrollView style={styles.detailQuyuView}>
-          {selectedCity.sublist.map((e: any, index: number) => {
+          {selectedCity.Counties.map((e: any, index: number) => {
             return (
               <NextTouchableOpacity
                 style={[styles.detailSecondBtn,
@@ -390,35 +419,36 @@ export default class JobSelectCity extends Component<IProps, IState> {
                 ]}
                 key={index.toString()}
                 onPress={() => {
+                  console.log('selectedCity: ', selectedCity)
                   this.setState({
-                    selectZhen: e,
+                    selectQu: e,
                   })
                 }}
               >
                 <Text
                   style={[
                     styles.detailSecondText,
-                    selectedCity.id === e.id && { color: greenColor }]}>
-                  {e.title}
+                    selectQu.county_id === e.county_id && { color: greenColor }]}>
+                  {e.name}
                 </Text>
               </NextTouchableOpacity>
             )
           })}
         </ScrollView>
         <ScrollView style={styles.detailZhenView}>
-          {selectZhen.sublist.map((e: any, index: number) => {
-            const isSelected = selectedZhen && selectedZhen.id === e.id
+          {selectQu.Towns.map((e: any, index: number) => {
+            const isSelected = selectZhen && selectZhen.town_id === e.town_id
             return (
               <NextTouchableOpacity
                 style={[styles.detailThirdBtn, { borderLeftColor: '#F0F0F0', }]}
                 key={index.toString()}
                 onPress={() => {
-                  this.setState({ selectedZhen: e })
+                  this.setState({ selectZhen: e })
                 }}
               >
                 <Text style={
                   [styles.detailSecondText, isSelected && { color: greenColor, fontWeight: 'bold', flex: 1 }]
-                }>{e.title}</Text>
+                }>{e.name}</Text>
                 {isSelected ? (
                   <Image
                     style={styles.selectTag}
@@ -434,11 +464,29 @@ export default class JobSelectCity extends Component<IProps, IState> {
   }
 
   renderFooterBtn() {
-    const { selectedCity, isSelectDetailArea } = this.state
+    const {
+      selectItem,
+      selectedCity,
+      selectQu,
+      selectZhen,
+      isSelectDetailArea,
+    } = this.state
+    console.log('222222222: ', selectItem,
+      selectedCity,
+      selectQu,
+      selectZhen)
     return (
       <View style={styles.footerView}>
         <NextTouchableOpacity
           style={styles.resetBtn}
+          onPress={() => {
+            this.setState({
+              selectedCity: undefined,
+              isSelectDetailArea: false,
+              selectQu: undefined,
+              selectZhen: undefined,
+            })
+          }}
         >
           <Text style={styles.resetText}>重置</Text>
         </NextTouchableOpacity>
@@ -449,9 +497,17 @@ export default class JobSelectCity extends Component<IProps, IState> {
           text="确定"
           onPress={() => {
             if (isSelectDetailArea) {
-
+              const { navigation, route: { params: { selectJobCityCallback } } } = this.props
+              // 临时把名称返回,具体的等后述需求
+              selectJobCityCallback(`${selectItem.name} ${selectedCity.name} ${selectQu.name} ${selectZhen.name}`)
+              navigation.goBack()
             } else {
-              this.setState({ isSelectDetailArea: true })
+              this.setState({
+                isSelectDetailArea: true,
+                selectedCity: selectItem.Cities[0],
+                selectQu: selectItem.Cities[0].Counties[0],
+                selectZhen: selectItem.Cities[0].Counties[0].Towns[0]
+              })
             }
           }}
         />
@@ -460,7 +516,14 @@ export default class JobSelectCity extends Component<IProps, IState> {
   }
 
   render() {
-    const { isSelectDetailArea } = this.state
+    const { isSelectDetailArea, dataSource } = this.state
+    if (!dataSource || dataSource.length === 0) {
+      return (
+        <View style={styles.container}>
+          {this.renderNavBar()}
+        </View>
+      )
+    }
     return (
       <View style={styles.container}>
         {this.renderNavBar()}
@@ -474,3 +537,11 @@ export default class JobSelectCity extends Component<IProps, IState> {
     )
   }
 }
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
+  return bindActionCreators({
+    getAllRegion: actions.getAllRegion
+  }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(JobSelectCity)

@@ -80,7 +80,7 @@ const putWithToken = (uri: string, body = {}) => {
     .catch(e => Promise.reject(e))
 }
 
-const get = (uri: string, timeout: number = 3000) => {
+const get = (uri: string, timeout: number = 30000) => {
   const request = () => {
     return fetch(uri)
       .then(response => response.json())

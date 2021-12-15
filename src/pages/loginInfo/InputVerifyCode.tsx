@@ -14,23 +14,23 @@ import WhiteContentModal from '../components/WhiteContentModal'
 import GradientButton from '../components/GradientButton'
 import SystemHelper from '../../utils/system'
 import NavBar, { EButtonType } from '../components/NavBar'
+import { TOperationType } from '../../utils/types/PropsType'
 
-type IProps = GenProps<'InputVerifyCode'> & {
-  email: string,
-  password: string,
-  number: string,
-}
+type IProps = GenProps<'InputVerifyCode'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 interface IState {
   email: string
   phone: string
   password: string
-  verifyCode: string
+  firstCode: string
   secondCode: string,
   thirdCode: string,
   fourCode: string,
+  fiveCode: string,
+  sixCode: string,
   countTime: number
   focusIndex: number
+  operation: TOperationType
 }
 
 class InputVerifyCode extends Component<IProps, IState> {
@@ -39,28 +39,45 @@ class InputVerifyCode extends Component<IProps, IState> {
   private secondInputRef: any
   private thirdInputRef: any
   private fourInputRef: any
+  private fiveInputRef: any
+  private sixInputRef: any
   constructor(props: IProps) {
     super(props)
+    const { route: { params } } = props
     this.state = {
       email: '',
-      phone: '',
+      phone: (params && params.phone) || '',
+      operation: (params && params.operation) || 'UserRegister',
       password: '',
-      verifyCode: '',
-      secondCode: '',
-      thirdCode: '',
-      fourCode: '',
+      firstCode: 't',
+      secondCode: 'e',
+      thirdCode: 's',
+      fourCode: 't',
+      fiveCode: 'e',
+      sixCode: 'd',
       countTime: 60,
       focusIndex: 0
     }
   }
 
-  requestFinish() {
-    const { phone, email, password } = this.state
-    if (!phone && !email) {
-      RootLoading.fail('请输入手机号码或邮箱')
-      return
-    }
+  componentDidMount() {
+    // 暂时注释,以免浪费验证码
+    // this.sendSms()
+  }
 
+  sendSms() {
+    // TODO:临时关闭验证码发送,使用 tested 即可
+    return
+    RootLoading.loading('正在发送验证码')
+    this.props.sendSMS(this.state.phone, (error, reuslt) => {
+      console.log('error, reuslt: ', error, reuslt)
+      if (!error && reuslt) {
+        RootLoading.success('发送成功')
+        this.countTimeFunc(60)
+      } else {
+        RootLoading.fail('发送失败,请重试')
+      }
+    })
   }
 
   componentWillUnmount() {
@@ -104,7 +121,7 @@ class InputVerifyCode extends Component<IProps, IState> {
   }
 
   renderVerifyCode() {
-    const { verifyCode, countTime, focusIndex, secondCode, thirdCode, fourCode } = this.state
+    const { firstCode, countTime, focusIndex, secondCode, thirdCode, fourCode, fiveCode, sixCode } = this.state
     console.log('focusIndex: ', focusIndex)
     console.log('secondInput: ', this.refs.secondInput)
     return (
@@ -113,26 +130,28 @@ class InputVerifyCode extends Component<IProps, IState> {
           <TextInput
             ref={(e) => { this.firstInputRef = e }}
             underlineColorAndroid="transparent"
+            keyboardType="number-pad"
             returnKeyType="done"
             autoCorrect={false}
             autoCapitalize="none"
             style={styles.accountLoginInput}
             placeholder=""
             maxLength={1}
-            value={verifyCode}
+            value={firstCode}
             onChangeText={(value) => {
               console.log('value: ', value)
               if (value !== '') {
                 if (this.secondInputRef) { this.secondInputRef.focus() }
               }
               this.setState({
-                verifyCode: value,
+                firstCode: value,
               })
             }}
           />
           <TextInput
             ref={(e) => { this.secondInputRef = e }}
             underlineColorAndroid="transparent"
+            keyboardType="number-pad"
             returnKeyType="done"
             autoCorrect={false}
             autoCapitalize="none"
@@ -154,6 +173,7 @@ class InputVerifyCode extends Component<IProps, IState> {
           <TextInput
             ref={(e) => this.thirdInputRef = e}
             underlineColorAndroid="transparent"
+            keyboardType="number-pad"
             returnKeyType="done"
             autoCorrect={false}
             autoCapitalize="none"
@@ -175,6 +195,7 @@ class InputVerifyCode extends Component<IProps, IState> {
           <TextInput
             ref={(e) => this.fourInputRef = e}
             underlineColorAndroid="transparent"
+            keyboardType="number-pad"
             returnKeyType="done"
             autoCorrect={false}
             autoCapitalize="none"
@@ -186,10 +207,54 @@ class InputVerifyCode extends Component<IProps, IState> {
               if (value === '') {
                 if (this.thirdInputRef) { this.thirdInputRef.focus() }
               } else {
-                if (this.fourInputRef) { this.fourInputRef.blur() }
+                if (this.fiveInputRef) { this.fiveInputRef.focus() }
               }
               this.setState({
                 fourCode: value,
+              })
+            }}
+          />
+          <TextInput
+            ref={(e) => this.fiveInputRef = e}
+            underlineColorAndroid="transparent"
+            keyboardType="number-pad"
+            returnKeyType="done"
+            autoCorrect={false}
+            autoCapitalize="none"
+            style={styles.accountLoginInput}
+            placeholder=""
+            maxLength={1}
+            value={fiveCode}
+            onChangeText={(value) => {
+              if (value === '') {
+                if (this.fourInputRef) { this.fourInputRef.focus() }
+              } else {
+                if (this.sixInputRef) { this.sixInputRef.focus() }
+              }
+              this.setState({
+                fiveCode: value,
+              })
+            }}
+          />
+          <TextInput
+            ref={(e) => this.sixInputRef = e}
+            underlineColorAndroid="transparent"
+            keyboardType="number-pad"
+            returnKeyType="done"
+            autoCorrect={false}
+            autoCapitalize="none"
+            style={styles.accountLoginInput}
+            placeholder=""
+            maxLength={1}
+            value={sixCode}
+            onChangeText={(value) => {
+              if (value === '') {
+                if (this.fiveInputRef) { this.fiveInputRef.focus() }
+              } else {
+                if (this.sixInputRef) { this.sixInputRef.blur() }
+              }
+              this.setState({
+                sixCode: value,
               })
             }}
           />
@@ -198,7 +263,7 @@ class InputVerifyCode extends Component<IProps, IState> {
           <NextTouchableOpacity
             style={styles.countTimeBtn}
             onPress={() => {
-              this.countTimeFunc(60)
+              this.sendSms()
             }}
           >
             <Text style={styles.sendBtnText}>
@@ -222,13 +287,71 @@ class InputVerifyCode extends Component<IProps, IState> {
     )
   }
 
+  checkNextFunction(verifyCode: string) {
+    const { operation, phone } = this.state
+    console.log('111111!: ', operation, verifyCode)
+    const { navigation } = this.props
+    RootLoading.loading()
+    this.props.checkUserVerifyCodeConsume(
+      phone, verifyCode, operation, (error, result) => {
+        console.log('22222222: ', error, result)
+        if (!error && result) {
+          // 校验通过
+          RootLoading.success('校验通过')
+          if (operation === 'UserLogIn') {
+            // 登录操作,将用户信息存储下来即可选择角色
+            // TODO:此处需要将用户角色信息存储下来
+            navigation.push('ChooseRole')
+          } else {
+            // 注册操作、忘记密码操作,进入到密码设置页面
+            // this.props.checkUserVerifyCodeConsume()
+            navigation.push('SetPassword', { operation: 'UserResetPassword' })
+          }
+        } else {
+          // 校验不通过
+          RootLoading.fail('验证码错误,请重新输入')
+        }
+      }
+    )
+  }
+
   renderFinish() {
+    // const username = ''
+    // const email = ''
+    // const password = ''
+    // const confirmPassword = ''
+    // const phoneNumber = ''
+    // const firstCode = ''
+    const {
+      firstCode,
+      secondCode,
+      thirdCode,
+      fourCode,
+      fiveCode,
+      sixCode
+    } = this.state
+    const verifyCode = `${firstCode}${secondCode}${thirdCode}${fourCode}${fiveCode}${sixCode}`
     return (
       <NextTouchableOpacity
-        style={styles.finishBtn}
+        style={[styles.finishBtn, verifyCode.length !== 6 && { opacity: 0.6 }]}
+        disabled={verifyCode.length !== 6}
         onPress={() => {
-          const { navigation } = this.props
-          navigation.push('SetPassword')
+          this.checkNextFunction(verifyCode)
+
+          // const { navigation } = this.props
+          // navigation.push('SetPassword')
+          // this.props.registerAccount(
+          //   username,
+          //   email,
+          //   password,
+          //   confirmPassword,
+          //   phoneNumber,
+          //   verifyCode,
+          //   (error, result) => {
+          //     console.log('进行注册操作')
+          //     // 此处和接口字段相差较多!!!
+          //   }
+          // )
         }}
       >
         <Text
@@ -250,7 +373,7 @@ class InputVerifyCode extends Component<IProps, IState> {
           style={styles.scrollview}
         >
           <Text style={styles.pageTitle}>输入短信验证码</Text>
-          <Text style={styles.pageDetail}>已向您的手机13430022233发送验证码</Text>
+          <Text style={styles.pageDetail}>{`已向您的手机${phone}发送验证码`}</Text>
           {this.renderVerifyCode()}
           {this.renderFinish()}
         </ScrollView>
@@ -261,7 +384,6 @@ class InputVerifyCode extends Component<IProps, IState> {
 
 const mapStateToProps = (state: IStoreState) => {
   return {
-    email: state.loginInfo.email,
     phone: state.loginInfo.phone,
     password: state.loginInfo.password,
     verifyCode: state.loginInfo.verifyCode,
@@ -273,6 +395,9 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
     reset_reducer: actions.reset_reducer,
     update_kv: actions.update_kv,
     loginMobile: actions.loginMobile,
+    sendSMS: actions.sendSMS,
+    registerAccount: actions.registerAccount,
+    checkUserVerifyCodeConsume: actions.checkUserVerifyCodeConsume,
   }, dispatch)
 }
 

@@ -15,9 +15,7 @@ import GradientButton from '../components/GradientButton'
 import SystemHelper from '../../utils/system'
 import NavBar, { EButtonType } from '../components/NavBar'
 
-type IProps = GenProps<'SetPassword'> & {
-  number: string,
-}
+type IProps = GenProps<'SetPassword'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 interface IState {
   phone: string
@@ -77,6 +75,7 @@ class SetPassword extends Component<IProps, IState> {
 
   renderInput() {
     const { confirmPassword, password } = this.state
+    console.log('phone: ', this.props.phone)
     return (
       <View>
         <View style={styles.accountLoginConatiner}>
@@ -130,8 +129,16 @@ class SetPassword extends Component<IProps, IState> {
           if (confirmPassword !== password) {
             RootLoading.info('密码不一致,请重新输入')
           } else {
-            const { navigation } = this.props
-            navigation.push('ChooseRole')
+            RootLoading.loading()
+            this.props.resetPassword(this.props.phone, password, confirmPassword, (error, result) => {
+              if (!error) {
+                RootLoading.success()
+                // 密码重置/设置操作,将用户信息存储下来即可选择角色
+                // TODO:此处需要将用户角色信息存储下来
+                const { navigation } = this.props
+                navigation.push('ChooseRole')
+              }
+            })
           }
         }}
       >
@@ -176,6 +183,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
     reset_reducer: actions.reset_reducer,
     update_kv: actions.update_kv,
     loginMobile: actions.loginMobile,
+    resetPassword: actions.resetPassword,
   }, dispatch)
 }
 

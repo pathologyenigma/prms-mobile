@@ -3,6 +3,7 @@ import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 're
 import CommentStar from '../../../components/CommentStar'
 import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
 import styles from './styles'
+import { format } from 'date-fns'
 
 interface ICell {
   isWhiteMode?: boolean
@@ -13,11 +14,13 @@ interface ICell {
 
 export default class CompanyCommentCell extends PureComponent<ICell> {
 
-  renderTag(tag: string) {
-    const tagArray = (tag && tag.split(' ')) || []
+  renderTag(tags: any) {
+    if (!tags) {
+      return null
+    }
     return (
       <View style={styles.jobInfoTagView}>
-        {tagArray.map((item: any, index: number) => {
+        {tags.map((item: any, index: number) => {
           return (
             <Text key={index.toString()} style={styles.jobInfoTagItem}>
               {item}
@@ -42,14 +45,14 @@ export default class CompanyCommentCell extends PureComponent<ICell> {
         <View style={styles.cellTitleView}>
           <Image
             style={styles.iconImage}
-            source={require('../../../../assets/requestJobs/icon-example.png')}
+            source={{ uri: cellItem.logo }}
           />
           <View style={styles.commentInfo}>
             <Text style={[styles.cellTitle, isWhiteMode && { color: '#333333' }]}>
-              {cellItem.name}
+              {cellItem.user_name}
             </Text>
             <Text style={[styles.cellJob, isWhiteMode && { color: '#888888' }]}>
-              {`面试职位：${cellItem.job}`}
+              {`面试职位：${cellItem.job_name}`}
             </Text>
           </View>
           <CommentStar
@@ -57,11 +60,11 @@ export default class CompanyCommentCell extends PureComponent<ICell> {
             star={cellItem.score}
           />
         </View>
-        {this.renderTag(cellItem.tag)}
+        {this.renderTag(cellItem.tags)}
         <Text style={[styles.cellContent, isWhiteMode && { color: '#666666' }]}>{cellItem.content}</Text>
         <View style={styles.cellDetail}>
           <Text style={styles.cellTime}>
-            {cellItem.time}
+            {format(Number(cellItem.createdAt), 'yyyy年MM月dd日')}
           </Text>
           <NextTouchableOpacity
             style={styles.likeView}
@@ -79,7 +82,7 @@ export default class CompanyCommentCell extends PureComponent<ICell> {
                 : require('../../../../assets/requestJobs/dianzan.png')
               }
             />
-            <Text style={styles.cellTime}>{cellItem.like || 0}</Text>
+            <Text style={styles.cellTime}>{cellItem.thumbs || 0}</Text>
           </NextTouchableOpacity>
         </View>
       </NextTouchableOpacity>
