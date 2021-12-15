@@ -4,6 +4,10 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
+#if RCT_DEV
+#import <React/RCTDevLoadingView.h>
+#endif
+
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
 #import <FlipperKitLayoutPlugin/FlipperKitLayoutPlugin.h>
@@ -35,6 +39,9 @@ static void InitializeFlipper(UIApplication *application) {
     RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                      moduleName:@"czzapp"
                                               initialProperties:nil];
+#if RCT_DEV
+    [bridge moduleForClass:[RCTDevLoadingView class]];
+#endif
     
     if (@available(iOS 13.0, *)) {
         rootView.backgroundColor = [UIColor systemBackgroundColor];
@@ -46,7 +53,8 @@ static void InitializeFlipper(UIApplication *application) {
     UIViewController *rootViewController = [UIViewController new];
     rootViewController.view = rootView;
     self.window.rootViewController = rootViewController;
-    [self.window makeKeyAndVisible];
+    self.splashWindow = [[SplashWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    [self.splashWindow show];
     return YES;
 }
 
@@ -57,6 +65,14 @@ static void InitializeFlipper(UIApplication *application) {
 #else
     return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
+}
+
+- (void)hideSplash {
+    if (self.splashWindow != nil) {
+        [self.splashWindow hide:^(BOOL finished) {
+            self.splashWindow = nil;
+        }];
+    }
 }
 
 @end

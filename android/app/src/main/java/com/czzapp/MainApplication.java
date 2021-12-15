@@ -1,20 +1,29 @@
 package com.czzapp;
 
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
+import android.os.Process;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
+import com.czzapp.splash.SplashPackage;
 import com.czzapp.system.SystemPackage;
+import com.facebook.common.logging.FLog;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.reactnative.picker.PickerViewPackage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
+
+    private final static String TAG = "MainApplication";
 
     private final ReactNativeHost mReactNativeHost =
             new ReactNativeHost(this) {
@@ -30,6 +39,8 @@ public class MainApplication extends Application implements ReactApplication {
                     // Packages that cannot be autolinked yet can be added manually here, for example:
                     // packages.add(new MyReactNativePackage());
                     packages.add(new SystemPackage());
+                    packages.add(new PickerViewPackage());
+                    packages.add(new SplashPackage());
                     return packages;
                 }
 
@@ -47,6 +58,12 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (!isOnMainProcess()) {
+            return;
+        }
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        FLog.setMinimumLoggingLevel(FLog.INFO);
+
         SoLoader.init(this, /* native exopackage */ false);
         initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
     }
@@ -80,5 +97,20 @@ public class MainApplication extends Application implements ReactApplication {
                 e.printStackTrace();
             }
         }
+    }
+
+    private boolean isOnMainProcess() {
+        List<ActivityManager.RunningAppProcessInfo> runningAppProcesses =
+                ((ActivityManager) getSystemService(Context.ACTIVITY_SERVICE)).getRunningAppProcesses();
+        if (runningAppProcesses != null && runningAppProcesses.size() != 0) {
+            for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : runningAppProcesses) {
+                boolean isCurrentProcess = runningAppProcessInfo.pid == Process.myPid();
+                boolean isMainProcessName = getPackageName().equals(runningAppProcessInfo.processName);
+                if (isCurrentProcess && isMainProcessName) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
