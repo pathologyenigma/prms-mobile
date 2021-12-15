@@ -1,11 +1,8 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image, ScrollView } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
-import CoordinationItem, { CoordinationItemProps } from './CoordinationItem'
 
-export const RecruitCoordinationOptions: StackNavigationOptions = {
-  title: '职位协作',
-}
+import CoordinationItem, { CoordinationItemProps } from './CoordinationItem'
+import NavBar from '../../components/NavBar'
 
 const coordinators: CoordinationItemProps[] = [
   {
@@ -27,37 +24,42 @@ const coordinators: CoordinationItemProps[] = [
 
 export default function RecruitCoordination() {
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.jobMeta}>
-        <View style={styles.titleRow}>
-          <Text style={styles.title}>项目经理</Text>
-          <Text style={styles.salary}>15K-30K</Text>
+    <View style={styles.container}>
+      <NavBar title="职位协作" />
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}>
+        <View style={styles.jobMeta}>
+          <View style={styles.titleRow}>
+            <Text style={styles.title}>项目经理</Text>
+            <Text style={styles.salary}>15K-30K</Text>
+          </View>
+          <View style={styles.conditionRow}>
+            <Text style={styles.condition}>全职</Text>
+            <Text style={styles.condition}>招2人</Text>
+            <Text style={styles.condition}>5-10年</Text>
+            <Text style={styles.condition}>5-10年</Text>
+          </View>
+          <View style={styles.addressRow}>
+            <Image style={styles.addressIcon} source={require('./dizhi.png')} />
+            <Text style={styles.address}>深圳·南山区·大学城</Text>
+          </View>
         </View>
-        <View style={styles.conditionRow}>
-          <Text style={styles.condition}>全职</Text>
-          <Text style={styles.condition}>招2人</Text>
-          <Text style={styles.condition}>5-10年</Text>
-          <Text style={styles.condition}>5-10年</Text>
+        <View style={styles.hrRow}>
+          <Image
+            style={styles.hrAvatar}
+            source={require('../../assets/avatar_default.png')}
+          />
+          <Text style={styles.hrMeta}>彭女士·UI设计师</Text>
         </View>
-        <View style={styles.addressRow}>
-          <Image style={styles.addressIcon} source={require('./dizhi.png')} />
-          <Text style={styles.address}>深圳·南山区·大学城</Text>
+        <View>
+          <Text style={styles.coordinatorsTitle}>协作同事</Text>
+          {coordinators.map((c, index) => (
+            <CoordinationItem key={index} {...c} />
+          ))}
         </View>
-      </View>
-      <View style={styles.hrRow}>
-        <Image
-          style={styles.hrAvatar}
-          source={require('../../assets/avatar_default.png')}
-        />
-        <Text style={styles.hrMeta}>彭女士·UI设计师</Text>
-      </View>
-      <View>
-        <Text style={styles.coordinatorsTitle}>协作同事</Text>
-        {coordinators.map((c, index) => (
-          <CoordinationItem key={index} {...c} />
-        ))}
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   )
 }
 

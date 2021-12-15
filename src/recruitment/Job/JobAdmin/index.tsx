@@ -1,14 +1,10 @@
 import React, { useRef } from 'react'
 import { StyleSheet, View, Animated } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import PagerView from 'react-native-pager-view'
 import Page from './Page'
 import usePagerView from '../../hooks/usePagerView'
 import TabBar from '../../components/TabBar'
-
-export const JobAdminOptions: StackNavigationOptions = {
-  title: '职位管理',
-}
+import NavBar from '../../components/NavBar'
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
@@ -26,6 +22,7 @@ export default function JobAdmin() {
 
   return (
     <View style={styles.container}>
+      <NavBar title="职位管理" />
       <TabBar
         tabs={tabs}
         selectedIndex={selectedIndex}

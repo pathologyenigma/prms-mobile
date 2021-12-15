@@ -1,28 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  StatusBar,
-  FlatList,
-} from 'react-native'
-import {
-  StackHeaderProps,
-  StackNavigationOptions,
-  StackNavigationProp,
-} from '@react-navigation/stack'
+import { View, Text, Image, StyleSheet, FlatList } from 'react-native'
+import { StackNavigationProp } from '@react-navigation/stack'
 import SearchBar from '../../components/SearchBar'
 import TextButton from '../../components/TextButton'
-import { headerHeight, navigationBarHeight, statusBarHeight } from '../../theme'
 import AddressItem from './Addresstem'
 import AddressHeader from './AddressHeader'
 import { useNavigation } from '@react-navigation/core'
-
-export const SearchJobAddressOptions: StackNavigationOptions = {
-  title: '上班地址',
-  headerShown: false,
-}
+import NavBar from '../../components/NavBar'
 
 const data = [
   {
@@ -63,20 +47,18 @@ export default function SearchJobAddress() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.nav}>
-          <SearchBar
-            onChangeText={setText}
-            style={styles.search}
-            placeholder="请输入上班地址"
-          />
-          <TextButton
-            style={styles.cancel}
-            title="取消"
-            onPress={() => navigation.goBack()}
-          />
-        </View>
-      </View>
+      <NavBar>
+        <SearchBar
+          onChangeText={setText}
+          style={styles.search}
+          placeholder="请输入上班地址"
+        />
+        <TextButton
+          style={styles.cancel}
+          title="取消"
+          onPress={() => navigation.goBack()}
+        />
+      </NavBar>
       <View style={{ flex: 1 }}>
         <View style={styles.map}></View>
         <FlatList
@@ -107,16 +89,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-  },
-  header: {
-    height: headerHeight(),
-    backgroundColor: '#FFFFFF',
-  },
-  nav: {
-    marginTop: statusBarHeight(),
-    height: navigationBarHeight(),
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   search: {
     flex: 1,

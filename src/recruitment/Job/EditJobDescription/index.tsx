@@ -8,20 +8,13 @@ import {
   Platform,
   Insets,
 } from 'react-native'
-import {
-  StackNavigationOptions,
-  StackNavigationProp,
-} from '@react-navigation/stack'
+import { StackNavigationProp } from '@react-navigation/stack'
 import TextButton from '../../components/TextButton'
 import { useNavigation } from '@react-navigation/core'
 import { TextInput } from 'react-native-gesture-handler'
 import { useKeyboard } from '@react-native-community/hooks'
 import { getBottomSpace, isIphoneX } from 'react-native-iphone-x-helper'
-
-export const EditJobDescriptionOptions = ({}) => ({
-  title: '职位描述',
-  headerRight: () => <TextButton title="保存" style={styles.save} />,
-})
+import NavBar from '../../components/NavBar'
 
 const placeholder = `请输入岗位职责、任职要求等描述，至少10个字，建 议使用以下格式逐条列出： 
 1、…… 
@@ -46,6 +39,10 @@ export default function EditJobDescription() {
 
   return (
     <View style={styles.container}>
+      <NavBar
+        title="职位描述"
+        headerRight={() => <TextButton title="保存" />}
+      />
       <View style={styles.box}>
         <Text style={styles.note}>
           请勿输入公司邮箱、联系电话、薪资面议及外链，请不要包含性 歧视语，
@@ -95,9 +92,6 @@ const styles = StyleSheet.create({
   },
   rule: {
     color: '#54D693',
-  },
-  save: {
-    marginRight: 12,
   },
   input: {
     margin: 14,

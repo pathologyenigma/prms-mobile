@@ -1,15 +1,9 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, Image, ScrollView, Switch } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import NavBar from '../components/NavBar'
 import RadioButton from '../components/RadioButton'
 import TextButton from '../components/TextButton'
 import RadioGroup from '../components/RadioGroup'
-
-export const GreetingSettingOptions: StackNavigationOptions = {
-  title: '页面模版',
-  headerShown: false,
-}
 
 const greetings: Array<GreetingItemProps> = [
   {

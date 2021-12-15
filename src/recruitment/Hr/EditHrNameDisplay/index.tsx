@@ -6,12 +6,8 @@ import {
   Image,
   TouchableWithoutFeedback,
 } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import { useState } from 'react'
-
-export const EditHrNameDisplayOptions: StackNavigationOptions = {
-  title: '名称显示',
-}
+import NavBar from '../../components/NavBar'
 
 interface ItemProps {
   avatar?: string
@@ -46,6 +42,7 @@ export default function EditHrNameDisplay() {
 
   return (
     <View style={styles.container}>
+      <NavBar title="名称显示" />
       <Text style={styles.status}>当前为实名展示</Text>
       <Item
         name="李小冉"

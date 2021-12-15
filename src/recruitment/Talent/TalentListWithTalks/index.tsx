@@ -1,12 +1,8 @@
 import React from 'react'
 import { StyleSheet, View, FlatList } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import Item from './Item'
 import { ListRenderItem } from 'react-native'
-
-export const TalentListwithTalksOptions: StackNavigationOptions = {
-  title: '沟通过的人才',
-}
+import NavBar from '../../components/NavBar'
 
 const items = ['male', 'female']
 
@@ -20,14 +16,17 @@ export default function TalentListwithTalks() {
   }
 
   return (
-    <FlatList
-      data={items}
-      keyExtractor={item => item}
-      renderItem={renderItem}
-      ItemSeparatorComponent={ItemSeparator}
-      style={styles.container}
-      contentContainerStyle={styles.content}
-    />
+    <View style={styles.container}>
+      <NavBar title="沟通过的人才" />
+      <FlatList
+        data={items}
+        keyExtractor={item => item}
+        renderItem={renderItem}
+        ItemSeparatorComponent={ItemSeparator}
+        style={styles.container}
+        contentContainerStyle={styles.content}
+      />
+    </View>
   )
 }
 

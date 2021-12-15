@@ -8,10 +8,7 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native'
-import {
-  StackNavigationOptions,
-  StackNavigationProp,
-} from '@react-navigation/stack'
+import { StackNavigationProp } from '@react-navigation/stack'
 import NavBar from '../../components/NavBar'
 import IconButton from '../../components/IconButton'
 import TabBar from '../../components/TabBar'
@@ -25,11 +22,6 @@ import { getBottomSpace, isIphoneX } from 'react-native-iphone-x-helper'
 import { useNavigation } from '@react-navigation/native'
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
-
-export const JobFairDetailOptions: StackNavigationOptions = {
-  title: '页面模版',
-  headerShown: false,
-}
 
 export default function JobFairDetail() {
   const tabs = ['招聘会详情', '参与企业', '招聘会问答']

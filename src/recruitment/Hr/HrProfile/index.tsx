@@ -5,17 +5,13 @@ import {
   View,
   Image,
   ScrollView,
-  StatusBar,
   TouchableWithoutFeedback,
 } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
+
 import CheckLabel from '../../components/CheckLabel'
 import GradientButton from '../../components/GradientButton'
 import { isIphoneX } from 'react-native-iphone-x-helper'
-
-export const HrProfileOptions: StackNavigationOptions = {
-  title: '个人资料',
-}
+import NavBar from '../../components/NavBar'
 
 interface ItemProps {
   title: string
@@ -41,66 +37,71 @@ const Item = ({ title, detail, onPress }: ItemProps) => {
 
 export default function HrProfile() {
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.head}>
-        <Text style={styles.detail}>头像</Text>
-        <Image source={require('../../assets/avatar_default.png')} />
-      </View>
-      <Item title="名称显示" detail="李小冉" />
-      <Item title="名称显示" detail="李小冉" onPress={() => {}} />
-      <View style={styles.gender}>
-        <Text style={styles.genderTitle}>性别</Text>
-        <CheckLabel
-          title="男"
-          checked={false}
-          style={[styles.labelButton, styles.genderButton]}
-        />
-        <CheckLabel
-          title="女"
-          checked={true}
-          style={[
-            { marginLeft: 15 },
-            styles.labelButton,
-            styles.genderButton,
-            styles.labelButtonChecked,
-          ]}
-        />
-      </View>
-      <Item title="所在公司" detail="猎德科技有限公司" />
-      <Item title="当前职位" detail="人事主管" onPress={() => {}} />
-      <Item title="手机号码" detail="1348004433" onPress={() => {}} />
-      <Item title="公司邮箱" detail="Lixiaoran@163.com" onPress={() => {}} />
-      <View style={styles.capacityContainer}>
-        <Text style={styles.title}>选择身份</Text>
-        <View style={styles.capacity}>
+    <View style={styles.container}>
+      <NavBar title="个人资料" />
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}>
+        <View style={styles.head}>
+          <Text style={styles.detail}>头像</Text>
+          <Image source={require('../../assets/avatar_default.png')} />
+        </View>
+        <Item title="名称显示" detail="李小冉" />
+        <Item title="名称显示" detail="李小冉" onPress={() => {}} />
+        <View style={styles.gender}>
+          <Text style={styles.genderTitle}>性别</Text>
           <CheckLabel
-            title="主管/员工"
+            title="男"
             checked={false}
-            style={[styles.labelButton, styles.capacityButton]}
+            style={[styles.labelButton, styles.genderButton]}
           />
           <CheckLabel
-            title="HR/HRBP"
+            title="女"
             checked={true}
             style={[
-              { marginLeft: 11 },
+              { marginLeft: 15 },
               styles.labelButton,
-              styles.capacityButton,
+              styles.genderButton,
               styles.labelButtonChecked,
             ]}
           />
-          <CheckLabel
-            title="暂时保密"
-            checked={false}
-            style={[
-              { marginLeft: 11 },
-              styles.labelButton,
-              styles.capacityButton,
-            ]}
-          />
         </View>
-      </View>
-      <GradientButton title="保存" style={styles.button} />
-    </ScrollView>
+        <Item title="所在公司" detail="猎德科技有限公司" />
+        <Item title="当前职位" detail="人事主管" onPress={() => {}} />
+        <Item title="手机号码" detail="1348004433" onPress={() => {}} />
+        <Item title="公司邮箱" detail="Lixiaoran@163.com" onPress={() => {}} />
+        <View style={styles.capacityContainer}>
+          <Text style={styles.title}>选择身份</Text>
+          <View style={styles.capacity}>
+            <CheckLabel
+              title="主管/员工"
+              checked={false}
+              style={[styles.labelButton, styles.capacityButton]}
+            />
+            <CheckLabel
+              title="HR/HRBP"
+              checked={true}
+              style={[
+                { marginLeft: 11 },
+                styles.labelButton,
+                styles.capacityButton,
+                styles.labelButtonChecked,
+              ]}
+            />
+            <CheckLabel
+              title="暂时保密"
+              checked={false}
+              style={[
+                { marginLeft: 11 },
+                styles.labelButton,
+                styles.capacityButton,
+              ]}
+            />
+          </View>
+        </View>
+        <GradientButton title="保存" style={styles.button} />
+      </ScrollView>
+    </View>
   )
 }
 

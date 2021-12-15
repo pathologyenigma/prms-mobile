@@ -7,22 +7,12 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
 } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import IconButton from '../../components/IconButton'
 import Wizard from './Wizard'
-import Colleagues from '../Colleagues'
+import Colleagues from '../components/Colleagues'
 import Hotline from '../Hotline'
 import { isIphoneX } from 'react-native-iphone-x-helper'
-
-export const CompanyAuthenticationByColleagueOptions: StackNavigationOptions = {
-  title: '同事协助认证',
-  headerRight: () => (
-    <IconButton
-      icon={require('../images/more.png')}
-      style={{ marginRight: 11 }}
-    />
-  ),
-}
+import NavBar from '../../components/NavBar'
 
 export default function CompanyAuthenticationByColleague() {
   const renderCompany = () => {
@@ -44,12 +34,20 @@ export default function CompanyAuthenticationByColleague() {
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Wizard />
-      {renderCompany()}
-      <Colleagues style={styles.colleagues} />
-      <Hotline style={styles.hotline} />
-    </ScrollView>
+    <View style={styles.container}>
+      <NavBar
+        title="同事协助认证"
+        headerRight={() => <IconButton icon={require('../images/more.png')} />}
+      />
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}>
+        <Wizard />
+        {renderCompany()}
+        <Colleagues style={styles.colleagues} />
+        <Hotline style={styles.hotline} />
+      </ScrollView>
+    </View>
   )
 }
 

@@ -1,22 +1,21 @@
 import React from 'react'
 import { View, Text, Image, StyleSheet, StatusBar } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import GradientButton from '../../components/GradientButton'
 import { getBottomSpace } from 'react-native-iphone-x-helper'
 import { ScrollView } from 'react-native-gesture-handler'
-
-export const RechargeExplainOptions: StackNavigationOptions = {
-  title: '充值问题说明',
-}
+import NavBar from '../../components/NavBar'
 
 export default function RechargeExplain() {
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <Text style={styles.title}>支付延迟问题</Text>
-        <Text style={styles.content}>{content}</Text>
-      </ScrollView>
-      <GradientButton style={styles.button} title="我要反馈" />
+    <View style={{ flex: 1 }}>
+      <NavBar title="充值问题说明" />
+      <View style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+          <Text style={styles.title}>支付延迟问题</Text>
+          <Text style={styles.content}>{content}</Text>
+        </ScrollView>
+        <GradientButton style={styles.button} title="我要反馈" />
+      </View>
     </View>
   )
 }

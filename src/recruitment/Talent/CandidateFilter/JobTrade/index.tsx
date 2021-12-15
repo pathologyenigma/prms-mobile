@@ -8,15 +8,10 @@ import {
   ListRenderItem,
   TouchableWithoutFeedback,
 } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import TextButton from '../../../components/TextButton'
 import CancelableTag from '../CancelableTag'
 import { isIphoneX } from 'react-native-iphone-x-helper'
-
-export const JobTradeOptions: StackNavigationOptions = {
-  title: '行业类别',
-  headerRight: () => <TextButton title="保存" textStyle={styles.rightButton} />,
-}
+import NavBar from '../../../components/NavBar'
 
 const provinces = [
   '互联网/IT/电子/通信',
@@ -123,6 +118,12 @@ export default function JobTrade() {
 
   return (
     <View style={styles.container}>
+      <NavBar
+        title="行业类别"
+        headerRight={() => (
+          <TextButton title="保存" textStyle={styles.rightButton} />
+        )}
+      />
       <View style={styles.selectedTagContainer}>
         <Text style={styles.count}>
           已选（{selectedTrades.length}/{tradeLimit}）
@@ -203,7 +204,6 @@ const styles = StyleSheet.create({
     paddingBottom: isIphoneX() ? 44 : 10,
   },
   rightButton: {
-    marginRight: 11,
     color: '#79D398',
   },
   item: {

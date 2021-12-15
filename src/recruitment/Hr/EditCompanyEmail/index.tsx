@@ -1,62 +1,54 @@
 import React from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  StatusBar,
-  TextInput,
-} from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
+import { StyleSheet, Text, View, TextInput } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import TextButton from '../../components/TextButton'
 import GradientButton from '../../components/GradientButton'
-
-export const EditCompanyEmailOptions: StackNavigationOptions = {
-  title: '公司邮箱',
-}
+import NavBar from '../../components/NavBar'
 
 export default function EditCompanyEmail() {
   return (
-    <KeyboardAwareScrollView
-      automaticallyAdjustContentInsets={false}
-      keyboardShouldPersistTaps="handled"
-      keyboardDismissMode={'on-drag'}
-      enableResetScrollToCoords={false}
-      style={styles.container}
-      contentContainerStyle={styles.content}>
-      <View style={styles.item}>
-        <Text style={styles.title}>
-          公司邮箱<Text style={styles.required}> *</Text>
-        </Text>
-        <TextInput
-          style={styles.input}
-          placeholder="请输入公司邮箱"
-          placeholderTextColor="#BBBBBB"
-          keyboardType="email-address"
-        />
-        <Text style={styles.error}>提示：您输入的邮箱地址有误</Text>
-        <Text style={styles.hint}>{`1、不建议使用个人邮箱
+    <View style={styles.container}>
+      <NavBar title="公司邮箱" />
+      <KeyboardAwareScrollView
+        automaticallyAdjustContentInsets={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode={'on-drag'}
+        enableResetScrollToCoords={false}
+        style={styles.container}
+        contentContainerStyle={styles.content}>
+        <View style={styles.item}>
+          <Text style={styles.title}>
+            公司邮箱<Text style={styles.required}> *</Text>
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="请输入公司邮箱"
+            placeholderTextColor="#BBBBBB"
+            keyboardType="email-address"
+          />
+          <Text style={styles.error}>提示：您输入的邮箱地址有误</Text>
+          <Text style={styles.hint}>{`1、不建议使用个人邮箱
 2、验证公司邮箱可提供公司招聘的安全级别`}</Text>
-      </View>
-      <View style={styles.item}>
-        <Text style={styles.title}>邮箱验证码</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="请输入验证码"
-          placeholderTextColor="#BBBBBB"
-          keyboardType="number-pad"
-        />
-        <TextButton
-          title="获取验证码"
-          style={styles.captchaButton}
-          disabled
-          textStyle={[styles.captchaText, styles.captchaTextDisabled]}
-        />
-      </View>
+        </View>
+        <View style={styles.item}>
+          <Text style={styles.title}>邮箱验证码</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="请输入验证码"
+            placeholderTextColor="#BBBBBB"
+            keyboardType="number-pad"
+          />
+          <TextButton
+            title="获取验证码"
+            style={styles.captchaButton}
+            disabled
+            textStyle={[styles.captchaText, styles.captchaTextDisabled]}
+          />
+        </View>
 
-      <GradientButton title="确认" style={styles.button} />
-    </KeyboardAwareScrollView>
+        <GradientButton title="确认" style={styles.button} />
+      </KeyboardAwareScrollView>
+    </View>
   )
 }
 

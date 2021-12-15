@@ -1,9 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image, TextInput } from 'react-native'
-import {
-  StackNavigationOptions,
-  StackNavigationProp,
-} from '@react-navigation/stack'
+import { StackNavigationProp } from '@react-navigation/stack'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import IconButton from '../../components/IconButton'
 import { useNavigation } from '@react-navigation/native'
@@ -14,16 +11,7 @@ import Hotline from '../Hotline'
 import PrimaryButton from '../../components/PrimaryButton'
 import TitleAndDetail from '../TitleAndDetail'
 import Hint from './Hint'
-
-export const CompanyAuthenticationOptions: StackNavigationOptions = {
-  title: '公司认证',
-  headerRight: () => (
-    <IconButton
-      icon={require('../images/more.png')}
-      style={{ marginRight: 11 }}
-    />
-  ),
-}
+import NavBar from '../../components/NavBar'
 
 export default function CompanyAuthentication() {
   const navigation = useNavigation<StackNavigationProp<any>>()
@@ -32,70 +20,76 @@ export default function CompanyAuthentication() {
   const [categoryModalVisible, setCategoryModalVisible] = useState(false)
 
   return (
-    <KeyboardAwareScrollView
-      automaticallyAdjustContentInsets={false}
-      keyboardShouldPersistTaps="never"
-      keyboardDismissMode={'on-drag'}
-      enableResetScrollToCoords={false}
-      showsVerticalScrollIndicator={false}
-      style={styles.container}
-      contentContainerStyle={styles.content}>
-      <Hint />
-      <TitleAndDetail
-        title="公司全称"
-        placeholder="请输入公司全称"
-        onPress={() => navigation.navigate('CompanyFullName')}
-        renderHint={() => (
-          <>
-            <Image
-              style={styles.titleHintIcon}
-              source={require('../images/warning.png')}
-            />
-            <Text style={styles.titleHint}>必须与公司营业执照的名称一致</Text>
-          </>
-        )}
+    <View style={styles.container}>
+      <NavBar
+        title="公司认证"
+        headerRight={() => <IconButton icon={require('../images/more.png')} />}
       />
-      <TitleAndDetail
-        title="公司所在地"
-        placeholder="请选择公司所在地"
-        onPress={() => setAddressModalVisible(true)}
-      />
-      <TitleAndDetail
-        title="公司类型"
-        placeholder="请选择公司类型"
-        onPress={() => setCategoryModalVisible(true)}
-      />
-      <TitleAndDetail
-        title="您的职务"
-        renderDetail={() => (
-          <View style={styles.detailRow}>
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="#CCCCCC"
-              placeholder="请填写真实职务可以让求职者更加信任您哦"
-              autoCapitalize="none"
-            />
-          </View>
-        )}
-      />
-      <PrimaryButton
-        title="下一步"
-        style={styles.next}
-        onPress={() => navigation.navigate('CompanyAuthenticationMethod')}
-      />
-      <Text style={styles.nextHint}>
-        根据法规要求，在您注册成为经办人前需应确保您所提交的相关认证材料的真实性、合法性、有效性及来源于公司的授权使用，授权目的包括但不限于注册、使用公司名下的招聘者账号
-      </Text>
-      <Hotline style={styles.hotline} />
-      <CompanyAddressModal
-        visible={addressModalVisible}
-        onCancel={() => setAddressModalVisible(false)}
-      />
-      <CompanyCategoryModal
-        visible={categoryModalVisible}
-        onCancel={() => setCategoryModalVisible(false)}
-      />
-    </KeyboardAwareScrollView>
+      <KeyboardAwareScrollView
+        automaticallyAdjustContentInsets={false}
+        keyboardShouldPersistTaps="never"
+        keyboardDismissMode={'on-drag'}
+        enableResetScrollToCoords={false}
+        showsVerticalScrollIndicator={false}
+        style={styles.container}
+        contentContainerStyle={styles.content}>
+        <Hint />
+        <TitleAndDetail
+          title="公司全称"
+          placeholder="请输入公司全称"
+          onPress={() => navigation.navigate('CompanyFullName')}
+          renderHint={() => (
+            <>
+              <Image
+                style={styles.titleHintIcon}
+                source={require('../images/warning.png')}
+              />
+              <Text style={styles.titleHint}>必须与公司营业执照的名称一致</Text>
+            </>
+          )}
+        />
+        <TitleAndDetail
+          title="公司所在地"
+          placeholder="请选择公司所在地"
+          onPress={() => setAddressModalVisible(true)}
+        />
+        <TitleAndDetail
+          title="公司类型"
+          placeholder="请选择公司类型"
+          onPress={() => setCategoryModalVisible(true)}
+        />
+        <TitleAndDetail
+          title="您的职务"
+          renderDetail={() => (
+            <View style={styles.detailRow}>
+              <TextInput
+                style={styles.input}
+                placeholderTextColor="#CCCCCC"
+                placeholder="请填写真实职务可以让求职者更加信任您哦"
+                autoCapitalize="none"
+              />
+            </View>
+          )}
+        />
+        <PrimaryButton
+          title="下一步"
+          style={styles.next}
+          onPress={() => navigation.navigate('CompanyAuthenticationMethod')}
+        />
+        <Text style={styles.nextHint}>
+          根据法规要求，在您注册成为经办人前需应确保您所提交的相关认证材料的真实性、合法性、有效性及来源于公司的授权使用，授权目的包括但不限于注册、使用公司名下的招聘者账号
+        </Text>
+        <Hotline style={styles.hotline} />
+        <CompanyAddressModal
+          visible={addressModalVisible}
+          onCancel={() => setAddressModalVisible(false)}
+        />
+        <CompanyCategoryModal
+          visible={categoryModalVisible}
+          onCancel={() => setCategoryModalVisible(false)}
+        />
+      </KeyboardAwareScrollView>
+    </View>
   )
 }
 

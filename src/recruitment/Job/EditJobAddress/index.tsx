@@ -5,11 +5,7 @@ import JobInfoItem from '../PostJob/JobInfoItem'
 import TextInputWithCounter from '../../components/TextInputWithCounter'
 import { useNavigation } from '@react-navigation/core'
 import { StackNavigationProp } from '@react-navigation/stack'
-
-export const EditJobAddressOptions = ({}) => ({
-  title: '上班地址',
-  headerRight: () => <TextButton title="保存" style={styles.save} />,
-})
+import NavBar from '../../components/NavBar'
 
 export default function EditJobAddress() {
   const [text, setText] = useState<string>()
@@ -18,6 +14,10 @@ export default function EditJobAddress() {
 
   return (
     <View style={styles.container}>
+      <NavBar
+        title="上班地址"
+        headerRight={() => <TextButton title="保存" />}
+      />
       <JobInfoItem
         title="上班地址（必填）"
         content="深圳市南山区创智云城（建设中）创智云城A218楼 302"
@@ -40,9 +40,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-  },
-  save: {
-    marginRight: 12,
   },
   doors: {
     color: '#666666',

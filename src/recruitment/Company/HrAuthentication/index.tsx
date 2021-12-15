@@ -1,48 +1,43 @@
 import React from 'react'
 import { StyleSheet, Text, View, TextInput } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import GradientButton from '../../components/GradientButton'
 import TextButton from '../../components/TextButton'
 import { TextInputProps } from 'react-native'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import IconButton from '../../components/IconButton'
 import PrimaryButton from '../../components/PrimaryButton'
-
-export const HrAuthenticationOptions: StackNavigationOptions = {
-  title: '实名认证',
-  headerRight: () => (
-    <IconButton
-      icon={require('../images/more.png')}
-      style={{ marginRight: 11 }}
-    />
-  ),
-}
+import NavBar from '../../components/NavBar'
 
 export default function HrAuthentication() {
   return (
-    <KeyboardAwareScrollView
-      automaticallyAdjustContentInsets={false}
-      keyboardShouldPersistTaps="handled"
-      keyboardDismissMode={'on-drag'}
-      enableResetScrollToCoords={false}
-      showsVerticalScrollIndicator={false}
-      style={styles.container}
-      contentContainerStyle={styles.content}>
-      <View style={styles.hintContainer}>
-        <Text style={styles.hint}>
-          你的信息仅用于认证，趁早找不会保留你的任何信息请填写你的真实姓名
-        </Text>
-      </View>
-      <LabelAndInput label="真实姓名" placeholder="请输入您的姓名" />
-      <LabelAndInput label="身份证号" placeholder="请输入您的身份证号" />
-      <PrimaryButton style={styles.next} title="下一步" />
-      <TextButton
-        style={styles.illustrate}
-        textStyle={styles.illustrateText}
-        title="《实名认证规则说明》"
+    <View style={styles.container}>
+      <NavBar
+        title="实名认证"
+        headerRight={() => <IconButton icon={require('../images/more.png')} />}
       />
-    </KeyboardAwareScrollView>
+      <KeyboardAwareScrollView
+        automaticallyAdjustContentInsets={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode={'on-drag'}
+        enableResetScrollToCoords={false}
+        showsVerticalScrollIndicator={false}
+        style={styles.container}
+        contentContainerStyle={styles.content}>
+        <View style={styles.hintContainer}>
+          <Text style={styles.hint}>
+            你的信息仅用于认证，趁早找不会保留你的任何信息请填写你的真实姓名
+          </Text>
+        </View>
+        <LabelAndInput label="真实姓名" placeholder="请输入您的姓名" />
+        <LabelAndInput label="身份证号" placeholder="请输入您的身份证号" />
+        <PrimaryButton style={styles.next} title="下一步" />
+        <TextButton
+          style={styles.illustrate}
+          textStyle={styles.illustrateText}
+          title="《实名认证规则说明》"
+        />
+      </KeyboardAwareScrollView>
+    </View>
   )
 }
 

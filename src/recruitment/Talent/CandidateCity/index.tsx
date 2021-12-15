@@ -8,13 +8,8 @@ import {
   ListRenderItem,
   TouchableWithoutFeedback,
 } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import TextButton from '../../components/TextButton'
-
-export const CandidateCityOptions: StackNavigationOptions = {
-  title: '求职者当前所在地',
-  headerRight: () => <TextButton title="保存" textStyle={styles.rightButton} />,
-}
+import NavBar from '../../components/NavBar'
 
 const provinces = [
   '热门',
@@ -105,21 +100,29 @@ export default function CandidateCity() {
   }
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={provinces}
-        keyExtractor={item => item}
-        renderItem={renderProviceItem}
-        style={styles.provinceContainer}
-        contentContainerStyle={styles.content}
+    <View style={{ flex: 1 }}>
+      <NavBar
+        title="求职者当前所在地"
+        headerRight={() => (
+          <TextButton title="保存" textStyle={styles.rightButton} />
+        )}
       />
-      <FlatList
-        data={cities}
-        keyExtractor={item => item}
-        renderItem={renderCityItem}
-        style={styles.cityContainer}
-        contentContainerStyle={styles.content}
-      />
+      <View style={styles.container}>
+        <FlatList
+          data={provinces}
+          keyExtractor={item => item}
+          renderItem={renderProviceItem}
+          style={styles.provinceContainer}
+          contentContainerStyle={styles.content}
+        />
+        <FlatList
+          data={cities}
+          keyExtractor={item => item}
+          renderItem={renderCityItem}
+          style={styles.cityContainer}
+          contentContainerStyle={styles.content}
+        />
+      </View>
     </View>
   )
 }
@@ -141,7 +144,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   rightButton: {
-    marginRight: 11,
     color: '#79D398',
   },
   item: {

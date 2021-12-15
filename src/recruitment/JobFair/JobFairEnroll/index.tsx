@@ -1,16 +1,10 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, TextInput } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import NavBar from '../../components/NavBar'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import GradientButton from '../../components/GradientButton'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import Stepper from '../../components/Stepper'
-
-export const JobFairEnrollOptions: StackNavigationOptions = {
-  title: '页面模版',
-  headerShown: false,
-}
 
 export default function JobFairEnroll() {
   const [count, setCount] = useState(1)

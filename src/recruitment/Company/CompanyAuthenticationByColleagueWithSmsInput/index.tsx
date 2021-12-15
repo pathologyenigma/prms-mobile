@@ -8,49 +8,44 @@ import {
   TouchableWithoutFeedback,
   TextInput,
 } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import IconButton from '../../components/IconButton'
-import Colleagues from '../Colleagues'
+import Colleagues from '../components/Colleagues'
 import Hotline from '../Hotline'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import MaskedInput from './MaskedInput'
 import { useState } from 'react'
 import PrimaryButton from '../../components/PrimaryButton'
-
-export const CompanyAuthenticationByColleagueWithSmsInputOptions: StackNavigationOptions =
-  {
-    title: '同事协助认证',
-    headerRight: () => (
-      <IconButton
-        icon={require('../images/more.png')}
-        style={{ marginRight: 11 }}
-      />
-    ),
-  }
+import NavBar from '../../components/NavBar'
 
 export default function CompanyAuthenticationByColleagueWithSmsInput() {
   const [sms, setSms] = useState('')
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-      keyboardShouldPersistTaps="handled">
-      <View style={styles.smsContainer}>
-        <Text style={styles.smsTitle}>输入短信验证码</Text>
-        <Text style={styles.smsDetail}>
-          已向您的同事（手机尾数2233）发送验证码，验证码今日有效，请尽快联系同事索要验证码
-        </Text>
-        <MaskedInput
-          style={styles.maskedInput}
-          value={sms}
-          onValueChange={setSms}
-        />
-        <PrimaryButton style={styles.button} title="提交验证" />
-      </View>
-      <Colleagues style={styles.colleagues} />
-      <Hotline style={styles.hotline} />
-    </ScrollView>
+    <View style={styles.container}>
+      <NavBar
+        title="同事协助认证"
+        headerRight={() => <IconButton icon={require('../images/more.png')} />}
+      />
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled">
+        <View style={styles.smsContainer}>
+          <Text style={styles.smsTitle}>输入短信验证码</Text>
+          <Text style={styles.smsDetail}>
+            已向您的同事（手机尾数2233）发送验证码，验证码今日有效，请尽快联系同事索要验证码
+          </Text>
+          <MaskedInput
+            style={styles.maskedInput}
+            value={sms}
+            onValueChange={setSms}
+          />
+          <PrimaryButton style={styles.button} title="提交验证" />
+        </View>
+        <Colleagues style={styles.colleagues} />
+        <Hotline style={styles.hotline} />
+      </ScrollView>
+    </View>
   )
 }
 

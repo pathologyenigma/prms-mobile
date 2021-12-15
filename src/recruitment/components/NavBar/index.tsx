@@ -15,7 +15,7 @@ import BackImage from '../BackImage'
 import FocusAwareStatusBar from '../FocusAwareStatusBar'
 
 interface NavBarProps {
-  headerLeft?: () => JSX.Element
+  headerLeft?: () => React.ReactNode
   headerRight?: () => JSX.Element
   title?: string
   style?: StyleProp<ViewStyle>
@@ -32,11 +32,11 @@ export default function NavBar({
 }: PropsWithChildren<NavBarProps>) {
   const navigation = useNavigation<StackNavigationProp<any>>()
 
-  const renderHeaderLeft = () => {
+  const renderHeaderLeft = (renderBackButtonIfNeeded = true) => {
     if (headerLeft) {
       return headerLeft()
     }
-    if (navigation.canGoBack()) {
+    if (renderBackButtonIfNeeded && navigation.canGoBack()) {
       return (
         <TouchableOpacity
           activeOpacity={0.5}
@@ -66,7 +66,7 @@ export default function NavBar({
     if (children) {
       return (
         <View style={styles.nav}>
-          {renderHeaderLeft()}
+          {renderHeaderLeft(false)}
           {children}
           {renderHeaderRight()}
         </View>
@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
   header: {
     height: headerHeight(),
     backgroundColor: '#FFFFFF',
+    alignSelf: 'stretch',
   },
   nav: {
     marginTop: statusBarHeight(),

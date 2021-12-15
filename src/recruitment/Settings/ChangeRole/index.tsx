@@ -1,13 +1,8 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image, ScrollView } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
+
 import NavBar from '../../components/NavBar'
 import GradientButton from '../../components/GradientButton'
-
-export const ChangeRoleOptions: StackNavigationOptions = {
-  title: '页面模版',
-  headerShown: false,
-}
 
 export default function ChangeRole() {
   return (

@@ -1,18 +1,7 @@
 import React from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
-  StatusBar,
-  FlatList,
-} from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
+import { StyleSheet, Text, View, Image, FlatList } from 'react-native'
 
-export const AllInterviewOptions: StackNavigationOptions = {
-  title: '全部面试',
-}
+import NavBar from '../../components/NavBar'
 
 const data = ['1', '2', '3']
 
@@ -37,12 +26,15 @@ export default function AllInterview() {
   }
 
   return (
-    <FlatList
-      contentContainerStyle={styles.content}
-      keyExtractor={item => item}
-      data={data}
-      renderItem={renderItem}
-      style={styles.container}></FlatList>
+    <View style={styles.container}>
+      <NavBar title="全部面试" />
+      <FlatList
+        contentContainerStyle={styles.content}
+        keyExtractor={item => item}
+        data={data}
+        renderItem={renderItem}
+        style={styles.container}></FlatList>
+    </View>
   )
 }
 

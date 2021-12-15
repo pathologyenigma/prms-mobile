@@ -1,11 +1,5 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image, ScrollView } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
-
-export const PageTempleteOptions: StackNavigationOptions = {
-  title: '页面模版',
-  headerShown: false,
-}
 
 export default function PageTemplete() {
   return (

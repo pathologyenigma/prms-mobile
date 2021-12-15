@@ -1,22 +1,24 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import FavoriteButton from '../TalentDetailView/FavoriteButton'
 import ReportButton from '../TalentDetailView/ReportButton'
 import TalentDetailView from '../TalentDetailView'
-
-export const TalentDetailOptions: StackNavigationOptions = {
-  title: '',
-  headerRight: () => (
-    <View style={styles.headerButtons}>
-      <FavoriteButton checked={true} />
-      <ReportButton />
-    </View>
-  ),
-}
+import NavBar from '../../components/NavBar'
 
 export default function TalentDetail() {
-  return <TalentDetailView />
+  return (
+    <View style={styles.container}>
+      <NavBar
+        headerRight={() => (
+          <View style={styles.headerButtons}>
+            <FavoriteButton checked={true} />
+            <ReportButton />
+          </View>
+        )}
+      />
+      <TalentDetailView />
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({

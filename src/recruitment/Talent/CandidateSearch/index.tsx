@@ -9,7 +9,6 @@ import {
   ListRenderItem,
   Animated,
 } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import SearchBar from '../../components/SearchBar'
 import { headerHeight, navigationBarHeight, statusBarHeight } from '../../theme'
 import IconLabelButton from '../../components/IconLabelButton'
@@ -22,12 +21,9 @@ import FilterButton from '../../components/FilterButton'
 import PagerView, {
   PagerViewOnPageSelectedEventData,
 } from 'react-native-pager-view'
+import NavBar from '../../components/NavBar'
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
-
-export const CandidateSearchOptions: StackNavigationOptions = {
-  header: () => null,
-}
 
 const histories = ['产品经理', '德科科技有限公司']
 
@@ -62,20 +58,18 @@ export default function CandidateSearch() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.navbar}>
-          <IconLabelButton
-            style={styles.city}
-            icon={require('./location.png')}
-            label="深圳"
-          />
-          <SearchBar
-            placeholder="搜索职位/公司/学校"
-            onChangeText={handleSearchTextChange}
-          />
-          <TextButton style={styles.cancel} title="取消" />
-        </View>
-      </View>
+      <NavBar>
+        <IconLabelButton
+          style={styles.city}
+          icon={require('./location.png')}
+          label="深圳"
+        />
+        <SearchBar
+          placeholder="搜索职位/公司/学校"
+          onChangeText={handleSearchTextChange}
+        />
+        <TextButton style={styles.cancel} title="取消" />
+      </NavBar>
       {!showSearchResult && (
         <ScrollView
           style={styles.container}
@@ -163,16 +157,6 @@ export default function CandidateSearch() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    height: headerHeight(),
-    backgroundColor: '#FFFFFF',
-  },
-  navbar: {
-    marginTop: statusBarHeight(),
-    height: navigationBarHeight(),
-    alignItems: 'center',
-    flexDirection: 'row',
   },
   city: {
     marginLeft: 11,

@@ -1,14 +1,8 @@
 import React from 'react'
-import {
-  View,
-  StyleSheet,
-  StatusBar,
-  FlatList,
-  ListRenderItem,
-} from 'react-native'
+import { View, StyleSheet, FlatList, ListRenderItem } from 'react-native'
 import FilterButton from '../../components/FilterButton'
+import FocusAwareStatusBar from '../../components/FocusAwareStatusBar'
 import RadioLabelGroup from '../../components/RadioLabelGroup'
-import { headerHeight, navigationBarHeight } from '../../theme'
 import NavBar from './NavBar'
 import NoMoreFooter from './NoMoreFooter'
 import TalentListItem from './TalentListItem'
@@ -23,7 +17,7 @@ export default function TalentList() {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+      <FocusAwareStatusBar barStyle="light-content" />
       <NavBar />
       <View style={styles.filterbar}>
         <RadioLabelGroup

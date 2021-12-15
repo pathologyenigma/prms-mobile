@@ -1,11 +1,7 @@
 import React from 'react'
 import { View, Text, Image, StyleSheet, StatusBar } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import { TextInput } from 'react-native-gesture-handler'
-
-export const EditJobNameOptions: StackNavigationOptions = {
-  title: '职位名称',
-}
+import NavBar from '../../components/NavBar'
 
 export default function EditJobName() {
   const handleSubmit = () => {
@@ -14,6 +10,7 @@ export default function EditJobName() {
 
   return (
     <View style={styles.container}>
+      <NavBar title="职位名称" />
       <TextInput
         style={styles.input}
         placeholder="请填写您要招聘的职位（最多30字）"

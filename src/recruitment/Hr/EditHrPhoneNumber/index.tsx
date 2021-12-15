@@ -1,30 +1,17 @@
 import React from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
-  StatusBar,
-  TextInput,
-} from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
+import { StyleSheet, View, TextInput } from 'react-native'
 import TextButton from '../../components/TextButton'
-
-export const EditHrPhoneNumberOptions: StackNavigationOptions = {
-  title: '手机号码',
-  headerRight: () => (
-    <TextButton
-      title="保存"
-      style={styles.button}
-      textStyle={styles.buttonTextStyle}
-    />
-  ),
-}
+import NavBar from '../../components/NavBar'
 
 export default function EditHrPhoneNumber() {
   return (
     <View style={styles.container}>
+      <NavBar
+        title="手机号码"
+        headerRight={() => (
+          <TextButton title="保存" textStyle={styles.buttonTextStyle} />
+        )}
+      />
       <TextInput
         style={styles.input}
         placeholderTextColor="#BBBBBB"
@@ -41,9 +28,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-  },
-  button: {
-    marginRight: 11,
   },
   buttonTextStyle: {
     color: '#7AD398',

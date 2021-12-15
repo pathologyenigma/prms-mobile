@@ -1,22 +1,25 @@
-import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import Empty from './Empty'
-import TalentList from './TalentList'
+import TalentDetail from './TalentDetail'
+import ComplaintCandidate from './ComplaintCandidate'
+import TalentListWithTalks from './TalentListWithTalks'
+import TalentDetailWithJudgment from './TalentDetailWithJudgment'
+import CandidateSearch from './CandidateSearch'
+import CandidateCity from './CandidateCity'
+import CandidateFilter from './CandidateFilter'
+import JobCategory from './CandidateFilter/JobCategory'
+import JobCity from './CandidateFilter/JobCity'
+import JobTrade from './CandidateFilter/JobTrade'
 
-function Talent() {
-  return <TalentList />
+const screens = {
+  TalentDetail,
+  ComplaintCandidate,
+  TalentListWithTalks,
+  TalentDetailWithJudgment,
+  CandidateSearch,
+  CandidateFilter,
+  CandidateCity,
+  JobCategory,
+  JobCity,
+  JobTrade,
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  text: {
-    fontSize: 36,
-  },
-})
-
-export default Talent
+export default screens

@@ -7,10 +7,7 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native'
-import {
-  StackNavigationOptions,
-  StackNavigationProp,
-} from '@react-navigation/stack'
+import { StackNavigationProp } from '@react-navigation/stack'
 import IconButton from '../../components/IconButton'
 import Hotline from '../Hotline'
 import { getBottomSpace } from 'react-native-iphone-x-helper'
@@ -21,16 +18,7 @@ import Hint from '../CompanyAuthentication/Hint'
 import ImagePicker from '../../components/ImagePicker'
 import ActionSheet from '../../components/ActionSheet'
 import AlertModal from '../../components/AlertModal'
-
-export const CompanyAuthenticationByLicenseOptions: StackNavigationOptions = {
-  title: '证照原件认证',
-  headerRight: () => (
-    <IconButton
-      icon={require('../images/more.png')}
-      style={{ marginRight: 11 }}
-    />
-  ),
-}
+import NavBar from '../../components/NavBar'
 
 export default function CompanyAuthenticationByLicense() {
   const navigation = useNavigation<StackNavigationProp<any>>()
@@ -51,58 +39,67 @@ export default function CompanyAuthenticationByLicense() {
   }, [navigation])
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Hint />
-      <TitleAndDetail
-        title="公司全称"
-        value="深圳智慧网络有限公司"
-        renderHint={() => (
-          <>
-            <Image
-              style={styles.titleAccessoryIcon}
-              source={require('../images/warning.png')}
-            />
-            <Text style={styles.titleAccessoryText}>
-              必须与公司营业执照的名称一致
-            </Text>
-          </>
-        )}
+    <View style={styles.container}>
+      <NavBar
+        title="证照原件认证"
+        headerRight={() => <IconButton icon={require('../images/more.png')} />}
       />
-      <View style={styles.imageSection}>
-        <Text style={styles.imageSectionTitle}>请上传「营业执照」照片</Text>
-        <View style={styles.imageUpload}>
-          <ImagePicker placeholder={require('./license.png')} />
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}>
+        <Hint />
+        <TitleAndDetail
+          title="公司全称"
+          value="深圳智慧网络有限公司"
+          renderHint={() => (
+            <>
+              <Image
+                style={styles.titleAccessoryIcon}
+                source={require('../images/warning.png')}
+              />
+              <Text style={styles.titleAccessoryText}>
+                必须与公司营业执照的名称一致
+              </Text>
+            </>
+          )}
+        />
+        <View style={styles.imageSection}>
+          <Text style={styles.imageSectionTitle}>请上传「营业执照」照片</Text>
+          <View style={styles.imageUpload}>
+            <ImagePicker placeholder={require('./license.png')} />
+          </View>
+          <Text style={styles.spec}>
+            1、上传营业执照名称需要与
+            <Text style={styles.specImportant}>所填公司全称一致</Text>
+          </Text>
+          <Text style={styles.spec}>
+            2、<Text style={styles.specImportant}>不允许上传截屏</Text>
+            ，复印版需
+            <Text style={styles.specImportant}>加盖公章</Text>
+          </Text>
+          <Text style={styles.spec}>
+            3、请上传有效期在<Text style={styles.specImportant}>15天以内</Text>
+            的营业执照
+          </Text>
         </View>
-        <Text style={styles.spec}>
-          1、上传营业执照名称需要与
-          <Text style={styles.specImportant}>所填公司全称一致</Text>
-        </Text>
-        <Text style={styles.spec}>
-          2、<Text style={styles.specImportant}>不允许上传截屏</Text>，复印版需
-          <Text style={styles.specImportant}>加盖公章</Text>
-        </Text>
-        <Text style={styles.spec}>
-          3、请上传有效期在<Text style={styles.specImportant}>15天以内</Text>
-          的营业执照
-        </Text>
-      </View>
-      <PrimaryButton style={styles.primaryButton} title="提交认证" />
-      <Hotline style={styles.hotline} />
-      <ActionSheet
-        visible={actionSheetVisible}
-        onDismiss={() => setActionSheetVisible(false)}
-        actions={[
-          { title: '切换身份' },
-          { title: '退出登录', onPress: () => setLogoutModalVisible(true) },
-        ]}
-      />
-      <AlertModal
-        visible={logoutModalVisible}
-        title="是否退出登录"
-        onNegativePress={() => setLogoutModalVisible(false)}
-        onPositivePress={() => setLogoutModalVisible(false)}
-      />
-    </ScrollView>
+        <PrimaryButton style={styles.primaryButton} title="提交认证" />
+        <Hotline style={styles.hotline} />
+        <ActionSheet
+          visible={actionSheetVisible}
+          onDismiss={() => setActionSheetVisible(false)}
+          actions={[
+            { title: '切换身份' },
+            { title: '退出登录', onPress: () => setLogoutModalVisible(true) },
+          ]}
+        />
+        <AlertModal
+          visible={logoutModalVisible}
+          title="是否退出登录"
+          onNegativePress={() => setLogoutModalVisible(false)}
+          onPositivePress={() => setLogoutModalVisible(false)}
+        />
+      </ScrollView>
+    </View>
   )
 }
 

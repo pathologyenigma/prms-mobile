@@ -8,15 +8,11 @@ import {
   ViewStyle,
   StyleProp,
 } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import InterviewProgressItem, {
   InterviewProgressItemProps,
 } from './InterviewProgressItem'
 import { getBottomSpace, isIphoneX } from 'react-native-iphone-x-helper'
-
-export const InterviewDetailOptions: StackNavigationOptions = {
-  title: '面试详情',
-}
+import NavBar from '../../components/NavBar'
 
 interface LabelAndDetailProps {
   label: string
@@ -59,40 +55,43 @@ export default function InterviewDetail() {
   }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.card}>
-        <View style={styles.avatarRow}>
-          <Image
-            style={styles.avatar}
-            source={require('../../assets/avatar_default.png')}
+    <View style={styles.container}>
+      <NavBar title="面试详情" />
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.card}>
+          <View style={styles.avatarRow}>
+            <Image
+              style={styles.avatar}
+              source={require('../../assets/avatar_default.png')}
+            />
+            <View style={styles.nameColumn}>
+              <Text style={styles.name}>谭先生</Text>
+              <Text style={styles.title}>UI设计师</Text>
+            </View>
+          </View>
+          <LabelAndDetail label="时间" detail="2021-07-15  17:30" />
+          <LabelAndDetail label="职位" detail="UI设计师，11K-16K·13月" />
+          <LabelAndDetail label="联系人" detail="拉面，13458888888" />
+          <LabelAndDetail label="面试形式" detail="线下面试" />
+          <LabelAndDetail
+            label="地址"
+            detail="深圳市南山区创智云城（建设中）创智云城A2栋8楼"
           />
-          <View style={styles.nameColumn}>
-            <Text style={styles.name}>谭先生</Text>
-            <Text style={styles.title}>UI设计师</Text>
+          <View style={styles.mapContainer}></View>
+          <LabelAndDetail
+            label="备注信息"
+            detail="带上简历和手机端作品展示，准备绿码和口罩。"
+            style={{ marginBottom: 32 }}
+          />
+        </View>
+        <View style={styles.card}>
+          <Text style={styles.interviewProgressTitle}>面试进度</Text>
+          <View style={styles.interviewProgressContainer}>
+            {interviewProgressData.map(renderInterviewProgressItem)}
           </View>
         </View>
-        <LabelAndDetail label="时间" detail="2021-07-15  17:30" />
-        <LabelAndDetail label="职位" detail="UI设计师，11K-16K·13月" />
-        <LabelAndDetail label="联系人" detail="拉面，13458888888" />
-        <LabelAndDetail label="面试形式" detail="线下面试" />
-        <LabelAndDetail
-          label="地址"
-          detail="深圳市南山区创智云城（建设中）创智云城A2栋8楼"
-        />
-        <View style={styles.mapContainer}></View>
-        <LabelAndDetail
-          label="备注信息"
-          detail="带上简历和手机端作品展示，准备绿码和口罩。"
-          style={{ marginBottom: 32 }}
-        />
-      </View>
-      <View style={styles.card}>
-        <Text style={styles.interviewProgressTitle}>面试进度</Text>
-        <View style={styles.interviewProgressContainer}>
-          {interviewProgressData.map(renderInterviewProgressItem)}
-        </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   )
 }
 

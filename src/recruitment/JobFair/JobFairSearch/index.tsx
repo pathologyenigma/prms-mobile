@@ -8,10 +8,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native'
-import {
-  StackNavigationOptions,
-  StackNavigationProp,
-} from '@react-navigation/stack'
+import { StackNavigationProp } from '@react-navigation/stack'
 import { headerHeight, navigationBarHeight, statusBarHeight } from '../../theme'
 import SearchBar from '../../components/SearchBar'
 import TextButton from '../../components/TextButton'
@@ -20,11 +17,6 @@ import NavBar from '../../components/NavBar'
 import IconButton from '../../components/IconButton'
 import { ListRenderItem } from 'react-native'
 import JobFairListItem from '../JobFairListItem'
-
-export const JobFairSearchOptions: StackNavigationOptions = {
-  title: '',
-  headerShown: false,
-}
 
 const histories = ['500强招聘', '暨南山智园人才招聘会']
 const hots = ['2021年青年人才招聘会', '欢聚人才招聘会', '小鹅通专场招聘会']

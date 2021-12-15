@@ -1,50 +1,44 @@
 import React from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
-  TextInput,
-} from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
+import { StyleSheet, Text, View, Image, TextInput } from 'react-native'
 import TextButton from '../../components/TextButton'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-
-export const CompanyFullNameOptions: StackNavigationOptions = {
-  title: '公司全称',
-  headerRight: () => (
-    <TextButton
-      title="保存"
-      style={styles.rightButton}
-      textStyle={{ color: '#54D693' }}
-    />
-  ),
-}
+import NavBar from '../../components/NavBar'
 
 export default function CompanyFullName() {
   return (
-    <KeyboardAwareScrollView
-      automaticallyAdjustContentInsets={false}
-      keyboardShouldPersistTaps="never"
-      keyboardDismissMode={'on-drag'}
-      enableResetScrollToCoords={false}
-      showsVerticalScrollIndicator={false}
-      style={styles.container}
-      contentContainerStyle={styles.content}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="请输入公司全称"
-          placeholderTextColor="#CCCCCC"
-          autoCapitalize="none"
-        />
-      </View>
-      <Text style={styles.hint}>
-        *公司全称必须与营业执照名称一致，否则审核将不予通过
-      </Text>
-      <Image style={styles.license} source={require('./license.png')} />
-    </KeyboardAwareScrollView>
+    <View style={styles.container}>
+      <NavBar
+        title="公司全称"
+        headerRight={() => (
+          <TextButton
+            title="保存"
+            style={styles.rightButton}
+            textStyle={{ color: '#54D693' }}
+          />
+        )}
+      />
+      <KeyboardAwareScrollView
+        automaticallyAdjustContentInsets={false}
+        keyboardShouldPersistTaps="never"
+        keyboardDismissMode={'on-drag'}
+        enableResetScrollToCoords={false}
+        showsVerticalScrollIndicator={false}
+        style={styles.container}
+        contentContainerStyle={styles.content}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="请输入公司全称"
+            placeholderTextColor="#CCCCCC"
+            autoCapitalize="none"
+          />
+        </View>
+        <Text style={styles.hint}>
+          *公司全称必须与营业执照名称一致，否则审核将不予通过
+        </Text>
+        <Image style={styles.license} source={require('./license.png')} />
+      </KeyboardAwareScrollView>
+    </View>
   )
 }
 

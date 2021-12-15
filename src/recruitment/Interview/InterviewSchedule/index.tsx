@@ -1,23 +1,11 @@
 import React from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
-  StatusBar,
-  FlatList,
-  ListRenderItem,
-} from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
+import { StyleSheet, View, FlatList, ListRenderItem } from 'react-native'
 import Empty from './Empty'
 import TextButton from '../../components/TextButton'
 import Item, { ItemProps } from './Item'
-
-export const InterviewScheduleOptions: StackNavigationOptions = {
-  title: '面试日程',
-  headerRight: () => <TextButton style={styles.rightButton} title="全部" />,
-}
+import NavBar from '../../components/NavBar'
+import { useNavigation } from '@react-navigation/native'
+import { StackNavigationProp } from '@react-navigation/stack'
 
 const data: ItemProps[] = [
   {
@@ -56,8 +44,19 @@ export default function InterviewSchedule() {
     return <Item {...item} />
   }
 
+  const navigation = useNavigation<StackNavigationProp<any>>()
+
   return (
     <View style={styles.container}>
+      <NavBar
+        title="面试日程"
+        headerRight={() => (
+          <TextButton
+            title="全部"
+            onPress={() => navigation.navigate('AllInterview')}
+          />
+        )}
+      />
       <FlatList
         contentContainerStyle={styles.content}
         keyExtractor={item => item.date + item.time}
@@ -76,8 +75,5 @@ const styles = StyleSheet.create({
   content: {
     backgroundColor: '#FFFFFF',
     flexGrow: 1,
-  },
-  rightButton: {
-    marginRight: 11,
   },
 })

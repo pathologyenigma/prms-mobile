@@ -1,15 +1,13 @@
 import React, { useMemo, useRef, useState } from 'react'
 import { StyleSheet, Text, View, Image, Animated } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import PagerView from 'react-native-pager-view'
 import JobFairListPage from './Page'
 import IconButton from '../../components/IconButton'
 import TabBar from '../../components/TabBar'
 import usePagerView from '../../hooks/usePagerView'
-
-export const JobFairListOptions: StackNavigationOptions = {
-  title: '线下招聘会',
-}
+import NavBar from '../../components/NavBar'
+import { useNavigation } from '@react-navigation/native'
+import { StackNavigationProp } from '@react-navigation/stack'
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
@@ -25,8 +23,11 @@ export default function JobFairList() {
     onPageSelected,
   } = usePagerView()
 
+  const navigation = useNavigation<StackNavigationProp<any>>()
+
   return (
     <View style={styles.container}>
+      <NavBar title="线下招聘会" />
       <TabBar
         tabs={tabs}
         scrollOffsetAnimatedValue={scrollOffsetAnimatedValue}
@@ -38,6 +39,7 @@ export default function JobFairList() {
         <IconButton
           style={styles.search}
           icon={require('./assets/search.png')}
+          onPress={() => navigation.navigate('JobFairSearch')}
         />
       </TabBar>
       <AnimatedPagerView

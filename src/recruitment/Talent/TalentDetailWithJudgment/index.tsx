@@ -1,6 +1,5 @@
 import React from 'react'
 import { StyleSheet, View, Alert } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import FavoriteButton from '../TalentDetailView/FavoriteButton'
 import ReportButton from '../TalentDetailView/ReportButton'
 import TalentDetailView from '../TalentDetailView'
@@ -9,16 +8,7 @@ import GradientButton from '../../components/GradientButton'
 import AlertModal from '../../components/AlertModal'
 import { useState } from 'react'
 import GhostButton from '../../components/GhostButton'
-
-export const TalentDetailWithJudgmentOptions: StackNavigationOptions = {
-  title: '',
-  headerRight: () => (
-    <View style={styles.headerButtons}>
-      <FavoriteButton checked={true} />
-      <ReportButton />
-    </View>
-  ),
-}
+import NavBar from '../../components/NavBar'
 
 export default function TalentDetailWithJudgment() {
   const [alertVisible, setAlertVisible] = useState(false)
@@ -44,7 +34,15 @@ export default function TalentDetailWithJudgment() {
   }
 
   return (
-    <>
+    <View style={styles.container}>
+      <NavBar
+        headerRight={() => (
+          <View style={styles.headerButtons}>
+            <FavoriteButton checked={true} />
+            <ReportButton />
+          </View>
+        )}
+      />
       <TalentDetailView renderBottomBar={renderBottomBar} />
       <AlertModal
         visible={alertVisible}
@@ -58,7 +56,7 @@ export default function TalentDetailWithJudgment() {
         }}
         onNegativePress={() => setAlertVisible(false)}
       />
-    </>
+    </View>
   )
 }
 

@@ -1,16 +1,9 @@
 import React from 'react'
-import { View, Text, Image, StyleSheet, StatusBar } from 'react-native'
-import {
-  StackNavigationOptions,
-  StackNavigationProp,
-} from '@react-navigation/stack'
+import { View, Text, Image, StyleSheet } from 'react-native'
+import { StackNavigationProp } from '@react-navigation/stack'
 import GradientButton from '../../components/GradientButton'
 import { useNavigation } from '@react-navigation/core'
-
-export const PostJobSuccessOptions: StackNavigationOptions = {
-  title: '职位发布成功',
-  headerLeft: () => null,
-}
+import NavBar from '../../components/NavBar'
 
 export default function PostJobSuccess() {
   const navigation = useNavigation<StackNavigationProp<any>>()
@@ -21,10 +14,15 @@ export default function PostJobSuccess() {
 
   return (
     <View style={styles.container}>
+      <NavBar title="职位发布成功" headerLeft={() => null} />
       <Image style={styles.icon} source={require('./chenggong.png')} />
       <Text style={styles.title}>发布成功</Text>
       <Text style={styles.detail}>已上线至求职端</Text>
-      <GradientButton text="完成" style={styles.button} onPress={handlePress} />
+      <GradientButton
+        title="完成"
+        style={styles.button}
+        onPress={handlePress}
+      />
     </View>
   )
 }

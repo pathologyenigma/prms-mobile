@@ -7,10 +7,7 @@ import {
   ScrollView,
   ImageSourcePropType,
 } from 'react-native'
-import {
-  StackNavigationOptions,
-  StackNavigationProp,
-} from '@react-navigation/stack'
+import { StackNavigationProp } from '@react-navigation/stack'
 import NavBar from '../../components/NavBar'
 import Rating from '../../components/Rating'
 import Grading from './Grading'
@@ -23,11 +20,6 @@ import MaskedView from '@react-native-community/masked-view'
 import LinearGradient from 'react-native-linear-gradient'
 import Pending from './Pending'
 import { useNavigation } from '@react-navigation/native'
-
-export const CompanyDetailOptions: StackNavigationOptions = {
-  title: '页面模版',
-  headerShown: false,
-}
 
 interface Time {
   icon: ImageSourcePropType

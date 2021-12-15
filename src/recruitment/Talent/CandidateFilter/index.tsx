@@ -1,9 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { StyleSheet, Text, View, Image, ScrollView } from 'react-native'
-import {
-  StackNavigationOptions,
-  StackNavigationProp,
-} from '@react-navigation/stack'
+import { StackNavigationProp } from '@react-navigation/stack'
 import LabelAndDetail from './LabelAndDetail'
 import CheckLabelGroup from '../../components/CheckLabelGroup'
 import RangeSlider from './RangeSlider'
@@ -13,10 +10,7 @@ import { isIphoneX } from 'react-native-iphone-x-helper'
 import { useNavigation } from '@react-navigation/native'
 import JobSalaryModal from './JobSalaryModal'
 import CancelableTag from './CancelableTag'
-
-export const CandidateFilterOptions: StackNavigationOptions = {
-  title: '筛选',
-}
+import NavBar from '../../components/NavBar'
 
 export default function CandidateFilter() {
   const [selectedCategories, setSelectedCategories] = useState(['产品经理'])
@@ -94,6 +88,7 @@ export default function CandidateFilter() {
 
   return (
     <View style={styles.container}>
+      <NavBar title="筛选" />
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.content}>

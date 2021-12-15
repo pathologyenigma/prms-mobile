@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { StyleSheet, View, ScrollView, Animated } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
+
 import NavBar from '../../components/NavBar'
 import Dashboard from './Dashboard'
 import TabBar from '../../components/TabBar'
@@ -10,11 +10,6 @@ import GradingPage from './GradingPage'
 import useScrollBar from '../../hooks/useScrollBar'
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
-
-export const InterviewGradingOptions: StackNavigationOptions = {
-  title: '页面模版',
-  headerShown: false,
-}
 
 const tabs = [
   '技术',

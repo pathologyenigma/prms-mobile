@@ -5,23 +5,15 @@ import {
   View,
   Image,
   ScrollView,
-  StatusBar,
   TouchableWithoutFeedback,
 } from 'react-native'
-import {
-  StackNavigationOptions,
-  StackNavigationProp,
-} from '@react-navigation/stack'
+import { StackNavigationProp } from '@react-navigation/stack'
 import IconButton from '../../components/IconButton'
 import Avatar from './Avatar'
 import Tab from './Tab'
 import Cell from './Cell'
 import { useNavigation } from '@react-navigation/native'
-
-export const MeOptions: StackNavigationOptions = {
-  title: '',
-  header: () => null,
-}
+import FocusAwareStatusBar from '../../components/FocusAwareStatusBar'
 
 export default function Me() {
   const navigation = useNavigation<StackNavigationProp<any>>()
@@ -29,6 +21,7 @@ export default function Me() {
   const renderHeader = () => {
     return (
       <View style={styles.header}>
+        <FocusAwareStatusBar barStyle="light-content" />
         <Image
           style={styles.bg}
           source={require('./images/bg.png')}

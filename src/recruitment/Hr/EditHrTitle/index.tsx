@@ -8,25 +8,20 @@ import {
   StatusBar,
   TextInput,
 } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import TextButton from '../../components/TextButton'
 import IconButton from '../../components/IconButton'
-
-export const EditHrTitleOptions: StackNavigationOptions = {
-  title: '当前职位',
-  headerRight: () => (
-    <TextButton
-      title="保存"
-      style={styles.button}
-      textStyle={styles.buttonTextStyle}
-    />
-  ),
-  headerLeft: () => <IconButton icon={require('./guanbi.png')} />,
-}
+import NavBar from '../../components/NavBar'
 
 export default function EditHrTitle() {
   return (
     <View style={styles.container}>
+      <NavBar
+        title="当前职位"
+        headerLeft={() => <IconButton icon={require('./guanbi.png')} />}
+        headerRight={() => (
+          <TextButton title="保存" textStyle={styles.buttonTextStyle} />
+        )}
+      />
       <TextInput
         style={styles.input}
         placeholderTextColor="#BBBBBB"
@@ -43,9 +38,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-  },
-  button: {
-    marginRight: 11,
   },
   buttonTextStyle: {
     color: '#7AD398',

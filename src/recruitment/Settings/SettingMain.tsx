@@ -8,18 +8,10 @@ import {
   TouchableWithoutFeedback,
   Switch,
 } from 'react-native'
-import {
-  StackNavigationOptions,
-  StackNavigationProp,
-} from '@react-navigation/stack'
+import { StackNavigationProp } from '@react-navigation/stack'
 import NavBar from '../components/NavBar'
 import PrimaryButton from '../components/PrimaryButton'
 import { useNavigation } from '@react-navigation/native'
-
-export const SettingMainOptions: StackNavigationOptions = {
-  title: '页面模版',
-  headerShown: false,
-}
 
 export default function SettingMain() {
   const navigation = useNavigation<StackNavigationProp<any>>()

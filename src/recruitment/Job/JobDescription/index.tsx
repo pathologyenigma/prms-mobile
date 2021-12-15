@@ -7,10 +7,7 @@ import {
   ScrollView,
   StatusBar,
 } from 'react-native'
-import {
-  StackNavigationOptions,
-  StackNavigationProp,
-} from '@react-navigation/stack'
+import { StackNavigationProp } from '@react-navigation/stack'
 import IconButton from '../../components/IconButton'
 import JobMeta from './JobMeta'
 import Collaborator from './Collaborator'
@@ -23,16 +20,7 @@ import { getBottomSpace, isIphoneX } from 'react-native-iphone-x-helper'
 import { useNavigation } from '@react-navigation/native'
 import AlertModal from '../../components/AlertModal'
 import { useState } from 'react'
-
-export const JobDescriptionOptions: StackNavigationOptions = {
-  title: '',
-  headerRight: () => (
-    <IconButton icon={require('./images/share.png')} style={styles.shareIcon} />
-  ),
-  headerBackground: () => (
-    <View style={{ backgroundColor: '#F8F8F8', flex: 1 }}></View>
-  ),
-}
+import NavBar from '../../components/NavBar'
 
 export default function JobDescription() {
   const navigation = useNavigation<StackNavigationProp<any>>()
@@ -40,6 +28,16 @@ export default function JobDescription() {
 
   return (
     <View style={styles.container}>
+      <NavBar
+        style={{ backgroundColor: '#F8F8F8' }}
+        title=""
+        headerRight={() => (
+          <IconButton
+            icon={require('./images/share.png')}
+            style={styles.shareIcon}
+          />
+        )}
+      />
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.content}>
@@ -81,7 +79,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8',
   },
   shareIcon: {
-    marginRight: 21,
+    marginRight: 10,
   },
   buttons: {
     flexDirection: 'row',

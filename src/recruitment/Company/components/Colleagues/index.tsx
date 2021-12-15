@@ -8,7 +8,7 @@ import {
   View,
   Image,
 } from 'react-native'
-import GradientButton from '../../components/GradientButton'
+import GradientButton from '../../../components/GradientButton'
 
 interface ColleaguesProps {
   style?: StyleProp<ViewStyle>
@@ -38,7 +38,7 @@ export default function Colleagues({ style }: ColleaguesProps) {
       <View style={styles.item} key={index}>
         <Image
           style={styles.avatar}
-          source={require('../../assets/avatar_default.png')}
+          source={require('../../../assets/avatar_default.png')}
         />
         <View style={styles.meta}>
           <Text style={styles.name}>{name}</Text>

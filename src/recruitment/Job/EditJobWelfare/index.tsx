@@ -4,11 +4,7 @@ import TextButton from '../../components/TextButton'
 import CheckLabelGroup from '../../components/CheckLabelGroup'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import AlertModalWithTextInput from '../../components/AlertModalWithTextInput'
-
-export const EditJobWelfareOptions = ({}) => ({
-  title: '职位福利',
-  headerRight: () => <TextButton title="保存" style={styles.save} />,
-})
+import NavBar from '../../components/NavBar'
 
 const initialLabels = [
   {
@@ -109,6 +105,10 @@ export default function EditJobWelfare() {
 
   return (
     <View style={styles.container}>
+      <NavBar
+        title="职位福利"
+        headerRight={() => <TextButton title="保存" />}
+      />
       <Text style={styles.slogan}>提升职位吸引力，招聘更快捷</Text>
       <Text style={styles.count}>{`已选${
         labels.filter(l => l.checked).length
@@ -141,9 +141,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 11,
     alignItems: 'flex-start',
-  },
-  save: {
-    marginRight: 12,
   },
   slogan: {
     fontSize: 20,

@@ -1,15 +1,9 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image, ScrollView } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
 import NavBar from '../../components/NavBar'
 import GhostButton from '../../components/GhostButton'
 import LeaveCompanyModal from './LeaveCompanyModal'
 import { useState } from 'react'
-
-export const ChangeCompanyOptions: StackNavigationOptions = {
-  title: '页面模版',
-  headerShown: false,
-}
 
 export default function ChangeCompany() {
   const [leaveModalVisible, setLeaveModalVisible] = useState(false)

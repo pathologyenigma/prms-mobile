@@ -9,20 +9,10 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
 } from 'react-native'
-import { StackNavigationOptions } from '@react-navigation/stack'
+
 import TextButton from '../../../components/TextButton'
 import CancelableTag from '../CancelableTag'
-
-export const JobCategoryOptions: StackNavigationOptions = {
-  title: '职位类别',
-  headerRight: () => (
-    <TextButton
-      title="保存"
-      style={styles.button}
-      textStyle={styles.buttonTextStyle}
-    />
-  ),
-}
+import NavBar from '../../../components/NavBar'
 
 const primaryCategories = [
   '销售/商务拓展',
@@ -136,6 +126,12 @@ export default function JobCategory() {
 
   return (
     <View style={styles.container}>
+      <NavBar
+        title="职位类别"
+        headerRight={() => (
+          <TextButton title="保存" textStyle={styles.buttonTextStyle} />
+        )}
+      />
       <View style={styles.selectedTagContainer}>
         <Text style={styles.count}>
           已选（{selectedCategories.length}/{categoryLimit}）
@@ -197,9 +193,6 @@ const styles = StyleSheet.create({
   content: {
     flexGrow: 1,
     backgroundColor: '#FFFFFF',
-  },
-  button: {
-    marginRight: 11,
   },
   buttonTextStyle: {
     color: '#7AD398',

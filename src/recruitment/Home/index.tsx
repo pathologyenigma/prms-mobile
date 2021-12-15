@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image, ImageRequireSource } from 'react-native'
 
-import Talent from '../Talent'
+import Talent from '../Talent/TalentList'
 import Msg from '../Msg'
 import Me from '../Hr/Me'
 

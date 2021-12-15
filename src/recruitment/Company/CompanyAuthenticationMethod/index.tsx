@@ -9,49 +9,47 @@ import {
   StyleProp,
   TouchableWithoutFeedback,
 } from 'react-native'
-import {
-  StackNavigationOptions,
-  StackNavigationProp,
-} from '@react-navigation/stack'
+import { StackNavigationProp } from '@react-navigation/stack'
 import IconButton from '../../components/IconButton'
 import Hotline from '../Hotline'
 import { useNavigation } from '@react-navigation/native'
-
-export const CompanyAuthenticationMethodOptions: StackNavigationOptions = {
-  title: '公司认证方式',
-  headerRight: () => (
-    <IconButton
-      icon={require('../images/more.png')}
-      style={{ marginRight: 11 }}
-    />
-  ),
-}
+import NavBar from '../../components/NavBar'
 
 export default function CompanyAuthenticationMethod() {
   const navigation = useNavigation<StackNavigationProp<any>>()
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.hint}>请选择认证方式</Text>
-      <Card style={[styles.cardStyle, { marginTop: 27 }]}>
-        <AuthenticationItem
-          title="同事协助认证"
-          detail="向同事发送验证码进行认证"
-          recommended
-          onPress={() =>
-            navigation.navigate('CompanyAuthenticationByColleague')
-          }
-        />
-      </Card>
-      <Card style={[styles.cardStyle, { marginTop: 21 }]}>
-        <AuthenticationItem
-          title="证照原件认证"
-          detail="需上传「营业执照」照片"
-          onPress={() => navigation.navigate('CompanyAuthenticationByLicense')}
-        />
-      </Card>
-      <Hotline style={styles.hotline} />
-    </ScrollView>
+    <View style={styles.container}>
+      <NavBar
+        title="公司认证方式"
+        headerLeft={() => <IconButton icon={require('../images/more.png')} />}
+      />
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}>
+        <Text style={styles.hint}>请选择认证方式</Text>
+        <Card style={[styles.cardStyle, { marginTop: 27 }]}>
+          <AuthenticationItem
+            title="同事协助认证"
+            detail="向同事发送验证码进行认证"
+            recommended
+            onPress={() =>
+              navigation.navigate('CompanyAuthenticationByColleague')
+            }
+          />
+        </Card>
+        <Card style={[styles.cardStyle, { marginTop: 21 }]}>
+          <AuthenticationItem
+            title="证照原件认证"
+            detail="需上传「营业执照」照片"
+            onPress={() =>
+              navigation.navigate('CompanyAuthenticationByLicense')
+            }
+          />
+        </Card>
+        <Hotline style={styles.hotline} />
+      </ScrollView>
+    </View>
   )
 }
 
