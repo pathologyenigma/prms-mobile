@@ -3,22 +3,21 @@ import NavBar, { EButtonType } from '../../components/NavBar'
 import styles from './styles/Setting.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import RootLoading from '../../../utils/rootLoading'
-import { Text, View, Image, StatusBar } from 'react-native'
+import { Text, View, Image, StatusBar, DeviceEventEmitter } from 'react-native'
 import { versionCode } from '../../../utils/config'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import { ActivityIndicator } from '@ant-design/react-native'
 import AlertContentModal from '../../components/AlertContentModal'
-import { CommonActions } from '@react-navigation/native';
-import * as CacheManager from 'react-native-http-cache';
+import { CommonActions } from '@react-navigation/native'
+import * as CacheManager from 'react-native-http-cache'
 import AsyncStorage from '@react-native-community/async-storage'
+import { Log_Out } from '../../../utils/constant'
 
-type IProps = GenProps<'Setting'> & {
-
-}
+type IProps = GenProps<'Setting'> & {}
 
 interface IState {
-  cacheSize: string,
-  cacheVisible: boolean,
+  cacheSize: string
+  cacheVisible: boolean
   logoutVisible: boolean
 }
 
@@ -28,7 +27,7 @@ export default class Setting extends Component<IProps, IState> {
     this.state = {
       cacheSize: '',
       cacheVisible: false,
-      logoutVisible: false
+      logoutVisible: false,
     }
   }
 
@@ -51,20 +50,20 @@ export default class Setting extends Component<IProps, IState> {
       .catch((error: any) => {
         RootLoading.fail(error.message || error.toString())
       })
-
   }
 
   loadData() {
-    CacheManager.getCacheSize().then((value: any) => {
-      const size = (value / 1024 / 1024).toFixed(2)
-      this.setState({ cacheSize: `${size} M` })
-    }, (error: any) => {
-      RootLoading.fail('获取缓存失败,请重试')
-      this.setState({ cacheSize: '--' })
-    });
+    CacheManager.getCacheSize().then(
+      (value: any) => {
+        const size = (value / 1024 / 1024).toFixed(2)
+        this.setState({ cacheSize: `${size} M` })
+      },
+      (error: any) => {
+        RootLoading.fail('获取缓存失败,请重试')
+        this.setState({ cacheSize: '--' })
+      },
+    )
   }
-
-
 
   renderNavBar() {
     const { navigation } = this.props
@@ -87,8 +86,6 @@ export default class Setting extends Component<IProps, IState> {
     )
   }
 
-
-
   renderCell(title: string, onpress: () => void) {
     return (
       <NextTouchableOpacity
@@ -97,8 +94,7 @@ export default class Setting extends Component<IProps, IState> {
           if (onpress) {
             onpress()
           }
-        }}
-      >
+        }}>
         <Text style={styles.cellName}>{title}</Text>
         <Image
           style={styles.nextIcon}
@@ -133,16 +129,12 @@ export default class Setting extends Component<IProps, IState> {
             } else {
               this.setState({ cacheVisible: true })
             }
-          }}
-        >
+          }}>
           <Text style={styles.cellName}>清除缓存</Text>
           {cacheSize ? (
             <Text style={styles.cellValue}>{cacheSize}</Text>
           ) : (
-            <ActivityIndicator
-              size="small"
-              color="#888888"
-            />
+            <ActivityIndicator size="small" color="#888888" />
           )}
           <Image
             style={styles.nextIcon}
@@ -154,18 +146,8 @@ export default class Setting extends Component<IProps, IState> {
   }
 
   logout() {
-    const { navigation } = this.props
-    RootLoading.loading()
     AsyncStorage.clear(() => {
-      RootLoading.hide()
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 1,
-          routes: [
-            { name: 'Dummy' },
-          ],
-        })
-      )
+      DeviceEventEmitter.emit(Log_Out)
     })
   }
 
@@ -175,11 +157,8 @@ export default class Setting extends Component<IProps, IState> {
         style={styles.logoOutBtn}
         onPress={() => {
           this.setState({ logoutVisible: true })
-        }}
-      >
-        <Text style={styles.logoOutText}>
-          退出登录
-        </Text>
+        }}>
+        <Text style={styles.logoOutText}>退出登录</Text>
       </NextTouchableOpacity>
     )
   }
@@ -203,18 +182,22 @@ export default class Setting extends Component<IProps, IState> {
           detail={`缓存大小为${cacheSize}，确定要清除吗？`}
           leftBtn={{
             title: '取消',
-            act: () => this.setState({
-              cacheVisible: false,
-            }),
+            act: () =>
+              this.setState({
+                cacheVisible: false,
+              }),
           }}
           rightBtn={{
             title: '确定',
             act: () => {
-              this.setState({
-                cacheVisible: false
-              }, () => {
-                this.clearCache()
-              })
+              this.setState(
+                {
+                  cacheVisible: false,
+                },
+                () => {
+                  this.clearCache()
+                },
+              )
             },
           }}
         />
@@ -224,18 +207,22 @@ export default class Setting extends Component<IProps, IState> {
           detail="确定退出登录吗?"
           leftBtn={{
             title: '取消',
-            act: () => this.setState({
-              logoutVisible: false,
-            }),
+            act: () =>
+              this.setState({
+                logoutVisible: false,
+              }),
           }}
           rightBtn={{
             title: '确定',
             act: () => {
-              this.setState({
-                logoutVisible: false
-              }, () => {
-                this.logout()
-              })
+              this.setState(
+                {
+                  logoutVisible: false,
+                },
+                () => {
+                  this.logout()
+                },
+              )
             },
           }}
         />
