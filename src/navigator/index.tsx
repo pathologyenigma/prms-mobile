@@ -1,8 +1,18 @@
 import React, { Component } from 'react'
 import {
-  Image, NativeModules, View, Text, InteractionManager, TextBase, DeviceEventEmitter,
+  Image,
+  NativeModules,
+  View,
+  Text,
+  InteractionManager,
+  TextBase,
+  DeviceEventEmitter,
 } from 'react-native'
-import { createStackNavigator, CardStyleInterpolators, TransitionPresets } from '@react-navigation/stack'
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+  TransitionPresets,
+} from '@react-navigation/stack'
 import * as http from '../utils/http'
 import { connect } from 'react-redux'
 import SystemHelper from '../utils/system'
@@ -12,14 +22,14 @@ import RequestLoginStacks from '../navigator/loginPages/stack'
 import RootLoading from '../utils/rootLoading'
 import AsyncStorage from '@react-native-community/async-storage'
 import { Login_Identity, Log_Out } from '../utils/constant'
-import { CommonActions } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native'
 
 const SplashScreen = NativeModules.SplashManager
 const styles = {
   navbar: {
     backgroundColor: '#3574FA',
     height: SystemHelper.safeTop,
-  }
+  },
 }
 
 const Stack = createStackNavigator()
@@ -27,18 +37,10 @@ const Stack = createStackNavigator()
 function RenderLoginContainer() {
   const { stacks } = RequestLoginStacks
   return (
-    <Stack.Navigator
-      headerMode="none"
-    >
-      {
-        Object.keys(stacks).map(stack => (
-          <Stack.Screen
-            key={stack}
-            name={stack}
-            component={stacks[stack]}
-          />
-        ))
-      }
+    <Stack.Navigator headerMode="none">
+      {Object.keys(stacks).map(stack => (
+        <Stack.Screen key={stack} name={stack} component={stacks[stack]} />
+      ))}
     </Stack.Navigator>
   )
 }
@@ -46,18 +48,10 @@ function RenderLoginContainer() {
 function RenderRequestJobTabs() {
   const { stacks } = RequestJobRouterStacks
   return (
-    <Stack.Navigator
-      headerMode="none"
-    >
-      {
-        Object.keys(stacks).map(stack => (
-          <Stack.Screen
-            key={stack}
-            name={stack}
-            component={stacks[stack]}
-          />
-        ))
-      }
+    <Stack.Navigator headerMode="none">
+      {Object.keys(stacks).map(stack => (
+        <Stack.Screen key={stack} name={stack} component={stacks[stack]} />
+      ))}
     </Stack.Navigator>
   )
 }
@@ -66,18 +60,10 @@ function RenderRequestJobTabs() {
 function RenderRequestZhaopinTabs() {
   const { stacks } = RequestZhaopinRouterStacks
   return (
-    <Stack.Navigator
-      headerMode="none"
-    >
-      {
-        Object.keys(stacks).map(stack => (
-          <Stack.Screen
-            key={stack}
-            name={stack}
-            component={stacks[stack]}
-          />
-        ))
-      }
+    <Stack.Navigator headerMode="none">
+      {Object.keys(stacks).map(stack => (
+        <Stack.Screen key={stack} name={stack} component={stacks[stack]} />
+      ))}
     </Stack.Navigator>
   )
 }
@@ -86,11 +72,14 @@ class Dummy extends React.Component {
   private logoutListner: any
   constructor(props: any) {
     super(props)
-    this.state = ({
-      loginIdentity: undefined
-    })
+    this.state = {
+      loginIdentity: undefined,
+    }
     this.renderNotification = this.renderNotification.bind(this)
-    this.logoutListner = DeviceEventEmitter.addListener(Log_Out, this.renderNotification)
+    this.logoutListner = DeviceEventEmitter.addListener(
+      Log_Out,
+      this.renderNotification,
+    )
     this.loadData()
   }
 
@@ -102,10 +91,8 @@ class Dummy extends React.Component {
       navigation.dispatch(
         CommonActions.reset({
           index: 1,
-          routes: [
-            { name: 'Dummy' },
-          ],
-        })
+          routes: [{ name: 'Dummy' }],
+        }),
       )
     })
   }
@@ -148,24 +135,30 @@ class Dummy extends React.Component {
   }
 
   render() {
-    return (
-      <View style={{ flex: 1, }}>
-      </View>
-    )
+    return <View style={{ flex: 1 }}></View>
   }
 }
 
 export default class Temp extends React.Component {
   render() {
     return (
-      <Stack.Navigator
-        headerMode="none"
-        initialRouteName="Dummy"
-      >
+      <Stack.Navigator headerMode="none" initialRouteName="Dummy">
         <Stack.Screen key="Dummy" name="Dummy" component={Dummy} />
-        <Stack.Screen key="RenderLoginContainer" name="RenderLoginContainer" component={RenderLoginContainer} />
-        <Stack.Screen key="RenderRequestJobTabs" name="RenderRequestJobTabs" component={RenderRequestJobTabs} />
-        <Stack.Screen key="RenderRequestZhaopinTabs" name="RenderRequestZhaopinTabs" component={RenderRequestZhaopinTabs} />
+        <Stack.Screen
+          key="RenderLoginContainer"
+          name="RenderLoginContainer"
+          component={RenderLoginContainer}
+        />
+        <Stack.Screen
+          key="RenderRequestJobTabs"
+          name="RenderRequestJobTabs"
+          component={RenderRequestJobTabs}
+        />
+        <Stack.Screen
+          key="RenderRequestZhaopinTabs"
+          name="RenderRequestZhaopinTabs"
+          component={RenderRequestZhaopinTabs}
+        />
       </Stack.Navigator>
     )
   }

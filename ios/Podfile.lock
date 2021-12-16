@@ -70,8 +70,6 @@ PODS:
     - FlipperKit/Core
     - FlipperKit/FlipperKitNetworkPlugin
   - glog (0.3.5)
-  - HeroPicker (0.0.8):
-    - React
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.180)
   - Permission-Camera (3.1.0):
@@ -408,7 +406,6 @@ DEPENDENCIES:
   - FlipperKit/FlipperKitUserDefaultsPlugin (= 0.87.0)
   - FlipperKit/SKIOSNetworkPlugin (= 0.87.0)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
-  - "HeroPicker (from `../node_modules/@react-native-hero/picker`)"
   - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera`)
   - Permission-LocationAlways (from `../node_modules/react-native-permissions/ios/LocationAlways`)
   - Permission-LocationWhenInUse (from `../node_modules/react-native-permissions/ios/LocationWhenInUse`)
@@ -484,8 +481,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/React/FBReactNativeSpec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
-  HeroPicker:
-    :path: "../node_modules/@react-native-hero/picker"
   Permission-Camera:
     :path: "../node_modules/react-native-permissions/ios/Camera"
   Permission-LocationAlways:
@@ -594,7 +589,6 @@ SPEC CHECKSUMS:
   Flipper-RSocket: 127954abe8b162fcaf68d2134d34dc2bd7076154
   FlipperKit: 651f50a42eb95c01b3e89a60996dd6aded529eeb
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
-  HeroPicker: d101f419ffae1d23071630efde22d74d8399e7b6
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
   Permission-Camera: 0db4fd6e1c556c1cf47f38b989a8084cea3ec3dd
