@@ -5,42 +5,39 @@ import { Provider } from 'react-redux'
 import Navigator from './src/navigator'
 import store from './src/store'
 import { Provider as AntProvider } from '@ant-design/react-native'
-import {
-  NavigationContainer,
-} from '@react-navigation/native'
-import {
-  ApolloProvider,
-} from "@apollo/client"
+import { NavigationContainer } from '@react-navigation/native'
+import { ApolloProvider } from '@apollo/client'
 import { initApolloClient } from './src/utils/postQuery'
 import { Login_Token } from './src/utils/constant'
 import AsyncStorage from '@react-native-community/async-storage'
 import RootLoading from './src/utils/rootLoading'
+import Splash from './src/bridge/splash'
 
-interface IProps {
-
-}
+interface IProps {}
 interface IStates {
-  localToken: string | undefined,
+  localToken: string | undefined
 }
 
 class App extends Component<IProps, IStates> {
   constructor(props: any) {
     super(props)
-    this.state = ({
-      localToken: undefined
-    })
+    this.state = {
+      localToken: undefined,
+    }
   }
 
   componentDidMount() {
     AsyncStorage.getItem(Login_Token)
       .then((result: any) => {
+        Splash.hide()
         if (result) {
           this.setState({ localToken: result })
         } else {
           this.setState({ localToken: '' })
         }
       })
-      .catch((error) => {
+      .catch(error => {
+        Splash.hide()
         this.setState({ localToken: '' })
       })
   }
