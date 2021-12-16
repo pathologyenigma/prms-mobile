@@ -304,7 +304,11 @@ const subscriptionMessage = ((callback?: (error: any, result?: any) => void) => 
       }, (error) => {
         errorHandler(error)
         console.log('error: ', error)
+        console.log('subscription断开了')
+        RootLoading.fail('subscription断开了')
       }, () => {
+        console.log('subscription断开了')
+        RootLoading.fail('subscription断开了')
         console.log('complete: ')
       })
   }

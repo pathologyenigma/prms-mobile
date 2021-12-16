@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import RootLoading from '../../../utils/rootLoading'
 import { IStoreState } from '../../../reducer'
-import { Text, View, Image, StatusBar, TextInput, DeviceEventEmitter, FlatList } from 'react-native'
+import { Text, View, Image, StatusBar, TextInput, DeviceEventEmitter, FlatList, Keyboard, ActivityIndicator } from 'react-native'
 import { versionCode } from '../../../utils/config'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import GradientButton from '../../components/GradientButton'
@@ -41,6 +41,7 @@ interface IState {
   operateModalVisible: boolean
   rejectReason: string
   rejectModalVisible: boolean
+  isLoadMoreData: boolean
 }
 
 const inappropriateArray = [
@@ -58,6 +59,10 @@ class MessagePage extends Component<IProps, IState> {
   private inputRef: any
   private newMessaheListner: any
   private messageListRef: any
+  private keyboardDidShowListener: any
+  private keyboardDidHideListener: any
+  private lastOffsetY: number
+  private latestOffsetY: number
   constructor(props: IProps) {
     super(props)
     const { route: { params: { targetId } } } = props
@@ -69,7 +74,8 @@ class MessagePage extends Component<IProps, IState> {
       content: '',
       listDataSource: [],
       dataSource: [],
-      RefreshState: 1,
+      refreshState: 1,
+      isLoadMoreData: false,
       showCommonWord: false,
       showMediaView: false,
       showSendBtn: false,
@@ -93,6 +99,12 @@ class MessagePage extends Component<IProps, IState> {
     }
     this.reformNewMessage = this.reformNewMessage.bind(this)
     this.newMessaheListner = DeviceEventEmitter.addListener(Receive_Message, this.reformNewMessage)
+    // 监听键盘弹出事件
+    // this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow',
+    //   this.keyboardDidShowHandler.bind(this))
+    // // 监听键盘隐藏事件
+    // this.keyboardDidHideListener = Keyboard.addListener('keyboardWillChangeFrame',
+    //   this.keyboardDidShowHandler.bind(this))
   }
 
   componentDidMount() {
@@ -104,6 +116,11 @@ class MessagePage extends Component<IProps, IState> {
       this.newMessaheListner.remove()
     }
   }
+
+  // keyboardDidShowHandler() {
+  //   console.log('2222222222222222222222222222')
+  //   this.listScrollToEnd()
+  // }
 
   reformNewMessage(message: any) {
     console.log('message: ', message)
@@ -118,17 +135,14 @@ class MessagePage extends Component<IProps, IState> {
   }
 
   listScrollToEnd() {
-    console.log('11111111111')
     if (!this.messageListRef) {
-      console.log('111111111112')
       setTimeout(() => {
         this.listScrollToEnd()
-      }, 300);
+      }, 300)
     } else {
-      console.log('111111111113')
       setTimeout(() => {
-        this.messageListRef.scrollToEnd({ animated: true })
-      }, 300);
+        this.messageListRef.scrollToEnd({ animated: false })
+      }, 100)
     }
   }
 
@@ -145,64 +159,85 @@ class MessagePage extends Component<IProps, IState> {
           && result.UserGetMessages.messages
           && result.UserGetMessages.messages.length > 0) {
           const newsList = [...result.UserGetMessages.messages]
-          this.setState({ listDataSource: listDataSource.concat(newsList.reverse()) }, () => this.listScrollToEnd())
+          this.setState({
+            listDataSource: newsList.reverse().concat(listDataSource)
+          }, () => {
+            if (page === 0) {
+              this.setState({ refreshState: 0, })
+              setTimeout(() => {
+                this.listScrollToEnd()
+              }, 100)
+            } else {
+              // 此处 需要再次调整
+              this.messageListRef.scrollToOffset({ animated: false, offset: this.latestOffsetY })
+              setTimeout(() => {
+                this.setState({ refreshState: 0, })
+              }, 1000)
+              console.log('this.lastOffsetY: ', this.lastOffsetY)
+              // this.setState({
+              //   isLoadMoreData: true,
+              // })
+            }
+          })
         }
+      } else {
+        this.setState({ refreshState: 0 })
       }
     })
-    this.setState({
-      dataSource: [{
-        id: 1,
-        type: 'jianli',
-        name: '项目经理',
-        company: '深圳市酷魅科技有限公司',
-        financing: '融资未公开',
-        staffAmount: '1-49人',
-        experience: '3-4年',
-        education: '大专及以上',
-        location: '深圳·宝安区',
-        salary: '15K-30K',
-        interviewer: '李女士·产品线HRBP',
-        time: '6月25日  20:40  ',
-        launch: '李女士'
-      }, {
-        id: 2,
-        type: 'message',
-        content: '这是我的资料，希望能成为贵团队的一员。',
-        time: '6月25日  20:40  ',
-        launch: '李女士'
-      }, {
-        id: 3,
-        type: 'message',
-        content: '请问有相关作品和个人简历吗？麻烦发送一份给我。',
-        time: '6月25日  20:40  ',
-        launch: '王经理'
-      }, {
-        id: 4,
-        type: 'requestResume',
-        content: '我想要一份您的附件简历到我的邮箱，您是否同意',
-        time: '6月25日  20:40  ',
-        launch: '王经理'
-      }, {
-        id: 5,
-        type: 'inviteInterview',
-        content: '领航新时代向您发出面试邀请，点击查看详情',
-        time: '6月25日  20:40  ',
-        launch: '李女士'
-      }, {
-        id: 6,
-        type: 'acceptInterview',
-        content: '接受了面试邀请',
-        time: '6月25日  20:40  ',
-        launch: '李女士'
-      }, {
-        id: 7,
-        type: 'rejectInterview',
-        content: '您已拒绝面试邀请',
-        detail: '已找到合适的公司，暂时不打算跳槽。',
-        time: '6月25日  20:40  ',
-        launch: '李女士'
-      },]
-    })
+    // this.setState({
+    //   dataSource: [{
+    //     id: 1,
+    //     type: 'jianli',
+    //     name: '项目经理',
+    //     company: '深圳市酷魅科技有限公司',
+    //     financing: '融资未公开',
+    //     staffAmount: '1-49人',
+    //     experience: '3-4年',
+    //     education: '大专及以上',
+    //     location: '深圳·宝安区',
+    //     salary: '15K-30K',
+    //     interviewer: '李女士·产品线HRBP',
+    //     time: '6月25日  20:40  ',
+    //     launch: '李女士'
+    //   }, {
+    //     id: 2,
+    //     type: 'message',
+    //     content: '这是我的资料，希望能成为贵团队的一员。',
+    //     time: '6月25日  20:40  ',
+    //     launch: '李女士'
+    //   }, {
+    //     id: 3,
+    //     type: 'message',
+    //     content: '请问有相关作品和个人简历吗？麻烦发送一份给我。',
+    //     time: '6月25日  20:40  ',
+    //     launch: '王经理'
+    //   }, {
+    //     id: 4,
+    //     type: 'requestResume',
+    //     content: '我想要一份您的附件简历到我的邮箱，您是否同意',
+    //     time: '6月25日  20:40  ',
+    //     launch: '王经理'
+    //   }, {
+    //     id: 5,
+    //     type: 'inviteInterview',
+    //     content: '领航新时代向您发出面试邀请，点击查看详情',
+    //     time: '6月25日  20:40  ',
+    //     launch: '李女士'
+    //   }, {
+    //     id: 6,
+    //     type: 'acceptInterview',
+    //     content: '接受了面试邀请',
+    //     time: '6月25日  20:40  ',
+    //     launch: '李女士'
+    //   }, {
+    //     id: 7,
+    //     type: 'rejectInterview',
+    //     content: '您已拒绝面试邀请',
+    //     detail: '已找到合适的公司，暂时不打算跳槽。',
+    //     time: '6月25日  20:40  ',
+    //     launch: '李女士'
+    //   },]
+    // })
   }
 
   renderNavBar() {
@@ -336,7 +371,7 @@ class MessagePage extends Component<IProps, IState> {
       // 发送方
       return (
         <View key={item.uuid.toString()} style={styles.cellSendMessage}>
-          <Text style={styles.cellSendContent}>
+          <Text style={styles.cellSendContent} selectable={true}>
             {item.messageContent}
           </Text>
           <Image
@@ -548,22 +583,82 @@ class MessagePage extends Component<IProps, IState> {
   }
 
   handleRefresh() {
+    this.setState({
+      refreshState: 1,
+      page: this.state.page + 1
+    }, () => {
+      this.loadData()
+    })
+  }
 
+  sendTextMessage() {
+    const info = {
+      messageType: 'Normal',
+      messageContent: this.state.content,
+      to: this.state.targetId
+    }
+    this.props.userSendMessage(info, (error, result) => {
+      if (!error) {
+        this.setState({ content: '' })
+      } else {
+        RootLoading.fail(`消息发送失败: ${error.toString()}`)
+      }
+    })
+  }
+
+  renderHeader() {
+    if (this.state.refreshState !== 1) {
+      return null
+    }
+    return (
+      <ActivityIndicator
+        color="#999"
+        style={{
+          alignSelf: 'center',
+          marginTop: 10
+        }}
+        size={'small'}
+      />
+    )
   }
 
   renderList() {
-    const { refreshState, listDataSource } = this.state
+    const { refreshState, listDataSource, isLoadMoreData } = this.state
     return (
       <RefreshListView
+        onScroll={(event: any) => {
+          console.log('event.nativeEvent.contentOffset.y: ', event.nativeEvent)
+          const offsetY = event.nativeEvent.contentOffset.y
+          const nativeEvent = event.nativeEvent
+          this.lastOffsetY = nativeEvent.contentSize.height
+          this.latestOffsetY = nativeEvent.contentSize.height - this.lastOffsetY
+          if (isLoadMoreData) {
+            // 获取到最新数据
+            // this.messageListRef.scrollToOffset({ animated: false, offset: nativeEvent.contentSize.height - this.lastOffsetY })
+            // this.setState({ isLoadMoreData: false })
+            // this.messageListRef.scrollTo({ x: 0, y: 100, animated: true })
+            // console.log('this.messageListRef.scrollTo: ', this.messageListRef.scrollTo(100))
+            // setTimeout(() => {
+            //   this.messageListRef && this.messageListRef.scrollTo({ y: nativeEvent.contentSize.height - this.lastOffsetY, animated: false })
+            // }, 1000)
+          } else {
+            // this.lastOffsetY = nativeEvent.contentSize.height
+            if (refreshState !== 1 && offsetY < 1) {
+              this.handleRefresh()
+            }
+          }
+        }}
         listRef={(e: any) => { this.messageListRef = e }}
         style={styles.listView}
-        onHeaderRefresh={() => this.handleRefresh()}
+        // onHeaderRefresh={() => this.handleRefresh()}
         refreshState={refreshState}
         automaticallyAdjustContentInsets={false}
         data={listDataSource}
         renderItem={({ item }: any) => this.renderCellItem(item)}
+        // ListFooterComponent={this.renderInput()}
+        ListHeaderComponent={() => this.renderHeader()}
         // onFooterRefresh={() => this.handleEndReached}
-        keyExtractor={item => item.uuid.toString()}
+        keyExtractor={(item: any) => item.uuid.toString()}
         footerRefreshingText="加载更多"
         footerNoMoreDataText="没有更多了"
       />
@@ -689,10 +784,25 @@ class MessagePage extends Component<IProps, IState> {
           <NextTouchableOpacity
             style={styles.commonWordsBtn}
             onPress={() => {
-              this.setState({
-                showCommonWord: !showCommonWord,
-                showMediaView: false
-              })
+              if (showCommonWord) {
+                // 切换为输入模式
+                this.setState({
+                  showCommonWord: !showCommonWord,
+                  showMediaView: false,
+                })
+                this.inputRef.focus()
+              } else {
+                // 切换为常用语模式
+                this.inputRef.blur()
+                setTimeout(() => {
+                  this.setState({
+                    showCommonWord: !showCommonWord,
+                    showMediaView: false,
+                  }, () => {
+                    this.listScrollToEnd()
+                  })
+                }, 100)
+              }
             }}
           >
             {showCommonWord ? (
@@ -708,7 +818,7 @@ class MessagePage extends Component<IProps, IState> {
           <TextInput
             ref={(e) => { this.inputRef = e }}
             underlineColorAndroid="transparent"
-            returnKeyType='send'
+            returnKeyType="send"
             autoCorrect={false}
             autoCapitalize="none"
             multiline={true}
@@ -721,24 +831,47 @@ class MessagePage extends Component<IProps, IState> {
               this.setState({
                 showCommonWord: false,
                 showMediaView: false
+              }, () => {
+                setTimeout(() => {
+                  this.listScrollToEnd()
+                }, 300)
               })
             }}
             onChangeText={(value) => {
-              if (value && !SystemHelper.iOS) {
+              if (value) {
                 this.setState({
                   content: value,
                   showSendBtn: true
+                }, () => {
+                  this.listScrollToEnd()
                 })
               } else {
                 this.setState({
                   content: value,
                   showSendBtn: false
+                }, () => {
+                  this.listScrollToEnd()
                 })
               }
+              // if (value && !SystemHelper.iOS) {
+              //   this.setState({
+              //     content: value,
+              //     showSendBtn: true
+              //   }, () => {
+              //     this.listScrollToEnd()
+              //   })
+              // } else {
+              //   this.setState({
+              //     content: value,
+              //     showSendBtn: false
+              //   }, () => {
+              //     this.listScrollToEnd()
+              //   })
+              // }
             }}
             returnKeyLabel="发送"
           />
-          <NextTouchableOpacity
+          {/* <NextTouchableOpacity
             style={styles.emojeBtn}
           >
             <Image
@@ -746,21 +879,25 @@ class MessagePage extends Component<IProps, IState> {
               style={styles.emojeIcon}
               resizeMode="center"
             />
-          </NextTouchableOpacity>
+          </NextTouchableOpacity> */}
           <NextTouchableOpacity
             style={styles.addBtn}
             onPress={() => {
-              if (showSendBtn) {
+              if (content) {
                 // 发送消息
+                this.sendTextMessage()
               } else {
-                this.setState({
-                  showMediaView: !showMediaView,
-                  showCommonWord: false
-                })
+                this.inputRef.blur()
+                setTimeout(() => {
+                  this.setState({
+                    showMediaView: !showMediaView,
+                    showCommonWord: false
+                  })
+                }, 100);
               }
             }}
           >
-            {showSendBtn ? (
+            {content ? (
               <Text style={styles.snedText}>发送</Text>
             ) : (
               <Image
@@ -971,10 +1108,12 @@ class MessagePage extends Component<IProps, IState> {
           animated
           barStyle={'dark-content'}
         />
-        {this.renderNavBar()}
-        {this.renderOperateView()}
-        {this.renderList()}
-        {this.renderInput()}
+        <View style={{ flex: 1 }}>
+          {this.renderNavBar()}
+          {this.renderOperateView()}
+          {this.renderList()}
+          {this.renderInput()}
+        </View>
         {this.renderModal()}
         {this.renderInappropriateModal()}
         {this.renderOperateModal()}
@@ -993,6 +1132,7 @@ const mapStateToProps = (state: IStoreState) => {
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
   return bindActionCreators({
     userGetMessages: actions.userGetMessages,
+    userSendMessage: actions.userSendMessage,
   }, dispatch)
 }
 

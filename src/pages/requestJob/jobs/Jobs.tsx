@@ -127,6 +127,9 @@ class Jobs extends Component<IProps, IState> {
       ) {
         RootLoading.info(`收到新消息 :${result.data.newMessage.messageContent}`)
         DeviceEventEmitter.emit(Receive_Message, result.data)
+      } else {
+        console.log('subscription断开了')
+        RootLoading.fail('subscription断开了')
       }
     })
   }

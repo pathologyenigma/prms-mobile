@@ -83,23 +83,27 @@ const userSendMessage = (
   info: any,
   callback?: (error: any, result?: any) => void) => {
   return (dispatch: Dispatch<AnyAction>) => {
-    apolloClientShare.subscribe({
-      query: sendMessageGql,
+    apolloClientShare.mutate({
+      mutation: sendMessageGql,
       variables: {
         info,
       }
     })
-      .subscribe((res) => {
-        // 注意:在浏览器中 debug 的模式中未打印出值.待排查原因
+      .then((res) => {
         console.log('subscriptionMessage-res: ', res)
-        if (res && callback) {
-          callback(undefined, res)
+        if (callback) {
+          if (res) {
+            callback(undefined, res)
+          } else {
+            callback(res)
+          }
         }
-      }, (error) => {
+      })
+      .catch((error) => {
         errorHandler(error)
-        console.log('error: ', error)
-      }, () => {
-        console.log('complete: ')
+        if (callback) {
+          callback(error)
+        }
       })
   }
 }

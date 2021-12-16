@@ -112,7 +112,8 @@ export default StyleSheet.create({
     color: '#FFFFFF',
     backgroundColor: '#7DD49C',
     fontSize: 12,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    paddingHorizontal: 3,
   },
   commonWordIcon: {
     width: 29,
@@ -143,8 +144,10 @@ export default StyleSheet.create({
     height: 20,
   },
   addBtn: {
+    width: 40,
     marginLeft: 10,
-    marginBottom: 3
+    marginBottom: 3,
+    alignItems: 'center'
   },
   addIcon: {
     width: 20,
