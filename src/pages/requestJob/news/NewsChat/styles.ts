@@ -81,6 +81,7 @@ export default StyleSheet.create({
     paddingHorizontal: 11,
     justifyContent: 'space-between',
     backgroundColor: '#FFF7ED',
+    marginTop: 9,
   },
   closeImg: {
     width: 15,

@@ -7,11 +7,12 @@ export default StyleSheet.create({
     backgroundColor: '#FDFDFD',
   },
   tabsView: {
-    paddingTop: SystemHelper.safeTop + 24,
-    height: SystemHelper.safeTop + 61,
+    paddingTop: SystemHelper.safeTop + 10,
+    height: SystemHelper.safeTop + 40,
     flexDirection: 'row',
     backgroundColor: '#fff',
     paddingHorizontal: 11,
+    alignItems: 'center',
   },
   tabLeft: {
     flex: 1,
@@ -36,7 +37,8 @@ export default StyleSheet.create({
     marginTop: 4
   },
   searchBtn: {
-
+    width: 21,
+    height: 27
   },
   tongzhiImage: {
     width: 22,

@@ -16,11 +16,17 @@ export default StyleSheet.create({
   },
   navBar: {
     paddingLeft: 11,
-    paddingTop: SystemHelper.safeTop + 8,
-    height: SystemHelper.safeTop + 44,
+    height: SystemHelper.safeTop + 41,
+    width: '100%',
+    backgroundColor: '#FFF',
+    flexDirection: 'row',
+  },
+  navBarContent: {
+    height: 41,
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF',
+    alignSelf: 'flex-end',
   },
   barLeftView: {
     flexDirection: 'row',

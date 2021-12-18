@@ -23,6 +23,16 @@ export default class News extends Component<TProps, IState> {
     }
   }
 
+  componentDidMount() {
+    this.props.navigation.addListener('focus', () => {
+      StatusBar.setBarStyle('dark-content', true)
+    })
+  }
+
+  componentWillUnmount() {
+    this.props.navigation.removeListener('focus', () => { })
+  }
+
   renderTabBar(tabProps: any) {
     const tabs = [{
       title: '聊天',

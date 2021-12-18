@@ -27,6 +27,13 @@ export default class Mine extends Component<IProps, IState> {
 
   componentDidMount() {
     this.loadData()
+    this.props.navigation.addListener('focus', () => {
+      StatusBar.setBarStyle('light-content', true)
+    })
+  }
+
+  componentWillUnmount() {
+    this.props.navigation.removeListener('focus', () => { })
   }
 
   loadData() {
@@ -139,14 +146,14 @@ export default class Mine extends Component<IProps, IState> {
         resizeMode="cover"
         source={require('../../../assets/requestJobs/me-beijing.png')}
       >
-        <NextTouchableOpacity
+        {/* <NextTouchableOpacity
           style={styles.scanBtn}
         >
           <Image
             style={styles.scanImage}
             source={require('../../../assets/requestJobs/saoyisao.png')}
           />
-        </NextTouchableOpacity>
+        </NextTouchableOpacity> */}
         {this.renderIconView()}
         {this.renderDetailInfo()}
       </ImageBackground>
@@ -327,10 +334,10 @@ export default class Mine extends Component<IProps, IState> {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <StatusBar
           translucent={true}
-          barStyle="light-content"
+          barStyle={'light-content'}
           animated />
         <ScrollView>
           {this.renderNavBar()}
@@ -339,7 +346,7 @@ export default class Mine extends Component<IProps, IState> {
           {this.renderMyStudy()}
           {this.renderOther()}
         </ScrollView>
-      </SafeAreaView>
+      </View>
     )
   }
 }

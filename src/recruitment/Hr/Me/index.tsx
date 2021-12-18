@@ -21,7 +21,7 @@ export default function Me() {
   const renderHeader = () => {
     return (
       <View style={styles.header}>
-        <FocusAwareStatusBar barStyle="light-content" />
+        <FocusAwareStatusBar barStyle={'light-content'} />
         <Image
           style={styles.bg}
           source={require('./images/bg.png')}

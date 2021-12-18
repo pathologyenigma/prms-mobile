@@ -28,6 +28,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import JobCellData from '../../components/JobCellData'
 import { IStoreState } from '../../../reducer'
 import { urlToHttpOptions } from 'http'
+import SystemHelper from '../../../utils/system'
 
 type IProps = GenProps<'Jobs'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
@@ -59,6 +60,14 @@ class Jobs extends Component<IProps, IState> {
   componentDidMount() {
     RootLoading.loading()
     this.loadJobExpections()
+    StatusBar.setBarStyle('light-content', true)
+    this.props.navigation.addListener('focus', () => {
+      StatusBar.setBarStyle('light-content', true)
+    })
+  }
+
+  componentWillUnmount() {
+    this.props.navigation.removeListener('focus', () => { })
   }
 
   loadJobExpections() {
@@ -149,7 +158,7 @@ class Jobs extends Component<IProps, IState> {
         {/* <Text style={[styles.text, textStyle]}>
           {text}
         </Text> */}
-        <View style={styles.statusBarStyle} />
+        {/* <View style={styles.statusBarStyle} /> */}
         {/* <GradientButton
           containerStyle={styles.statusBarStyle}
         /> */}

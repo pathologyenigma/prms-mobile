@@ -109,6 +109,7 @@ class MessagePage extends Component<IProps, IState> {
 
   componentDidMount() {
     this.loadData()
+    RootLoading.info(SystemHelper.safeTop)
   }
 
   componentWillUnmount() {
@@ -244,35 +245,37 @@ class MessagePage extends Component<IProps, IState> {
     const { navigation, userInfo } = this.props
     return (
       <View style={styles.navBar}>
-        <NextTouchableOpacity
-          style={styles.barLeftView}
-          onPress={() => {
-            navigation.goBack()
-          }}
-        >
-          <Image
-            source={require('../../../assets/requestJobs/message-back.png')}
-            style={styles.backIcon}
-          />
-          <Text style={styles.unreadText}>
-            99+
-          </Text>
-        </NextTouchableOpacity>
-        <View style={styles.barTitleView}>
-          <Text style={styles.barTitle}>{userInfo.userInfo.username}</Text>
-          <Text style={styles.barDetail}>{userInfo.userInfo.currentRole}</Text>
+        <View style={styles.navBarContent} >
+          <NextTouchableOpacity
+            style={styles.barLeftView}
+            onPress={() => {
+              navigation.goBack()
+            }}
+          >
+            <Image
+              source={require('../../../assets/requestJobs/message-back.png')}
+              style={styles.backIcon}
+            />
+            <Text style={styles.unreadText}>
+              99+
+            </Text>
+          </NextTouchableOpacity>
+          <View style={styles.barTitleView}>
+            <Text style={styles.barTitle}>{'userInfo.userInfo.username'}</Text>
+            <Text style={styles.barDetail}>{'userInfo.userInfo.currentRole'}</Text>
+          </View>
+          <NextTouchableOpacity
+            style={styles.editBtbn}
+            onPress={() => {
+              this.setState({ operateModalVisible: true })
+            }}
+          >
+            <Image
+              source={require('../../../assets/requestJobs/message-edit.png')}
+              style={styles.editIcon}
+            />
+          </NextTouchableOpacity>
         </View>
-        <NextTouchableOpacity
-          style={styles.editBtbn}
-          onPress={() => {
-            this.setState({ operateModalVisible: true })
-          }}
-        >
-          <Image
-            source={require('../../../assets/requestJobs/message-edit.png')}
-            style={styles.editIcon}
-          />
-        </NextTouchableOpacity>
       </View>
     )
   }

@@ -110,7 +110,7 @@ export default function CompanyDetail() {
       <View style={{ flex: 1 }}>
         <NavBar
           style={styles.navbar}
-          barStyle="light-content"
+          barStyle={'light-content'}
           headerRight={() => (
             <TextButton
               title="切换公司"

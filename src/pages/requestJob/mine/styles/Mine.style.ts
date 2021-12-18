@@ -47,8 +47,9 @@ export default StyleSheet.create({
     height: 20,
   },
   topImage: {
-    height: SystemHelper.safeTop + 286,
+    height: SystemHelper.safeTop + 210,
     width: SystemHelper.width,
+    paddingTop: SystemHelper.safeTop + 10,
   },
   scanBtn: {
     marginTop: SystemHelper.safeTop + 28,
@@ -60,7 +61,6 @@ export default StyleSheet.create({
     height: 22
   },
   iconView: {
-    marginTop: 11,
     flexDirection: 'row',
   },
   avatar: {
@@ -142,7 +142,7 @@ export default StyleSheet.create({
   jianliViewContainer: {
     backgroundColor: '#fff',
     height: 192,
-    marginTop: -58,
+    marginTop: -34,
     borderRadius: 8,
     paddingTop: 5,
     elevation: 3,
@@ -153,7 +153,6 @@ export default StyleSheet.create({
   },
   jianliView: {
     backgroundColor: '#fff',
-    // height: 110,
     marginHorizontal: 11,
     flexDirection: 'row',
     justifyContent: 'space-between',
