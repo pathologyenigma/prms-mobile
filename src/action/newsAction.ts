@@ -35,6 +35,7 @@ const subscriptionMessage = ((callback?: (error: any, result?: any) => void) => 
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.subscribe({
       query: subscriptionGqlServerGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
     })
       .subscribe((res) => {
         // 注意:在浏览器中 debug 的模式中未打印出值.待排查原因
@@ -85,6 +86,7 @@ const userSendMessage = (
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.mutate({
       mutation: sendMessageGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         info,
       }
@@ -113,6 +115,7 @@ const getUserGetContractList = (
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: userGetContractListGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
     })
       .then((res) => {
         if (res && res.data) {

@@ -47,7 +47,8 @@ export default StyleSheet.create({
     borderRadius: 11,
     backgroundColor: '#f3f3f3',
     lineHeight: 22,
-    textAlign: 'center'
+    textAlign: 'center',
+    overflow: 'hidden'
   },
   barTitleView: {
     flex: 1,
@@ -98,6 +99,7 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: '#F3F3F3',
     paddingHorizontal: 11,
+    transform: [{ rotateZ: '180deg' }]
   },
   footerContainer: {
     flexDirection: 'row',
@@ -227,7 +229,8 @@ export default StyleSheet.create({
     marginTop: 15,
     marginBottom: 10,
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    transform: [{ rotateZ: '180deg' }]
   },
   accpetIcon: {
     width: 17,
@@ -271,6 +274,14 @@ export default StyleSheet.create({
     marginTop: 15,
     marginBottom: 10,
     flexDirection: 'row',
+    transform: [{ rotateZ: '180deg' }]
+  },
+  noMoreText: {
+    color: '#999',
+    fontSize: 12,
+    marginBottom: 10,
+    textAlign: 'center',
+    transform: [{ rotateZ: '180deg' }],
   },
   cellReceiveContent: {
     color: '#333333',
