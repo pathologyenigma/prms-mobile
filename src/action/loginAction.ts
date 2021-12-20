@@ -33,6 +33,7 @@ const loginMobile = (account: string, password: string, callback: (error: any, r
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: loginGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         info: {
           account,
@@ -63,6 +64,7 @@ const userNumberCheck = (num: string, callback: (error: any, result?: any) => vo
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: numberCheckGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         num,
       }
@@ -90,6 +92,7 @@ const sendSMS = (phoneNumber: string, callback: (error: any, result?: any) => vo
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: sendSMSGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         phoneNumber: phoneNumber,
       }
@@ -121,6 +124,7 @@ const registerAccount = (
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: registerGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         username,
         email,
@@ -155,6 +159,7 @@ const getENTEditEnterpriseBasicInfo = (info: any, callback: (error: any, result?
   } = info
   apolloClientShare.mutate({
     mutation: getENTEditEnterpriseBasicInfoGql,
+    fetchPolicy: 'no-cache', // 设置缓存策略
     variables: {
       info: {
         enterpriseName,
@@ -204,6 +209,7 @@ const checkUserVerifyCodeConsume = (
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: checkUserVerifyCodeConsumeGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         info: {
           phoneNumber: "13951848647",
@@ -237,6 +243,7 @@ const chooseRole = (
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.mutate({
       mutation: chooseOrSwitchIdentityGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         targetIdentity: targetIdentity,
         role: role
@@ -266,6 +273,7 @@ const resetPassword = (
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.mutate({
       mutation: resetPasswordGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         info: {
           phoneNumber: phone,
@@ -294,6 +302,7 @@ const subscriptionMessage = ((callback?: (error: any, result?: any) => void) => 
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.subscribe({
       query: subscriptionGqlServerGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
     })
       .subscribe((res) => {
         // 注意:在浏览器中 debug 的模式中未打印出值.待排查原因
@@ -304,7 +313,11 @@ const subscriptionMessage = ((callback?: (error: any, result?: any) => void) => 
       }, (error) => {
         errorHandler(error)
         console.log('error: ', error)
+        console.log('subscription断开了')
+        RootLoading.fail('subscription断开了')
       }, () => {
+        console.log('subscription断开了')
+        RootLoading.fail('subscription断开了')
         console.log('complete: ')
       })
   }

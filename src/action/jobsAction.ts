@@ -25,6 +25,7 @@ const loginMobile = (account: string, password: string, callback: (error: any, r
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: loginGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         info: {
           account,
@@ -97,6 +98,7 @@ const getCandidateGetAllJobExpectations = (callback: (error: any, result?: any) 
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: getCandidateGetAllJobExpectationsGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
     })
       .then((res) => {
         console.log('res: ', res)
@@ -123,6 +125,7 @@ const getCandidateGetJobList = (filter: any, callback: (error: any, result?: any
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: getCandidateGetJobListGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         filter,
       }
@@ -147,6 +150,7 @@ const getJobDetail = (jobid: number, callback: (error: any, result?: any) => voi
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: getJobDetailGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         jobid,
       }
@@ -170,6 +174,7 @@ const getHrBasicInfo = (hrId: number, callback: (error: any, result?: any) => vo
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: getHrBasicInfoGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         hrId,
       }
@@ -193,6 +198,7 @@ const getHrMatchJobList = (hrId: number, callback: (error: any, result?: any) =>
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: getHrMatchJobListGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         hrId,
       }
@@ -216,6 +222,7 @@ const getHrMoreJobList = (hrId: number, page: number, callback: (error: any, res
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: getHrMoreJobListGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         hrId,
         pageSize: 10,
@@ -242,6 +249,7 @@ const getCandidateGetEnterpriseDetail_EntInfo = (entId: number, callback: (error
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: candidateGetEnterpriseDetail_EntInfoGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         entId,
       }
@@ -266,6 +274,7 @@ const getCandidateGetEnterpriseDetail_HRList = (entId: number, callback: (error:
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: candidateGetEnterpriseDetail_HRListGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         entId,
       }
@@ -290,6 +299,7 @@ const getCandidateGetEnterpriseDetail_InterviewRecomment = (entId: number, callb
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: candidateGetEnterpriseDetail_InterviewRecommentGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         entId,
       }
@@ -314,6 +324,7 @@ const getCandidateGetEnterpriseDetail_QA = (entId: number, callback: (error: any
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare.query({
       query: candidateGetEnterpriseDetail_QAGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
       variables: {
         entId,
       }

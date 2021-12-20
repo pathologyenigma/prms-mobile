@@ -162,7 +162,7 @@ export default class JinbiSignin extends Component<IProps, IState> {
       <SafeAreaView style={styles.container} >
         <StatusBar
           translucent={true}
-          barStyle="light-content"
+          barStyle={'light-content'}
           animated />
         <ScrollView>
           {this.renderNavBar()}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView } from 'react-native'
+import { Text, View, Image, ScrollView, StatusBar } from 'react-native'
 import { Tabs } from '@ant-design/react-native'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import NavBar from '../../components/NavBar'
@@ -25,14 +25,19 @@ export default class Find extends Component<TProps, IState> {
   }
 
   componentDidMount() {
+    this.props.navigation.addListener('focus', () => {
+      StatusBar.setBarStyle('dark-content', true)
+    })
+  }
 
+  componentWillUnmount() {
+    this.props.navigation.removeListener('focus', () => { })
   }
 
   renderNavBar() {
     return (
       <NavBar
-        barStyle={{ elevation: 0, borderBottomWidth: 0, }}
-        statusBarTheme="dark-content"
+        barStyle={{ elevation: 0, borderBottomWidth: 0 }}
         title="发现"
       />
     )

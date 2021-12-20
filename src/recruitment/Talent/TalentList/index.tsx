@@ -17,7 +17,7 @@ export default function TalentList() {
 
   return (
     <View style={styles.container}>
-      <FocusAwareStatusBar barStyle="light-content" />
+      <FocusAwareStatusBar barStyle={'light-content'} />
       <NavBar />
       <View style={styles.filterbar}>
         <RadioLabelGroup

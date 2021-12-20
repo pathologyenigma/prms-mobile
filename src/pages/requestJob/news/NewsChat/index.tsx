@@ -392,7 +392,7 @@ class NewsChat extends Component<TProps, IState> {
           onPress={() => {
             console.log('item: ', item)
             const { navigation } = this.props
-            navigation.push('MessagePage', { targetId: item.item.id })
+            navigation.push('MessagePage', { targetItem: item.item })
           }}
         />
       </SwipeRow >
@@ -445,7 +445,8 @@ class NewsChat extends Component<TProps, IState> {
         <NextTouchableOpacity
           style={styles.allReadBtn}
           onPress={() => {
-
+            // const { navigation } = this.props
+            // navigation.push('MessagePage', { targetId: 1 })
           }}
         >
           <Image

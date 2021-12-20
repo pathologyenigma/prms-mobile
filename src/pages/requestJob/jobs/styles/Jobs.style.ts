@@ -19,16 +19,17 @@ export default StyleSheet.create({
     zIndex: 100
   },
   naviBar: {
-    height: SystemHelper.safeTop + 61,
+    height: SystemHelper.safeTop + 40,
     width: '100%',
-    paddingHorizontal: 11,
-    paddingTop: SystemHelper.safeTop + 29,
+    display: 'flex',
+    justifyContent: 'flex-end'
   },
   naviBarContainer: {
-    width: '100%',
     flexDirection: 'row',
     height: 20,
     overflow: 'hidden',
+    marginBottom: 10,
+    marginHorizontal: 11,
   },
   naviBarScrollview: {
     height: 20,
