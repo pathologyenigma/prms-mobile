@@ -1,12 +1,24 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView, StatusBar, DeviceEventEmitter } from 'react-native'
+import {
+  Text,
+  View,
+  Image,
+  ScrollView,
+  StatusBar,
+  DeviceEventEmitter,
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import RootLoading from '../../../utils/rootLoading'
 import GradientButton from '../../components/GradientButton'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import styles from './styles/Jobs.style'
 import LinearGradient from 'react-native-linear-gradient'
-import { gradienViewRightGreenColor, greenColor, Log_Out, Receive_Message } from '../../../utils/constant'
+import {
+  gradienViewRightGreenColor,
+  greenColor,
+  Log_Out,
+  Receive_Message,
+} from '../../../utils/constant'
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { Carousel } from '@ant-design/react-native'
 import NavBar, { EButtonType } from '../../components/NavBar'
@@ -16,29 +28,26 @@ import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import * as actions from '../../../action/loginAction'
 import * as jobActions from '../../../action/jobsAction'
-import {
-  Query
-} from "@apollo/client/react/components"
-import {
-  gql
-} from "@apollo/client"
+import { Query } from '@apollo/client/react/components'
+import { gql } from '@apollo/client'
 import { getENTEditEnterpriseBasicInfo } from '../../../action/loginAction'
-import { CommonActions } from '@react-navigation/native';
-import AsyncStorage from '@react-native-community/async-storage'
+import { CommonActions } from '@react-navigation/native'
 import JobCellData from '../../components/JobCellData'
 import { IStoreState } from '../../../reducer'
 import { urlToHttpOptions } from 'http'
 import SystemHelper from '../../../utils/system'
 
-type IProps = GenProps<'Jobs'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
+type IProps = GenProps<'Jobs'> &
+  ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>
 
 type IState = {
-  videoSource: [],
-  listDataSource: any,
-  refreshState: RefreshState.HeaderRefreshing,
-  selectCondition: number,
-  selectJobsArray: any,
-  selectJobIndex: number,
+  videoSource: []
+  listDataSource: any
+  refreshState: RefreshState.HeaderRefreshing
+  selectCondition: number
+  selectJobsArray: any
+  selectJobIndex: number
   page: number
 }
 
@@ -53,7 +62,7 @@ class Jobs extends Component<IProps, IState> {
       selectCondition: 2, // 1:推荐; 2: 最新; 3:附近
       selectJobsArray: [],
       selectJobIndex: 0,
-      page: 0
+      page: 0,
     }
   }
 
@@ -67,7 +76,7 @@ class Jobs extends Component<IProps, IState> {
   }
 
   componentWillUnmount() {
-    this.props.navigation.removeListener('focus', () => { })
+    this.props.navigation.removeListener('focus', () => {})
   }
 
   loadJobExpections() {
@@ -76,9 +85,12 @@ class Jobs extends Component<IProps, IState> {
       console.log('getCandidateGetAllJobExpectations1: ', error, result)
       if (!error && result && result.CandidateGetAllJobExpectations) {
         this.loadData()
-        this.setState({ selectJobsArray: result.CandidateGetAllJobExpectations }, () => {
-          this.lodJobList()
-        })
+        this.setState(
+          { selectJobsArray: result.CandidateGetAllJobExpectations },
+          () => {
+            this.lodJobList()
+          },
+        )
       } else {
         RootLoading.fail('职位加载失败,请重试')
       }
@@ -92,46 +104,52 @@ class Jobs extends Component<IProps, IState> {
       // 没有筛选条件，直接展示空列表
       this.setState({
         listDataSource: [],
-        refreshState: 3
+        refreshState: 3,
       })
       return
     }
-    console.log('selectJobsArray[selectJobIndex]: ', selectJobsArray[selectJobIndex])
+    console.log(
+      'selectJobsArray[selectJobIndex]: ',
+      selectJobsArray[selectJobIndex],
+    )
     const filter = {
       page,
-      pageSize: 10
+      pageSize: 10,
     }
     console.log('filter:', filter)
-    this.props.getCandidateGetJobList(filter,
-      (error, result) => {
-        RootLoading.hide()
-        if (!error && result && result.CandidateGetJobList && result.CandidateGetJobList.data) {
-          this.setState({
-            listDataSource: listDataSource.concat(result.CandidateGetJobList.data),
-            refreshState: result.CandidateGetJobList.data.length === 10 ? 0 : 3
-          })
-        } else {
-          this.setState({
-            refreshState: 4
-          })
-          RootLoading.fail('职位加载失败,请重试')
-        }
-      })
+    this.props.getCandidateGetJobList(filter, (error, result) => {
+      RootLoading.hide()
+      if (
+        !error &&
+        result &&
+        result.CandidateGetJobList &&
+        result.CandidateGetJobList.data
+      ) {
+        this.setState({
+          listDataSource: listDataSource.concat(
+            result.CandidateGetJobList.data,
+          ),
+          refreshState: result.CandidateGetJobList.data.length === 10 ? 0 : 3,
+        })
+      } else {
+        this.setState({
+          refreshState: 4,
+        })
+        RootLoading.fail('职位加载失败,请重试')
+      }
+    })
   }
 
   loadData() {
-    // 获取视频和列表数据
-    // AsyncStorage.getAllKeys((error, result) => {
-    //   console.log('AsyncStorage: ', error, result)
-    // })
     // 测试订阅
     console.log('111111111: loadData ')
     this.props.subscriptionMessage((error, result) => {
       console.log('subscriptionMessage: ', error, result)
-      if (!error
-        && result
-        && result.data
-        && result.data.newMessage
+      if (
+        !error &&
+        result &&
+        result.data &&
+        result.data.newMessage
         // && result.data.newMessage.to.toString() === this.props.userInfo.userInfo.id.toString()
       ) {
         RootLoading.info(`收到新消息 :${result.data.newMessage.messageContent}`)
@@ -153,8 +171,7 @@ class Jobs extends Component<IProps, IState> {
         start={start}
         end={end}
         colors={[greenColor, gradienViewRightGreenColor]}
-        style={styles.naviBar}
-      >
+        style={styles.naviBar}>
         {/* <Text style={[styles.text, textStyle]}>
           {text}
         </Text> */}
@@ -167,38 +184,42 @@ class Jobs extends Component<IProps, IState> {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             ref={'barScrollView'}
-            style={styles.naviBarScrollview}
-          >
-            {selectJobsArray && selectJobsArray.length > 0 && (
+            style={styles.naviBarScrollview}>
+            {selectJobsArray &&
+              selectJobsArray.length > 0 &&
               selectJobsArray.map((item: any, index: number) => {
                 return (
                   <NextTouchableOpacity
                     key={index.toString()}
                     onPress={() => {
-                      this.setState({
-                        selectJobIndex: index,
-                      }, () => {
-                        this.handleRefresh()
-                      })
-                    }}
-                  >
-                    <Text style={[styles.naviBarText, selectJobIndex === index && {
-                      fontSize: 20,
-                      fontWeight: '400'
-                    }]}>
+                      this.setState(
+                        {
+                          selectJobIndex: index,
+                        },
+                        () => {
+                          this.handleRefresh()
+                        },
+                      )
+                    }}>
+                    <Text
+                      style={[
+                        styles.naviBarText,
+                        selectJobIndex === index && {
+                          fontSize: 20,
+                          fontWeight: '400',
+                        },
+                      ]}>
                       {item.job_category[item.job_category.length - 1]}
                     </Text>
                   </NextTouchableOpacity>
                 )
-              })
-            )}
+              })}
           </ScrollView>
           <NextTouchableOpacity
             style={{ marginLeft: 40, marginRight: 10 }}
             onPress={() => {
               navigation.push('JobExpectations')
-            }}
-          >
+            }}>
             <Image
               style={styles.naviBarIcon}
               source={require('../../../assets/requestJobs/add.png')}
@@ -207,8 +228,7 @@ class Jobs extends Component<IProps, IState> {
           <NextTouchableOpacity
             onPress={() => {
               navigation.push('JobSearch')
-            }}
-          >
+            }}>
             <Image
               style={styles.naviBarIcon}
               source={require('../../../assets/requestJobs/search.png')}
@@ -220,22 +240,28 @@ class Jobs extends Component<IProps, IState> {
   }
 
   handleRefresh() {
-    this.setState({
-      page: 0,
-      refreshState: 1,
-      listDataSource: [],
-    }, () => {
-      this.lodJobList()
-    })
+    this.setState(
+      {
+        page: 0,
+        refreshState: 1,
+        listDataSource: [],
+      },
+      () => {
+        this.lodJobList()
+      },
+    )
   }
 
   handleEndReached() {
-    this.setState({
-      page: this.state.page + 1,
-      refreshState: 2
-    }, () => {
-      this.lodJobList()
-    })
+    this.setState(
+      {
+        page: this.state.page + 1,
+        refreshState: 2,
+      },
+      () => {
+        this.lodJobList()
+      },
+    )
   }
 
   renderVideoTag() {
@@ -247,15 +273,12 @@ class Jobs extends Component<IProps, IState> {
           start={start}
           end={end}
           colors={['#FF5A00', '#FF8C05']}
-          style={styles.videoTagView}
-        >
+          style={styles.videoTagView}>
           <Image
             style={styles.videoTable}
             source={require('../../../assets/requestJobs/video-table.png')}
           />
-          <Text style={styles.videoTagTitle}>
-            直播
-          </Text>
+          <Text style={styles.videoTagTitle}>直播</Text>
         </LinearGradient>
         <Text style={styles.videoAccount}>280人</Text>
       </View>
@@ -282,27 +305,22 @@ class Jobs extends Component<IProps, IState> {
                 selectJobCityCallback: (e: any) => {
                   console.log('eeeee: ', e)
                   RootLoading.info(e.title || e)
-                }
+                },
               })
-            }}
-          >
+            }}>
             {this.renderVideoTag()}
             <Text style={styles.videoText}>在招职场系列直播</Text>
           </NextTouchableOpacity>
-          <NextTouchableOpacity
-            style={styles.videoBtn}
-          >
+          <NextTouchableOpacity style={styles.videoBtn}>
             {this.renderVideoTag()}
             <Text style={styles.videoText}>在招职场系列直播</Text>
           </NextTouchableOpacity>
-          <NextTouchableOpacity
-            style={styles.videoBtn}
-          >
+          <NextTouchableOpacity style={styles.videoBtn}>
             {this.renderVideoTag()}
             <Text style={styles.videoText}>在招职场系列直播</Text>
           </NextTouchableOpacity>
         </View>
-      </View >
+      </View>
     )
   }
 
@@ -342,32 +360,38 @@ class Jobs extends Component<IProps, IState> {
             style={styles.conditionLeftBtn}
             onPress={() => {
               this.setState({ selectCondition: 2 })
-            }}
-          >
+            }}>
             <Text
-              style={[styles.conditionLeftText, selectCondition === 2 && {
-                color: greenColor, fontWeight: '500'
-              }]}
-            >最新</Text>
+              style={[
+                styles.conditionLeftText,
+                selectCondition === 2 && {
+                  color: greenColor,
+                  fontWeight: '500',
+                },
+              ]}>
+              最新
+            </Text>
           </NextTouchableOpacity>
           <NextTouchableOpacity
             style={styles.conditionLeftBtn}
             onPress={() => {
               this.setState({ selectCondition: 3 })
-            }}
-          >
+            }}>
             <Text
-              style={[styles.conditionLeftText, selectCondition === 3 && {
-                color: greenColor, fontWeight: '500'
-              }]}
-            >附近</Text>
+              style={[
+                styles.conditionLeftText,
+                selectCondition === 3 && {
+                  color: greenColor,
+                  fontWeight: '500',
+                },
+              ]}>
+              附近
+            </Text>
           </NextTouchableOpacity>
         </View>
         <View style={styles.conditionRightView}>
           <NextTouchableOpacity style={styles.conditionRightBtn}>
-            <Text style={styles.conditionRightText}>
-              地点
-            </Text>
+            <Text style={styles.conditionRightText}>地点</Text>
             <Image
               style={styles.rightBottomImg}
               source={require('../../../assets/requestJobs/right-bootom-triangle.png')}
@@ -379,15 +403,12 @@ class Jobs extends Component<IProps, IState> {
               const { navigation } = this.props
               navigation.push('FilterView', {
                 filterMode: 0,
-                filterResultCallback: ((result) => {
+                filterResultCallback: result => {
                   console.log('111111111: ', result)
-                })
+                },
               })
-            }}
-          >
-            <Text style={styles.conditionRightText}>
-              筛选
-            </Text>
+            }}>
+            <Text style={styles.conditionRightText}>筛选</Text>
             <Image
               style={styles.rightBottomImg}
               source={require('../../../assets/requestJobs/right-bootom-triangle.png')}
@@ -407,21 +428,14 @@ class Jobs extends Component<IProps, IState> {
         dotStyle={styles.dots}
         dotActiveStyle={styles.activeDots}
         style={styles.carousel}
-        styles={{ pagination: styles.pageController }}
-      >
-        <NextTouchableOpacity
-          style={styles.adBtn}
-        >
+        styles={{ pagination: styles.pageController }}>
+        <NextTouchableOpacity style={styles.adBtn}>
           <Text style={styles.adText}>这是广告 1</Text>
         </NextTouchableOpacity>
-        <NextTouchableOpacity
-          style={styles.adBtn}
-        >
+        <NextTouchableOpacity style={styles.adBtn}>
           <Text style={styles.adText}>这是广告 2</Text>
         </NextTouchableOpacity>
-        <NextTouchableOpacity
-          style={styles.adBtn}
-        >
+        <NextTouchableOpacity style={styles.adBtn}>
           <Text style={styles.adText}>这是广告 3</Text>
         </NextTouchableOpacity>
       </Carousel>
@@ -500,20 +514,24 @@ class Jobs extends Component<IProps, IState> {
 
 const mapStateToProps = (state: IStoreState) => {
   return {
-    userInfo: state.userInfo
+    userInfo: state.userInfo,
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
-  return bindActionCreators({
-    reset_reducer: actions.reset_reducer,
-    update_kv: actions.update_kv,
-    loginMobile: actions.loginMobile,
-    userNumberCheck: actions.userNumberCheck,
-    subscriptionMessage: actions.subscriptionMessage,
-    getCandidateGetAllJobExpectations: jobActions.getCandidateGetAllJobExpectations,
-    getCandidateGetJobList: jobActions.getCandidateGetJobList,
-  }, dispatch)
+  return bindActionCreators(
+    {
+      reset_reducer: actions.reset_reducer,
+      update_kv: actions.update_kv,
+      loginMobile: actions.loginMobile,
+      userNumberCheck: actions.userNumberCheck,
+      subscriptionMessage: actions.subscriptionMessage,
+      getCandidateGetAllJobExpectations:
+        jobActions.getCandidateGetAllJobExpectations,
+      getCandidateGetJobList: jobActions.getCandidateGetJobList,
+    },
+    dispatch,
+  )
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Jobs)

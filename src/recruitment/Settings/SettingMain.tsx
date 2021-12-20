@@ -7,14 +7,12 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Switch,
-  DeviceEventEmitter,
 } from 'react-native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import NavBar from '../components/NavBar'
 import PrimaryButton from '../components/PrimaryButton'
 import { useNavigation } from '@react-navigation/native'
-import AsyncStorage from '@react-native-community/async-storage'
-import { Log_Out } from '../../utils/constant'
+import * as Auth from '../../utils/auth'
 
 export default function SettingMain() {
   const navigation = useNavigation<StackNavigationProp<any>>()
@@ -49,11 +47,7 @@ export default function SettingMain() {
         <PrimaryButton
           style={styles.logout}
           title="退出登录"
-          onPress={() => {
-            AsyncStorage.clear(() => {
-              DeviceEventEmitter.emit(Log_Out)
-            })
-          }}
+          onPress={() => Auth.logout()}
         />
       </ScrollView>
     </View>

@@ -3,16 +3,14 @@ import NavBar, { EButtonType } from '../../components/NavBar'
 import styles from './styles/AccountSetting.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import RootLoading from '../../../utils/rootLoading'
-import { Text, View, Image, StatusBar, AsyncStorage } from 'react-native'
+import { Text, View, Image, StatusBar } from 'react-native'
 import { versionCode } from '../../../utils/config'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import { ActivityIndicator } from '@ant-design/react-native'
 import AlertContentModal from '../../components/AlertContentModal'
-import { CommonActions } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native'
 
-type IProps = GenProps<'AccountSetting'> & {
-
-}
+type IProps = GenProps<'AccountSetting'> & {}
 
 interface IState {
   phone: string | undefined
@@ -30,7 +28,7 @@ export default class AccountSetting extends Component<IProps, IState> {
       isVerified: undefined,
       bindedEmail: undefined,
       isBindWechat: undefined,
-      cancelBindWechatVisible: false
+      cancelBindWechatVisible: false,
     }
   }
 
@@ -46,12 +44,10 @@ export default class AccountSetting extends Component<IProps, IState> {
         phone: '13951840000',
         isVerified: false,
         bindedEmail: '780178977@qq.com',
-        isBindWechat: true
+        isBindWechat: true,
       })
-    }, 1000);
+    }, 1000)
   }
-
-
 
   renderNavBar() {
     const { navigation } = this.props
@@ -74,8 +70,6 @@ export default class AccountSetting extends Component<IProps, IState> {
     )
   }
 
-
-
   renderCell(title: string, detail: any, onpress: () => void) {
     return (
       <NextTouchableOpacity
@@ -84,12 +78,9 @@ export default class AccountSetting extends Component<IProps, IState> {
           if (onpress) {
             onpress()
           }
-        }}
-      >
+        }}>
         <Text style={styles.cellName}>{title}</Text>
-        {detail !== undefined && (
-          <Text style={styles.cellValue}>{detail}</Text>
-        )}
+        {detail !== undefined && <Text style={styles.cellValue}>{detail}</Text>}
         <Image
           style={styles.nextIcon}
           source={require('../../../assets/requestJobs/next-gray.png')}
@@ -121,7 +112,7 @@ export default class AccountSetting extends Component<IProps, IState> {
         {this.renderCell('实名认证', verifiedShow, () => {
           navigation.push('VerifySetting', {
             name: '',
-            idNumber: ''
+            idNumber: '',
           })
         })}
         {this.renderCell('修改密码', '', () => {
@@ -159,19 +150,23 @@ export default class AccountSetting extends Component<IProps, IState> {
           detail="解除微信绑定后，将无法继续使用它快速登录趁早找，确定要解除吗？"
           leftBtn={{
             title: '取消',
-            act: () => this.setState({
-              cancelBindWechatVisible: false,
-            }),
+            act: () =>
+              this.setState({
+                cancelBindWechatVisible: false,
+              }),
           }}
           rightBtn={{
             title: '确定',
             act: () => {
-              this.setState({
-                cancelBindWechatVisible: false
-              }, () => {
-                this.setState({ isBindWechat: false })
-                RootLoading.info('解除绑定')
-              })
+              this.setState(
+                {
+                  cancelBindWechatVisible: false,
+                },
+                () => {
+                  this.setState({ isBindWechat: false })
+                  RootLoading.info('解除绑定')
+                },
+              )
             },
           }}
         />

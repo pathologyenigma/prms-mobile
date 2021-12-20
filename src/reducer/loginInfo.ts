@@ -1,6 +1,4 @@
-import AsyncStorage from "@react-native-community/async-storage"
-import { Login_Account, Login_Password, Login_Token } from "../utils/constant"
-import { initApolloClient } from "../utils/postQuery"
+import * as Auth from '../utils/auth'
 
 const initState = {
   email: '',
@@ -8,15 +6,15 @@ const initState = {
   password: 'word_12',
   verifyCode: '',
   loginType: 1,
-  UserLogIn: ''
+  UserLogIn: '',
 }
 type TLoginInfoActionType = 'loginInfo/reset_reducer' | 'loginInfo/update_kv'
 
 export interface ILoginInfoState {
-  email: string,
-  phone: string,
-  password: string,
-  verifyCode: string,
+  email: string
+  phone: string
+  password: string
+  verifyCode: string
   loginType: number
 }
 
@@ -38,15 +36,9 @@ const loginInfo = (state = initState, action: ILoginInfoAction) => {
     case 'loginInfo/update_kv':
       console.log('payload: ', payload)
       if (payload.key === 'UserLogIn') {
-        initApolloClient(payload.value.token)
-        AsyncStorage.multiSet([
-          [Login_Account, state.phone],
-          [Login_Password, state.password],
-          [Login_Token, payload.value.token]
-        ])
+        Auth.setToken(payload.value.token)
       } else if (payload.key === 'UpdateToken') {
-        initApolloClient(payload.value)
-        AsyncStorage.setItem(Login_Token, payload.value)
+        Auth.setToken(payload.value)
       }
       nextState = {
         ...state,

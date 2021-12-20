@@ -7,7 +7,6 @@ import {
   ImageBackground,
   Platform,
   TextInput,
-  DeviceEventEmitter,
 } from 'react-native'
 import styles from './styles/ChooseRole.style'
 import { GenProps } from '../../navigator/router/stack'
@@ -24,8 +23,7 @@ import GradientButton from '../components/GradientButton'
 import SystemHelper from '../../utils/system'
 import NavBar, { EButtonType } from '../components/NavBar'
 import { CommonActions } from '@react-navigation/native'
-import AsyncStorage from '@react-native-community/async-storage'
-import { Login_Token, Login_Identity } from '../../utils/constant'
+import * as Auth from '../../utils/auth'
 
 type IProps = GenProps<'ChooseRole'> &
   ReturnType<typeof mapStateToProps> &
@@ -44,14 +42,9 @@ class ChooseRole extends Component<IProps, IState> {
   }
 
   componentDidMount() {
-    RootLoading.loading()
-    AsyncStorage.getItem(Login_Identity, (error, result) => {
-      RootLoading.hide()
-      if (!error && result) {
-        console.log('getAllKeys: ', error, result)
-        this.setState({ loginIdentity: result })
-      }
-    })
+    Auth.getTargetIdentity().then(identity =>
+      this.setState({ loginIdentity: identity ?? '' }),
+    )
   }
 
   renderNavBar() {
@@ -80,19 +73,8 @@ class ChooseRole extends Component<IProps, IState> {
       RootLoading.hide()
       if (!error && result) {
         // 此处将状态全局存储起来后,再回到导航首页进行判断身份跳转
-        AsyncStorage.multiSet(
-          [
-            [Login_Identity, targetIdentity],
-            [Login_Token, result.UserChooseOrSwitchIdentity],
-          ],
-          error => {
-            if (!error) {
-              DeviceEventEmitter.emit(Login_Identity)
-            } else {
-              RootLoading.fail('请重试或联系客服')
-            }
-          },
-        )
+        Auth.setToken(result.UserChooseOrSwitchIdentity)
+        Auth.setTargetIdentity(targetIdentity as any)
       }
     })
   }

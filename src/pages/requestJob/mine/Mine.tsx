@@ -1,28 +1,30 @@
 import React, { Component } from 'react'
-import { SafeAreaView, StatusBar, ImageBackground, Image, ScrollView, View, Text, ImageSourcePropType } from 'react-native'
+import {
+  SafeAreaView,
+  StatusBar,
+  ImageBackground,
+  Image,
+  ScrollView,
+  View,
+  Text,
+  ImageSourcePropType,
+} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import styles from './styles/Mine.style'
 import RootLoading from '../../../utils/rootLoading'
-import AsyncStorage from "@react-native-community/async-storage";
-import { CommonActions } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native'
 import { GenProps } from '../../../navigator/requestJob/stack'
 
-type IProps = GenProps<'Mine'> & {
+type IProps = GenProps<'Mine'> & {}
 
-}
-
-type IState = {
-
-}
+type IState = {}
 
 export default class Mine extends Component<IProps, IState> {
   constructor(props: any) {
     super(props)
     console.log('props: ', props)
-    this.state = {
-
-    }
+    this.state = {}
   }
 
   componentDidMount() {
@@ -33,12 +35,10 @@ export default class Mine extends Component<IProps, IState> {
   }
 
   componentWillUnmount() {
-    this.props.navigation.removeListener('focus', () => { })
+    this.props.navigation.removeListener('focus', () => {})
   }
 
-  loadData() {
-
-  }
+  loadData() {}
 
   renderIconView() {
     const start = { x: 0, y: 0.5 }
@@ -50,33 +50,26 @@ export default class Mine extends Component<IProps, IState> {
           onPress={() => {
             const { navigation } = this.props
             navigation.push('UserInfo')
-          }}
-        >
+          }}>
           <Image
             style={styles.gender}
             source={require('../../../assets/requestJobs/women-icon.png')}
           />
         </NextTouchableOpacity>
         <View style={styles.nameView}>
-          <Text style={styles.nameTitle}>
-            李小冉
-          </Text>
-          <Text style={styles.detailInfo}>
-            工作4年/27岁/本科
-          </Text>
+          <Text style={styles.nameTitle}>李小冉</Text>
+          <Text style={styles.detailInfo}>工作4年/27岁/本科</Text>
         </View>
         <LinearGradient
           start={start}
           end={end}
           colors={['#2A2420', '#443A35', '#2F2925']}
-          style={styles.onlineJianliView}
-        >
+          style={styles.onlineJianliView}>
           <NextTouchableOpacity
             onPress={() => {
               const { navigation } = this.props
               navigation.push('EditOnlineResume')
-            }}
-          >
+            }}>
             <View style={styles.onlineJianliTop}>
               <Text style={styles.onlineJianli}>在线简历</Text>
               <Image
@@ -144,8 +137,7 @@ export default class Mine extends Component<IProps, IState> {
       <ImageBackground
         style={styles.topImage}
         resizeMode="cover"
-        source={require('../../../assets/requestJobs/me-beijing.png')}
-      >
+        source={require('../../../assets/requestJobs/me-beijing.png')}>
         {/* <NextTouchableOpacity
           style={styles.scanBtn}
         >
@@ -214,9 +206,7 @@ export default class Mine extends Component<IProps, IState> {
   }
 
   renderAdImage() {
-    return (
-      <View style={styles.adImage} />
-    )
+    return <View style={styles.adImage} />
   }
 
   renderMyStudy() {
@@ -247,7 +237,7 @@ export default class Mine extends Component<IProps, IState> {
   renderOtherCell(
     icon: ImageSourcePropType,
     title: string,
-    onPress: () => void
+    onPress: () => void,
   ) {
     return (
       <NextTouchableOpacity
@@ -257,14 +247,9 @@ export default class Mine extends Component<IProps, IState> {
           if (onPress) {
             onPress()
           }
-        }}
-      >
+        }}>
         <View style={styles.titleView}>
-          <Image
-            resizeMode="contain"
-            style={styles.leftArrow}
-            source={icon}
-          />
+          <Image resizeMode="contain" style={styles.leftArrow} source={icon} />
           <Text style={styles.otherTitle}>{title}</Text>
         </View>
         <Image
@@ -286,45 +271,52 @@ export default class Mine extends Component<IProps, IState> {
       require('../../../assets/requestJobs/about.png'),
       require('../../../assets/requestJobs/setting.png'),
     ]
-    const titleArray = ['附件简历', '隐私设置', '我的钱包', '我的关注', '切换身份', '反馈与帮助', '关于', '设置']
+    const titleArray = [
+      '附件简历',
+      '隐私设置',
+      '我的钱包',
+      '我的关注',
+      '切换身份',
+      '反馈与帮助',
+      '关于',
+      '设置',
+    ]
     const { navigation } = this.props
     return (
       <View>
         {titleArray.map((item, index) => {
           {
-            return (
-              this.renderOtherCell(
-                imageSource[index],
-                titleArray[index],
-                () => {
-                  switch (item) {
-                    case '附件简历':
-                      navigation.push('AttachedResume')
-                      break;
-                    case '隐私设置':
-                      navigation.push('PrivacySetting')
-                      break;
-                    case '我的钱包':
-                      navigation.push('MyWallet')
-                      break;
-                    case '切换身份':
-                      navigation.push('ChooseRole')
-                      break;
-                    case '反馈与帮助':
-                      navigation.push('FeedbackAndHelp')
-                      break;
-                    case '关于':
-                      navigation.push('About')
-                      break;
-                    case '设置':
-                      navigation.push('Setting')
-                      break;
-                    default:
-                      RootLoading.info('敬请期待')
-                      break;
-                  }
+            return this.renderOtherCell(
+              imageSource[index],
+              titleArray[index],
+              () => {
+                switch (item) {
+                  case '附件简历':
+                    navigation.push('AttachedResume')
+                    break
+                  case '隐私设置':
+                    navigation.push('PrivacySetting')
+                    break
+                  case '我的钱包':
+                    navigation.push('MyWallet')
+                    break
+                  case '切换身份':
+                    navigation.push('ChooseRole')
+                    break
+                  case '反馈与帮助':
+                    navigation.push('FeedbackAndHelp')
+                    break
+                  case '关于':
+                    navigation.push('About')
+                    break
+                  case '设置':
+                    navigation.push('Setting')
+                    break
+                  default:
+                    RootLoading.info('敬请期待')
+                    break
                 }
-              )
+              },
             )
           }
         })}
@@ -335,10 +327,7 @@ export default class Mine extends Component<IProps, IState> {
   render() {
     return (
       <View style={styles.container}>
-        <StatusBar
-          translucent={true}
-          barStyle={'light-content'}
-          animated />
+        <StatusBar translucent={true} barStyle={'light-content'} animated />
         <ScrollView>
           {this.renderNavBar()}
           {this.renderJianliView()}

@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler'
-import React, { Component } from 'react'
+import React, { Component, ComponentType } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import {
   createStackNavigator,
@@ -16,7 +16,7 @@ import jobFairScreens from './JobFair'
 import talentScreens from './Talent'
 import settingScreens from './Settings'
 
-const screens: Record<string, () => JSX.Element> = {
+const screens: Record<string, ComponentType<any>> = {
   ...companyScreens,
   ...hrScreens,
   ...interviewScreens,

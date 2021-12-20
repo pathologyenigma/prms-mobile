@@ -1,3 +1,5 @@
+import * as Auth from './auth'
+
 const post = (uri: string, body = {}) => {
   return fetch(uri, {
     method: 'POST',
@@ -22,59 +24,66 @@ const postImage = (uri: string, formData: FormData) => {
     },
     body: formData,
   })
-    .then((response) => {
+    .then(response => {
       console.log('111111111: ', response)
       response.json()
     })
-    .then((json) => console.log('333: ', json))
+    .then(json => console.log('333: ', json))
     .catch(e => console.log('2222222: ', e))
 }
 
 const postWithToken = (uri: string, body = {}) => {
-  return fetch(uri, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'jwtsessiontoken': global.token,
-    },
-    body: JSON.stringify(body),
-    credentials: 'same-origin',
-  })
+  return Auth.getToken()
+    .then(token =>
+      fetch(uri, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          jwtsessiontoken: token ?? '',
+        },
+        body: JSON.stringify(body),
+        credentials: 'same-origin',
+      }),
+    )
     .then(response => response.json())
     .then(json => Promise.resolve(json))
     .catch(e => Promise.reject(e))
 }
 
 const patchWithToken = (uri: string, body = {}) => {
-  console.log('global.token: ', global.token)
-  return fetch(uri, {
-    method: 'PATCH',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'jwtsessiontoken': global.token,
-    },
-    body: JSON.stringify(body),
-    credentials: 'same-origin',
-  })
+  return Auth.getToken()
+    .then(token =>
+      fetch(uri, {
+        method: 'PATCH',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          jwtsessiontoken: token ?? '',
+        },
+        body: JSON.stringify(body),
+        credentials: 'same-origin',
+      }),
+    )
     .then(response => response.json())
     .then(json => Promise.resolve(json))
     .catch(e => Promise.reject(e))
 }
 
 const putWithToken = (uri: string, body = {}) => {
-  console.log('global.token: ', global.token)
-  return fetch(uri, {
-    method: 'PUT',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'jwtsessiontoken': global.token,
-    },
-    body: JSON.stringify(body),
-    credentials: 'same-origin',
-  })
+  return Auth.getToken()
+    .then(token =>
+      fetch(uri, {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          jwtsessiontoken: token ?? '',
+        },
+        body: JSON.stringify(body),
+        credentials: 'same-origin',
+      }),
+    )
     .then(response => response.json())
     .then(json => Promise.resolve(json))
     .catch(e => Promise.reject(e))
@@ -93,7 +102,7 @@ const get = (uri: string, timeout: number = 30000) => {
       request(),
       new Promise((resolve, reject) => {
         setTimeout(() => reject(new Error('request timeout')), timeout)
-      })
+      }),
     ])
   }
   return request()
@@ -101,14 +110,17 @@ const get = (uri: string, timeout: number = 30000) => {
 
 const getWithToken = (uri: string, token?: string, timeout: number = 30000) => {
   const request = () => {
-    return fetch(uri, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'jwtsessiontoken': global.token,
-      },
-    })
+    return Auth.getToken()
+      .then(token =>
+        fetch(uri, {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            jwtsessiontoken: token ?? '',
+          },
+        }),
+      )
       .then(response => response.json())
       .then(json => Promise.resolve(json))
       .catch(e => Promise.reject(e))
@@ -119,7 +131,7 @@ const getWithToken = (uri: string, token?: string, timeout: number = 30000) => {
       request(),
       new Promise((resolve, reject) => {
         setTimeout(() => reject(new Error('request timeout')), timeout)
-      })
+      }),
     ])
   }
   return request()
@@ -141,16 +153,11 @@ const graphql = (uri: string, body = '') => {
 }
 
 // 是否登录
-const isLogin = () => {
-  // @ts-ignore
-  return global.token && global.token.length !== 0
-}
-
 const uploadFile = (
   uri: string,
   opts: any,
   callback?: (error: any, result?: any) => void,
-  onProgress?: (error: any, result?: any) => void
+  onProgress?: (error: any, result?: any) => void,
 ) => {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
@@ -161,7 +168,7 @@ const uploadFile = (
       }
     }
     xhr.onload = e => resolve(e)
-    xhr.onreadystatechange = (e) => {
+    xhr.onreadystatechange = e => {
       if (xhr.readyState !== 4) {
         return
       }
@@ -191,7 +198,6 @@ export {
   graphql,
   patchWithToken,
   putWithToken,
-  isLogin,
   postImage,
   uploadFile,
 }

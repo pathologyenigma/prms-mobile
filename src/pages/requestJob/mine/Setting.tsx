@@ -10,8 +10,7 @@ import { ActivityIndicator } from '@ant-design/react-native'
 import AlertContentModal from '../../components/AlertContentModal'
 import { CommonActions } from '@react-navigation/native'
 import * as CacheManager from 'react-native-http-cache'
-import AsyncStorage from '@react-native-community/async-storage'
-import { Log_Out } from '../../../utils/constant'
+import * as Auth from '../../../utils/auth'
 
 type IProps = GenProps<'Setting'> & {}
 
@@ -146,9 +145,7 @@ export default class Setting extends Component<IProps, IState> {
   }
 
   logout() {
-    AsyncStorage.clear(() => {
-      DeviceEventEmitter.emit(Log_Out)
-    })
+    Auth.logout()
   }
 
   renderBtn() {

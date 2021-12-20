@@ -1,52 +1,9 @@
-import {
-  ApolloClient,
-  InMemoryCache,
-  NormalizedCache,
-  ApolloProvider,
-  useQuery,
-  gql,
-  split,
-  ApolloLink,
-  HttpLink,
-} from "@apollo/client"
-import { hostUri, wssUri } from "./config"
-import { WebSocketLink, } from '@apollo/link-ws'
-import { getMainDefinition } from '@apollo/client/utilities';
+import { ApolloClient, gql } from '@apollo/client'
 
 let apolloClientShare: ApolloClient<any>
 
-const initApolloClient = (Authorization: string) => {
-  const ws = new WebSocketLink({
-    uri: wssUri,
-    options: {
-      reconnect: true,
-      connectionParams: {
-        Authorization: Authorization,
-      }
-    },
-  });
-
-  const http = new HttpLink({
-    uri: hostUri,
-    headers: {
-      Authorization: Authorization,
-    }
-  })
-
-  const newLink = split(
-    ({ query }) => {
-      const def = getMainDefinition(query);
-      return def.kind === 'OperationDefinition' && def.operation === 'subscription';
-    },
-    ws,
-    http,
-  )
-  apolloClientShare = new ApolloClient({
-    // uri: hostUri,
-    link: newLink,
-    cache: new InMemoryCache(),
-  })
-  return apolloClientShare
+export function setApolloClient(client: ApolloClient<any>) {
+  apolloClientShare = client
 }
 
 export const GET_ALL_COUNTRIES = gql`
@@ -58,31 +15,31 @@ export const GET_ALL_COUNTRIES = gql`
       currencyCode
     }
   }
-`;
+`
 
 const sendSMSGql = gql`
-  query StaticSendSms( $phoneNumber:String! ) {
-    StaticSendSms(phoneNumber:$phoneNumber)
+  query StaticSendSms($phoneNumber: String!) {
+    StaticSendSms(phoneNumber: $phoneNumber)
   }
 `
 
 const numberCheckGql = gql`
-  query UserNumberCheck( $num:String! ) {
-    UserNumberCheck(num:$num)
+  query UserNumberCheck($num: String!) {
+    UserNumberCheck(num: $num)
   }
-  `
+`
 
 const testGql = gql`
-  query rates($currency:String!) {
-    rates(currency:$currency){
+  query rates($currency: String!) {
+    rates(currency: $currency) {
       currency
     }
   }
 `
 
 const loginGql = gql`
-  query UserLogIn( $info:LogIn! ) {
-    UserLogIn(info:$info) {
+  query UserLogIn($info: LogIn!) {
+    UserLogIn(info: $info) {
       username
       token
       createdAt
@@ -91,29 +48,29 @@ const loginGql = gql`
 `
 
 const registerGql = gql`
-  query UserRegister( $info:Register! ) {
-    UserRegister(info:$info)
+  query UserRegister($info: Register!) {
+    UserRegister(info: $info)
   }
 `
 
 // 重置密码
 const resetPasswordGql = gql`
-  mutation UserResetPassword( $info:ResetPassword! ) {
-    UserResetPassword(info:$info)
+  mutation UserResetPassword($info: ResetPassword!) {
+    UserResetPassword(info: $info)
   }
 `
 
 // check 验证码
 const checkUserVerifyCodeConsumeGql = gql`
-  query UserVerifyCodeConsume( $info:VerifyInfo! ) {
-    UserVerifyCodeConsume(info:$info)
+  query UserVerifyCodeConsume($info: VerifyInfo!) {
+    UserVerifyCodeConsume(info: $info)
   }
 `
 
 // subscription message
 const subscriptionGqlServerGql = gql`
-  subscription newMessage{
-    newMessage{
+  subscription newMessage {
+    newMessage {
       from
       messageType
       messageContent
@@ -125,9 +82,9 @@ const subscriptionGqlServerGql = gql`
 
 // 获取和某人的消息记录
 const userGetMessagesGql = gql`
-  query UserGetMessages($targetId: Int!, $page: Int!, $pageSize: Int!){
-    UserGetMessages(targetId:$targetId,page:$page,pageSize:$pageSize){
-        messages{
+  query UserGetMessages($targetId: Int!, $page: Int!, $pageSize: Int!) {
+    UserGetMessages(targetId: $targetId, page: $page, pageSize: $pageSize) {
+      messages {
         from
         messageType
         messageContent
@@ -143,40 +100,43 @@ const userGetMessagesGql = gql`
 
 // 选择身份
 const chooseOrSwitchIdentityGql = gql`
-  mutation UserChooseOrSwitchIdentity($targetIdentity:Identity!,$role:EnterpriseRole!){
-    UserChooseOrSwitchIdentity(targetIdentity:$targetIdentity,role:$role)
+  mutation UserChooseOrSwitchIdentity(
+    $targetIdentity: Identity!
+    $role: EnterpriseRole!
+  ) {
+    UserChooseOrSwitchIdentity(targetIdentity: $targetIdentity, role: $role)
   }
 `
 
 const getAllRegionGql = gql`
-  query StaticGetAllRegion{
-    StaticGetAllRegion{
-    data{
-      Cities{
+  query StaticGetAllRegion {
+    StaticGetAllRegion {
+      data {
+        Cities {
+          name
+          city_id
+        }
         name
-        city_id
       }
-      name
     }
   }
-}
 `
 
 const getUserEditPersonalDataGql = gql`
-  mutation UserEditPersonalData($info:BasicData!){
-    UserEditPersonalData(info:$info)
+  mutation UserEditPersonalData($info: BasicData!) {
+    UserEditPersonalData(info: $info)
   }
 `
 
 const getENTEditEnterpriseBasicInfoGql = gql`
-  mutation ENTEditEnterpriseBasicInfo ($info:EditEnterpriseBasicInfo!){
-    ENTEditEnterpriseBasicInfo (info:$info)
+  mutation ENTEditEnterpriseBasicInfo($info: EditEnterpriseBasicInfo!) {
+    ENTEditEnterpriseBasicInfo(info: $info)
   }
 `
 
 const getCandidateGetAllJobExpectationsGql = gql`
-  query CandidateGetAllJobExpectations{
-    CandidateGetAllJobExpectations{
+  query CandidateGetAllJobExpectations {
+    CandidateGetAllJobExpectations {
       job_category
       aimed_city
       min_salary_expectation
@@ -186,8 +146,8 @@ const getCandidateGetAllJobExpectationsGql = gql`
 `
 
 const getCandidateGetJobListGql = gql`
-  query CandidateGetJobList($filter:JobFilter!){
-    CandidateGetJobList(filter:$filter){
+  query CandidateGetJobList($filter: JobFilter!) {
+    CandidateGetJobList(filter: $filter) {
       page
       pageSize
       count
@@ -218,32 +178,31 @@ const getCandidateGetJobListGql = gql`
   }
 `
 
-
 /**
  * 公司详情页的公司基本信息
  */
 const candidateGetEnterpriseDetail_EntInfoGql = gql`
-  query UserGetEnterpriseDetail_EntInfo($entId:Int!){
-    UserGetEnterpriseDetail_EntInfo(entId:$entId) {
-        enterprise_name
-        business_nature
-        industry_involved
-        enterprise_profile
-        enterprise_financing
-        enterprise_size
-        enterprise_welfare
-        enterprise_logo
-        tags
-        enterprise_coordinates
-        enterprise_loc_detail
-        extra_attribute
-        rest_rule
-        overtime_work_degree
-        homepage
-        established_time
-        tel
-        work_time
-        createdAt
+  query UserGetEnterpriseDetail_EntInfo($entId: Int!) {
+    UserGetEnterpriseDetail_EntInfo(entId: $entId) {
+      enterprise_name
+      business_nature
+      industry_involved
+      enterprise_profile
+      enterprise_financing
+      enterprise_size
+      enterprise_welfare
+      enterprise_logo
+      tags
+      enterprise_coordinates
+      enterprise_loc_detail
+      extra_attribute
+      rest_rule
+      overtime_work_degree
+      homepage
+      established_time
+      tel
+      work_time
+      createdAt
     }
   }
 `
@@ -252,22 +211,22 @@ const candidateGetEnterpriseDetail_EntInfoGql = gql`
  * 公司详情页的公司基本信息
  */
 const candidateGetEnterpriseDetail_HRListGql = gql`
-  query CandidateGetEnterpriseDetail_HRList($entId:Int!){
-    CandidateGetEnterpriseDetail_HRList(entId:$entId) {
+  query CandidateGetEnterpriseDetail_HRList($entId: Int!) {
+    CandidateGetEnterpriseDetail_HRList(entId: $entId) {
       id
       name
       logo
       pos
-   }
- }
+    }
+  }
 `
 
 /**
  * 公司详情页的公司热门招聘官信息
  */
 const candidateGetEnterpriseDetail_InterviewRecommentGql = gql`
-  query CandidateGetEnterpriseDetail_InterviewRecomment($entId:Int!){
-    CandidateGetEnterpriseDetail_InterviewRecomment(entId:$entId) {
+  query CandidateGetEnterpriseDetail_InterviewRecomment($entId: Int!) {
+    CandidateGetEnterpriseDetail_InterviewRecomment(entId: $entId) {
       total
       description
       comp_env
@@ -284,66 +243,69 @@ const candidateGetEnterpriseDetail_InterviewRecommentGql = gql`
         createdAt
         logo
       }
-   }
- }
+    }
+  }
 `
 
 /**
  * 公司详情页的公司问答
  */
 const candidateGetEnterpriseDetail_QAGql = gql`
-  query CandidateGetEnterpriseDetail_QA($entId:Int!){
-    CandidateGetEnterpriseDetail_QA(entId:$entId) {
-      questionCount answerCount question  answer
-   }
- }
+  query CandidateGetEnterpriseDetail_QA($entId: Int!) {
+    CandidateGetEnterpriseDetail_QA(entId: $entId) {
+      questionCount
+      answerCount
+      question
+      answer
+    }
+  }
 `
 
 /**
  * 获取职位详情
  */
 const getJobDetailGql = gql`
- query CandidateGetJob($jobid:Int!){
-    CandidateGetJob(jobid:$jobid) {
-        job{
-            id
-            title
-            category
-            detail
-            address_coordinate
-            address_description
-            salaryExpected
-            experience
-            education
-            required_num
-            full_time_job
-            tags
-            updatedAt
-          }
-        hr{
-          id
-          name
-          pos
-          last_log_out_time
-          # logo
-        }
-        company{
-          id
-          name
-          address_coordinates
-          address_description
-          industry_involved
-          enterprise_size
-          business_nature
-    #       enterprise_logo
-        }
+  query CandidateGetJob($jobid: Int!) {
+    CandidateGetJob(jobid: $jobid) {
+      job {
+        id
+        title
+        category
+        detail
+        address_coordinate
+        address_description
+        salaryExpected
+        experience
+        education
+        required_num
+        full_time_job
+        tags
+        updatedAt
+      }
+      hr {
+        id
+        name
+        pos
+        last_log_out_time
+        # logo
+      }
+      company {
+        id
+        name
+        address_coordinates
+        address_description
+        industry_involved
+        enterprise_size
+        business_nature
+        #       enterprise_logo
+      }
+    }
   }
- }
 `
 
 const getHrBasicInfoGql = gql`
-   query CandidateGetHRDetail_HRInfo($hrId: Int!){
-    CandidateGetHRDetail_HRInfo(hrId: $hrId){
+  query CandidateGetHRDetail_HRInfo($hrId: Int!) {
+    CandidateGetHRDetail_HRInfo(hrId: $hrId) {
       name
       pos
       last_log_out_time
@@ -354,9 +316,9 @@ const getHrBasicInfoGql = gql`
 `
 
 const getHrMatchJobListGql = gql`
-   query CandidateGetHRDetail_RecommendationsList($hrId: Int!){
-    CandidateGetHRDetail_RecommendationsList(hrId: $hrId){
-      data{
+  query CandidateGetHRDetail_RecommendationsList($hrId: Int!) {
+    CandidateGetHRDetail_RecommendationsList(hrId: $hrId) {
+      data {
         id
         title
         loc
@@ -371,9 +333,17 @@ const getHrMatchJobListGql = gql`
 `
 
 const getHrMoreJobListGql = gql`
-   query CandidateGetHRDetail_JobListPageView($hrId: Int!,$pageSize: Int!,$page: Int!){
-    CandidateGetHRDetail_JobListPageView(hrId: $hrId, pageSize:$pageSize,page:$page){
-      data{
+  query CandidateGetHRDetail_JobListPageView(
+    $hrId: Int!
+    $pageSize: Int!
+    $page: Int!
+  ) {
+    CandidateGetHRDetail_JobListPageView(
+      hrId: $hrId
+      pageSize: $pageSize
+      page: $page
+    ) {
+      data {
         id
         title
         loc
@@ -389,15 +359,20 @@ const getHrMoreJobListGql = gql`
 
 // send message
 const sendMessageGql = gql`
-  mutation UserSendMessage($info: SendMessage!){
+  mutation UserSendMessage($info: SendMessage!) {
     UserSendMessage(info: $info)
   }
 `
 
 const userGetContractListGql = gql`
-  query UserGetContractList{
-    UserGetContractList{
-      id name pos ent last_msg last_msg_time
+  query UserGetContractList {
+    UserGetContractList {
+      id
+      name
+      pos
+      ent
+      last_msg
+      last_msg_time
       # logo
     }
   }
@@ -405,7 +380,6 @@ const userGetContractListGql = gql`
 
 export {
   apolloClientShare,
-  initApolloClient,
   sendSMSGql,
   loginGql,
   numberCheckGql,
