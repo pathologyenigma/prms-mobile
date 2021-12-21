@@ -1,8 +1,21 @@
-import { get, getWithToken, post, postWithToken } from '../utils/http'
+import { get } from '../utils/http'
 import { Dispatch } from 'react'
 import { AnyAction } from 'redux'
-import AsyncStorage from '@react-native-community/async-storage'
-import { apolloClientShare, candidateGetEnterpriseDetail_EntInfoGql, candidateGetEnterpriseDetail_HRListGql, candidateGetEnterpriseDetail_InterviewRecommentGql, candidateGetEnterpriseDetail_QAGql, getAllRegionGql, getCandidateGetAllJobExpectationsGql, getCandidateGetJobListGql, getHrBasicInfoGql, getHrMatchJobListGql, getHrMoreJobListGql, getJobDetailGql, loginGql } from '../utils/postQuery'
+import {
+  apolloClientShare,
+  candidateGetEnterpriseDetail_EntInfoGql,
+  candidateGetEnterpriseDetail_HRListGql,
+  candidateGetEnterpriseDetail_InterviewRecommentGql,
+  candidateGetEnterpriseDetail_QAGql,
+  getAllRegionGql,
+  getCandidateGetAllJobExpectationsGql,
+  getCandidateGetJobListGql,
+  getHrBasicInfoGql,
+  getHrMatchJobListGql,
+  getHrMoreJobListGql,
+  getJobDetailGql,
+  loginGql,
+} from '../utils/postQuery'
 import errorHandler from '../utils/errorhandler'
 
 const reset_reducer = () => {
@@ -21,20 +34,25 @@ const update_kv = (key: string, value: string) => {
   }
 }
 
-const loginMobile = (account: string, password: string, callback: (error: any, result?: any) => void) => {
+const loginMobile = (
+  account: string,
+  password: string,
+  callback: (error: any, result?: any) => void,
+) => {
   return (dispatch: Dispatch<AnyAction>) => {
-    apolloClientShare.query({
-      query: loginGql,
-      fetchPolicy: 'no-cache', // 设置缓存策略
-      variables: {
-        info: {
-          account,
-          password,
-          deviceId: 'deviceId',
-        }
-      }
-    })
-      .then((res) => {
+    apolloClientShare
+      .query({
+        query: loginGql,
+        fetchPolicy: 'no-cache', // 设置缓存策略
+        variables: {
+          info: {
+            account,
+            password,
+            deviceId: 'deviceId',
+          },
+        },
+      })
+      .then(res => {
         console.log('res: ', res)
         if (res && res.data) {
           dispatch(update_kv('UserLogIn', res.data.UserLogIn))
@@ -43,7 +61,7 @@ const loginMobile = (account: string, password: string, callback: (error: any, r
           }
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log('error: ', error)
         errorHandler(error)
       })
@@ -54,9 +72,8 @@ const getAllRegion = (callback: (error: any, result?: any) => void) => {
   return (dispatch: Dispatch<AnyAction>) => {
     // 临时使用json形式获取数据后进行逻辑展示
 
-
     get('https://be.chenzaozhao.com/preludeDatas/regions.json')
-      .then((res) => {
+      .then(res => {
         console.log('res: ', res)
         if (res) {
           if (callback) {
@@ -64,7 +81,7 @@ const getAllRegion = (callback: (error: any, result?: any) => void) => {
           }
         }
       })
-      .catch((error) => {
+      .catch(error => {
         // TODO:此处由于登录接口错误,会返回错误的结果,实际参数是正确的.注意后续流程复测
         console.log('error: ', error)
         errorHandler(error)
@@ -91,16 +108,19 @@ const getAllRegion = (callback: (error: any, result?: any) => void) => {
 
 /**
  * 获取预测职位标签
- * @param callback 
- * @returns 
+ * @param callback
+ * @returns
  */
-const getCandidateGetAllJobExpectations = (callback: (error: any, result?: any) => void) => {
+const getCandidateGetAllJobExpectations = (
+  callback: (error: any, result?: any) => void,
+) => {
   return (dispatch: Dispatch<AnyAction>) => {
-    apolloClientShare.query({
-      query: getCandidateGetAllJobExpectationsGql,
-      fetchPolicy: 'no-cache', // 设置缓存策略
-    })
-      .then((res) => {
+    apolloClientShare
+      .query({
+        query: getCandidateGetAllJobExpectationsGql,
+        fetchPolicy: 'no-cache', // 设置缓存策略
+      })
+      .then(res => {
         console.log('res: ', res)
         if (res && res.data) {
           if (callback) {
@@ -108,7 +128,7 @@ const getCandidateGetAllJobExpectations = (callback: (error: any, result?: any) 
           }
         }
       })
-      .catch((error) => {
+      .catch(error => {
         // TODO:此处由于登录接口错误,会返回错误的结果,实际参数是正确的.注意后续流程复测
         console.log('error: ', error)
         errorHandler(error)
@@ -118,19 +138,23 @@ const getCandidateGetAllJobExpectations = (callback: (error: any, result?: any) 
 
 /**
  * 获取预测职位
- * @param callback 
- * @returns 
+ * @param callback
+ * @returns
  */
-const getCandidateGetJobList = (filter: any, callback: (error: any, result?: any) => void) => {
+const getCandidateGetJobList = (
+  filter: any,
+  callback: (error: any, result?: any) => void,
+) => {
   return (dispatch: Dispatch<AnyAction>) => {
-    apolloClientShare.query({
-      query: getCandidateGetJobListGql,
-      fetchPolicy: 'no-cache', // 设置缓存策略
-      variables: {
-        filter,
-      }
-    })
-      .then((res) => {
+    apolloClientShare
+      .query({
+        query: getCandidateGetJobListGql,
+        fetchPolicy: 'no-cache', // 设置缓存策略
+        variables: {
+          filter,
+        },
+      })
+      .then(res => {
         console.log('res: ', res)
         if (res && res.data) {
           if (callback) {
@@ -138,7 +162,7 @@ const getCandidateGetJobList = (filter: any, callback: (error: any, result?: any
           }
         }
       })
-      .catch((error) => {
+      .catch(error => {
         // TODO:此处由于登录接口错误,会返回错误的结果,实际参数是正确的.注意后续流程复测
         console.log('error: ', error)
         errorHandler(error)
@@ -146,16 +170,20 @@ const getCandidateGetJobList = (filter: any, callback: (error: any, result?: any
   }
 }
 
-const getJobDetail = (jobid: number, callback: (error: any, result?: any) => void) => {
+const getJobDetail = (
+  jobid: number,
+  callback: (error: any, result?: any) => void,
+) => {
   return (dispatch: Dispatch<AnyAction>) => {
-    apolloClientShare.query({
-      query: getJobDetailGql,
-      fetchPolicy: 'no-cache', // 设置缓存策略
-      variables: {
-        jobid,
-      }
-    })
-      .then((res) => {
+    apolloClientShare
+      .query({
+        query: getJobDetailGql,
+        fetchPolicy: 'no-cache', // 设置缓存策略
+        variables: {
+          jobid,
+        },
+      })
+      .then(res => {
         console.log('res: ', res)
         if (res && res.data) {
           if (callback) {
@@ -163,23 +191,27 @@ const getJobDetail = (jobid: number, callback: (error: any, result?: any) => voi
           }
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log('error: ', error)
         errorHandler(error)
       })
   }
 }
 
-const getHrBasicInfo = (hrId: number, callback: (error: any, result?: any) => void) => {
+const getHrBasicInfo = (
+  hrId: number,
+  callback: (error: any, result?: any) => void,
+) => {
   return (dispatch: Dispatch<AnyAction>) => {
-    apolloClientShare.query({
-      query: getHrBasicInfoGql,
-      fetchPolicy: 'no-cache', // 设置缓存策略
-      variables: {
-        hrId,
-      }
-    })
-      .then((res) => {
+    apolloClientShare
+      .query({
+        query: getHrBasicInfoGql,
+        fetchPolicy: 'no-cache', // 设置缓存策略
+        variables: {
+          hrId,
+        },
+      })
+      .then(res => {
         console.log('res: ', res)
         if (res && res.data) {
           if (callback) {
@@ -187,23 +219,27 @@ const getHrBasicInfo = (hrId: number, callback: (error: any, result?: any) => vo
           }
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log('error: ', error)
         errorHandler(error)
       })
   }
 }
 
-const getHrMatchJobList = (hrId: number, callback: (error: any, result?: any) => void) => {
+const getHrMatchJobList = (
+  hrId: number,
+  callback: (error: any, result?: any) => void,
+) => {
   return (dispatch: Dispatch<AnyAction>) => {
-    apolloClientShare.query({
-      query: getHrMatchJobListGql,
-      fetchPolicy: 'no-cache', // 设置缓存策略
-      variables: {
-        hrId,
-      }
-    })
-      .then((res) => {
+    apolloClientShare
+      .query({
+        query: getHrMatchJobListGql,
+        fetchPolicy: 'no-cache', // 设置缓存策略
+        variables: {
+          hrId,
+        },
+      })
+      .then(res => {
         console.log('res: ', res)
         if (res && res.data) {
           if (callback) {
@@ -211,25 +247,30 @@ const getHrMatchJobList = (hrId: number, callback: (error: any, result?: any) =>
           }
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log('error: ', error)
         errorHandler(error)
       })
   }
 }
 
-const getHrMoreJobList = (hrId: number, page: number, callback: (error: any, result?: any) => void) => {
+const getHrMoreJobList = (
+  hrId: number,
+  page: number,
+  callback: (error: any, result?: any) => void,
+) => {
   return (dispatch: Dispatch<AnyAction>) => {
-    apolloClientShare.query({
-      query: getHrMoreJobListGql,
-      fetchPolicy: 'no-cache', // 设置缓存策略
-      variables: {
-        hrId,
-        pageSize: 10,
-        page,
-      }
-    })
-      .then((res) => {
+    apolloClientShare
+      .query({
+        query: getHrMoreJobListGql,
+        fetchPolicy: 'no-cache', // 设置缓存策略
+        variables: {
+          hrId,
+          pageSize: 10,
+          page,
+        },
+      })
+      .then(res => {
         console.log('res: ', res)
         if (res && res.data) {
           if (callback) {
@@ -237,7 +278,7 @@ const getHrMoreJobList = (hrId: number, page: number, callback: (error: any, res
           }
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log('error: ', error)
         errorHandler(error)
       })
@@ -245,16 +286,20 @@ const getHrMoreJobList = (hrId: number, page: number, callback: (error: any, res
 }
 
 // 获取公司信息
-const getCandidateGetEnterpriseDetail_EntInfo = (entId: number, callback: (error: any, result?: any) => void) => {
+const getCandidateGetEnterpriseDetail_EntInfo = (
+  entId: number,
+  callback: (error: any, result?: any) => void,
+) => {
   return (dispatch: Dispatch<AnyAction>) => {
-    apolloClientShare.query({
-      query: candidateGetEnterpriseDetail_EntInfoGql,
-      fetchPolicy: 'no-cache', // 设置缓存策略
-      variables: {
-        entId,
-      }
-    })
-      .then((res) => {
+    apolloClientShare
+      .query({
+        query: candidateGetEnterpriseDetail_EntInfoGql,
+        fetchPolicy: 'no-cache', // 设置缓存策略
+        variables: {
+          entId,
+        },
+      })
+      .then(res => {
         console.log('res: ', res)
         if (res && res.data) {
           if (callback) {
@@ -262,7 +307,7 @@ const getCandidateGetEnterpriseDetail_EntInfo = (entId: number, callback: (error
           }
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log('error: ', error)
         errorHandler(error)
       })
@@ -270,16 +315,20 @@ const getCandidateGetEnterpriseDetail_EntInfo = (entId: number, callback: (error
 }
 
 // 获取公司详情界面hr list
-const getCandidateGetEnterpriseDetail_HRList = (entId: number, callback: (error: any, result?: any) => void) => {
+const getCandidateGetEnterpriseDetail_HRList = (
+  entId: number,
+  callback: (error: any, result?: any) => void,
+) => {
   return (dispatch: Dispatch<AnyAction>) => {
-    apolloClientShare.query({
-      query: candidateGetEnterpriseDetail_HRListGql,
-      fetchPolicy: 'no-cache', // 设置缓存策略
-      variables: {
-        entId,
-      }
-    })
-      .then((res) => {
+    apolloClientShare
+      .query({
+        query: candidateGetEnterpriseDetail_HRListGql,
+        fetchPolicy: 'no-cache', // 设置缓存策略
+        variables: {
+          entId,
+        },
+      })
+      .then(res => {
         console.log('res: ', res)
         if (res && res.data) {
           if (callback) {
@@ -287,7 +336,7 @@ const getCandidateGetEnterpriseDetail_HRList = (entId: number, callback: (error:
           }
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log('error: ', error)
         errorHandler(error)
       })
@@ -295,16 +344,20 @@ const getCandidateGetEnterpriseDetail_HRList = (entId: number, callback: (error:
 }
 
 // 获取公司详情面试评价(注意:和面试评价详情页数据不同)
-const getCandidateGetEnterpriseDetail_InterviewRecomment = (entId: number, callback: (error: any, result?: any) => void) => {
+const getCandidateGetEnterpriseDetail_InterviewRecomment = (
+  entId: number,
+  callback: (error: any, result?: any) => void,
+) => {
   return (dispatch: Dispatch<AnyAction>) => {
-    apolloClientShare.query({
-      query: candidateGetEnterpriseDetail_InterviewRecommentGql,
-      fetchPolicy: 'no-cache', // 设置缓存策略
-      variables: {
-        entId,
-      }
-    })
-      .then((res) => {
+    apolloClientShare
+      .query({
+        query: candidateGetEnterpriseDetail_InterviewRecommentGql,
+        fetchPolicy: 'no-cache', // 设置缓存策略
+        variables: {
+          entId,
+        },
+      })
+      .then(res => {
         console.log('res: ', res)
         if (res && res.data) {
           if (callback) {
@@ -312,7 +365,7 @@ const getCandidateGetEnterpriseDetail_InterviewRecomment = (entId: number, callb
           }
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log('error: ', error)
         errorHandler(error)
       })
@@ -320,16 +373,20 @@ const getCandidateGetEnterpriseDetail_InterviewRecomment = (entId: number, callb
 }
 
 // 获取公司详情问答数据
-const getCandidateGetEnterpriseDetail_QA = (entId: number, callback: (error: any, result?: any) => void) => {
+const getCandidateGetEnterpriseDetail_QA = (
+  entId: number,
+  callback: (error: any, result?: any) => void,
+) => {
   return (dispatch: Dispatch<AnyAction>) => {
-    apolloClientShare.query({
-      query: candidateGetEnterpriseDetail_QAGql,
-      fetchPolicy: 'no-cache', // 设置缓存策略
-      variables: {
-        entId,
-      }
-    })
-      .then((res) => {
+    apolloClientShare
+      .query({
+        query: candidateGetEnterpriseDetail_QAGql,
+        fetchPolicy: 'no-cache', // 设置缓存策略
+        variables: {
+          entId,
+        },
+      })
+      .then(res => {
         console.log('res: ', res)
         if (res && res.data) {
           if (callback) {
@@ -337,7 +394,7 @@ const getCandidateGetEnterpriseDetail_QA = (entId: number, callback: (error: any
           }
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log('error: ', error)
         errorHandler(error)
       })

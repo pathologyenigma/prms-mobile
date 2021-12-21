@@ -12,6 +12,7 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import NavBar from '../components/NavBar'
 import PrimaryButton from '../components/PrimaryButton'
 import { useNavigation } from '@react-navigation/native'
+import * as Auth from '../../utils/auth'
 
 export default function SettingMain() {
   const navigation = useNavigation<StackNavigationProp<any>>()
@@ -43,7 +44,11 @@ export default function SettingMain() {
           renderDetail={() => <Text style={styles.detailText}>12.76M</Text>}
           onPress={() => console.log('设置')}
         />
-        <PrimaryButton style={styles.logout} title="退出登录" />
+        <PrimaryButton
+          style={styles.logout}
+          title="退出登录"
+          onPress={() => Auth.logout()}
+        />
       </ScrollView>
     </View>
   )

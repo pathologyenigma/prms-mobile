@@ -3,16 +3,21 @@ import NavBar, { EButtonType } from '../../components/NavBar'
 import styles from './styles/AuthoritySetting.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import RootLoading from '../../../utils/rootLoading'
-import { Text, View, Image, StatusBar, AsyncStorage } from 'react-native'
+import { Text, View, Image, StatusBar } from 'react-native'
 import { versionCode } from '../../../utils/config'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import { ActivityIndicator } from '@ant-design/react-native'
-import { CommonActions } from '@react-navigation/native';
-import { check, checkMultiple, PERMISSIONS, RESULTS, request, requestMultiple } from 'react-native-permissions'
+import { CommonActions } from '@react-navigation/native'
+import {
+  check,
+  checkMultiple,
+  PERMISSIONS,
+  RESULTS,
+  request,
+  requestMultiple,
+} from 'react-native-permissions'
 
-type IProps = GenProps<'AuthoritySetting'> & {
-
-}
+type IProps = GenProps<'AuthoritySetting'> & {}
 
 interface IState {
   locationAuthority: any
@@ -42,21 +47,37 @@ export default class AuthoritySetting extends Component<IProps, IState> {
       PERMISSIONS.ANDROID.CAMERA,
       PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
       PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
-      PERMISSIONS.ANDROID.RECORD_AUDIO
-    ]).then((result: any) => {
-      console.log('222222: ', result)
-      console.log('2222223: ', result['android.permission.ACCESS_COARSE_LOCATION'])
-      this.setState({
-        locationAuthority: result['android.permission.ACCESS_COARSE_LOCATION'].toLocaleLowerCase() === 'granted',
-        photoAuthority: result['android.permission.CAMERA'].toLocaleLowerCase() === 'granted',
-        libraryAuthority:
-          result['android.permission.READ_EXTERNAL_STORAGE'].toLocaleLowerCase() === 'granted'
-          && result['android.permission.WRITE_EXTERNAL_STORAGE'].toLocaleLowerCase() === 'granted',
-        MicrophoneAuthority: result['android.permission.RECORD_AUDIO'].toLocaleLowerCase() === 'granted',
+      PERMISSIONS.ANDROID.RECORD_AUDIO,
+    ])
+      .then((result: any) => {
+        console.log('222222: ', result)
+        console.log(
+          '2222223: ',
+          result['android.permission.ACCESS_COARSE_LOCATION'],
+        )
+        this.setState({
+          locationAuthority:
+            result[
+              'android.permission.ACCESS_COARSE_LOCATION'
+            ].toLocaleLowerCase() === 'granted',
+          photoAuthority:
+            result['android.permission.CAMERA'].toLocaleLowerCase() ===
+            'granted',
+          libraryAuthority:
+            result[
+              'android.permission.READ_EXTERNAL_STORAGE'
+            ].toLocaleLowerCase() === 'granted' &&
+            result[
+              'android.permission.WRITE_EXTERNAL_STORAGE'
+            ].toLocaleLowerCase() === 'granted',
+          MicrophoneAuthority:
+            result['android.permission.RECORD_AUDIO'].toLocaleLowerCase() ===
+            'granted',
+        })
       })
-    }).catch((error) => {
-      console.log('error: ', error)
-    })
+      .catch(error => {
+        console.log('error: ', error)
+      })
   }
 
   requestPermission(permission: any) {
@@ -65,7 +86,7 @@ export default class AuthoritySetting extends Component<IProps, IState> {
         console.log('result: ', result)
         this.loadData()
       })
-      .catch((error) => {
+      .catch(error => {
         RootLoading.fail(`申请失败,请重试: ${error.message}`)
       })
   }
@@ -91,8 +112,6 @@ export default class AuthoritySetting extends Component<IProps, IState> {
     )
   }
 
-
-
   renderCell(title: string, detail: string, onpress: () => void) {
     return (
       <NextTouchableOpacity
@@ -101,11 +120,16 @@ export default class AuthoritySetting extends Component<IProps, IState> {
           if (onpress) {
             onpress()
           }
-        }}
-      >
+        }}>
         <Text style={styles.cellName}>{title}</Text>
         {detail !== undefined && (
-          <Text style={[styles.cellValue, detail === false && { color: '#FA8E4F' }]}>{detail ? '已开启' : '已关闭'}</Text>
+          <Text
+            style={[
+              styles.cellValue,
+              detail === false && { color: '#FA8E4F' },
+            ]}>
+            {detail ? '已开启' : '已关闭'}
+          </Text>
         )}
         <Image
           style={styles.nextIcon}
@@ -116,7 +140,12 @@ export default class AuthoritySetting extends Component<IProps, IState> {
   }
 
   renderContent() {
-    const { locationAuthority, photoAuthority, libraryAuthority, MicrophoneAuthority } = this.state
+    const {
+      locationAuthority,
+      photoAuthority,
+      libraryAuthority,
+      MicrophoneAuthority,
+    } = this.state
     return (
       <View style={styles.content}>
         {this.renderCell('访问位置信息', locationAuthority, () => {
@@ -126,21 +155,32 @@ export default class AuthoritySetting extends Component<IProps, IState> {
           this.requestPermission(PERMISSIONS.ANDROID.CAMERA)
         })}
         {this.renderCell('使用相册功能', libraryAuthority, () => {
-          requestMultiple([PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE, PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE])
+          requestMultiple([
+            PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+            PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+          ])
             .then((result: any) => {
               console.log('result111: ', result)
               if (
-                result['android.permission.READ_EXTERNAL_STORAGE'].toLocaleLowerCase() === 'unavailable'
-                || result['android.permission.READ_EXTERNAL_STORAGE'].toLocaleLowerCase() === 'blocked'
-                || result['android.permission.WRITE_EXTERNAL_STORAGE'].toLocaleLowerCase() === 'unavailable'
-                || result['android.permission.WRITE_EXTERNAL_STORAGE'].toLocaleLowerCase() === 'blocked'
+                result[
+                  'android.permission.READ_EXTERNAL_STORAGE'
+                ].toLocaleLowerCase() === 'unavailable' ||
+                result[
+                  'android.permission.READ_EXTERNAL_STORAGE'
+                ].toLocaleLowerCase() === 'blocked' ||
+                result[
+                  'android.permission.WRITE_EXTERNAL_STORAGE'
+                ].toLocaleLowerCase() === 'unavailable' ||
+                result[
+                  'android.permission.WRITE_EXTERNAL_STORAGE'
+                ].toLocaleLowerCase() === 'blocked'
               ) {
                 RootLoading.fail('获取权限失败,请手动前往系统设置中开启', 2)
               } else {
                 this.loadData()
               }
             })
-            .catch((error) => {
+            .catch(error => {
               RootLoading.fail(`申请失败,请重试: ${error.message}`)
             })
         })}
@@ -152,7 +192,6 @@ export default class AuthoritySetting extends Component<IProps, IState> {
   }
 
   render() {
-
     return (
       <View style={styles.container}>
         <StatusBar

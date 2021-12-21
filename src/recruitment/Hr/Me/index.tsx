@@ -105,7 +105,7 @@ export default function Me() {
         <Cell
           icon={require('./images/switch.png')}
           title="切换身份"
-          onPress={() => navigation.navigate('ChangeRole')}
+          onPress={() => navigation.navigate('ChooseRole')}
         />
         <Cell icon={require('./images/feekback.png')} title="帮助与反馈" />
         <Cell icon={require('./images/about.png')} title="关于我们" />
