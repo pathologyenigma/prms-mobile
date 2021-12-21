@@ -157,6 +157,17 @@ const reformFullTime = (full_time_job: string) => {
   return ''
 }
 
+const reformDistanceYears = (first_time_working: string) => {
+  if (!first_time_working) {
+    return ''
+  }
+  const fromYears = first_time_working.split('-')[0]
+  if (!fromYears) {
+    return ''
+  }
+  return (new Date().getFullYear() - Number(fromYears))
+}
+
 export {
   formatHintsIndex,
   calculateTime,
@@ -164,5 +175,6 @@ export {
   reformEducation,
   reformCompanySize,
   reformComFinancing,
-  reformFullTime
+  reformFullTime,
+  reformDistanceYears,
 }

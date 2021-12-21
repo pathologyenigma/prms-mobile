@@ -68,6 +68,7 @@ class Jobs extends Component<IProps, IState> {
 
   componentDidMount() {
     RootLoading.loading()
+    this.loadUserBasicInfo()
     this.loadJobExpections()
     StatusBar.setBarStyle('light-content', true)
     this.props.navigation.addListener('focus', () => {
@@ -77,6 +78,10 @@ class Jobs extends Component<IProps, IState> {
 
   componentWillUnmount() {
     this.props.navigation.removeListener('focus', () => {})
+  }
+
+  loadUserBasicInfo() {
+    this.props.getUserGetBasicInfo()
   }
 
   loadJobExpections() {
@@ -133,7 +138,7 @@ class Jobs extends Component<IProps, IState> {
         })
       } else {
         this.setState({
-          refreshState: 4,
+          refreshState: 0,
         })
         RootLoading.fail('职位加载失败,请重试')
       }
@@ -529,8 +534,9 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
       getCandidateGetAllJobExpectations:
         jobActions.getCandidateGetAllJobExpectations,
       getCandidateGetJobList: jobActions.getCandidateGetJobList,
+      getUserGetBasicInfo: actions.getUserGetBasicInfo,
     },
-    dispatch,
+    dispatch
   )
 }
 

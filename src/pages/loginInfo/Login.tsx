@@ -335,10 +335,12 @@ class LoginScreen extends Component<IProps, IState> {
             containerStyle={styles.registerTipRightBtn}
             text="注册"
             onPress={() => {
-              const { navigation } = this.props
-              navigation.push('InputVerifyCode', {
-                phone: phone,
-                operation: 'UserRegister',
+              this.setState({ showRegisterTips: false }, () => {
+                const { navigation } = this.props
+                navigation.push('InputVerifyCode', {
+                  phone: phone,
+                  operation: 'UserRegister',
+                })
               })
             }}
           />
@@ -436,8 +438,8 @@ class LoginScreen extends Component<IProps, IState> {
           {loginType === 0
             ? this.renderOneClickLogin()
             : loginType === 1
-            ? this.renderPasswordLogin()
-            : this.renderVerifyCodeLogin()}
+              ? this.renderPasswordLogin()
+              : this.renderVerifyCodeLogin()}
         </ScrollView>
         {this.renderPrivicy()}
         <WhiteContentModal visible={showRegisterTips}>

@@ -378,6 +378,22 @@ const userGetContractListGql = gql`
   }
 `
 
+const getUserGetBasicInfoGql = gql`
+  query{
+    UserGetBasicInfo{
+      username
+  #     image_url
+      gender
+      birth_date
+      current_city
+      first_time_working
+      education
+      phone_number
+      email
+    }
+}
+`
+
 export {
   apolloClientShare,
   sendSMSGql,
@@ -405,4 +421,5 @@ export {
   candidateGetEnterpriseDetail_InterviewRecommentGql,
   candidateGetEnterpriseDetail_QAGql,
   userGetContractListGql,
+  getUserGetBasicInfoGql
 }

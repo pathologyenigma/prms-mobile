@@ -15,12 +15,17 @@ import styles from './styles/Mine.style'
 import RootLoading from '../../../utils/rootLoading'
 import { CommonActions } from '@react-navigation/native'
 import { GenProps } from '../../../navigator/requestJob/stack'
+import { IStoreState } from '../../../reducer'
+import { bindActionCreators, Dispatch, AnyAction } from 'redux'
+import { connect } from 'react-redux'
+import { reformDistanceYears, reformEducation } from '../../../utils/utils'
 
-type IProps = GenProps<'Mine'> & {}
+type IProps = GenProps<'Mine'> & ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>
 
 type IState = {}
 
-export default class Mine extends Component<IProps, IState> {
+class Mine extends Component<IProps, IState> {
   constructor(props: any) {
     super(props)
     console.log('props: ', props)
@@ -35,14 +40,15 @@ export default class Mine extends Component<IProps, IState> {
   }
 
   componentWillUnmount() {
-    this.props.navigation.removeListener('focus', () => {})
+    this.props.navigation.removeListener('focus', () => { })
   }
 
-  loadData() {}
+  loadData() { }
 
   renderIconView() {
     const start = { x: 0, y: 0.5 }
     const end = { x: 1, y: 0.5 }
+    const { userInfo } = this.props
     return (
       <View style={styles.iconView}>
         <NextTouchableOpacity
@@ -57,8 +63,13 @@ export default class Mine extends Component<IProps, IState> {
           />
         </NextTouchableOpacity>
         <View style={styles.nameView}>
-          <Text style={styles.nameTitle}>李小冉</Text>
-          <Text style={styles.detailInfo}>工作4年/27岁/本科</Text>
+          <Text style={styles.nameTitle}>{userInfo.username}</Text>
+          <Text style={styles.detailInfo}>
+            {
+            `${userInfo.first_time_working ? `工作${reformDistanceYears(userInfo.first_time_working)}年` : ''}${userInfo.birth_date ? `/${reformDistanceYears(userInfo.birth_date)}岁` : ''}${userInfo.education ? `/${reformEducation(userInfo.birth_date)}` : ''}`
+            }
+          </Text>
+          {/* <Text style={styles.detailInfo}>工作4年/27岁/本科</Text> */}
         </View>
         <LinearGradient
           start={start}
@@ -339,3 +350,21 @@ export default class Mine extends Component<IProps, IState> {
     )
   }
 }
+
+const mapStateToProps = (state: IStoreState) => {
+  return {
+    userInfo: state.userInfo.userInfo,
+  }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
+  return bindActionCreators(
+    {
+
+    },
+    dispatch
+  )
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Mine)
+

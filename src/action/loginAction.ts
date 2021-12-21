@@ -8,6 +8,7 @@ import {
   chooseOrSwitchIdentityGql,
   getENTEditEnterpriseBasicInfoGql,
   getUserEditPersonalDataGql,
+  getUserGetBasicInfoGql,
   loginGql,
   numberCheckGql,
   registerGql,
@@ -27,6 +28,16 @@ const reset_reducer = () => {
 const update_kv = (key: string, value: string) => {
   return {
     type: 'loginInfo/update_kv',
+    payload: {
+      key,
+      value,
+    },
+  }
+}
+
+const update_user_kv = (key: string, value: string) => {
+  return {
+    type: 'userInfo/update_kv',
     payload: {
       key,
       value,
@@ -312,6 +323,33 @@ const chooseRole = (
   }
 }
 
+// 获取个人信息
+const getUserGetBasicInfo = (
+  callback?: (error: any, result?: any) => void,
+) => {
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare
+      .mutate({
+        mutation: getUserGetBasicInfoGql,
+        fetchPolicy: 'no-cache', // 设置缓存策略
+      })
+      .then(res => {
+        console.log('res1: ', res)
+        if (res && res.data) {
+          dispatch(
+            update_user_kv('userInfo', res.data.UserGetBasicInfo)
+          )
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error: ApolloError) => {
+        errorHandler(error)
+      })
+  }
+}
+
 // 重置密码
 const resetPassword = (
   phone: string,
@@ -412,4 +450,5 @@ export {
   resetPassword,
   subscriptionMessage,
   chooseRole,
+  getUserGetBasicInfo,
 }

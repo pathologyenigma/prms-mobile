@@ -165,6 +165,9 @@ const getCandidateGetJobList = (
       .catch(error => {
         // TODO:此处由于登录接口错误,会返回错误的结果,实际参数是正确的.注意后续流程复测
         console.log('error: ', error)
+        if (callback) {
+          callback(error)
+        }
         errorHandler(error)
       })
   }
