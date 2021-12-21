@@ -17,7 +17,7 @@ import Splash from './bridge/splash'
 import { setApolloClient } from './utils/postQuery'
 import { Identity, getTargetIdentity } from './utils/auth'
 
-setApolloClient(client())
+setApolloClient(client)
 
 const Stack = createStackNavigator()
 
@@ -64,7 +64,6 @@ function App() {
         identity,
       )
       reset()
-      setApolloClient(client())
       setIdentity(identity as Identity)
     }
 
@@ -128,7 +127,7 @@ function App() {
   }
 
   return (
-    <ApolloProvider client={client()}>
+    <ApolloProvider client={client}>
       <Provider store={store}>
         <AntProvider>{container}</AntProvider>
       </Provider>
