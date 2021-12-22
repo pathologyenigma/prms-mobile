@@ -53,11 +53,17 @@ class JobSelectCity extends Component<IProps, IState> {
     getAllRegion((error, result) => {
       console.log('getAll:" ', error, result)
       RootLoading.hide()
-      if (!error && result) {
+      // 缺少后面层级,待沟通
+      if (!error && result && result.StaticGetAllRegion && result.StaticGetAllRegion.data) {
         this.setState({
-          dataSource: result,
-          selectItem: result[0],
-          selectItemSecond: result[0].Cities,
+          dataSource: result.StaticGetAllRegion.data,
+          selectItem: result.StaticGetAllRegion.data[0],
+          selectItemSecond: result.StaticGetAllRegion.data[0].Cities,
+      // if (!error && result) {
+      //   this.setState({
+      //     dataSource: result,
+      //     selectItem: result[0],
+      //     selectItemSecond: result[0].Cities,
         })
         // if (result.StaticGetAllRegion
         //   && result.StaticGetAllRegion.data
@@ -278,6 +284,7 @@ class JobSelectCity extends Component<IProps, IState> {
           type: EButtonType.IMAGE,
           value: require('../../../assets/requestJobs/job-select-back.png'),
           act: () => {
+            const { navigation } = this.props
             navigation.pop()
           },
         }}
@@ -310,7 +317,7 @@ class JobSelectCity extends Component<IProps, IState> {
             return (
               <NextTouchableOpacity
                 style={[styles.detailSecondBtn,
-                selectItem.province_id === e.province_id && {
+                selectItem.name === e.name && {
                   borderLeftColor: greenColor,
                 }
                 ]}
@@ -322,7 +329,7 @@ class JobSelectCity extends Component<IProps, IState> {
                   })
                 }}
               >
-                <Text style={[styles.detailSecondText, selectItem.province_id === e.province_id && { color: greenColor, fontWeight: 'bold' }]}>{e.name}</Text>
+                <Text style={[styles.detailSecondText, selectItem.name === e.name && { color: greenColor, fontWeight: 'bold' }]}>{e.name}</Text>
               </NextTouchableOpacity>
             )
           })}

@@ -34,7 +34,6 @@ const initState: IUserInfoState = {
       token: '',
       createdAt: ''
     },
-    // TODO: 临时代码 , 对应账号 18800001012 /  word_12
     birth_date: '',
     current_city: '',
     education: null,
@@ -44,6 +43,7 @@ const initState: IUserInfoState = {
     phone_number: '',
     username: '',
 
+    // TODO: 临时代码 , 对应账号 18800001012 /  word_12
     id: '49',
     avatar: '',
     lastOnlineAt: '',

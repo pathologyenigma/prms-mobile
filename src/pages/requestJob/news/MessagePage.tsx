@@ -147,6 +147,13 @@ class MessagePage extends Component<IProps, IState> {
 
   loadData() {
     const { targetItem, pageSize, page, listDataSource } = this.state
+    const { userInfo, navigation } = this.props
+    console.log('userInfo: ', userInfo, userInfo.userInfo, userInfo.userInfo.id)
+    if (!userInfo || !userInfo.userInfo || !userInfo.userInfo.id) {
+      RootLoading.fail('登录失效,请重新登录')
+      navigation.goBack()
+      return
+    }
     this.props.userGetMessages(targetItem.id, page, pageSize, (error, result) => {
       if (!error && result) {
         if (result.UserGetMessages
@@ -432,6 +439,7 @@ class MessagePage extends Component<IProps, IState> {
   }
 
   renderInviteInterview(item: any) {
+    console.log('renderInviteInterview: ', item)
     return (
       <View style={styles.cellReceiveMessage}>
         <Image
