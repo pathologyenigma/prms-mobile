@@ -5,6 +5,7 @@ import {
   ApolloClient,
   ApolloLink,
   from,
+  fromPromise,
   HttpLink,
   InMemoryCache,
   split,
@@ -13,6 +14,7 @@ import { onError } from '@apollo/client/link/error'
 import { setContext } from '@apollo/client/link/context'
 import * as Auth from './auth'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
+import { refreshToken } from './refreshToken'
 
 const wsClient = new SubscriptionClient(wssUri, {
   reconnect: true,
@@ -25,7 +27,11 @@ const wsClient = new SubscriptionClient(wssUri, {
     }
   },
   connectionCallback: (error, result) => {
-    console.log('[SubscriptionClient] connectionCallback', error, result)
+    if (error) {
+      console.warn('[SubscriptionClient] connectionCallback', error, result)
+    } else {
+      console.log('[SubscriptionClient] connectionCallback', error, result)
+    }
   },
 })
 
@@ -35,22 +41,47 @@ const httpLink = new HttpLink({
   uri: hostUri,
 })
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors)
-    graphQLErrors.forEach(error => {
-      console.warn(`[GraphQL error]:  ${JSON.stringify(error, null, 2)}`)
-      if (error.extensions.code === 'UNAUTHENTICATED') {
-        Auth.logout()
-      }
-    })
+const errorLink = onError(
+  ({ graphQLErrors, networkError, operation, forward }) => {
+    if (graphQLErrors)
+      for (let error of graphQLErrors) {
+        console.warn(`[GraphQL error]:  ${JSON.stringify(error, null, 2)}`)
 
-  if (networkError) console.warn(`[Network error]: ${networkError}`)
-})
+        if (error.extensions.code === 'UNAUTHENTICATED') {
+          const headers = operation.getContext().headers
+          if (headers) {
+            return fromPromise(
+              Auth.getToken()
+                .then(token => {
+                  const usedToken = headers['Authorization'] as string
+                  if (token === null || !usedToken) {
+                    Auth.logout()
+                    throw new Error('UNAUTHENTICATED')
+                  }
+                  if (token !== usedToken) {
+                    return
+                  }
+
+                  return refreshToken()
+                })
+                .then(() => true)
+                .catch(() => false),
+            )
+              .filter(value => value)
+              .flatMap(() => {
+                return forward(operation)
+              })
+          }
+          Auth.logout()
+        }
+      }
+
+    if (networkError) console.warn(`[Network error]: ${networkError}`)
+  },
+)
 
 const authLink = setContext(async (_, { headers }) => {
-  // get the authentication token from local storage if it exists
   const token = await Auth.getToken()
-  // return the headers to the context so httpLink can read them
   return {
     headers: {
       ...headers,
@@ -61,13 +92,13 @@ const authLink = setContext(async (_, { headers }) => {
 
 const loggingLink = new ApolloLink((operation, forward) => {
   console.log(
-    '[logging]',
+    '[logging][request]',
     operation.operationName,
     operation.variables,
     operation.getContext().headers,
   )
   return forward(operation).map(result => {
-    console.log('[logging]', result.data)
+    console.log('[logging][response]', result.data)
     return result
   })
 })

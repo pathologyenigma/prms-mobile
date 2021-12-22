@@ -16,8 +16,11 @@ import { DeviceEventEmitter } from 'react-native'
 import Splash from './bridge/splash'
 import { setApolloClient } from './utils/postQuery'
 import { Identity, getTargetIdentity } from './utils/auth'
+import { setApolloClient as setApolloClientForRefreshToken } from './utils/refreshToken'
+import RootLoading from './utils/rootLoading'
 
 setApolloClient(client)
+setApolloClientForRefreshToken(client)
 
 const Stack = createStackNavigator()
 
@@ -64,6 +67,7 @@ function App() {
         identity,
       )
       reset()
+      RootLoading.hide()
       setIdentity(identity as Identity)
     }
 
