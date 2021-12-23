@@ -5,14 +5,19 @@ import { GenProps } from '../../../navigator/requestJob/stack'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import GradientButton from '../../components/GradientButton'
+import { IStoreState } from '../../../reducer'
+import { bindActionCreators, Dispatch, AnyAction } from 'redux'
+import { connect } from 'react-redux'
+import { loginAction } from '../../../action'
+import { reformEducation } from '../../../utils/utils'
 
-type IProps = GenProps<'UserInfo'> & {
-
-}
+type IProps = GenProps<'UserInfo'> &
+  ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>
 
 interface IState {
   dataSource: any,
-  selectGender: number | undefined
+  selectGender: number
 }
 
 const listData = [
@@ -51,12 +56,12 @@ const listData = [
   }
 ]
 
-export default class UserInfo extends Component<IProps, IState> {
+class UserInfo extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
       dataSource: listData,
-      selectGender: undefined
+      selectGender: props.userInfo.gender ? 1 : 0
     }
   }
 
@@ -82,11 +87,12 @@ export default class UserInfo extends Component<IProps, IState> {
   }
 
   renderIcon() {
+    const { userInfo } = this.props
     return (
       <View style={styles.iconView}>
         <Text style={styles.iconText}>头像</Text>
         <Image
-          source={require('../../../assets/requestJobs/icon-example.png')}
+          source={userInfo.logo ? { uri: userInfo.logo } : require('../../../assets/requestJobs/icon-example.png')}
           style={styles.iconStyle}
         />
       </View>
@@ -180,6 +186,8 @@ export default class UserInfo extends Component<IProps, IState> {
   }
 
   render() {
+    const { userInfo } = this.props
+    console.log('userInfo: ', userInfo)
     return (
       <View style={styles.container}>
         <StatusBar
@@ -194,16 +202,33 @@ export default class UserInfo extends Component<IProps, IState> {
           contentContainerStyle={{ paddingBottom: 20 }}
         >
           {this.renderIcon()}
-          {this.renderCell('姓名', '李小冉', false)}
-          {this.renderCell('出生日期', '1995.11', true)}
+          {this.renderCell('姓名', userInfo.username, false)}
+          {this.renderCell('出生日期', userInfo.birth_date, true)}
           {this.renderGender()}
-          {this.renderCell('所在城市', '深圳', true)}
-          {this.renderCell('手机号码', '13100000000', true)}
-          {this.renderCell('您的学历', '本科', true)}
-          {this.renderCell('首次参加工作时间', '2016.12', true)}
+          {this.renderCell('所在城市', userInfo.current_city, true)}
+          {this.renderCell('手机号码', userInfo.phone_number, true)}
+          {this.renderCell('您的学历', reformEducation(userInfo.education), true)}
+          {this.renderCell('首次参加工作时间', userInfo.first_time_working, true)}
         </ScrollView>
         {this.renderSaveBtn()}
       </View>
     )
   }
 }
+
+const mapStateToProps = (state: IStoreState) => {
+  return {
+    userInfo: state.userInfo.userInfo,
+  }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
+  return bindActionCreators(
+    {
+      setUserEditBasicInfo: loginAction.setUserEditBasicInfo
+    },
+    dispatch
+  )
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserInfo)

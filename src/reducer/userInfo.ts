@@ -15,6 +15,7 @@ export interface IUserInfoState {
     gender: boolean | null,
     phone_number: string
     username: string,
+    logo: string,
 
     id: string,
     avatar: string,
@@ -42,6 +43,7 @@ const initState: IUserInfoState = {
     gender: null,
     phone_number: '',
     username: '',
+    logo: '',
 
     // TODO: 临时代码 , 对应账号 18800001012 /  word_12
     id: '49',

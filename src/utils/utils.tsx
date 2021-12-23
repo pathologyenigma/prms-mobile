@@ -37,7 +37,7 @@ const calculateSize = (originSize: number) => {
   return status
 }
 
-const reformEducation = (education: string) => {
+const reformEducation = (education: any) => {
   if (!education) {
     return ''
   }

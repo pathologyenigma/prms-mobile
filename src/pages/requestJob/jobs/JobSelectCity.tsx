@@ -59,11 +59,11 @@ class JobSelectCity extends Component<IProps, IState> {
           dataSource: result.StaticGetAllRegion.data,
           selectItem: result.StaticGetAllRegion.data[0],
           selectItemSecond: result.StaticGetAllRegion.data[0].Cities,
-      // if (!error && result) {
-      //   this.setState({
-      //     dataSource: result,
-      //     selectItem: result[0],
-      //     selectItemSecond: result[0].Cities,
+          // if (!error && result) {
+          //   this.setState({
+          //     dataSource: result,
+          //     selectItem: result[0],
+          //     selectItemSecond: result[0].Cities,
         })
         // if (result.StaticGetAllRegion
         //   && result.StaticGetAllRegion.data
@@ -317,7 +317,7 @@ class JobSelectCity extends Component<IProps, IState> {
             return (
               <NextTouchableOpacity
                 style={[styles.detailSecondBtn,
-                selectItem.name === e.name && {
+                selectItem.province_id === e.province_id && {
                   borderLeftColor: greenColor,
                 }
                 ]}
@@ -329,7 +329,7 @@ class JobSelectCity extends Component<IProps, IState> {
                   })
                 }}
               >
-                <Text style={[styles.detailSecondText, selectItem.name === e.name && { color: greenColor, fontWeight: 'bold' }]}>{e.name}</Text>
+                <Text style={[styles.detailSecondText, selectItem.province_id === e.province_id && { color: greenColor, fontWeight: 'bold' }]}>{e.name}</Text>
               </NextTouchableOpacity>
             )
           })}
@@ -404,9 +404,13 @@ class JobSelectCity extends Component<IProps, IState> {
                 ]}
                 key={index.toString()}
                 onPress={() => {
-                  this.setState({
-                    selectArea: e
-                  })
+                  if (index > 0) {
+                    RootLoading.info('敬请期待')
+                  } else {
+                    this.setState({
+                      selectArea: e
+                    })
+                  }
                 }}
               >
                 <Text style=

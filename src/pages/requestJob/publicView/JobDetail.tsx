@@ -253,29 +253,6 @@ class JobDetail extends Component<IProps, IState> {
     )
   }
 
-  renderItem(item: any, section: any) {
-    const { selectFilter } = this.state
-    const sectionKey = section.key
-    const selectItem = selectFilter && selectFilter[sectionKey] === item.id
-    return (
-      <NextTouchableOpacity
-        style={[styles.jobSalaryBtn,
-        selectItem && { backgroundColor: '#E2FFF0', }
-        ]}
-        onPress={() => {
-          const nextSelectFilter = selectFilter
-          nextSelectFilter[sectionKey] = item.id
-          this.setState({ selectFilter: nextSelectFilter })
-        }}
-      >
-        <Text style={[styles.jobSalaryText,
-        selectItem && { backgroundColor: '#E2FFF0', } && { color: greenColor, fontWeight: 'bold' }]}>
-          {item.label}
-        </Text>
-      </NextTouchableOpacity>
-    )
-  }
-
   renderHeader() {
     const {
       dataSource: {
@@ -292,7 +269,6 @@ class JobDetail extends Component<IProps, IState> {
           required_num,
           full_time_job,
           tags,
-          updatedAt,
         } } } = this.state
     return (
       <View
@@ -396,7 +372,6 @@ class JobDetail extends Component<IProps, IState> {
           required_num,
           full_time_job,
           tags,
-          updatedAt,
         } } } = this.state
     return (
       <View style={[styles.headerView, { minHeight: 100 }]}>

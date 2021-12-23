@@ -115,7 +115,16 @@ const getAllRegionGql = gql`
         Cities {
           name
           city_id
+          Counties {
+            county_id
+            name
+            Towns {
+              town_id
+              name
+            }
+          }
         }
+        province_id
         name
       }
     }
@@ -164,7 +173,7 @@ const getCandidateGetJobListGql = gql`
         min_experience
         full_time_job
         min_education
-        expired_at
+        # expired_at
         max_salary
         min_salary
         comp_size
@@ -280,7 +289,6 @@ const getJobDetailGql = gql`
         required_num
         full_time_job
         tags
-        updatedAt
       }
       hr {
         id
@@ -394,6 +402,12 @@ const getUserGetBasicInfoGql = gql`
 }
 `
 
+const setUserEditBasicInfoGql = gql`
+  mutation UserEditBasicInfo($info: BasicData!){
+    UserEditBasicInfo(info: $BasicData)
+}
+`
+
 export {
   apolloClientShare,
   sendSMSGql,
@@ -421,5 +435,6 @@ export {
   candidateGetEnterpriseDetail_InterviewRecommentGql,
   candidateGetEnterpriseDetail_QAGql,
   userGetContractListGql,
-  getUserGetBasicInfoGql
+  getUserGetBasicInfoGql,
+  setUserEditBasicInfoGql
 }

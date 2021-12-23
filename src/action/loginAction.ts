@@ -14,6 +14,7 @@ import {
   registerGql,
   resetPasswordGql,
   sendSMSGql,
+  setUserEditBasicInfoGql,
   subscriptionGqlServerGql,
   testGql,
 } from '../utils/postQuery'
@@ -246,7 +247,7 @@ const sendResetCode = (
   mobileNumber?: string,
   email?: string,
   callback?: (error: any, result?: any) => void,
-) => {}
+) => { }
 
 // 检查验证码(operation 中不同参数对应不同接口功能)
 const checkUserVerifyCodeConsume = (
@@ -350,6 +351,37 @@ const getUserGetBasicInfo = (
   }
 }
 
+// 修改个人信息
+const setUserEditBasicInfo = (
+  info: any,
+  callback?: (error: any, result?: any) => void
+) => {
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare
+      .mutate({
+        mutation: setUserEditBasicInfoGql,
+        fetchPolicy: 'no-cache', // 设置缓存策略
+        variables: {
+          info
+        }
+      })
+      .then(res => {
+        console.log('res1: ', res)
+        if (res && res.data) {
+          dispatch(
+            update_user_kv('userInfo', res.data.UserGetBasicInfo)
+          )
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error: ApolloError) => {
+        errorHandler(error)
+      })
+  }
+}
+
 // 重置密码
 const resetPassword = (
   phone: string,
@@ -434,7 +466,7 @@ const verificationResetCode = (
   password?: string,
   email?: string,
   callback?: (error: any, result?: any) => void,
-) => {}
+) => { }
 
 export {
   reset_reducer,
@@ -451,4 +483,5 @@ export {
   subscriptionMessage,
   chooseRole,
   getUserGetBasicInfo,
+  setUserEditBasicInfo,
 }

@@ -77,7 +77,7 @@ class Jobs extends Component<IProps, IState> {
   }
 
   componentWillUnmount() {
-    this.props.navigation.removeListener('focus', () => {})
+    this.props.navigation.removeListener('focus', () => { })
   }
 
   loadUserBasicInfo() {
@@ -130,8 +130,9 @@ class Jobs extends Component<IProps, IState> {
         result.CandidateGetJobList &&
         result.CandidateGetJobList.data
       ) {
+        const originData = page === 0 ? [] : listDataSource
         this.setState({
-          listDataSource: listDataSource.concat(
+          listDataSource: originData.concat(
             result.CandidateGetJobList.data,
           ),
           refreshState: result.CandidateGetJobList.data.length === 10 ? 0 : 3,
@@ -249,7 +250,6 @@ class Jobs extends Component<IProps, IState> {
       {
         page: 0,
         refreshState: 1,
-        listDataSource: [],
       },
       () => {
         this.lodJobList()

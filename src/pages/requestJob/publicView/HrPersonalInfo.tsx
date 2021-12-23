@@ -210,9 +210,11 @@ class HrPersonalInfo extends Component<IProps, IState> {
 
   renderMatchView() {
     const { matchJobsList } = this.state
+    console.log('matchJobsList: ', matchJobsList)
     if (!matchJobsList) {
       return null
     }
+    console.log('matchJobsList:1 ', matchJobsList)
     return (
       <View style={styles.matchJobView}>
         <Text style={styles.matchTitle}>
@@ -296,7 +298,7 @@ class HrPersonalInfo extends Component<IProps, IState> {
 
   renderList() {
     const { moreJobsLis, jobRefreshState } = this.state
-    if (!moreJobsLis || moreJobsLis.length === 0) {
+    if (!moreJobsLis) {
       return null
     }
     return (
