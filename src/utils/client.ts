@@ -26,13 +26,6 @@ const wsClient = new SubscriptionClient(wssUri, {
       Authorization: token ?? '',
     }
   },
-  connectionCallback: (error, result) => {
-    if (error) {
-      console.warn('[SubscriptionClient] connectionCallback', error, result)
-    } else {
-      console.log('[SubscriptionClient] connectionCallback', error, result)
-    }
-  },
 })
 
 const wsLink = new WebSocketLink(wsClient)
@@ -46,33 +39,43 @@ const errorLink = onError(
     if (graphQLErrors)
       for (let error of graphQLErrors) {
         console.warn(`[GraphQL error]:  ${JSON.stringify(error, null, 2)}`)
-
         if (error.extensions.code === 'UNAUTHENTICATED') {
-          const headers = operation.getContext().headers
-          if (headers) {
-            return fromPromise(
-              Auth.getToken()
-                .then(token => {
-                  const usedToken = headers['Authorization'] as string
-                  if (token === null || !usedToken) {
-                    Auth.logout()
-                    throw new Error('UNAUTHENTICATED')
-                  }
-                  if (token !== usedToken) {
-                    return
-                  }
-
-                  return refreshToken()
-                })
-                .then(() => true)
-                .catch(() => false),
-            )
-              .filter(value => value)
-              .flatMap(() => {
-                return forward(operation)
-              })
+          if (operation.operationName === 'UserRefreshToken') {
+            Auth.logout()
+            return
           }
-          Auth.logout()
+
+          const def = getMainDefinition(operation.query)
+          const isWs =
+            def.kind === 'OperationDefinition' &&
+            def.operation === 'subscription'
+
+          return fromPromise(
+            Auth.getToken().then(async token => {
+              if (token === null) {
+                Auth.logout()
+                return false
+              }
+
+              try {
+                await refreshToken()
+                return true
+              } catch (e) {
+                if (isWs) {
+                  Auth.logout()
+                }
+                return false
+              }
+            }),
+          )
+            .filter(value => value)
+            .flatMap(() => {
+              if (isWs) {
+                wsClient.unsubscribeAll()
+                wsClient.close(false, false)
+              }
+              return forward(operation)
+            })
         }
       }
 
@@ -128,9 +131,9 @@ const client = new ApolloClient({
 })
 
 const reset = () => {
-  wsClient.unsubscribeAll()
-  wsClient.close(false, true)
   client.stop()
+  wsClient.unsubscribeAll()
+  wsClient.close(false, false)
 }
 
 export { client, reset }
