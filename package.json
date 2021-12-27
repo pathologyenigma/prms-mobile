@@ -5,7 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "start": "react-native start",
+    "start": "react-native start --reset-cache",
     "test": "jest",
     "lint": "tslint .",
     "patch-android-cache-libs": "cp patch/HttpCacheModule.java ./node_modules/react-native-http-cache/android/src/main/java/cn/reactnative/httpcache/HttpCacheModule.java",
