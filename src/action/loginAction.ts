@@ -427,25 +427,27 @@ const subscriptionMessage = (callback?: (error: any, result?: any) => void) => {
         fetchPolicy: 'no-cache', // 设置缓存策略
       })
       .subscribe(
-        res => {
+        (value) => {
           // 注意:在浏览器中 debug 的模式中未打印出值.待排查原因
-          console.log('subscriptionMessage-res: ', res)
-          if (res && callback) {
-            callback(undefined, res)
+          console.log('subscriptionMessage-res: ', value)
+          if (value && callback) {
+            callback(undefined, value)
           }
         },
-        error => {
+        (error) => {
+          console.log('subscriptionMessage-111: ')
           errorHandler(error)
           console.log('error: ', error)
           console.log('subscription断开了')
           RootLoading.fail('subscription断开了')
         },
         () => {
+          console.log('subscriptionMessage-222complete ')
           console.log('subscription断开了')
           RootLoading.fail('subscription断开了')
           console.log('complete: ')
-        },
-      )
+        }
+    )
   }
 }
 

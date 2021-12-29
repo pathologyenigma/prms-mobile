@@ -20,6 +20,7 @@ import JobCell from '../../components/JobCell'
 import AlertContentModal from '../../components/AlertContentModal'
 import WhiteContentModal from '../../components/WhiteContentModal'
 import * as actions from '../../../action/newsAction'
+import { getId, logout } from '../../../utils/auth'
 
 type IProps = GenProps<'MessagePage'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 interface IState {
@@ -42,6 +43,7 @@ interface IState {
   rejectReason: string
   rejectModalVisible: boolean
   isLoadMoreData: boolean
+  userId: any
 }
 
 const inappropriateArray = [
@@ -69,6 +71,7 @@ class MessagePage extends Component<IProps, IState> {
       return
     }
     this.state = {
+      userId: '',
       targetItem,
       page: 0,
       pageSize: 10,
@@ -103,7 +106,20 @@ class MessagePage extends Component<IProps, IState> {
   }
 
   componentDidMount() {
-    this.loadData()
+    getId()
+      .then((res) => {
+        console.log('res', res)
+        if (res) {
+          this.setState({ userId: res }, () => {
+            this.loadData()
+          })
+        } else {
+          RootLoading.info('登录失效,请重新登录')
+        }
+      })
+      .catch((err) => {
+        RootLoading.info('登录失效,请重新登录')
+      })
   }
 
   componentWillUnmount() {
@@ -146,10 +162,9 @@ class MessagePage extends Component<IProps, IState> {
   }
 
   loadData() {
-    const { targetItem, pageSize, page, listDataSource } = this.state
+    const { targetItem, pageSize, page, listDataSource, userId } = this.state
     const { userInfo, navigation } = this.props
-    console.log('userInfo: ', userInfo, userInfo.userInfo, userInfo.userInfo.id)
-    if (!userInfo || !userInfo.userInfo || !userInfo.userInfo.id) {
+    if (!userId) {
       RootLoading.fail('登录失效,请重新登录')
       navigation.goBack()
       return
@@ -370,7 +385,7 @@ class MessagePage extends Component<IProps, IState> {
   renderTextMessage(item: any) {
     const { userInfo } = this.props
     const isSend = userInfo.userInfo.username !== item.launch
-    if (userInfo.userInfo.id.toString() === item.from.toString()) {
+    if (this.state.userId === item.from.toString()) {
       // 发送方
       return (
         <View key={item.uuid.toString()} style={styles.cellSendMessage}>

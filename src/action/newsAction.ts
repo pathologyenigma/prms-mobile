@@ -3,18 +3,7 @@ import { AnyAction } from 'redux'
 import { ApolloError, gql } from '@apollo/client'
 import {
   apolloClientShare,
-  checkUserVerifyCodeConsumeGql,
-  chooseOrSwitchIdentityGql,
-  getENTEditEnterpriseBasicInfoGql,
-  getUserEditPersonalDataGql,
-  loginGql,
-  numberCheckGql,
-  registerGql,
-  resetPasswordGql,
   sendMessageGql,
-  sendSMSGql,
-  subscriptionGqlServerGql,
-  testGql,
   userGetContractListGql,
   userGetMessagesGql,
 } from '../utils/postQuery'
@@ -33,34 +22,6 @@ const update_kv = (key: string, value: string) => {
       key,
       value,
     },
-  }
-}
-
-// 订阅消息
-const subscriptionMessage = (callback?: (error: any, result?: any) => void) => {
-  console.log('111111111: 22loadData ')
-  return (dispatch: Dispatch<AnyAction>) => {
-    apolloClientShare
-      .subscribe({
-        query: subscriptionGqlServerGql,
-        fetchPolicy: 'no-cache', // 设置缓存策略
-      })
-      .subscribe(
-        res => {
-          // 注意:在浏览器中 debug 的模式中未打印出值.待排查原因
-          console.log('subscriptionMessage-res: ', res)
-          if (res && callback) {
-            callback(undefined, res)
-          }
-        },
-        error => {
-          errorHandler(error)
-          console.log('error: ', error)
-        },
-        () => {
-          console.log('complete: ')
-        },
-      )
   }
 }
 
@@ -110,7 +71,7 @@ const userSendMessage = (
         },
       })
       .then(res => {
-        console.log('subscriptionMessage-res: ', res)
+        console.log('userSendMessage-res: ', res)
         if (callback) {
           if (res) {
             callback(undefined, res)
@@ -153,7 +114,6 @@ const getUserGetContractList = (
 export {
   reset_reducer,
   update_kv,
-  subscriptionMessage,
   getUserGetContractList,
   userSendMessage,
   userGetMessages,

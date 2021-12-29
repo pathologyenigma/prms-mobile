@@ -6,6 +6,7 @@ export interface IUserInfoState {
       username: string,
       token: string,
       createdAt: string,
+      id: string,
     },
     birth_date: string,
     current_city: string,
@@ -17,7 +18,6 @@ export interface IUserInfoState {
     username: string,
     logo: string,
 
-    id: string,
     avatar: string,
     lastOnlineAt: string,
     lastLoginAt: string,
@@ -33,7 +33,8 @@ const initState: IUserInfoState = {
     UserLogIn: {
       username: '',
       token: '',
-      createdAt: ''
+      createdAt: '',
+      id: '',
     },
     birth_date: '',
     current_city: '',
@@ -45,8 +46,6 @@ const initState: IUserInfoState = {
     username: '',
     logo: '',
 
-    // TODO: 临时代码 , 对应账号 18800001012 /  word_12
-    id: '49',
     avatar: '',
     lastOnlineAt: '',
     lastLoginAt: '',

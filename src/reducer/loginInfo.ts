@@ -37,6 +37,7 @@ const loginInfo = (state = initState, action: ILoginInfoAction) => {
       console.log('payload: ', payload)
       if (payload.key === 'UserLogIn') {
         Auth.setToken(payload.value.token)
+        Auth.setId(payload.value.id)
       } else if (payload.key === 'UpdateToken') {
         Auth.setToken(payload.value)
       }

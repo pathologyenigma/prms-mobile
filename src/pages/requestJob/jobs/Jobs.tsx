@@ -69,6 +69,10 @@ class Jobs extends Component<IProps, IState> {
   componentDidMount() {
     RootLoading.loading()
     this.loadUserBasicInfo()
+    // 注意:当前服务端不支持 subscription 和 其他接口同时调用,暂时修改为延迟获取
+    setTimeout(() => {
+      this.subscribeMessage()
+    }, 5000)
     this.loadJobExpections()
     StatusBar.setBarStyle('light-content', true)
     this.props.navigation.addListener('focus', () => {
@@ -89,20 +93,18 @@ class Jobs extends Component<IProps, IState> {
     this.props.getCandidateGetAllJobExpectations((error, result) => {
       console.log('getCandidateGetAllJobExpectations1: ', error, result)
       if (!error && result && result.CandidateGetAllJobExpectations) {
-        this.loadData()
-        this.setState(
-          { selectJobsArray: result.CandidateGetAllJobExpectations },
-          () => {
-            this.lodJobList()
-          },
-        )
+        this.setState({
+          selectJobsArray: result.CandidateGetAllJobExpectations
+        }, () => {
+          this.loadJobList()
+        })
       } else {
         RootLoading.fail('职位加载失败,请重试')
       }
     })
   }
 
-  lodJobList() {
+  loadJobList() {
     // 根据个人类型加载列表
     const { selectJobsArray, selectJobIndex, listDataSource, page } = this.state
     if (!selectJobsArray) {
@@ -115,7 +117,7 @@ class Jobs extends Component<IProps, IState> {
     }
     console.log(
       'selectJobsArray[selectJobIndex]: ',
-      selectJobsArray[selectJobIndex],
+      selectJobsArray[selectJobIndex], selectJobIndex
     )
     const filter = {
       page,
@@ -123,6 +125,7 @@ class Jobs extends Component<IProps, IState> {
     }
     console.log('filter:', filter)
     this.props.getCandidateGetJobList(filter, (error, result) => {
+      console.log('CandidateGetJobList: ', filter, error, result)
       RootLoading.hide()
       if (
         !error &&
@@ -146,11 +149,9 @@ class Jobs extends Component<IProps, IState> {
     })
   }
 
-  loadData() {
-    // 测试订阅
-    console.log('111111111: loadData ')
+  subscribeMessage() {
+    // 订阅相关
     this.props.subscriptionMessage((error, result) => {
-      console.log('subscriptionMessage: ', error, result)
       if (
         !error &&
         result &&
@@ -252,7 +253,7 @@ class Jobs extends Component<IProps, IState> {
         refreshState: 1,
       },
       () => {
-        this.lodJobList()
+        this.loadJobList()
       },
     )
   }
@@ -264,7 +265,7 @@ class Jobs extends Component<IProps, IState> {
         refreshState: 2,
       },
       () => {
-        this.lodJobList()
+        this.loadJobList()
       },
     )
   }

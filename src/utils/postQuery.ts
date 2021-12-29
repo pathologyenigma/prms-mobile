@@ -43,6 +43,7 @@ const loginGql = gql`
       username
       token
       createdAt
+      id
     }
   }
 `
@@ -375,12 +376,19 @@ const sendMessageGql = gql`
 const userGetContractListGql = gql`
   query UserGetContractList {
     UserGetContractList {
-      id
-      name
-      pos
-      ent
-      last_msg
-      last_msg_time
+      ... on Contract {
+        id name pos ent last_msg last_msg_time
+        # logo
+      }
+      ... on Talent {
+        age
+      }
+      # id
+      # name
+      # pos
+      # ent
+      # last_msg
+      # last_msg_time
       # logo
     }
   }
