@@ -8,29 +8,33 @@ import {
   View,
   Image,
 } from 'react-native'
+import { JobItem } from '../useJobList'
 
-export interface ItemProps {
-  title: string
-  tags: { text: string; color: string }[]
-  labels: string[]
-  status: string
-}
-
-export default function Item({ title, tags, labels, status }: ItemProps) {
+export default function JobAdminItem({
+  title,
+  tags,
+  labels,
+  salary,
+  status,
+}: JobItem) {
   return (
     <View style={styles.container}>
       <View style={styles.titleRow}>
         <Text style={styles.title}>{title}</Text>
         {tags.map(({ text, color }) => (
-          <Text style={[styles.tag, { color: color, borderColor: color }]}>
+          <Text
+            key={text}
+            style={[styles.tag, { color: color, borderColor: color }]}>
             {text}
           </Text>
         ))}
-        <Text style={styles.status}>{status}</Text>
+        <Text style={styles.sarary}>{salary}</Text>
       </View>
       <View style={styles.labelRow}>
         {labels.map(label => (
-          <Text style={styles.label}>{label}</Text>
+          <Text key={label} style={styles.label}>
+            {label}
+          </Text>
         ))}
       </View>
     </View>
@@ -70,6 +74,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     color: '#888888',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  sarary: {
+    position: 'absolute',
+    right: 0,
+    color: '#7DDBA3',
     fontSize: 16,
     fontWeight: 'bold',
   },
