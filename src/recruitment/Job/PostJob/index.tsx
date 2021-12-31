@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, Text, Image, StyleSheet, StatusBar } from 'react-native'
+import React, { useState } from 'react'
+import { View, StyleSheet, StatusBar } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import GradientButton from '../../components/GradientButton'
 import AdmissionPicker from './AdmissionPicker'
@@ -10,10 +10,27 @@ import JobNatureModal from './JobNatureModal'
 import JobAdmissionModal from './JobAdmissionModal'
 import RechargeModal from '../RechargeModal'
 import JobLabelModal from './JobLabelModal'
-import Vip from './Vip'
 import NavBar from '../../components/NavBar'
+import { StackScreenProps } from '@react-navigation/stack'
+import { JobParamList } from '../typing'
+import { stringForFullTime } from '../JobHelper'
 
-function PostJob() {
+type Props = StackScreenProps<JobParamList, 'PostJob'>
+
+function PostJob({ navigation, route }: Props) {
+  const {
+    jobName,
+    jobDescription,
+    jobNature = 'Full',
+    jobCategory = [],
+  } = route.params || {}
+
+  console.log('jobName', jobName)
+  console.log('jobDescription', jobDescription)
+  console.log('jobNature', jobNature)
+
+  const [jobNatureModalVisible, setJobNatureModalVisible] = useState(false)
+
   return (
     <View style={{ flex: 1 }}>
       <NavBar title="发布职位" />
@@ -21,10 +38,32 @@ function PostJob() {
         <StatusBar barStyle="dark-content" />
         <JobInfoItem
           title="职位名称"
-          placeholder="请填写您要招聘的职位"
-          renderIndicator={() => <DropdownButton title="全职" />}
+          placeholder="请填写职位名称，如：产品经理"
+          content={jobName}
+          renderIndicator={() => (
+            <DropdownButton
+              title={stringForFullTime(jobNature)}
+              onPress={() => setJobNatureModalVisible(true)}
+            />
+          )}
+          onPress={() =>
+            navigation.navigate('EditJobName', {
+              initialName: jobName,
+            })
+          }
         />
-        <JobInfoItem title="职位描述" placeholder="请填写职位描述" />
+        <JobNatureModal
+          visible={jobNatureModalVisible}
+          initialValue={jobNature}
+          onValueSelected={value => navigation.setParams({ jobNature: value })}
+          onDismiss={() => setJobNatureModalVisible(false)}
+        />
+        <JobInfoItem
+          title="职位类型"
+          placeholder="请选择"
+          content={jobCategory.join(' | ')}
+          onPress={() => navigation.navigate('EditJobCategory')}
+        />
         <View style={styles.admission}>
           <AdmissionPicker title="经验要求" detail="经验不限" />
           <View style={styles.verticalDiviver} />
@@ -34,19 +73,24 @@ function PostJob() {
           <View style={styles.diviver} />
         </View>
         <JobInfoItem
-          title="上班地址"
-          placeholder="请填写上班地址"
+          title="职位描述"
+          placeholder="请详细描述岗位职责及任职要求"
+          content={jobDescription}
+          onPress={() =>
+            navigation.navigate('EditJobDescription', {
+              initialDescription: jobDescription,
+            })
+          }
+        />
+        <JobInfoItem
+          title="工作地址"
+          placeholder="请填写"
           content="深圳市南山区创智云城（建设中）创智云城A218楼 302"
         />
-        <JobInfoItem title="职位福利（选填）" placeholder="如“年底双薪”" />
-        <JobInfoItem
-          title="选择增值服务"
-          placeholder="求职者将在求职首页顶部看到您的招聘职位"
-          renderTitleBadge={() => <Vip />}
-        />
+        <JobInfoItem title="职位福利（选填）" placeholder="如：年底双薪" />
         <HeadcountItem />
         <GradientButton title="立即发布" style={styles.postButton} />
-        <JobNatureModal visible={false} />
+
         <JobAdmissionModal visible={false} />
         <JobLabelModal visible={false} />
         <RechargeModal visible={false} />

@@ -4,26 +4,35 @@ import Picker from '../../../components/Picker'
 import BottomModal from '../../../components/BottomModal'
 import { getBottomSpace } from 'react-native-iphone-x-helper'
 import TextButton from '../../../components/TextButton'
+import { FullTime } from '../../typing'
+import { stringForFullTime } from '../../JobHelper'
 
 interface JobNatureModalProps {
   visible?: boolean
-  initialValue?: string
-  onValueSelected?: (value: string) => void
+  onDismiss?: () => void
+  initialValue?: FullTime
+  onValueSelected?: (value: FullTime) => void
 }
 
-const natures = ['全职', '兼职', '实习', '校园']
+const labels = ['全职', '兼职', '实习']
+const values: FullTime[] = ['Full', 'Part', 'InternShip']
 
 export default function JobNatureModal({
   visible,
   initialValue,
   onValueSelected,
+  onDismiss,
 }: JobNatureModalProps) {
   const [selectedNature, setSelectedNature] = useState(
-    initialValue || natures[0],
+    initialValue || values[0],
   )
 
   return (
-    <BottomModal visible={visible}>
+    <BottomModal
+      contentStyle={styles.model}
+      visible={visible}
+      onDismiss={onDismiss}
+      onRequestClose={onDismiss}>
       <View style={styles.header}>
         <Text style={styles.title}>请选择职位性质</Text>
         <TextButton
@@ -31,6 +40,7 @@ export default function JobNatureModal({
           style={styles.button}
           onPress={() => {
             onValueSelected && onValueSelected(selectedNature)
+            onDismiss && onDismiss()
           }}
         />
       </View>
@@ -39,10 +49,10 @@ export default function JobNatureModal({
         <Picker
           style={styles.picker}
           itemStyle={styles.pickerItem}
-          values={natures}
-          selectedValue={selectedNature}
-          onValueChange={itemValue => {
-            setSelectedNature(itemValue)
+          values={labels}
+          selectedValue={stringForFullTime(selectedNature)}
+          onValueChange={(itemValue, index) => {
+            setSelectedNature(values[index])
           }}
         />
       </View>
@@ -51,6 +61,9 @@ export default function JobNatureModal({
 }
 
 const styles = StyleSheet.create({
+  model: {
+    height: 200 + getBottomSpace(),
+  },
   header: {
     height: 60,
     flexDirection: 'row',

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Provider } from 'react-redux'
 import store from './store'
 import { Provider as AntProvider } from '@ant-design/react-native'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { NavigationContainer } from '@react-navigation/native'
 import { ApolloProvider } from '@apollo/client'
 import { client, reset } from './utils/client'
@@ -133,7 +134,9 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <Provider store={store}>
-        <AntProvider>{container}</AntProvider>
+        <SafeAreaProvider>
+          <AntProvider>{container}</AntProvider>
+        </SafeAreaProvider>
       </Provider>
     </ApolloProvider>
   )
