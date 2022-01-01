@@ -9,49 +9,24 @@ import NavBar from '../../components/NavBar'
 import IconLabelButton from '../../components/IconLabelButton'
 import { JobParamList } from '../typing'
 import { useGeoLocation } from '../../hooks/useGeoLocation'
-
-const data = [
-  {
-    title: '米陀饭团',
-    detail: '粤海街道科技园中区科苑路15号科兴科学园臻食美食广场 100铺',
-  },
-  {
-    title: '谷典煎饼果',
-    detail: '粤海街道科技园中区科苑路15号科兴科学园臻食美食广场 100铺',
-  },
-  {
-    title: '皇牌自助餐科兴',
-    detail: '粤海街道科技园中区科苑路15号科兴科学园臻食美食广场 100铺',
-  },
-  {
-    title: '科兴科学园',
-    detail: '科苑路15号',
-  },
-  {
-    title: '科兴科学园D1栋',
-    detail: '高新中二道',
-  },
-  {
-    title: '科兴科学园（北门）',
-    detail: '高新中一道9号后侧',
-  },
-]
+import { useInputTips } from '../../hooks/useInputTips'
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 
 export default function SearchJobAddress({
   navigation,
   route,
 }: StackScreenProps<JobParamList, 'SearchJobAddress'>) {
-  const { city = '未知' } = route.params || {}
+  const { city } = route.params || {}
   const geoLocation = useGeoLocation()
 
   useEffect(() => {
     if (geoLocation?.city) {
       navigation.setParams({ city: geoLocation.city })
     }
+    console.log(geoLocation)
   }, [geoLocation])
 
   console.log('-------------------SearchJobAddress-----------------------')
-  console.log(geoLocation)
 
   const [text, setText] = useState<string>('')
   const [showsSearchResult, setShowsSearchResult] = useState(false)
@@ -60,13 +35,19 @@ export default function SearchJobAddress({
     setShowsSearchResult(text !== '')
   }, [text])
 
+  const inputTips = useInputTips(text, city)
+
+  useEffect(() => {
+    console.log(inputTips)
+  }, [inputTips])
+
   return (
     <View style={styles.container}>
       <NavBar>
         <IconLabelButton
           style={styles.city}
           icon={require('./images/location.png')}
-          label={city}
+          label={city || '定位中'}
           onPress={() =>
             navigation.navigate('EditJobCity', {
               currentCity: geoLocation?.city,
@@ -87,10 +68,10 @@ export default function SearchJobAddress({
       <View style={{ flex: 1 }}>
         <View style={styles.map}></View>
         <FlatList
-          data={data}
-          keyboardDismissMode="on-drag"
+          data={inputTips}
           keyboardShouldPersistTaps="handled"
-          keyExtractor={item => item.title}
+          keyboardDismissMode="on-drag"
+          keyExtractor={item => item.district + item.name}
           renderItem={({ item }) => <AddressItem {...item} />}
           ListHeaderComponent={
             <AddressHeader
@@ -100,13 +81,22 @@ export default function SearchJobAddress({
           }
         />
         {showsSearchResult && (
-          <FlatList
-            keyboardDismissMode="interactive"
+          <KeyboardAwareFlatList
             keyboardShouldPersistTaps="handled"
+            keyboardDismissMode={'on-drag'}
             style={styles.searchList}
-            data={data}
-            keyExtractor={item => item.title}
-            renderItem={({ item }) => <AddressItem {...item} />}
+            data={inputTips}
+            keyExtractor={item => item.district + item.name}
+            renderItem={({ item }) => (
+              <AddressItem
+                {...item}
+                onPress={() =>
+                  navigation.navigate('EditJobAddress', {
+                    address: { ...item, city },
+                  })
+                }
+              />
+            )}
           />
         )}
       </View>

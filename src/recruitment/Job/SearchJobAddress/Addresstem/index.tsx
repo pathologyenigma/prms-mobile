@@ -8,14 +8,14 @@ import {
 } from 'react-native'
 
 interface AddressItemProps {
-  title: string
-  detail: string
+  name: string
+  address: string
   onPress?: () => void
 }
 
 export default function AddressItem({
-  title,
-  detail,
+  name,
+  address,
   onPress,
 }: AddressItemProps) {
   return (
@@ -27,8 +27,8 @@ export default function AddressItem({
           resizeMode="center"
         />
         <View style={styles.column}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.detail}>{detail}</Text>
+          <Text style={styles.title}>{name}</Text>
+          <Text style={styles.detail}>{address}</Text>
         </View>
       </View>
     </TouchableWithoutFeedback>

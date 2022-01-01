@@ -25,6 +25,15 @@ export interface Location {
   poi: string
 }
 
+export interface InputTip {
+  adcode: string
+  name: string
+  address: string
+  district: string
+  latitude: number
+  longitude: number
+}
+
 const LocationManagerErrorCode = 'GeoLocationModuleOnceLocationManager'
 
 function getLocation(): Promise<Location> {
@@ -33,7 +42,12 @@ function getLocation(): Promise<Location> {
   })
 }
 
+function getInputTips(key: string, city: string): Promise<InputTip[]> {
+  return GeoLocationModule.getInputTips(key, city)
+}
+
 export default {
   getLocation,
+  getInputTips,
   LocationManagerErrorCode,
 }

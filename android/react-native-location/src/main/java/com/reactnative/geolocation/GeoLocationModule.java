@@ -28,4 +28,10 @@ public class GeoLocationModule extends ReactContextBaseJavaModule {
         OnceLocationManager locationManager = new OnceLocationManager(getReactApplicationContext(), config);
         locationManager.startLocationUpdate(promise);
     }
+
+    @ReactMethod
+    public void getInputTips(String key, String city, Promise promise) {
+        InputTipsRequest inputTipsRequest = new InputTipsRequest(getReactApplicationContext());
+        inputTipsRequest.execute(key, city, promise);
+    }
 }

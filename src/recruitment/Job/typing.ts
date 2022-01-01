@@ -14,6 +14,16 @@ export type Education =
 
 export type FullTime = 'Full' | 'Part' | 'InternShip'
 
+export interface JobAddress {
+  adcode: string
+  name: string
+  address: string
+  city: string
+  district: string
+  latitude: number
+  longitude: number
+}
+
 export interface JobParamList extends ParamListBase {
   EditJobName: {
     initialName?: string
@@ -27,6 +37,9 @@ export interface JobParamList extends ParamListBase {
   }
   EditJobCity: {
     currentCity?: string
+  }
+  EditJobAddress: {
+    address?: JobAddress
   }
   SearchJobAddress: {
     city?: string

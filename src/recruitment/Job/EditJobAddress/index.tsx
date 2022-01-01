@@ -1,16 +1,50 @@
 import React, { useState } from 'react'
-import { View, Text, Image, StyleSheet, StatusBar } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import TextButton from '../../components/TextButton'
 import JobInfoItem from '../PostJob/JobInfoItem'
 import TextInputWithCounter from '../../components/TextInputWithCounter'
-import { useNavigation } from '@react-navigation/core'
-import { StackNavigationProp } from '@react-navigation/stack'
+import { StackScreenProps } from '@react-navigation/stack'
 import NavBar from '../../components/NavBar'
+import { JobAddress, JobParamList } from '../typing'
 
-export default function EditJobAddress() {
+interface AddressRegion {
+  province: string
+  city: string
+  town: string
+}
+
+function regionFromAddress(address?: JobAddress) {
+  if (!address) {
+    return undefined
+  }
+
+  const { city, district } = address
+  if (district.includes(city)) {
+    const [province, town] = district.split(city)
+    console.log(province, town)
+    return { province, city, town }
+  }
+}
+
+function workAddress(address?: JobAddress, region?: AddressRegion) {
+  if (address && region) {
+    const { city, town } = region
+    return `${city}${town}${address.name}`
+  }
+
+  if (address) {
+    return `${address.district}${address.name}`
+  }
+  return undefined
+}
+
+export default function EditJobAddress({
+  navigation,
+  route,
+}: StackScreenProps<JobParamList, 'EditJobAddress'>) {
+  const { address } = route.params || {}
+  const region = regionFromAddress(address)
   const [text, setText] = useState<string>()
-
-  const navigation = useNavigation<StackNavigationProp<any>>()
 
   return (
     <View style={styles.container}>
@@ -20,8 +54,9 @@ export default function EditJobAddress() {
       />
       <JobInfoItem
         title="上班地址（必填）"
-        content="深圳市南山区创智云城（建设中）创智云城A218楼 302"
-        onPress={() => navigation.navigate('SearchJobAddress')}
+        content={workAddress(address, region)}
+        placeholder="请填写工作地点"
+        onPress={() => navigation.navigate('SearchJobAddress', {})}
       />
       <Text style={styles.doors}>门牌号</Text>
       <TextInputWithCounter
