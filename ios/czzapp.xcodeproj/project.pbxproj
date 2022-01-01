@@ -354,7 +354,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.czzapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chenzaozhao.app;
 				PRODUCT_NAME = czzapp;
 				SWIFT_OBJC_BRIDGING_HEADER = "czzapp-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -381,7 +381,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.czzapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chenzaozhao.app;
 				PRODUCT_NAME = czzapp;
 				SWIFT_OBJC_BRIDGING_HEADER = "czzapp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

@@ -11,29 +11,44 @@ import { isIphoneX } from 'react-native-iphone-x-helper'
 import NavBar from '../../components/NavBar'
 import { Province, useProvinces } from './useProvinces'
 import { City, useCities } from './useCities'
+import { StackScreenProps } from '@react-navigation/stack'
+import { JobParamList } from '../typing'
+import { useGeoLocation } from '../../hooks/useGeoLocation'
 
-export default function EditJobCity() {
+const dumpProvince: Province = { id: '0', name: '定位城市' }
+
+export default function EditJobCity({
+  navigation,
+  route,
+}: StackScreenProps<JobParamList, 'EditJobCity'>) {
   const { provinces } = useProvinces()
   const [province, setProvince] = useState<Province>()
   const { cities, getCities } = useCities()
 
   useEffect(() => {
-    if (provinces) {
-      setProvince(provinces[0])
-    }
-  }, [provinces])
-
-  useEffect(() => {
-    if (province) {
+    if (province && province.id !== '0') {
       getCities(province.id)
     }
   }, [province])
+
+  const location = useGeoLocation()
+
+  const selectedProvince = province || dumpProvince
+  const displayCities: City[] =
+    selectedProvince === dumpProvince
+      ? [
+          {
+            id: 'city_id',
+            name: location?.city || route.params.currentCity || '定位中...',
+          },
+        ]
+      : cities || []
 
   console.log('---------------------EditJobCity-------------------------')
 
   const renderProviceItem: ListRenderItem<Province> = ({ item }) => {
     const { id, name } = item
-    const checked = id === province?.id
+    const checked = id === selectedProvince.id
     return (
       <TouchableWithoutFeedback onPress={() => setProvince(item)}>
         <View style={styles.item}>
@@ -51,9 +66,18 @@ export default function EditJobCity() {
   }
 
   const renderCityItem: ListRenderItem<City> = ({ item }) => {
-    const { id, name, provinceId } = item
+    const { name } = item
     return (
-      <TouchableWithoutFeedback>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          let city = name
+          if (name === '市辖区') {
+            city = province!.name
+          }
+          if (city !== '定位中...') {
+            navigation.navigate('SearchJobAddress', { city })
+          }
+        }}>
         <View style={[styles.item]}>
           <Text style={styles.cityText}>{name}</Text>
         </View>
@@ -63,10 +87,10 @@ export default function EditJobCity() {
 
   return (
     <View style={styles.container}>
-      <NavBar title="工作城市" />
+      <NavBar title="选择城市" />
       <View style={styles.listContainer}>
         <FlatList
-          data={provinces || []}
+          data={provinces ? [dumpProvince, ...provinces] : [dumpProvince]}
           keyExtractor={item => item.id}
           renderItem={renderProviceItem}
           style={styles.provinceContainer}
@@ -74,7 +98,7 @@ export default function EditJobCity() {
           showsVerticalScrollIndicator={false}
         />
         <FlatList
-          data={cities || []}
+          data={displayCities}
           keyExtractor={item => item.id}
           renderItem={renderCityItem}
           style={styles.cityContainer}

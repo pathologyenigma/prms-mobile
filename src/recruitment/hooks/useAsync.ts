@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 
-export function useAsync<T>(callback: (...args: any) => Promise<T>, initialValue?: T) {
+export function useAsync<T>(
+  callback: (...args: any) => Promise<T>,
+  initialValue?: T,
+) {
   const [state, set] = useState(initialValue)
 
   useEffect(() => {
@@ -12,7 +15,7 @@ export function useAsync<T>(callback: (...args: any) => Promise<T>, initialValue
           set(state)
         }
       } catch (e) {
-        // ignore
+        console.warn(e)
       }
     })()
     return () => {

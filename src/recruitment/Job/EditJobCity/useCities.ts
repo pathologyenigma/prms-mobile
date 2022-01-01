@@ -4,7 +4,6 @@ import { useCallback, useMemo } from 'react'
 export interface City {
   name: string
   id: string
-  provinceId: string
 }
 
 interface CityData {
@@ -21,8 +20,7 @@ export function useCities() {
   const cities = useMemo(
     () =>
       data?.StaticGetCities.map(
-        ({ name, city_id }) =>
-          ({ id: city_id, name, provinceId: variables?.proviceId } as City),
+        ({ name, city_id }) => ({ id: city_id, name } as City),
       ),
     [data],
   )

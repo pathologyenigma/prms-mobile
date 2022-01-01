@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, Image, StyleSheet, FlatList } from 'react-native'
-import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack'
+import React, { useEffect, useState, useCallback } from 'react'
+import { View, StyleSheet, FlatList } from 'react-native'
+import { StackScreenProps } from '@react-navigation/stack'
 import SearchBar from '../../components/SearchBar'
 import TextButton from '../../components/TextButton'
 import AddressItem from './Addresstem'
 import AddressHeader from './AddressHeader'
-import { useNavigation } from '@react-navigation/core'
 import NavBar from '../../components/NavBar'
 import IconLabelButton from '../../components/IconLabelButton'
 import { JobParamList } from '../typing'
+import { useGeoLocation } from '../../hooks/useGeoLocation'
 
 const data = [
   {
@@ -41,6 +41,18 @@ export default function SearchJobAddress({
   navigation,
   route,
 }: StackScreenProps<JobParamList, 'SearchJobAddress'>) {
+  const { city = '未知' } = route.params || {}
+  const geoLocation = useGeoLocation()
+
+  useEffect(() => {
+    if (geoLocation?.city) {
+      navigation.setParams({ city: geoLocation.city })
+    }
+  }, [geoLocation])
+
+  console.log('-------------------SearchJobAddress-----------------------')
+  console.log(geoLocation)
+
   const [text, setText] = useState<string>('')
   const [showsSearchResult, setShowsSearchResult] = useState(false)
 
@@ -54,8 +66,12 @@ export default function SearchJobAddress({
         <IconLabelButton
           style={styles.city}
           icon={require('./images/location.png')}
-          label="深圳"
-          onPress={() => navigation.navigate('EditJobCity')}
+          label={city}
+          onPress={() =>
+            navigation.navigate('EditJobCity', {
+              currentCity: geoLocation?.city,
+            })
+          }
         />
         <SearchBar
           onChangeText={setText}
@@ -72,6 +88,8 @@ export default function SearchJobAddress({
         <View style={styles.map}></View>
         <FlatList
           data={data}
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="handled"
           keyExtractor={item => item.title}
           renderItem={({ item }) => <AddressItem {...item} />}
           ListHeaderComponent={
@@ -83,6 +101,8 @@ export default function SearchJobAddress({
         />
         {showsSearchResult && (
           <FlatList
+            keyboardDismissMode="interactive"
+            keyboardShouldPersistTaps="handled"
             style={styles.searchList}
             data={data}
             keyExtractor={item => item.title}

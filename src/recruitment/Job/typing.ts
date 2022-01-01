@@ -25,6 +25,12 @@ export interface JobParamList extends ParamListBase {
   EditJobWelfare: {
     initialTags?: string[]
   }
+  EditJobCity: {
+    currentCity?: string
+  }
+  SearchJobAddress: {
+    city?: string
+  }
   PostJob: {
     jobName?: string
     jobDescription?: string
