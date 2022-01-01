@@ -7,7 +7,6 @@ import HeadcountItem from './HeadcountItem'
 import JobInfoItem from './JobInfoItem'
 import JobNatureModal from './JobNatureModal'
 import JobAdmissionModal from './JobAdmissionModal'
-import JobLabelModal from './JobLabelModal'
 import NavBar from '../../components/NavBar'
 import { StackScreenProps } from '@react-navigation/stack'
 import { Education, JobParamList } from '../typing'
@@ -29,6 +28,8 @@ function PostJob({ navigation, route }: Props) {
     experience,
     education = 'RegularCollege',
     salary,
+    tags,
+    headcount = 1,
   } = route.params || {}
 
   console.log('jobName', jobName)
@@ -140,10 +141,20 @@ function PostJob({ navigation, route }: Props) {
           title="工作地址"
           placeholder="请填写"
           content="深圳市南山区创智云城（建设中）创智云城A218楼 302"
+          onPress={() => navigation.navigate('EditJobAddress')}
         />
-        <JobInfoItem title="职位福利（选填）" placeholder="如：年底双薪" />
-        <JobLabelModal visible={false} />
-        <HeadcountItem />
+        <JobInfoItem
+          title="职位福利（选填）"
+          placeholder="如：年底双薪"
+          content={tags && tags.length > 0 ? tags.join('+') : undefined}
+          onPress={() =>
+            navigation.navigate('EditJobWelfare', { initialTags: tags })
+          }
+        />
+        <HeadcountItem
+          value={headcount}
+          onValueChange={value => navigation.setParams({ headcount: value })}
+        />
         <GradientButton title="立即发布" style={styles.postButton} />
       </ScrollView>
     </View>

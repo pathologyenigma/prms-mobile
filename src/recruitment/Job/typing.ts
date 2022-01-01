@@ -22,6 +22,9 @@ export interface JobParamList extends ParamListBase {
     initialDescription?: string
   }
   EditJobCategory: undefined
+  EditJobWelfare: {
+    initialTags?: string[]
+  }
   PostJob: {
     jobName?: string
     jobDescription?: string
@@ -30,5 +33,7 @@ export interface JobParamList extends ParamListBase {
     experience?: number
     education?: Education
     salary?: number[]
+    tags?: string[]
+    headcount?: number
   }
 }

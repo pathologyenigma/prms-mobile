@@ -1,14 +1,19 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native'
 import Stepper from '../../../components/Stepper'
+interface HeadcountItemProps {
+  value?: number
+  onValueChange: (value: number) => void
+}
 
-export default function HeadcountItem() {
-  const [count, setCount] = useState(1)
-
+export default function HeadcountItem({
+  value,
+  onValueChange,
+}: HeadcountItemProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>招聘人数</Text>
-      <Stepper value={count} onValueChange={setCount} />
+      <Stepper value={value} onValueChange={onValueChange} />
       <View style={styles.diviver} />
     </View>
   )

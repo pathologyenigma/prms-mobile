@@ -10,7 +10,7 @@ import {
   StyleProp,
   ViewStyle,
   TextStyle,
-  TextInputProps,
+  TouchableWithoutFeedback,
 } from 'react-native'
 import GradientButton from './GradientButton'
 
@@ -20,6 +20,7 @@ interface AlertModalWithTextInputProps {
   inputStyle?: StyleProp<TextStyle>
   placeholder?: string
   inputMaxLength?: number
+  onDismiss?: () => void
   onSubmitValue?: (value: string) => void
 }
 
@@ -29,6 +30,7 @@ export default function AlertModalWithTextInput({
   inputMaxLength,
   modalContentStyle,
   inputStyle,
+  onDismiss,
   onSubmitValue,
 }: AlertModalWithTextInputProps) {
   const { onLayout, y, height } = useLayout()
@@ -54,6 +56,7 @@ export default function AlertModalWithTextInput({
 
   const handleSubmit = () => {
     onSubmitValue && onSubmitValue(value)
+    onDismiss && onDismiss()
     setValue('')
   }
 
@@ -62,31 +65,35 @@ export default function AlertModalWithTextInput({
       visible={visible}
       transparent
       statusBarTranslucent
+      onDismiss={onDismiss}
+      onRequestClose={onDismiss}
       presentationStyle="overFullScreen"
       animationType="fade">
-      <View style={styles.modal}>
-        <View
-          style={[styles.content, modalContentStyle, { marginBottom }]}
-          onLayout={onLayout}>
-          <Text style={styles.title}>添加标签</Text>
-          <TextInput
-            style={[styles.input, inputStyle]}
-            placeholder={placeholder}
-            placeholderTextColor="#888888"
-            autoFocus={true}
-            autoCapitalize="none"
-            autoCorrect={false}
-            maxLength={inputMaxLength}
-            value={value}
-            onChangeText={setValue}
-          />
-          <GradientButton
-            onPress={handleSubmit}
-            style={styles.button}
-            title="确定"
-          />
+      <TouchableWithoutFeedback onPress={onDismiss}>
+        <View style={styles.modal}>
+          <View
+            style={[styles.content, modalContentStyle, { marginBottom }]}
+            onLayout={onLayout}>
+            <Text style={styles.title}>添加标签</Text>
+            <TextInput
+              style={[styles.input, inputStyle]}
+              placeholder={placeholder}
+              placeholderTextColor="#888888"
+              autoFocus={true}
+              autoCapitalize="none"
+              autoCorrect={false}
+              maxLength={inputMaxLength}
+              value={value}
+              onChangeText={setValue}
+            />
+            <GradientButton
+              onPress={handleSubmit}
+              style={styles.button}
+              title="确定"
+            />
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </Modal>
   )
 }
