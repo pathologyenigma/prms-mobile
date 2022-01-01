@@ -30,11 +30,11 @@ export function stringForExperience(experience: number) {
     return '1-3 年'
   }
 
-  if (experience > 0) {
+  if (experience >= 0) {
     return '1 年以下'
   }
 
-  return '经验不限'
+  return '不限'
 }
 
 export function stringForEducation(education: Education) {
@@ -48,16 +48,28 @@ export function stringForEducation(education: Education) {
   // | 'Doctor'
   switch (education) {
     case 'High':
-      return '高中以上'
+      return '高中'
     case 'JuniorCollege':
-      return '大专以上'
+      return '大专'
     case 'RegularCollege':
-      return '本科以上'
+      return '本科'
     case 'Postgraduate':
-      return '研究生以上'
+      return '研究生'
     case 'Doctor':
       return '博士'
     default:
-      return '学历不限'
+      return '不限'
+  }
+}
+
+export function stirngForSalary(salary: number[]) {
+  if (salary.length === 2) {
+    return `${salary[0] / 1000}-${salary[1] / 1000}k`
+  } else {
+    if (salary[2] > 12) {
+      return `${salary[0] / 1000}-${salary[1] / 1000}k·${salary[2]}`
+    } else {
+      return `${salary[0] / 1000}-${salary[1] / 1000}k`
+    }
   }
 }

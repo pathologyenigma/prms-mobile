@@ -27,5 +27,8 @@ export interface JobParamList extends ParamListBase {
     jobDescription?: string
     jobNature?: FullTime
     jobCategory?: string[]
+    experience?: number
+    education?: Education
+    salary?: number[]
   }
 }
