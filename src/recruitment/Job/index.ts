@@ -12,6 +12,7 @@ import JobAdmin from './JobAdmin'
 import JobDescription from './JobDescription'
 import RecruitCoordination from './RecruitCoordination'
 import EditJobCategory from './EditJobCategory'
+import EditJobCity from './EditJobCity'
 
 const screens = {
   PostJob,
@@ -23,6 +24,7 @@ const screens = {
   SearchJobAddress,
   EditJobWelfare,
   EditJobCategory,
+  EditJobCity,
   RechargeExplain,
   RechargeFeekback,
   JobAdmin,

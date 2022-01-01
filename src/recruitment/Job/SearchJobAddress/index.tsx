@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, Image, StyleSheet, FlatList } from 'react-native'
-import { StackNavigationProp } from '@react-navigation/stack'
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack'
 import SearchBar from '../../components/SearchBar'
 import TextButton from '../../components/TextButton'
 import AddressItem from './Addresstem'
 import AddressHeader from './AddressHeader'
 import { useNavigation } from '@react-navigation/core'
 import NavBar from '../../components/NavBar'
+import IconLabelButton from '../../components/IconLabelButton'
+import { JobParamList } from '../typing'
 
 const data = [
   {
@@ -35,7 +37,10 @@ const data = [
   },
 ]
 
-export default function SearchJobAddress() {
+export default function SearchJobAddress({
+  navigation,
+  route,
+}: StackScreenProps<JobParamList, 'SearchJobAddress'>) {
   const [text, setText] = useState<string>('')
   const [showsSearchResult, setShowsSearchResult] = useState(false)
 
@@ -43,11 +48,15 @@ export default function SearchJobAddress() {
     setShowsSearchResult(text !== '')
   }, [text])
 
-  const navigation = useNavigation<StackNavigationProp<any>>()
-
   return (
     <View style={styles.container}>
       <NavBar>
+        <IconLabelButton
+          style={styles.city}
+          icon={require('./images/location.png')}
+          label="深圳"
+          onPress={() => navigation.navigate('EditJobCity')}
+        />
         <SearchBar
           onChangeText={setText}
           style={styles.search}
@@ -90,9 +99,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
+  city: {
+    marginLeft: 11,
+    marginRight: 19,
+  },
   search: {
     flex: 1,
-    marginLeft: 11,
   },
   cancel: {
     marginLeft: 24,
