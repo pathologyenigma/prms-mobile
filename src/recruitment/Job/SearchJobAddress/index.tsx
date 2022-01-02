@@ -11,6 +11,8 @@ import { JobParamList } from '../typing'
 import { useGeoLocation } from '../../hooks/useGeoLocation'
 import { useInputTips } from '../../hooks/useInputTips'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
+import MapView, { LatLng } from '../../../bridge/MapView'
+import { useMemo } from 'react'
 
 export default function SearchJobAddress({
   navigation,
@@ -18,6 +20,16 @@ export default function SearchJobAddress({
 }: StackScreenProps<JobParamList, 'SearchJobAddress'>) {
   const { city } = route.params || {}
   const geoLocation = useGeoLocation()
+
+  const centerLatLng = useMemo<LatLng | undefined>(() => {
+    if (geoLocation) {
+      const { latitude, longitude } = geoLocation
+      return {
+        latitude,
+        longitude,
+      }
+    }
+  }, [geoLocation])
 
   useEffect(() => {
     if (geoLocation?.city) {
@@ -66,7 +78,7 @@ export default function SearchJobAddress({
         />
       </NavBar>
       <View style={{ flex: 1 }}>
-        <View style={styles.map}></View>
+        <MapView style={styles.map} centerLatLng={centerLatLng} />
         <FlatList
           data={inputTips}
           keyboardShouldPersistTaps="handled"
@@ -133,6 +145,5 @@ const styles = StyleSheet.create({
   map: {
     width: '100%',
     aspectRatio: 375 / 350,
-    backgroundColor: '#FF0000',
   },
 })

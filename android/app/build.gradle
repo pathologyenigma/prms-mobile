@@ -81,6 +81,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation project(':react-native-picker-android')
     implementation project(':react-native-location')
+    implementation project(':react-native-mapview')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

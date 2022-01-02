@@ -17,6 +17,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.reactnative.geolocation.GeoLocationPackage;
+import com.reactnative.mapview.AMapViewPackage;
 import com.reactnative.picker.PickerViewPackage;
 
 import java.lang.reflect.InvocationTargetException;
@@ -43,6 +44,7 @@ public class MainApplication extends Application implements ReactApplication {
                     packages.add(new PickerViewPackage());
                     packages.add(new SplashPackage());
                     packages.add(new GeoLocationPackage());
+                    packages.add(new AMapViewPackage());
                     return packages;
                 }
 
