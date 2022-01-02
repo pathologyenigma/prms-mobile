@@ -1,26 +1,33 @@
-import React, { useEffect, useState, useCallback } from 'react'
-import { View, StyleSheet, FlatList } from 'react-native'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
+import { View, StyleSheet, FlatList, Image, ListRenderItem } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import SearchBar from '../../components/SearchBar'
 import TextButton from '../../components/TextButton'
 import AddressItem from './Addresstem'
-import AddressHeader from './AddressHeader'
 import NavBar from '../../components/NavBar'
 import IconLabelButton from '../../components/IconLabelButton'
 import { JobParamList } from '../typing'
 import { useGeoLocation } from '../../hooks/useGeoLocation'
 import { useInputTips } from '../../hooks/useInputTips'
-import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
-import MapView, { LatLng } from '../../../bridge/MapView'
-import { useMemo } from 'react'
+import MapView, { LatLng, MoveEvent } from '../../../bridge/MapView'
+import { usePoiItems } from '../../hooks/usePoiItems'
 
 export default function SearchJobAddress({
   navigation,
   route,
 }: StackScreenProps<JobParamList, 'SearchJobAddress'>) {
+  // 当前城市
   const { city } = route.params || {}
   const geoLocation = useGeoLocation()
 
+  useEffect(() => {
+    if (geoLocation?.city) {
+      navigation.setParams({ city: geoLocation.city })
+    }
+    console.log(geoLocation)
+  }, [geoLocation])
+
+  // 地图，兴趣点搜索
   const centerLatLng = useMemo<LatLng | undefined>(() => {
     if (geoLocation) {
       const { latitude, longitude } = geoLocation
@@ -31,15 +38,30 @@ export default function SearchJobAddress({
     }
   }, [geoLocation])
 
+  const { poiItems, getPoiItems } = usePoiItems()
+
+  const onMoveEnd = useCallback(
+    async ({ wasUserAction, latitude, longitude }: MoveEvent) => {
+      console.log(
+        'wasUserAction',
+        wasUserAction,
+        'latitude',
+        latitude,
+        'longitude',
+        longitude,
+      )
+      getPoiItems(latitude, longitude)
+    },
+    [],
+  )
+
   useEffect(() => {
-    if (geoLocation?.city) {
-      navigation.setParams({ city: geoLocation.city })
-    }
-    console.log(geoLocation)
-  }, [geoLocation])
+    console.log(poiItems)
+  }, [poiItems])
 
   console.log('-------------------SearchJobAddress-----------------------')
 
+  // 关键字搜索
   const [text, setText] = useState<string>('')
   const [showsSearchResult, setShowsSearchResult] = useState(false)
 
@@ -49,16 +71,12 @@ export default function SearchJobAddress({
 
   const inputTips = useInputTips(text, city)
 
-  useEffect(() => {
-    console.log(inputTips)
-  }, [inputTips])
-
   return (
     <View style={styles.container}>
       <NavBar>
         <IconLabelButton
           style={styles.city}
-          icon={require('./images/location.png')}
+          icon={require('./images/city_location.png')}
           label={city || '定位中'}
           onPress={() =>
             navigation.navigate('EditJobCity', {
@@ -78,33 +96,53 @@ export default function SearchJobAddress({
         />
       </NavBar>
       <View style={{ flex: 1 }}>
-        <MapView style={styles.map} centerLatLng={centerLatLng} />
+        <View style={styles.mapWrapper}>
+          <MapView
+            style={styles.map}
+            zoomLevel={16}
+            centerLatLng={centerLatLng}
+            onMoveEnd={onMoveEnd}
+          />
+          <View style={StyleSheet.absoluteFillObject}>
+            <View style={styles.mapMarkerBox}>
+              <Image source={require('./images/marker.png')} />
+            </View>
+            <View style={styles.mapMarkerBox}></View>
+          </View>
+        </View>
         <FlatList
-          data={inputTips}
+          key="poiItems"
+          data={poiItems}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
-          keyExtractor={item => item.district + item.name}
-          renderItem={({ item }) => <AddressItem {...item} />}
-          ListHeaderComponent={
-            <AddressHeader
-              title="卤潮鲜"
-              detail="粤海街道科技园中区科苑路15号科兴科学园臻食美食广场 100铺"
+          keyExtractor={item => item.poiID}
+          renderItem={({ item, index }) => (
+            <AddressItem
+              {...item}
+              index={index}
+              onPress={() =>
+                navigation.navigate('EditJobAddress', {
+                  address: { ...item },
+                })
+              }
             />
-          }
+          )}
         />
         {showsSearchResult && (
-          <KeyboardAwareFlatList
+          <FlatList
+            key="inputTips"
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode={'on-drag'}
             style={styles.searchList}
             data={inputTips}
-            keyExtractor={item => item.district + item.name}
+            keyExtractor={item => item.poiID}
             renderItem={({ item }) => (
               <AddressItem
                 {...item}
+                index={-1}
                 onPress={() =>
                   navigation.navigate('EditJobAddress', {
-                    address: { ...item, city },
+                    address: { ...item },
                   })
                 }
               />
@@ -141,9 +179,16 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
   },
-  mapList: {},
-  map: {
+  mapWrapper: {
     width: '100%',
     aspectRatio: 375 / 350,
+  },
+  map: {
+    flex: 1,
+  },
+  mapMarkerBox: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
 })

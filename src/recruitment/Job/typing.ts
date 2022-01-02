@@ -1,4 +1,5 @@
 import { ParamListBase } from '@react-navigation/native'
+import { PoiItem } from '../../bridge/geolocation'
 
 export type JobStatus = 'NotPublishedYet' | 'InRecruitment' | 'OffLine'
 
@@ -14,15 +15,7 @@ export type Education =
 
 export type FullTime = 'Full' | 'Part' | 'InternShip'
 
-export interface JobAddress {
-  adcode: string
-  name: string
-  address: string
-  city: string
-  district: string
-  latitude: number
-  longitude: number
-}
+export type JobAddress = PoiItem
 
 export interface JobParamList extends ParamListBase {
   EditJobName: {

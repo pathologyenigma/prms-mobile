@@ -7,15 +7,23 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.AMapGestureListener;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
 
-public class AMapView extends TextureMapView implements AMap.OnMapLoadedListener {
+public class AMapView extends TextureMapView implements AMap.OnMapLoadedListener, AMapGestureListener, AMap.OnCameraChangeListener {
 
     public static final String TAG = "AMapView";
 
     private boolean mMapLoaded;
     private float mZoomLevel = 16.0f;
     private LatLng mCenterLatLng;
+    private boolean mMoveByUser;
+    private boolean mCameraOnMove;
 
     public AMapView(Context context) {
         super(context);
@@ -43,18 +51,12 @@ public class AMapView extends TextureMapView implements AMap.OnMapLoadedListener
         map.setMaxZoomLevel(20);
 
         map.setOnMapLoadedListener(this);
-        //map.setAMapGestureListener(this);
-        //map.setOnCameraChangeListener(this);
+        map.setAMapGestureListener(this);
+        map.setOnCameraChangeListener(this);
         map.setOnMarkerClickListener(marker -> {
             Log.d("AMapView", "onMarkerClick==>" + marker.getId());
             return true;
         });
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        onDestroy();
     }
 
     @Override
@@ -84,7 +86,87 @@ public class AMapView extends TextureMapView implements AMap.OnMapLoadedListener
         }
     }
 
-    boolean isMapLoaded () {
+    boolean isMapLoaded() {
         return mMapLoaded;
+    }
+
+    @Override
+    public void onDoubleTap(float v, float v1) {
+
+    }
+
+    @Override
+    public void onSingleTap(float v, float v1) {
+
+    }
+
+    @Override
+    public void onFling(float v, float v1) {
+
+    }
+
+    @Override
+    public void onScroll(float v, float v1) {
+
+    }
+
+    @Override
+    public void onLongPress(float v, float v1) {
+
+    }
+
+    @Override
+    public void onDown(float v, float v1) {
+        mMoveByUser = true;
+    }
+
+    @Override
+    public void onUp(float v, float v1) {
+        if (!mCameraOnMove) {
+            mMoveByUser = false;
+        }
+    }
+
+    @Override
+    public void onMapStable() {
+
+    }
+
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+        if (!mMapLoaded) {
+            return;
+        }
+        if (mCameraOnMove) {
+            return;
+        }
+        mCameraOnMove = true;
+        onMoveByUser("onMoveStart");
+    }
+
+    @Override
+    public void onCameraChangeFinish(CameraPosition cameraPosition) {
+        if (!mMapLoaded) {
+            return;
+        }
+        onMoveByUser("onMoveEnd");
+        mCameraOnMove = false;
+        mMoveByUser = false;
+    }
+
+    private void onMoveByUser(String eventName) {
+        AMap map = getMap();
+        LatLng center = map.getCameraPosition().target;
+        WritableMap event = Arguments.createMap();
+        event.putDouble("latitude", center.latitude);
+        event.putDouble("longitude", center.longitude);
+        event.putBoolean("wasUserAction", mMoveByUser);
+        ReactContext reactContext = (ReactContext) getContext();
+        if (reactContext.hasActiveCatalystInstance()) {
+            reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+                    getId(),
+                    eventName,
+                    event);
+        }
     }
 }

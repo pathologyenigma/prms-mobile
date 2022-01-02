@@ -8,6 +8,8 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 
+import javax.annotation.Nonnull;
+
 public class GeoLocationModule extends ReactContextBaseJavaModule {
 
     public static final String NAME = "GeoLocationModule";
@@ -31,7 +33,13 @@ public class GeoLocationModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getInputTips(String key, String city, Promise promise) {
-        InputTipsRequest inputTipsRequest = new InputTipsRequest(getReactApplicationContext());
-        inputTipsRequest.execute(key, city, promise);
+        PoiSearchQuery poiSearchQuery = new PoiSearchQuery(getReactApplicationContext());
+        poiSearchQuery.inputTips(key, city, promise);
+    }
+
+    @ReactMethod
+    public void getPoiItems(double latitude, double longitude, String poiTypeList, @Nonnull Promise promise) {
+        PoiSearchQuery poiSearchQuery = new PoiSearchQuery(getReactApplicationContext());
+        poiSearchQuery.poiItems(latitude, longitude, poiTypeList, promise);
     }
 }

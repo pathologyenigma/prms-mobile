@@ -7,33 +7,10 @@ import { StackScreenProps } from '@react-navigation/stack'
 import NavBar from '../../components/NavBar'
 import { JobAddress, JobParamList } from '../typing'
 
-interface AddressRegion {
-  province: string
-  city: string
-  town: string
-}
-
-function regionFromAddress(address?: JobAddress) {
-  if (!address) {
-    return undefined
-  }
-
-  const { city, district } = address
-  if (district.includes(city)) {
-    const [province, town] = district.split(city)
-    console.log(province, town)
-    return { province, city, town }
-  }
-}
-
-function workAddress(address?: JobAddress, region?: AddressRegion) {
-  if (address && region) {
-    const { city, town } = region
-    return `${city}${town}${address.name}`
-  }
-
+function workAddress(address?: JobAddress) {
   if (address) {
-    return `${address.district}${address.name}`
+    const { city, district, name } = address
+    return `${city}${district}${name}`
   }
   return undefined
 }
@@ -43,7 +20,6 @@ export default function EditJobAddress({
   route,
 }: StackScreenProps<JobParamList, 'EditJobAddress'>) {
   const { address } = route.params || {}
-  const region = regionFromAddress(address)
   const [text, setText] = useState<string>()
 
   return (
@@ -54,7 +30,7 @@ export default function EditJobAddress({
       />
       <JobInfoItem
         title="上班地址（必填）"
-        content={workAddress(address, region)}
+        content={workAddress(address)}
         placeholder="请填写工作地点"
         onPress={() => navigation.navigate('SearchJobAddress', {})}
       />

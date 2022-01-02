@@ -25,11 +25,12 @@ public class OnceLocationManager implements AMapLocationListener  {
         mLocationClient = new AMapLocationClient(context.getApplicationContext());
         //初始化定位参数
         AMapLocationClientOption option = new AMapLocationClientOption();
-
         option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        option.setOnceLocationLatest(true);
+        option.setOnceLocationLatest(false);
         option.setInterval(1000);
         option.setHttpTimeOut(10 * 1000);
+        option.setLocationCacheEnable(true);
+        option.setSensorEnable(false);
 
         // 设置要不要返回地址信息，默认为true
         option.setNeedAddress(config.withReGeocode);
@@ -77,20 +78,20 @@ public class OnceLocationManager implements AMapLocationListener  {
         WritableMap map = Arguments.createMap();
         map.putDouble("latitude", location.getLatitude());
         map.putDouble("longitude", location.getLongitude());
-        map.putDouble("altitude", location.getAltitude());
         map.putDouble("accuracy", location.getAccuracy());
-        map.putDouble("speed", location.getSpeed());
-        map.putDouble("bearing", location.getBearing());
         map.putDouble("timestamp", location.getTime());
 
         if (!location.getAddress().isEmpty()) {
             map.putString("adcode", location.getAdCode());
             map.putString("province", location.getProvince());
             map.putString("city", location.getCity());
-            map.putString("cityCode", location.getCityCode());
+            map.putString("district", location.getDistrict());
+            map.putString("name", location.getPoiName());
+            // 以下信息仅供调试
             map.putString("address", location.getAddress());
-            map.putString("aoi", location.getAoiName());
-            map.putString("poi", location.getPoiName());
+            map.putString("description", location.getDescription());
+            map.putString("street", location.getStreet());
+            map.putString("streetNum", location.getStreetNum());
         }
         return map;
     }
