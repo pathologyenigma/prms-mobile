@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, StatusBar, ScrollView } from 'react-native'
 import GradientButton from '../../components/GradientButton'
 import AdmissionPicker from './AdmissionPicker'
@@ -16,6 +16,24 @@ import {
   stringForExperience,
   stringForFullTime,
 } from '../JobHelper'
+import { usePostJob } from './usePostJob'
+import RootLoading from '../../../utils/rootLoading'
+
+function computeDisplayAddress(workingAddress?: string[]) {
+  if (!workingAddress) {
+    return undefined
+  }
+
+  if (workingAddress.length >= 8) {
+    return `${workingAddress[6]}${workingAddress[7]}`
+  }
+
+  if (workingAddress.length >= 7) {
+    return workingAddress[6]
+  }
+
+  return ''
+}
 
 type Props = StackScreenProps<JobParamList, 'PostJob'>
 
@@ -30,11 +48,13 @@ function PostJob({ navigation, route }: Props) {
     salary,
     tags,
     headcount = 1,
+    workingAddress,
+    coordinates,
   } = route.params || {}
 
-  console.log('jobName', jobName)
-  console.log('jobDescription', jobDescription)
-  console.log('jobNature', jobNature)
+  console.log(route.params)
+
+  const postJob = usePostJob()
 
   const [jobNatureModalVisible, setJobNatureModalVisible] = useState(false)
   const [jobAdmissionIndex, setJobAdmissionIndex] = useState(0)
@@ -140,8 +160,13 @@ function PostJob({ navigation, route }: Props) {
         <JobInfoItem
           title="工作地址"
           placeholder="请填写"
-          content="深圳市南山区创智云城（建设中）创智云城A218楼 302"
-          onPress={() => navigation.navigate('EditJobAddress')}
+          content={computeDisplayAddress(workingAddress)}
+          onPress={() =>
+            navigation.navigate('EditJobAddress', {
+              coordinates,
+              workingAddress,
+            })
+          }
         />
         <JobInfoItem
           title="职位福利（选填）"
@@ -155,7 +180,26 @@ function PostJob({ navigation, route }: Props) {
           value={headcount}
           onValueChange={value => navigation.setParams({ headcount: value })}
         />
-        <GradientButton title="立即发布" style={styles.postButton} />
+        <GradientButton
+          title="立即发布"
+          style={styles.postButton}
+          onPress={() => {
+            postJob({
+              jobTitle: jobName,
+              workingAddress,
+              experience,
+              salary,
+              education,
+              description: jobDescription,
+              requiredNum: headcount,
+              isFullTime: jobNature,
+              tags: tags || [],
+              coordinates,
+              publishNow: true,
+              category: jobCategory,
+            })
+          }}
+        />
       </ScrollView>
     </View>
   )

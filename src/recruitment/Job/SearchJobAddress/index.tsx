@@ -17,18 +17,22 @@ export default function SearchJobAddress({
   route,
 }: StackScreenProps<JobParamList, 'SearchJobAddress'>) {
   // 当前城市
-  const { city } = route.params || {}
   const geoLocation = useGeoLocation()
+  const { city, coordinates } = route.params || {}
 
   useEffect(() => {
-    if (geoLocation?.city) {
+    if (!city && geoLocation?.city) {
       navigation.setParams({ city: geoLocation.city })
     }
     console.log(geoLocation)
-  }, [geoLocation])
+  }, [geoLocation, city])
 
   // 地图，兴趣点搜索
   const centerLatLng = useMemo<LatLng | undefined>(() => {
+    if (coordinates) {
+      return coordinates
+    }
+
     if (geoLocation) {
       const { latitude, longitude } = geoLocation
       return {
@@ -36,7 +40,7 @@ export default function SearchJobAddress({
         longitude,
       }
     }
-  }, [geoLocation])
+  }, [geoLocation, coordinates])
 
   const { poiItems, getPoiItems } = usePoiItems()
 

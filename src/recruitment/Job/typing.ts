@@ -1,5 +1,6 @@
 import { ParamListBase } from '@react-navigation/native'
 import { PoiItem } from '../../bridge/geolocation'
+import { LatLng } from '../../bridge/MapView'
 
 export type JobStatus = 'NotPublishedYet' | 'InRecruitment' | 'OffLine'
 
@@ -36,6 +37,7 @@ export interface JobParamList extends ParamListBase {
   }
   SearchJobAddress: {
     city?: string
+    coordinates?: LatLng
   }
   PostJob: {
     jobName?: string
