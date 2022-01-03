@@ -1,10 +1,9 @@
-import { NativeModules } from 'react-native'
+import { NativeModules, Platform } from 'react-native'
 
 const GeoLocationModule = NativeModules.GeoLocationModule
 
 interface Configuration {
   apiKey: string
-  mockEnable: boolean
 }
 
 export interface Location {
@@ -35,9 +34,7 @@ export interface PoiItem {
 const LocationManagerErrorCode = 'GeoLocationModuleOnceLocationManager'
 
 function getLocation(): Promise<Location> {
-  return GeoLocationModule.getLocation({
-    apiKey: '5b9826b16a2e7a03ca5a32bdd262844a',
-  })
+  return GeoLocationModule.getLocation()
 }
 
 function getInputTips(key: string, city: string): Promise<PoiItem[]> {
@@ -73,6 +70,7 @@ function getPoiItems(latitude: number, longitude: number): Promise<PoiItem[]> {
   // 1504 长途汽车站
   // 1505 地铁站
   // 1601 银行
+
   return GeoLocationModule.getPoiItems(
     latitude,
     longitude,

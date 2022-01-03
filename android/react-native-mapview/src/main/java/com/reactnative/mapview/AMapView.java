@@ -1,7 +1,7 @@
 package com.reactnative.mapview;
 
 import android.content.Context;
-import android.util.Log;
+import android.graphics.Point;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
@@ -10,6 +10,7 @@ import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.AMapGestureListener;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
+import com.facebook.common.logging.FLog;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
@@ -54,7 +55,7 @@ public class AMapView extends TextureMapView implements AMap.OnMapLoadedListener
         map.setAMapGestureListener(this);
         map.setOnCameraChangeListener(this);
         map.setOnMarkerClickListener(marker -> {
-            Log.d("AMapView", "onMarkerClick==>" + marker.getId());
+            FLog.d("AMapView", "onMarkerClick==>" + marker.getId());
             return true;
         });
     }
@@ -96,8 +97,20 @@ public class AMapView extends TextureMapView implements AMap.OnMapLoadedListener
     }
 
     @Override
-    public void onSingleTap(float v, float v1) {
-
+    public void onSingleTap(float x, float y) {
+        FLog.i(TAG, "onSingleTap");
+        AMap map = getMap();
+        LatLng latLng = map.getProjection().fromScreenLocation(new Point((int) x, (int) y));
+        WritableMap event = Arguments.createMap();
+        event.putDouble("latitude", latLng.latitude);
+        event.putDouble("longitude", latLng.longitude);
+        ReactContext reactContext = (ReactContext) getContext();
+        if (reactContext.hasActiveCatalystInstance()) {
+            reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+                    getId(),
+                    "onSingleTap",
+                    event);
+        }
     }
 
     @Override

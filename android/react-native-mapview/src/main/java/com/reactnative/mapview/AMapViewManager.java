@@ -65,6 +65,7 @@ public class AMapViewManager extends SimpleViewManager<AMapView>  {
     @Override
     public Map<String, Object> getExportedCustomBubblingEventTypeConstants() {
         return MapBuilder.<String, Object>builder()
+                .put("onSingleTap", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onSingleTap")))
                 .put("onMoveEnd", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onMoveEnd")))
                 .put("onMoveStart", MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onMoveStart")))
                 .build();

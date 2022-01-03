@@ -25,6 +25,9 @@ target 'czzapp' do
     pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
     pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
 
+    pod 'GeoLocation', :path => './GeoLocation'
+    pod 'AMapView', :path => './AMapView'
+
     post_install do |installer|
         flipper_post_install(installer)
 

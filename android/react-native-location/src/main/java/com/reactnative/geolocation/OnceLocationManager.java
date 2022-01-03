@@ -19,9 +19,7 @@ public class OnceLocationManager implements AMapLocationListener  {
     private final AMapLocationClient mLocationClient;
     private Promise promise;
 
-    public OnceLocationManager(Context context, Config config) {
-        AMapLocationClient.setApiKey(config.apiKey);
-
+    public OnceLocationManager(Context context) {
         mLocationClient = new AMapLocationClient(context.getApplicationContext());
         //初始化定位参数
         AMapLocationClientOption option = new AMapLocationClientOption();
@@ -31,9 +29,8 @@ public class OnceLocationManager implements AMapLocationListener  {
         option.setHttpTimeOut(10 * 1000);
         option.setLocationCacheEnable(true);
         option.setSensorEnable(false);
-
-        // 设置要不要返回地址信息，默认为true
-        option.setNeedAddress(config.withReGeocode);
+        // 返回地址信息，默认为true
+        option.setNeedAddress(true);
 
         //设置定位参数
         mLocationClient.setLocationOption(option);

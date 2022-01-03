@@ -1,4 +1,15 @@
 PODS:
+  - AMap3DMap (7.9.0):
+    - AMapFoundation (~> 1.6.6)
+  - AMapFoundation (1.6.9)
+  - AMapLocation (2.6.9):
+    - AMapFoundation (~> 1.6.8)
+  - AMapSearch (7.9.0):
+    - AMapFoundation (~> 1.6.6)
+  - AMapView (1.0.0):
+    - AMap3DMap (~> 7.9.0)
+    - AMapFoundation (~> 1.6.7)
+    - React
   - boost-for-react-native (1.63.0)
   - BVLinearGradient (2.5.6):
     - React
@@ -69,6 +80,11 @@ PODS:
   - FlipperKit/SKIOSNetworkPlugin (0.87.0):
     - FlipperKit/Core
     - FlipperKit/FlipperKitNetworkPlugin
+  - GeoLocation (1.0.0):
+    - AMapFoundation (~> 1.6.7)
+    - AMapLocation (~> 2.6.8)
+    - AMapSearch (~> 7.9.0)
+    - React
   - glog (0.3.5)
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.180)
@@ -382,6 +398,7 @@ PODS:
     - Yoga (~> 1.14)
 
 DEPENDENCIES:
+  - AMapView (from `./AMapView`)
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -405,6 +422,7 @@ DEPENDENCIES:
   - FlipperKit/FlipperKitReactPlugin (= 0.87.0)
   - FlipperKit/FlipperKitUserDefaultsPlugin (= 0.87.0)
   - FlipperKit/SKIOSNetworkPlugin (= 0.87.0)
+  - GeoLocation (from `./GeoLocation`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera`)
   - Permission-LocationAlways (from `../node_modules/react-native-permissions/ios/LocationAlways`)
@@ -457,6 +475,10 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AMap3DMap
+    - AMapFoundation
+    - AMapLocation
+    - AMapSearch
     - boost-for-react-native
     - CocoaAsyncSocket
     - Flipper
@@ -471,6 +493,8 @@ SPEC REPOS:
     - YogaKit
 
 EXTERNAL SOURCES:
+  AMapView:
+    :path: "./AMapView"
   BVLinearGradient:
     :path: "../node_modules/react-native-linear-gradient"
   DoubleConversion:
@@ -479,6 +503,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
     :path: "../node_modules/react-native/React/FBReactNativeSpec"
+  GeoLocation:
+    :path: "./GeoLocation"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   Permission-Camera:
@@ -575,6 +601,11 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  AMap3DMap: 4ff760f011b89aec85edd8b5fcf90d384aae1202
+  AMapFoundation: 8d8ecbb0b2e9ce5487995360d26c885d94642bfd
+  AMapLocation: 3ec0e9bf53800b40cceb313cbd047743f75e2483
+  AMapSearch: 94cff5f6ab7233c1639111e486861ac2acea6d4b
+  AMapView: e3ed63502322bb7063aa2470af6bc82e79279614
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
@@ -588,6 +619,7 @@ SPEC CHECKSUMS:
   Flipper-PeerTalk: 116d8f857dc6ef55c7a5a75ea3ceaafe878aadc9
   Flipper-RSocket: 127954abe8b162fcaf68d2134d34dc2bd7076154
   FlipperKit: 651f50a42eb95c01b3e89a60996dd6aded529eeb
+  GeoLocation: a8806d6df128b82888716129ea99e79a174466e1
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
@@ -639,6 +671,6 @@ SPEC CHECKSUMS:
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 13baa1ae7ae276a453393e8d34f43858c27b41f2
+PODFILE CHECKSUM: 0a9173693c67e01c51c99600755dc004c765b4b9
 
 COCOAPODS: 1.11.2

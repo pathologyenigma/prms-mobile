@@ -15,8 +15,6 @@ export type Education =
 
 export type FullTime = 'Full' | 'Part' | 'InternShip'
 
-export type JobAddress = PoiItem
-
 export interface JobParamList extends ParamListBase {
   EditJobName: {
     initialName?: string
@@ -32,7 +30,9 @@ export interface JobParamList extends ParamListBase {
     currentCity?: string
   }
   EditJobAddress: {
-    address?: JobAddress
+    poiItem?: PoiItem
+    coordinates?: [number, number]
+    workingAddress?: string[]
   }
   SearchJobAddress: {
     city?: string
@@ -47,5 +47,7 @@ export interface JobParamList extends ParamListBase {
     salary?: number[]
     tags?: string[]
     headcount?: number
+    coordinates?: [number, number]
+    workingAddress?: string[]
   }
 }

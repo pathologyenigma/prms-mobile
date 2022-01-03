@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import TextButton from '../../components/TextButton'
 import JobInfoItem from '../PostJob/JobInfoItem'
 import TextInputWithCounter from '../../components/TextInputWithCounter'
 import { StackScreenProps } from '@react-navigation/stack'
 import NavBar from '../../components/NavBar'
-import { JobAddress, JobParamList } from '../typing'
+import { JobParamList } from '../typing'
+import { PoiItem } from '../../../bridge/geolocation'
 
-function workAddress(address?: JobAddress) {
-  if (address) {
-    const { city, district, name } = address
+function workAddress(poiItem?: PoiItem) {
+  if (poiItem) {
+    const { city, district, name } = poiItem
     return `${city}${district}${name}`
   }
   return undefined
@@ -19,7 +20,15 @@ export default function EditJobAddress({
   navigation,
   route,
 }: StackScreenProps<JobParamList, 'EditJobAddress'>) {
-  const { address } = route.params || {}
+  const { poiItem, workingAddress, coordinates } = route.params || {}
+
+  useEffect(() => {
+    if (poiItem) {
+      const { latitude, longitude } = poiItem
+      navigation.setParams({ coordinates: [longitude, latitude] })
+    }
+  }, [poiItem])
+
   const [text, setText] = useState<string>()
 
   return (
@@ -30,7 +39,7 @@ export default function EditJobAddress({
       />
       <JobInfoItem
         title="上班地址（必填）"
-        content={workAddress(address)}
+        content={workAddress(poiItem)}
         placeholder="请填写工作地点"
         onPress={() => navigation.navigate('SearchJobAddress', {})}
       />

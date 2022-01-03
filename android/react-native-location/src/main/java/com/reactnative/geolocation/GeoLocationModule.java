@@ -6,7 +6,6 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.ReadableMap;
 
 import javax.annotation.Nonnull;
 
@@ -25,9 +24,8 @@ public class GeoLocationModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getLocation(ReadableMap map, Promise promise) {
-        Config config = Config.fromMap(map);
-        OnceLocationManager locationManager = new OnceLocationManager(getReactApplicationContext(), config);
+    public void getLocation(Promise promise) {
+        OnceLocationManager locationManager = new OnceLocationManager(getReactApplicationContext());
         locationManager.startLocationUpdate(promise);
     }
 

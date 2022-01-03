@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
-import { View, StyleSheet, FlatList, Image, ListRenderItem } from 'react-native'
+import { View, StyleSheet, FlatList, Image, Keyboard } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import SearchBar from '../../components/SearchBar'
 import TextButton from '../../components/TextButton'
@@ -101,9 +101,11 @@ export default function SearchJobAddress({
             style={styles.map}
             zoomLevel={16}
             centerLatLng={centerLatLng}
+            onMoveStart={() => Keyboard.dismiss()}
             onMoveEnd={onMoveEnd}
+            onSingleTap={() => Keyboard.dismiss()}
           />
-          <View style={StyleSheet.absoluteFillObject}>
+          <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
             <View style={styles.mapMarkerBox}>
               <Image source={require('./images/marker.png')} />
             </View>
@@ -122,7 +124,7 @@ export default function SearchJobAddress({
               index={index}
               onPress={() =>
                 navigation.navigate('EditJobAddress', {
-                  address: { ...item },
+                  poiItem: { ...item },
                 })
               }
             />
@@ -142,7 +144,7 @@ export default function SearchJobAddress({
                 index={-1}
                 onPress={() =>
                   navigation.navigate('EditJobAddress', {
-                    address: { ...item },
+                    poiItem: { ...item },
                   })
                 }
               />

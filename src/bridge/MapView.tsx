@@ -27,10 +27,11 @@ export interface MapViewProps {
   centerLatLng?: LatLng
   onMoveStart?: (event: MoveEvent) => void
   onMoveEnd?: (event: MoveEvent) => void
+  onSingleTap?: (event: LatLng) => void
 }
 
 function MapView(props: MapViewProps) {
-  const { onMoveEnd, onMoveStart } = props
+  const { onMoveEnd, onMoveStart, onSingleTap } = props
 
   const handleMoveEnd = useCallback(
     (event: NativeSyntheticEvent<MoveEvent>) => {
@@ -46,11 +47,19 @@ function MapView(props: MapViewProps) {
     [onMoveStart],
   )
 
+  const handleSingleTap = useCallback(
+    (event: NativeSyntheticEvent<LatLng>) => {
+      onSingleTap?.(event.nativeEvent)
+    },
+    [onSingleTap],
+  )
+
   return (
     <AMapView
       {...props}
       onMoveStart={handleMoveStart}
       onMoveEnd={handleMoveEnd}
+      onSingleTap={handleSingleTap}
     />
   )
 }
