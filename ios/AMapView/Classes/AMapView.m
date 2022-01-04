@@ -10,7 +10,7 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        _zoomLevel = 16;
+        _zoomLevel = 17;
         _centerLatLng = kCLLocationCoordinate2DInvalid;
         [self addSubview:self.mapView];
     }
@@ -20,13 +20,12 @@
 - (MAMapView *)mapView {
     if (!_mapView) {
         MAMapView *mapView = [[MAMapView alloc] initWithFrame:self.bounds];
-        mapView.centerCoordinate = CLLocationCoordinate2DMake(39.9242, 116.3979);
         mapView.delegate = self;
         mapView.rotateEnabled = NO;
         mapView.rotateCameraEnabled = NO;
         mapView.showsCompass = NO;
         mapView.maxZoomLevel = 20;
-        mapView.zoomLevel = 16;
+        mapView.zoomLevel = 17;
         mapView.showsBuildings = NO;
         
         _mapView = mapView;

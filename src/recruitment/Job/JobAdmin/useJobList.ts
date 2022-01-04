@@ -66,7 +66,7 @@ export function useJobList(status: JobStatus) {
     const { min_experience, min_education, address_description } = job
     labels.push(stringForExperience(min_experience))
     labels.push(stringForEducation(min_education))
-    labels.push(`${address_description[3]}·${address_description[4]}`)
+    labels.push(`${address_description[4]}·${address_description[5]}`)
 
     const { min_salary, max_salary } = job
     const salary = min_salary / 1000 + 'K-' + max_salary / 1000 + 'K'

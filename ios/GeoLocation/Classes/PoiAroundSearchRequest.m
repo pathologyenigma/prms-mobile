@@ -33,6 +33,7 @@ static NSString * const ErrorCode = @"GeoLocationModulePoiAroundSearchRequest";
     self.types               = poiTypes;
     /* 按照距离排序. */
     self.sortrule            = 0;
+    self.offset              = 10;
     self.requireExtension    = YES;
     [self.search AMapPOIAroundSearch:self];
 }

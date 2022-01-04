@@ -21,7 +21,7 @@ public class AMapView extends TextureMapView implements AMap.OnMapLoadedListener
     public static final String TAG = "AMapView";
 
     private boolean mMapLoaded;
-    private float mZoomLevel = 16.0f;
+    private float mZoomLevel = 17.0f;
     private LatLng mCenterLatLng;
     private boolean mMoveByUser;
     private boolean mCameraOnMove;

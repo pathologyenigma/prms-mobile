@@ -28,8 +28,9 @@ static NSString * const ErrorCode = @"GeoLocationModulePoiKeywordSearchRequest";
 }
 
 - (void)searchWithKeyword:(NSString *)keyword city:(NSString *)city {
-    self.keywords = keyword;
-    self.city = city;
+    self.keywords         = keyword;
+    self.city             = city;
+    self.offset           = 10;
     self.requireExtension = YES;
     [self.search AMapPOIKeywordsSearch:self];
 }

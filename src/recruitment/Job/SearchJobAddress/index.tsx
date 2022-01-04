@@ -74,6 +74,9 @@ export default function SearchJobAddress({
   }, [text])
 
   const inputTips = useInputTips(text, city)
+  useEffect(() => {
+    console.log(inputTips)
+  }, [inputTips])
 
   return (
     <View style={styles.container}>
@@ -103,7 +106,7 @@ export default function SearchJobAddress({
         <View style={styles.mapWrapper}>
           <MapView
             style={styles.map}
-            zoomLevel={16}
+            zoomLevel={17}
             centerLatLng={centerLatLng}
             onMoveStart={() => Keyboard.dismiss()}
             onMoveEnd={onMoveEnd}

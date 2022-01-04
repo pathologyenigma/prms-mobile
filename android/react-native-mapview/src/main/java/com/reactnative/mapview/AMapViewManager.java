@@ -41,7 +41,7 @@ public class AMapViewManager extends SimpleViewManager<AMapView>  {
         }
     }
 
-    @ReactProp(name = "zoomLevel", defaultFloat = 16.0f)
+    @ReactProp(name = "zoomLevel", defaultFloat = 17.0f)
     public void setZoomLevel(AMapView mapView, float zoomLevel) {
         mapView.setZoomLevel(zoomLevel);
     }
