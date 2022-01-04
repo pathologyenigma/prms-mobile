@@ -1,42 +1,72 @@
 import React from 'react'
+import { useState } from 'react'
 import { View, StyleSheet, FlatList, ListRenderItem } from 'react-native'
 import FilterButton from '../../components/FilterButton'
 import FocusAwareStatusBar from '../../components/FocusAwareStatusBar'
 import RadioLabelGroup from '../../components/RadioLabelGroup'
+import TalentListEmpty from './TalentListEmpty'
 import NavBar from './NavBar'
 import NoMoreFooter from './NoMoreFooter'
 import TalentListItem from './TalentListItem'
 import UpgradeFeature from './UpgradeFeature'
+import { useSimpleOnlineJobs } from './useSimpleOnlineJobs'
+import { StackScreenProps } from '@react-navigation/stack'
+import { TalentParamList } from '../typings'
 
-export default function TalentList() {
+export default function TalentList({
+  navigation,
+}: StackScreenProps<TalentParamList, 'TalentList'>) {
+  let jobItems = useSimpleOnlineJobs()
+  const [sortIndex, setSortIndex] = useState(0)
+
   const data = ['a', 'b']
 
   const renderItem: ListRenderItem<string> = ({ index, item }) => {
     return <TalentListItem key={index} />
   }
 
+  if (jobItems && jobItems.length > 0) {
+    return (
+      <View style={styles.container}>
+        <FocusAwareStatusBar barStyle={'light-content'} />
+        <NavBar
+          jobs={jobItems || []}
+          onJobItemChecked={(jobId: number) => {
+            console.log('onJobItemChecked', jobId)
+          }}
+          onPlusPress={() => navigation.navigate('JobAdmin')}
+          onSearchPress={() => navigation.navigate('CandidateSearch')}
+        />
+        <View style={styles.filterbar}>
+          <RadioLabelGroup
+            style={styles.labelGroup}
+            labelStyle={styles.labelStyle}
+            labelInactiveStyle={styles.labelInactiveStyle}
+            labelSpace={20}
+            labels={['推荐', '最新']}
+            checkedIndex={sortIndex}
+            onValueChange={(_, index) => setSortIndex(index)}
+          />
+          <FilterButton
+            text={'筛选'}
+            style={styles.filterButton}
+            onPress={() => navigation.navigate('CandidateFilter')}
+          />
+        </View>
+        <FlatList
+          data={data}
+          keyExtractor={item => item}
+          renderItem={renderItem}
+          ListHeaderComponent={UpgradeFeature}
+          ListFooterComponent={NoMoreFooter}
+        />
+      </View>
+    )
+  }
+
   return (
     <View style={styles.container}>
-      <FocusAwareStatusBar barStyle={'light-content'} />
-      <NavBar />
-      <View style={styles.filterbar}>
-        <RadioLabelGroup
-          style={styles.labelGroup}
-          labelStyle={styles.labelStyle}
-          labelInactiveStyle={styles.labelInactiveStyle}
-          labelSpace={20}
-          labels={['推荐', '最新']}
-          checkedIndex={0}
-        />
-        <FilterButton text={'筛选'} style={styles.filterButton} />
-      </View>
-      <FlatList
-        data={data}
-        keyExtractor={item => item}
-        renderItem={renderItem}
-        ListHeaderComponent={UpgradeFeature}
-        ListFooterComponent={NoMoreFooter}
-      />
+      <TalentListEmpty onPublishPress={() => navigation.navigate('PostJob')} />
     </View>
   )
 }

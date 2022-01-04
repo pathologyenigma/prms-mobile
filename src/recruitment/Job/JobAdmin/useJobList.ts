@@ -1,10 +1,11 @@
-import { gql, useQuery } from '@apollo/client'
+import { gql, useLazyQuery, useQuery } from '@apollo/client'
 import { Education, FullTime, JobStatus } from '../typing'
 import {
   stringForEducation,
   stringForExperience,
   stringForFullTime,
 } from '../JobHelper'
+import { useCallback, useMemo } from 'react'
 
 interface JobData {
   __typename: 'JobDataBriefly'
@@ -28,7 +29,7 @@ interface Tag {
 }
 
 export interface JobItem {
-  jobId: string
+  jobId: number
   title: string
   tags: Tag[]
   labels: string[]
@@ -36,54 +37,63 @@ export interface JobItem {
   status: JobStatus
 }
 
-export function useJobList(status: JobStatus) {
-  const { data, loading, error } = useQuery<{
+export function useJobList() {
+  const [fetch, { data, loading, error }] = useLazyQuery<{
     UserGetJobListByEntId: { count: number; data: JobData[] }
-  }>(UserGetJobListByEntId, {
-    variables: {
-      status,
-      pageSize: 20,
-    },
-  })
+  }>(UserGetJobListByEntId, { fetchPolicy: 'cache-and-network' })
 
-  const items = data?.UserGetJobListByEntId.data.map(job => {
-    const title = job.title
-    const tags: Tag[] = []
-    const { emergency, full_time_job } = job
-    if (emergency) {
-      tags.push({
-        text: '急聘',
-        color: '#EB3B2B',
+  const getJobList = useCallback(
+    (status: JobStatus) => {
+      fetch({
+        variables: {
+          status,
+          pageSize: 20,
+        },
       })
-    }
+    },
+    [fetch],
+  )
 
-    tags.push({
-      text: stringForFullTime(full_time_job),
-      color: '#6CD6B3',
+  const items = useMemo(() => {
+    return data?.UserGetJobListByEntId.data.map(job => {
+      const title = job.title
+      const tags: Tag[] = []
+      const { emergency, full_time_job } = job
+      if (emergency) {
+        tags.push({
+          text: '急聘',
+          color: '#EB3B2B',
+        })
+      }
+
+      tags.push({
+        text: stringForFullTime(full_time_job),
+        color: '#6CD6B3',
+      })
+
+      const labels: string[] = []
+      const { min_experience, min_education, address_description } = job
+      labels.push(stringForExperience(min_experience))
+      labels.push(stringForEducation(min_education))
+      labels.push(`${address_description[4]}·${address_description[5]}`)
+
+      const { min_salary, max_salary } = job
+      const salary = min_salary / 1000 + 'K-' + max_salary / 1000 + 'K'
+      const status = job.status
+      const jobId = job.job_id
+
+      return {
+        title,
+        tags,
+        labels,
+        salary,
+        status,
+        jobId,
+      } as JobItem
     })
+  }, [data])
 
-    const labels: string[] = []
-    const { min_experience, min_education, address_description } = job
-    labels.push(stringForExperience(min_experience))
-    labels.push(stringForEducation(min_education))
-    labels.push(`${address_description[4]}·${address_description[5]}`)
-
-    const { min_salary, max_salary } = job
-    const salary = min_salary / 1000 + 'K-' + max_salary / 1000 + 'K'
-    const status = job.status
-    const jobId = String(job.job_id)
-
-    return {
-      title,
-      tags,
-      labels,
-      salary,
-      status,
-      jobId,
-    } as JobItem
-  })
-
-  return { items, loading }
+  return { getJobList, items, loading }
 }
 
 const UserGetJobListByEntId = gql`

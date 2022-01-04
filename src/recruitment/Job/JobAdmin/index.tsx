@@ -52,7 +52,11 @@ export default function JobAdmin() {
         onPageScroll={onPageScroll}
         onPageSelected={onPageSelected}>
         {states.map((status: JobStatus, index: number) => (
-          <JobPage key={status} status={status} />
+          <JobPage
+            key={status}
+            status={status}
+            isActive={index === selectedIndex}
+          />
         ))}
       </AnimatedPagerView>
       <GradientButton

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ComponentType } from 'react'
 import {
   createStackNavigator,
   StackNavigationOptions,
@@ -13,7 +13,7 @@ import jobFairScreens from './JobFair'
 import talentScreens from './Talent'
 import settingScreens from './Settings'
 
-const screens: Record<string, () => JSX.Element> = {
+const screens: Record<string, ComponentType<any>> = {
   ...companyScreens,
   ...hrScreens,
   ...interviewScreens,

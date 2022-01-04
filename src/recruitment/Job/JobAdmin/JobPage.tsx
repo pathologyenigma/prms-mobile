@@ -1,17 +1,28 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { StyleSheet, View, FlatList, ListRenderItem } from 'react-native'
 import { JobItem, useJobList } from './useJobList'
 import { JobStatus } from '../typing'
 import Empty from './Empty'
 import JobAdminItem from './JobAdminItem'
-import { useEffect } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 
 interface PageProps {
   status: JobStatus
+  isActive: boolean
 }
 
-export default function JobPage({ status }: PageProps) {
-  const { items, loading } = useJobList(status)
+export default function JobPage({ status, isActive }: PageProps) {
+  const { getJobList, items, loading } = useJobList()
+
+  useFocusEffect(
+    useCallback(() => {
+      if (isActive) {
+        getJobList(status)
+      }
+    }, [status, isActive]),
+  )
+
+  console.log('---------JobPage----------')
 
   const renderItem: ListRenderItem<JobItem> = ({ item, index }) => {
     return <JobAdminItem {...item} />
@@ -22,7 +33,7 @@ export default function JobPage({ status }: PageProps) {
       {items && (
         <FlatList
           contentContainerStyle={styles.content}
-          keyExtractor={(job: JobItem, index: number) => job.jobId}
+          keyExtractor={(job: JobItem, index: number) => String(job.jobId)}
           data={items}
           renderItem={renderItem}
           ListEmptyComponent={Empty}

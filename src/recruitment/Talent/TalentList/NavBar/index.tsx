@@ -1,15 +1,31 @@
 import React from 'react'
-import { View, StyleSheet, StatusBar, ScrollView } from 'react-native'
+import { View, StyleSheet, ScrollView } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import IconButton from '../../../components/IconButton'
 import RadioLabelGroup from '../../../components/RadioLabelGroup'
 import { headerHeight, navigationBarHeight } from '../../../theme'
 import LinearGradientMaskedView from '../../../components/LinearGradientMaskedView'
-import { useNavigation } from '@react-navigation/core'
-import { StackNavigationProp } from '@react-navigation/stack'
+import { useState } from 'react'
 
-export default function NavBar() {
-  const navigation = useNavigation<StackNavigationProp<any>>()
+export interface JobItem {
+  jobId: number
+  title: string
+}
+
+interface NavBarProps {
+  onSearchPress?: () => void
+  onPlusPress?: () => void
+  jobs: JobItem[]
+  onJobItemChecked: (jobId: number) => void
+}
+
+export default function NavBar({
+  onSearchPress,
+  onPlusPress,
+  jobs,
+  onJobItemChecked,
+}: NavBarProps) {
+  const [index, setIndex] = useState(0)
 
   return (
     <LinearGradient
@@ -29,19 +45,21 @@ export default function NavBar() {
               labelStyle={styles.labelStyle}
               labelInactiveStyle={styles.labelInactiveStyle}
               labelSpace={24}
-              labels={['产品经理', 'UE设计师', 'APP设计师', 'APP设计师']}
-              checkedIndex={0}
+              labels={jobs.map(job => job.title)}
+              onValueChange={(_, index) => {
+                setIndex(index)
+                onJobItemChecked(jobs[index].jobId)
+              }}
+              checkedIndex={index}
             />
           </ScrollView>
         </LinearGradientMaskedView>
-        <IconButton
-          icon={require('./guanli.png')}
-          onPress={() => navigation.navigate('PostJob')}
-        />
+        <IconButton icon={require('./guanli.png')} onPress={onPlusPress} />
         <IconButton
           icon={require('./sousuo.png')}
           style={{ marginRight: 8 }}
           iconStyle={styles.iconStyle}
+          onPress={onSearchPress}
         />
       </View>
     </LinearGradient>

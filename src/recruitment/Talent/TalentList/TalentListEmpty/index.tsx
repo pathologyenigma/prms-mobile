@@ -1,14 +1,24 @@
 import React from 'react'
 import { View, Image, Text, StyleSheet } from 'react-native'
-import GradientButton from '../../components/GradientButton'
+import FocusAwareStatusBar from '../../../components/FocusAwareStatusBar'
+import GradientButton from '../../../components/GradientButton'
 
-export function Empty() {
+interface TalentListEmptyProps {
+  onPublishPress?: () => void
+}
+
+export function TalentListEmpty({ onPublishPress }: TalentListEmptyProps) {
   return (
     <View style={styles.container}>
+      <FocusAwareStatusBar barStyle={'dark-content'} />
       <Image source={require('./404.png')} />
       <Text style={styles.title}>您还没有发布职位</Text>
       <Text style={styles.detail}>发布职位后，可以获取精准的人才推荐</Text>
-      <GradientButton title="发布职位" style={styles.button} />
+      <GradientButton
+        title="发布职位"
+        style={styles.button}
+        onPress={onPublishPress}
+      />
     </View>
   )
 }
@@ -35,4 +45,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Empty
+export default TalentListEmpty
