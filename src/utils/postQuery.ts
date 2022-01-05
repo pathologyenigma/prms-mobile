@@ -410,9 +410,9 @@ const getUserGetBasicInfoGql = gql`
 }
 `
 
-const setUserEditBasicInfoGql = gql`
+const userEditBasicInfoGql = gql`
   mutation UserEditBasicInfo($info: BasicData!){
-    UserEditBasicInfo(info: $BasicData)
+    UserEditBasicInfo(info: $info)
 }
 `
 
@@ -444,5 +444,5 @@ export {
   candidateGetEnterpriseDetail_QAGql,
   userGetContractListGql,
   getUserGetBasicInfoGql,
-  setUserEditBasicInfoGql
+  userEditBasicInfoGql
 }

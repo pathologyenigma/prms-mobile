@@ -53,7 +53,6 @@ class JobSelectCity extends Component<IProps, IState> {
     getAllRegion((error, result) => {
       console.log('getAll:" ', error, result)
       RootLoading.hide()
-      // 缺少后面层级,待沟通
       if (!error && result && result.StaticGetAllRegion && result.StaticGetAllRegion.data) {
         this.setState({
           dataSource: result.StaticGetAllRegion.data,
@@ -507,8 +506,12 @@ class JobSelectCity extends Component<IProps, IState> {
           linearStyle={styles.linearStyle}
           text="确定"
           onPress={() => {
-            if (isSelectDetailArea) {
-              const { navigation, route: { params: { selectJobCityCallback } } } = this.props
+            const { navigation, route: { params: { selectJobCityCallback, mode } } } = this.props
+            if (mode === 1) {
+              // 选择城市级别
+              selectJobCityCallback(`${selectItem.name} ${selectedCity.name}`)
+              navigation.goBack()
+            } else if (isSelectDetailArea) {
               // 临时把名称返回,具体的等后述需求
               selectJobCityCallback(`${selectItem.name} ${selectedCity.name} ${selectQu.name} ${selectZhen.name}`)
               navigation.goBack()

@@ -14,7 +14,7 @@ import {
   registerGql,
   resetPasswordGql,
   sendSMSGql,
-  setUserEditBasicInfoGql,
+  userEditBasicInfoGql,
   subscriptionGqlServerGql,
   testGql,
 } from '../utils/postQuery'
@@ -359,18 +359,15 @@ const setUserEditBasicInfo = (
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare
       .mutate({
-        mutation: setUserEditBasicInfoGql,
+        mutation: userEditBasicInfoGql,
         fetchPolicy: 'no-cache', // 设置缓存策略
         variables: {
           info
         }
       })
       .then(res => {
-        console.log('res1: ', res)
         if (res && res.data) {
-          dispatch(
-            update_user_kv('userInfo', res.data.UserGetBasicInfo)
-          )
+          dispatch(getUserGetBasicInfo())
           if (callback) {
             callback(undefined, res.data)
           }

@@ -1,4 +1,15 @@
-import { differenceInHours } from "date-fns"
+import { differenceInHours } from 'date-fns'
+
+export enum EducationType {
+  LessThanPrime,
+  Primary,
+  Junior,
+  High,
+  JuniorCollege,
+  RegularCollege,
+  Postgraduate,
+  Doctor
+}
 
 const formatHintsIndex = (originIndex: string | number) => {
   return Number(originIndex) > 9 ? originIndex.toString() : `0${Number(originIndex)}`
@@ -66,6 +77,42 @@ const reformEducation = (education: any) => {
       break;
     case 'Doctor':
       showEducation = '博士及以上'
+      break;
+    default:
+      break;
+  }
+  return showEducation
+}
+
+const selectEducation = (education: any) => {
+  if (!education) {
+    return ''
+  }
+  let showEducation = education
+  switch (education) {
+    case 'LessThanPrime':
+      showEducation = '无'
+      break;
+    case 'Primary':
+      showEducation = '小学'
+      break;
+    case 'Junior':
+      showEducation = '初中'
+      break;
+    case 'High':
+      showEducation = '高中'
+      break;
+    case 'JuniorCollege':
+      showEducation = '大专'
+      break;
+    case 'RegularCollege':
+      showEducation = '本科'
+      break;
+    case 'Postgraduate':
+      showEducation = '研究生'
+      break;
+    case 'Doctor':
+      showEducation = '博士'
       break;
     default:
       break;
@@ -177,4 +224,5 @@ export {
   reformComFinancing,
   reformFullTime,
   reformDistanceYears,
+  selectEducation,
 }
