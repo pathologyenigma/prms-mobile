@@ -4,26 +4,22 @@ import { RadioContext } from './RadioContext'
 
 interface RadioGroupProps {
   style?: StyleProp<ViewStyle>
-  defaultValue?: string | number
-  value?: string | number
+  value?: string | number | boolean
   onValueChecked?: (value: any) => void
 }
 
 export default function RadioGroup({
   value,
-  defaultValue,
   onValueChecked,
   children,
 }: PropsWithChildren<RadioGroupProps>) {
-  const [checkedValue, setCheckedValue] = useState<string | number>()
+  const [checkedValue, setCheckedValue] = useState<string | number | boolean>()
 
   useEffect(() => {
     if (checkedValue !== undefined) {
       onValueChecked?.(checkedValue)
-    } else if (defaultValue !== undefined) {
-      onValueChecked?.(defaultValue)
     }
-  }, [defaultValue, checkedValue, onValueChecked])
+  }, [checkedValue, onValueChecked])
 
   return (
     <RadioContext.Provider value={{ checkedValue: value, setCheckedValue }}>

@@ -1,9 +1,7 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, FlatList, ListRenderItem } from 'react-native'
 import FilterButton from '../../components/FilterButton'
 import FocusAwareStatusBar from '../../components/FocusAwareStatusBar'
-import RadioLabelGroup from '../../components/RadioLabelGroup'
 import TalentListEmpty from './TalentListEmpty'
 import NavBar from './NavBar'
 import NoMoreFooter from './NoMoreFooter'
@@ -11,18 +9,60 @@ import TalentListItem from './TalentListItem'
 import UpgradeFeature from './UpgradeFeature'
 import { useSimpleOnlineJobs } from './useSimpleOnlineJobs'
 import { StackScreenProps } from '@react-navigation/stack'
-import { TalentParamList } from '../typings'
+import { TalentParamList } from '../typing'
+import RadioGroup from '../../components/RadioGroup'
+import RadioLabel from '../../components/RadioLabel'
+import { CandidateItem, useSearchCandidates } from './useSearchCandidates'
+
+interface SortItem {
+  label: string
+  value: boolean
+}
+
+const sorts: SortItem[] = [
+  {
+    label: '推荐',
+    value: false,
+  },
+  {
+    label: '最新',
+    value: true,
+  },
+]
 
 export default function TalentList({
   navigation,
 }: StackScreenProps<TalentParamList, 'TalentList'>) {
   let jobItems = useSimpleOnlineJobs()
-  const [sortIndex, setSortIndex] = useState(0)
+  const [sortByUpdatedTime, setSortByUpdatedTime] = useState(false)
+  const [checkedJobId, setCheckedJobId] = useState<number>()
 
-  const data = ['a', 'b']
+  useEffect(() => {
+    if (jobItems && jobItems.length > 0) {
+      const index = jobItems.findIndex(item => item.jobId === checkedJobId)
+      if (index === -1) {
+        setCheckedJobId(jobItems[0].jobId)
+      }
+    }
+  }, [jobItems, checkedJobId])
 
-  const renderItem: ListRenderItem<string> = ({ index, item }) => {
-    return <TalentListItem key={index} />
+  const jobName = jobItems?.find(job => job.jobId === checkedJobId)?.title
+
+  const { searchCandidates, candidates } = useSearchCandidates()
+
+  console.log(candidates)
+
+  useEffect(() => {
+    if (jobName) {
+      searchCandidates({
+        expectation: jobName,
+        page: 1,
+      })
+    }
+  }, [sortByUpdatedTime, jobName])
+
+  const renderItem: ListRenderItem<CandidateItem> = ({ item }) => {
+    return <TalentListItem {...item} />
   }
 
   if (jobItems && jobItems.length > 0) {
@@ -31,22 +71,27 @@ export default function TalentList({
         <FocusAwareStatusBar barStyle={'light-content'} />
         <NavBar
           jobs={jobItems || []}
-          onJobItemChecked={(jobId: number) => {
-            console.log('onJobItemChecked', jobId)
-          }}
+          checkedJobId={checkedJobId}
+          onJobItemChecked={setCheckedJobId}
           onPlusPress={() => navigation.navigate('JobAdmin')}
           onSearchPress={() => navigation.navigate('CandidateSearch')}
         />
         <View style={styles.filterbar}>
-          <RadioLabelGroup
-            style={styles.labelGroup}
-            labelStyle={styles.labelStyle}
-            labelInactiveStyle={styles.labelInactiveStyle}
-            labelSpace={20}
-            labels={['推荐', '最新']}
-            checkedIndex={sortIndex}
-            onValueChange={(_, index) => setSortIndex(index)}
-          />
+          <RadioGroup
+            value={sortByUpdatedTime}
+            onValueChecked={value => setSortByUpdatedTime(value)}>
+            <View style={styles.labelGroup}>
+              {sorts.map(({ label, value }) => (
+                <RadioLabel
+                  key={label}
+                  label={label}
+                  value={value}
+                  style={styles.labelStyle}
+                  checkedStyle={styles.checkedLabelStyle}
+                />
+              ))}
+            </View>
+          </RadioGroup>
           <FilterButton
             text={'筛选'}
             style={styles.filterButton}
@@ -54,8 +99,10 @@ export default function TalentList({
           />
         </View>
         <FlatList
-          data={data}
-          keyExtractor={item => item}
+          style={styles.container}
+          contentContainerStyle={styles.content}
+          data={candidates}
+          keyExtractor={item => String(item.id)}
           renderItem={renderItem}
           ListHeaderComponent={UpgradeFeature}
           ListFooterComponent={NoMoreFooter}
@@ -74,7 +121,10 @@ export default function TalentList({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  content: {
     backgroundColor: '#FFFFFF',
+    flexGrow: 1,
   },
   filterButton: {
     marginRight: 11,
@@ -82,22 +132,26 @@ const styles = StyleSheet.create({
   filterbar: {
     height: 40,
     flexDirection: 'row',
+    alignItems: 'stretch',
+    backgroundColor: '#FFFFFF',
   },
   labelGroup: {
     flex: 1,
-    paddingHorizontal: 10.5,
+    flexDirection: 'row',
+    alignItems: 'stretch',
   },
-  labelStyle: {
+  checkedLabelStyle: {
     color: '#7DDBA3',
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: 'bold',
     // ios 垂直居中
     lineHeight: 40,
   },
-  labelInactiveStyle: {
+  labelStyle: {
     color: '#666666',
     fontSize: 13,
     fontWeight: 'normal',
     lineHeight: 40,
+    paddingHorizontal: 11,
   },
 })

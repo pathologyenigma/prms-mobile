@@ -2,10 +2,10 @@ import React from 'react'
 import { View, StyleSheet, ScrollView } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import IconButton from '../../../components/IconButton'
-import RadioLabelGroup from '../../../components/RadioLabelGroup'
 import { headerHeight, navigationBarHeight } from '../../../theme'
 import LinearGradientMaskedView from '../../../components/LinearGradientMaskedView'
-import { useState } from 'react'
+import RadioGroup from '../../../components/RadioGroup'
+import RadioLabel from '../../../components/RadioLabel'
 
 export interface JobItem {
   jobId: number
@@ -16,6 +16,7 @@ interface NavBarProps {
   onSearchPress?: () => void
   onPlusPress?: () => void
   jobs: JobItem[]
+  checkedJobId?: number
   onJobItemChecked: (jobId: number) => void
 }
 
@@ -23,10 +24,9 @@ export default function NavBar({
   onSearchPress,
   onPlusPress,
   jobs,
+  checkedJobId,
   onJobItemChecked,
 }: NavBarProps) {
-  const [index, setIndex] = useState(0)
-
   return (
     <LinearGradient
       style={styles.header}
@@ -39,19 +39,24 @@ export default function NavBar({
             style={styles.scrollview}
             horizontal
             showsHorizontalScrollIndicator={false}>
-            <RadioLabelGroup
-              key={'labelGroup'}
-              style={styles.labelGroup}
-              labelStyle={styles.labelStyle}
-              labelInactiveStyle={styles.labelInactiveStyle}
-              labelSpace={24}
-              labels={jobs.map(job => job.title)}
-              onValueChange={(_, index) => {
-                setIndex(index)
-                onJobItemChecked(jobs[index].jobId)
-              }}
-              checkedIndex={index}
-            />
+            <RadioGroup
+              value={checkedJobId}
+              onValueChecked={value => onJobItemChecked(value)}>
+              <View style={styles.labelGroup}>
+                {jobs.map((job, index) => (
+                  <RadioLabel
+                    key={job.jobId}
+                    label={job.title}
+                    value={job.jobId}
+                    style={[
+                      styles.labelStyle,
+                      { marginLeft: index !== 0 ? 20 : 0 },
+                    ]}
+                    checkedStyle={styles.checkedLabelStyle}
+                  />
+                ))}
+              </View>
+            </RadioGroup>
           </ScrollView>
         </LinearGradientMaskedView>
         <IconButton icon={require('./guanli.png')} onPress={onPlusPress} />
@@ -83,15 +88,17 @@ const styles = StyleSheet.create({
   },
   labelGroup: {
     paddingHorizontal: 10,
+    flex: 1,
+    flexDirection: 'row',
   },
-  labelStyle: {
+  checkedLabelStyle: {
     color: '#FFFFFF',
     fontSize: 20,
-    fontWeight: '500',
+    fontWeight: 'bold',
     // ios 垂直居中
     lineHeight: navigationBarHeight(),
   },
-  labelInactiveStyle: {
+  labelStyle: {
     color: '#FFFFFF',
     fontSize: 15,
     fontWeight: 'normal',

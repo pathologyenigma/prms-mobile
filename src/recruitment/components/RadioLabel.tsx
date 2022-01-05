@@ -1,27 +1,28 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native'
+import { RadioContext } from './RadioContext'
 
 interface RadioLabelProps {
-  text: string
-  checked?: boolean
+  label?: string
+  value?: string | number | boolean
   style?: StyleProp<TextStyle>
-  inactiveStyle?: StyleProp<TextStyle>
-  onPress?: () => void
+  checkedStyle?: StyleProp<TextStyle>
 }
 
 export default function RadioLabel({
-  text,
-  checked = false,
+  label,
+  value,
   style,
-  inactiveStyle,
-  onPress,
+  checkedStyle,
 }: RadioLabelProps) {
+  const { checkedValue, setCheckedValue } = useContext(RadioContext)
+  const checked = value === checkedValue
   return (
     <Text
-      style={[styles.text, checked ? style : inactiveStyle]}
+      style={[styles.text, style, checked ? checkedStyle : undefined]}
       suppressHighlighting
-      onPress={onPress}>
-      {text}
+      onPress={() => setCheckedValue(value)}>
+      {label}
     </Text>
   )
 }

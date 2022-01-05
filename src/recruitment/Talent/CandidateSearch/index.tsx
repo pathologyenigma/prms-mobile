@@ -10,7 +10,6 @@ import {
   Animated,
 } from 'react-native'
 import SearchBar from '../../components/SearchBar'
-import { headerHeight, navigationBarHeight, statusBarHeight } from '../../theme'
 import IconLabelButton from '../../components/IconLabelButton'
 import TextButton from '../../components/TextButton'
 import IconButton from '../../components/IconButton'

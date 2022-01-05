@@ -32,6 +32,7 @@ export default function JobPage({ status, isActive }: PageProps) {
     <View style={StyleSheet.absoluteFillObject} collapsable={false}>
       {items && (
         <FlatList
+          style={styles.container}
           contentContainerStyle={styles.content}
           keyExtractor={(job: JobItem, index: number) => String(job.jobId)}
           data={items}
