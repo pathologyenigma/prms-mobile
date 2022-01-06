@@ -36,6 +36,10 @@ import JobCellData from '../../components/JobCellData'
 import { IStoreState } from '../../../reducer'
 import { urlToHttpOptions } from 'http'
 import SystemHelper from '../../../utils/system'
+import {
+  requestNotifications,
+  checkNotifications
+} from 'react-native-permissions'
 
 type IProps = GenProps<'Jobs'> &
   ReturnType<typeof mapStateToProps> &
@@ -67,6 +71,7 @@ class Jobs extends Component<IProps, IState> {
   }
 
   componentDidMount() {
+    this.getNotificationPermission()
     RootLoading.loading()
     this.loadUserBasicInfo()
     // 注意:当前服务端不支持 subscription 和 其他接口同时调用,暂时修改为延迟获取
@@ -78,6 +83,29 @@ class Jobs extends Component<IProps, IState> {
     this.props.navigation.addListener('focus', () => {
       StatusBar.setBarStyle('light-content', true)
     })
+  }
+
+  getNotificationPermission() {
+    checkNotifications()
+      .then(({ status, settings }) => {
+        // …
+        console.log('checkNotifications: ', status, settings)
+        // 'unavailable' | 'denied' | 'limited' | 'granted' | 'blocked';
+        if (status !== 'granted') {
+          // 已经被拒绝或不可达,尝试再次申请
+          requestNotifications(['alert', 'sound'])
+            .then(({ status: nextStatus, settings: nextSetting }) => {
+              // …
+              console.log('requestNotifications: ', nextStatus, nextSetting)
+            })
+            .catch((error) => {
+              console.log('request-error: ', error)
+            })
+        }
+      })
+      .catch((error) => {
+
+      })
   }
 
   componentWillUnmount() {

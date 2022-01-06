@@ -16,6 +16,7 @@ import {
   request,
   requestMultiple,
 } from 'react-native-permissions'
+import SystemHelper from '../../../utils/system'
 
 type IProps = GenProps<'AuthoritySetting'> & {}
 
@@ -42,6 +43,14 @@ export default class AuthoritySetting extends Component<IProps, IState> {
   }
 
   loadData() {
+    if (SystemHelper.iOS) {
+      this.loadIosData()
+    } else {
+      this.loadAndroidData()
+    }
+  }
+
+  loadAndroidData() {
     checkMultiple([
       PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
       PERMISSIONS.ANDROID.CAMERA,
@@ -72,6 +81,41 @@ export default class AuthoritySetting extends Component<IProps, IState> {
             ].toLocaleLowerCase() === 'granted',
           MicrophoneAuthority:
             result['android.permission.RECORD_AUDIO'].toLocaleLowerCase() ===
+            'granted',
+        })
+      })
+      .catch(error => {
+        console.log('error: ', error)
+      })
+  }
+
+  loadIosData() {
+    checkMultiple([
+      PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+      PERMISSIONS.IOS.CAMERA,
+      PERMISSIONS.IOS.PHOTO_LIBRARY,
+      PERMISSIONS.IOS.MICROPHONE,
+    ])
+      .then((result: any) => {
+        console.log('222222: ', result)
+        console.log(
+          '2222223: ',
+          result['android.permission.ACCESS_COARSE_LOCATION'],
+        )
+        this.setState({
+          locationAuthority:
+            result[
+              'ios.permission.LOCATION_WHEN_IN_USE'
+            ].toLocaleLowerCase() === 'granted',
+          photoAuthority:
+            result['ios.permission.CAMERA'].toLocaleLowerCase() ===
+            'granted',
+          libraryAuthority:
+            result[
+              'ios.permission.PHOTO_LIBRARY'
+            ].toLocaleLowerCase() === 'granted',
+          MicrophoneAuthority:
+            result['ios.permission.MICROPHONE'].toLocaleLowerCase() ===
             'granted',
         })
       })
@@ -149,43 +193,46 @@ export default class AuthoritySetting extends Component<IProps, IState> {
     return (
       <View style={styles.content}>
         {this.renderCell('访问位置信息', locationAuthority, () => {
-          this.requestPermission(PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION)
+          this.requestPermission(SystemHelper.iOS ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE : PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION)
         })}
         {this.renderCell('使用相机功能', photoAuthority, () => {
-          this.requestPermission(PERMISSIONS.ANDROID.CAMERA)
+          this.requestPermission(SystemHelper.iOS ? PERMISSIONS.IOS.CAMERA : PERMISSIONS.ANDROID.CAMERA)
         })}
         {this.renderCell('使用相册功能', libraryAuthority, () => {
-          requestMultiple([
-            PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-            PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
-          ])
-            .then((result: any) => {
-              console.log('result111: ', result)
-              if (
-                result[
-                  'android.permission.READ_EXTERNAL_STORAGE'
-                ].toLocaleLowerCase() === 'unavailable' ||
-                result[
-                  'android.permission.READ_EXTERNAL_STORAGE'
-                ].toLocaleLowerCase() === 'blocked' ||
-                result[
-                  'android.permission.WRITE_EXTERNAL_STORAGE'
-                ].toLocaleLowerCase() === 'unavailable' ||
-                result[
-                  'android.permission.WRITE_EXTERNAL_STORAGE'
-                ].toLocaleLowerCase() === 'blocked'
-              ) {
-                RootLoading.fail('获取权限失败,请手动前往系统设置中开启', 2)
-              } else {
-                this.loadData()
-              }
-            })
-            .catch(error => {
-              RootLoading.fail(`申请失败,请重试: ${error.message}`)
-            })
+          SystemHelper.iOS
+            ? this.requestPermission(PERMISSIONS.IOS.PHOTO_LIBRARY)
+            : (requestMultiple([
+              PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+              PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+            ])
+              .then((result: any) => {
+                console.log('result111: ', result)
+                if (
+                  result[
+                    'android.permission.READ_EXTERNAL_STORAGE'
+                  ].toLocaleLowerCase() === 'unavailable' ||
+                  result[
+                    'android.permission.READ_EXTERNAL_STORAGE'
+                  ].toLocaleLowerCase() === 'blocked' ||
+                  result[
+                    'android.permission.WRITE_EXTERNAL_STORAGE'
+                  ].toLocaleLowerCase() === 'unavailable' ||
+                  result[
+                    'android.permission.WRITE_EXTERNAL_STORAGE'
+                  ].toLocaleLowerCase() === 'blocked'
+                ) {
+                  RootLoading.fail('获取权限失败,请手动前往系统设置中开启', 2)
+                } else {
+                  this.loadData()
+                }
+              })
+              .catch(error => {
+                RootLoading.fail(`申请失败,请重试: ${error.message}`)
+              })
+            )
         })}
         {this.renderCell('使用麦克风功能', MicrophoneAuthority, () => {
-          this.requestPermission(PERMISSIONS.ANDROID.RECORD_AUDIO)
+          this.requestPermission(SystemHelper.iOS ? PERMISSIONS.IOS.MICROPHONE : PERMISSIONS.ANDROID.RECORD_AUDIO)
         })}
       </View>
     )

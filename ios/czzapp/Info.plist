@@ -39,8 +39,6 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>趁早找需要拍照，是否允许打开相机？</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>趁早找需要您的位置信息推荐工作，是否允许访问您的位置？</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>趁早找需要您的位置信息推荐工作，是否允许访问您的位置？</string>
 	<key>NSMicrophoneUsageDescription</key>

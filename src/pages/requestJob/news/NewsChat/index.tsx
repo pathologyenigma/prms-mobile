@@ -462,6 +462,9 @@ class NewsChat extends Component<TProps, IState> {
   renderMessageTips() {
     const start = { x: 0, y: 0.5 }
     const end = { x: 1, y: 0.5 }
+    if (!this.props.showNotificationTips) {
+      return
+    }
     return (
       <View style={styles.tongzhiTips}>
         <View style={styles.leftView}>

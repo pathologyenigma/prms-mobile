@@ -377,7 +377,7 @@ const userGetContractListGql = gql`
   query UserGetContractList {
     UserGetContractList {
       ... on Contract {
-        id name pos ent last_msg last_msg_time
+        id name pos ent last_msg last_msg_time job
         # logo
       }
       ... on Talent {

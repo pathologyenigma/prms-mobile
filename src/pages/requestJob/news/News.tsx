@@ -7,11 +7,16 @@ import styles from './styles/News.style'
 import NavBar from '../../components/NavBar'
 import NewsChat from './NewsChat'
 import ChatCircle from './ChatCircle'
+import {
+  requestNotifications,
+  checkNotifications
+} from 'react-native-permissions'
 
 type TProps = GenProps<'News'>
 
 interface IState {
   selectTabs: number,
+  showNotificationTips: boolean
 }
 
 export default class News extends Component<TProps, IState> {
@@ -20,6 +25,7 @@ export default class News extends Component<TProps, IState> {
     const { route } = this.props
     this.state = {
       selectTabs: 0,
+      showNotificationTips: false,
     }
   }
 
@@ -27,6 +33,31 @@ export default class News extends Component<TProps, IState> {
     this.props.navigation.addListener('focus', () => {
       StatusBar.setBarStyle('dark-content', true)
     })
+    this.getNotificationPermission()
+  }
+
+  getNotificationPermission() {
+    checkNotifications()
+      .then(({ status, settings }) => {
+        // …
+        console.log('checkNotifications: ', status, settings)
+        // 'unavailable' | 'denied' | 'limited' | 'granted' | 'blocked';
+        if (status !== 'granted') {
+          // 已经被拒绝或不可达,尝试再次申请
+          this.setState({ showNotificationTips: true })
+          // requestNotifications(['alert', 'sound'])
+          //   .then(({ status: nextStatus, settings: nextSetting }) => {
+          //     // …
+          //     console.log('requestNotifications: ', nextStatus, nextSetting)
+          //   })
+          //   .catch((error) => {
+          //     console.log('request-error: ', error)
+          //   })
+        }
+      })
+      .catch((error) => {
+
+      })
   }
 
   componentWillUnmount() {
@@ -83,7 +114,7 @@ export default class News extends Component<TProps, IState> {
   }
 
   render() {
-    const { selectTabs } = this.state
+    const { selectTabs, showNotificationTips } = this.state
     const { navigation, route } = this.props
     return (
       <View style={{ flex: 1 }}>
@@ -108,8 +139,8 @@ export default class News extends Component<TProps, IState> {
             this.setState({ selectTabs: index })
           }}
         >
-          <NewsChat route={route} navigation={navigation} />
-          <ChatCircle route={route} navigation={navigation} />
+          <NewsChat route={route} showNotificationTips={showNotificationTips} navigation={navigation} />
+          <ChatCircle route={route} showNotificationTips={showNotificationTips} navigation={navigation} />
         </Tabs>
       </View>
     )
