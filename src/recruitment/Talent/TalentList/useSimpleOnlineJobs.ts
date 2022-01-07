@@ -15,7 +15,7 @@ export interface JobItem {
 }
 
 export function useSimpleOnlineJobs() {
-  const [fetch, { data }] = useLazyQuery<{
+  const [fetch, { data, loading }] = useLazyQuery<{
     UserGetJobListByEntId: { count: number; data: JobData[] }
   }>(UserGetJobListByEntId, {
     variables: {
@@ -38,7 +38,7 @@ export function useSimpleOnlineJobs() {
     } as JobItem
   })
 
-  return jobs
+  return { jobs, loading }
 }
 
 const UserGetJobListByEntId = gql`

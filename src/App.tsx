@@ -13,7 +13,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import RequestJobRouterStacks from './navigator/requestJob/stack'
 import { Route as RenderRequestZhaopinTabs } from './recruitment'
 import RequestLoginStacks from './navigator/loginPages/stack'
-import { DeviceEventEmitter } from 'react-native'
+import { DeviceEventEmitter, StatusBar } from 'react-native'
 import Splash from './bridge/splash'
 import { setApolloClient } from './utils/postQuery'
 import { Identity, getTargetIdentity } from './utils/auth'
@@ -135,6 +135,7 @@ function App() {
     <ApolloProvider client={client}>
       <Provider store={store}>
         <SafeAreaProvider>
+          <StatusBar translucent backgroundColor="transparent" />
           <AntProvider>{container}</AntProvider>
         </SafeAreaProvider>
       </Provider>

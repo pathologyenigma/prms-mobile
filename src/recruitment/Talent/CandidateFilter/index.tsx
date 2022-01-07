@@ -17,29 +17,21 @@ export default function CandidateFilter() {
 
   const [educations, setEducations] = useState([
     { title: '不限', checked: true },
-    { title: '初中及以下', checked: false },
     { title: '高中', checked: false },
-    { title: '中专/中技', checked: false },
     { title: '大专', checked: false },
     { title: '本科', checked: false },
     { title: '硕士', checked: false },
-    { title: 'MBA/EMBA', checked: false },
     { title: '博士', checked: false },
-  ])
-  const [eduNatures, setEduNatures] = useState([
-    { title: '不限', checked: true },
-    { title: '统招', checked: false },
-    { title: '985院校', checked: false },
-    { title: '211院校', checked: false },
   ])
 
   const [experiences, setExperiences] = useState([
+    { title: '不限', checked: true },
     { title: '在校/应届', checked: false },
-    { title: '3年及以下', checked: false },
-    { title: '3-5年', checked: false },
-    { title: '5-10年', checked: false },
-    { title: '10年以上', checked: false },
-    { title: '经验不限', checked: true },
+    { title: '1 年以下', checked: false },
+    { title: '1-3 年', checked: false },
+    { title: '3-5 年', checked: false },
+    { title: '5-10 年', checked: false },
+    { title: '10 年以上', checked: false },
   ])
 
   const [intentions, setIntentions] = useState([
@@ -171,17 +163,6 @@ export default function CandidateFilter() {
             limit={5}
             numOfRow={2}
             horizontalSpace={53}
-          />
-        </View>
-        <View style={styles.section}>
-          <SectionHeader title="学历性质" desc="/多选" />
-          <CheckLabelGroup
-            style={styles.sectionBody}
-            labels={eduNatures}
-            onValuesChange={setEduNatures}
-            limit={5}
-            numOfRow={3}
-            horizontalSpace={9}
           />
         </View>
         <View style={styles.section}>

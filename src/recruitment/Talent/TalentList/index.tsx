@@ -1,18 +1,21 @@
-import React, { useState, useEffect } from 'react'
-import { View, StyleSheet, FlatList, ListRenderItem } from 'react-native'
+import React, { useState, useEffect, useRef } from 'react'
+import { View, StyleSheet, Animated } from 'react-native'
 import FilterButton from '../../components/FilterButton'
 import FocusAwareStatusBar from '../../components/FocusAwareStatusBar'
 import TalentListEmpty from './TalentListEmpty'
 import NavBar from './NavBar'
-import NoMoreFooter from './NoMoreFooter'
-import TalentListItem from './TalentListItem'
-import UpgradeFeature from './UpgradeFeature'
 import { useSimpleOnlineJobs } from './useSimpleOnlineJobs'
-import { StackScreenProps } from '@react-navigation/stack'
+import { StackScreenProps, useHeaderHeight } from '@react-navigation/stack'
 import { TalentParamList } from '../typing'
 import RadioGroup from '../../components/RadioGroup'
 import RadioLabel from '../../components/RadioLabel'
-import { CandidateItem, useSearchCandidates } from './useSearchCandidates'
+import LoadingAndError from '../../components/LoadingAndError'
+import PagerView from 'react-native-pager-view'
+import usePagerView from '../../hooks/usePagerView'
+import TalentPage from './TalentPage'
+import { headerHeight } from '../../theme'
+
+const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
 interface SortItem {
   label: string
@@ -33,7 +36,7 @@ const sorts: SortItem[] = [
 export default function TalentList({
   navigation,
 }: StackScreenProps<TalentParamList, 'TalentList'>) {
-  let jobItems = useSimpleOnlineJobs()
+  let { jobs: jobItems, loading } = useSimpleOnlineJobs()
   const [sortByUpdatedTime, setSortByUpdatedTime] = useState(false)
   const [checkedJobId, setCheckedJobId] = useState<number>()
 
@@ -48,72 +51,74 @@ export default function TalentList({
 
   const jobName = jobItems?.find(job => job.jobId === checkedJobId)?.title
 
-  const { searchCandidates, candidates } = useSearchCandidates()
-
-  console.log(candidates)
+  const ref = useRef<PagerView>(null)
+  const { selectedIndex, onPageSelected, onPageScroll } = usePagerView()
 
   useEffect(() => {
-    if (jobName) {
-      searchCandidates({
-        expectation: jobName,
-        page: 1,
-      })
-    }
-  }, [sortByUpdatedTime, jobName])
+    ref.current?.setPageWithoutAnimation(sortByUpdatedTime ? 1 : 0)
+  }, [sortByUpdatedTime])
 
-  const renderItem: ListRenderItem<CandidateItem> = ({ item }) => {
-    return <TalentListItem {...item} />
-  }
-
-  if (jobItems && jobItems.length > 0) {
+  if ((loading && !jobItems) || (jobItems && jobItems.length === 0)) {
     return (
-      <View style={styles.container}>
-        <FocusAwareStatusBar barStyle={'light-content'} />
-        <NavBar
-          jobs={jobItems || []}
-          checkedJobId={checkedJobId}
-          onJobItemChecked={setCheckedJobId}
-          onPlusPress={() => navigation.navigate('JobAdmin')}
-          onSearchPress={() => navigation.navigate('CandidateSearch')}
+      <LoadingAndError
+        loadingStyle={{ paddingTop: headerHeight() + 40 }}
+        loading={loading}
+        error={''}>
+        <FocusAwareStatusBar barStyle={'dark-content'} />
+        <TalentListEmpty
+          onPublishPress={() => navigation.navigate('PostJob')}
         />
-        <View style={styles.filterbar}>
-          <RadioGroup
-            value={sortByUpdatedTime}
-            onValueChecked={value => setSortByUpdatedTime(value)}>
-            <View style={styles.labelGroup}>
-              {sorts.map(({ label, value }) => (
-                <RadioLabel
-                  key={label}
-                  label={label}
-                  value={value}
-                  style={styles.labelStyle}
-                  checkedStyle={styles.checkedLabelStyle}
-                />
-              ))}
-            </View>
-          </RadioGroup>
-          <FilterButton
-            text={'筛选'}
-            style={styles.filterButton}
-            onPress={() => navigation.navigate('CandidateFilter')}
-          />
-        </View>
-        <FlatList
-          style={styles.container}
-          contentContainerStyle={styles.content}
-          data={candidates}
-          keyExtractor={item => String(item.id)}
-          renderItem={renderItem}
-          ListHeaderComponent={UpgradeFeature}
-          ListFooterComponent={NoMoreFooter}
-        />
-      </View>
+      </LoadingAndError>
     )
   }
 
   return (
     <View style={styles.container}>
-      <TalentListEmpty onPublishPress={() => navigation.navigate('PostJob')} />
+      <FocusAwareStatusBar barStyle={'light-content'} />
+      <NavBar
+        jobs={jobItems || []}
+        checkedJobId={checkedJobId}
+        onJobItemChecked={setCheckedJobId}
+        onPlusPress={() => navigation.navigate('JobAdmin')}
+        onSearchPress={() => navigation.navigate('CandidateSearch')}
+      />
+      <View style={styles.filterbar}>
+        <RadioGroup
+          value={sortByUpdatedTime}
+          onValueChecked={value => setSortByUpdatedTime(value)}>
+          <View style={styles.labelGroup}>
+            {sorts.map(({ label, value }) => (
+              <RadioLabel
+                key={label}
+                label={label}
+                value={value}
+                style={styles.labelStyle}
+                checkedStyle={styles.checkedLabelStyle}
+              />
+            ))}
+          </View>
+        </RadioGroup>
+        <FilterButton
+          text={'筛选'}
+          style={styles.filterButton}
+          onPress={() => navigation.navigate('CandidateFilter')}
+        />
+      </View>
+      <AnimatedPagerView
+        ref={ref}
+        style={styles.container}
+        scrollEnabled={false}
+        initialPage={selectedIndex}
+        onPageScroll={onPageScroll}
+        onPageSelected={onPageSelected}>
+        {sorts.map((status: SortItem, index: number) => (
+          <TalentPage
+            key={status.label}
+            jobName={jobName}
+            sortByUpdatedTime={status.value}
+          />
+        ))}
+      </AnimatedPagerView>
     </View>
   )
 }

@@ -69,7 +69,9 @@ function educationDesc(education: Education | null) {
 }
 
 export function useSearchCandidates() {
-  const [fetch, { data, loading }] = useLazyQuery<Result, Variables>(query)
+  const [fetch, { fetchMore, data, loading }] = useLazyQuery<Result, Variables>(
+    query,
+  )
 
   const searchCandidates = useCallback(
     (v: Variables) => {
@@ -79,6 +81,16 @@ export function useSearchCandidates() {
     },
     [fetch],
   )
+
+  // const loadMore = useCallback((v: Variables) => {
+  //   fetchMore?.({
+  //     variables: {
+  //       ...v,
+
+  //     }
+
+  //   })
+  // }, [fetchMore])
 
   const candidates = useMemo<CandidateItem[]>(() => {
     const items = data?.ENTSearchCandidates.data.map<CandidateItem>(c => {
