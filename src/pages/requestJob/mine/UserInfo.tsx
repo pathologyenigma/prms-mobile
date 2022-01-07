@@ -20,7 +20,7 @@ type IProps = GenProps<'UserInfo'> &
 
 interface IState {
   dataSource: any,
-  selectGender: boolean,
+  selectGender: any,
   genderActionVisible: boolean,
   datePickVisible: boolean
   localDateOfBirth: any,
@@ -76,7 +76,7 @@ class UserInfo extends Component<IProps, IState> {
     const { userInfo: { gender, birth_date, username, phone_number, education, first_time_working, current_city, logo } } = props
     this.state = {
       dataSource: listData,
-      selectGender: gender || true,
+      selectGender: gender,
       genderActionVisible: false,
       datePickVisible: false,
       localDateOfBirth: birth_date || new Date(),
@@ -161,14 +161,14 @@ class UserInfo extends Component<IProps, IState> {
             }}
             style={[
               styles.genderDetailBtn,
-              selectGender && {
+              selectGender === true && {
                 backgroundColor: '#E9FFF0',
                 borderColor: '#7AD398'
               }
             ]}
           >
             <Text style={[styles.genderDetailText,
-            selectGender && {
+            selectGender === true && {
               fontWeight: 'bold',
               color: '#7AD398'
             }
@@ -180,14 +180,14 @@ class UserInfo extends Component<IProps, IState> {
             }}
             style={[
               styles.genderDetailBtn,
-              !selectGender && {
+              selectGender === false && {
                 backgroundColor: '#E9FFF0',
                 borderColor: '#7AD398'
               }
             ]}
           >
             <Text style={[styles.genderDetailText,
-            !selectGender && {
+            selectGender === false && {
               fontWeight: 'bold',
               color: '#7AD398'
             }

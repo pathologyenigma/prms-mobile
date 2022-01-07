@@ -303,7 +303,8 @@ class Mine extends Component<IProps, IState> {
               () => {
                 switch (item) {
                   case '附件简历':
-                    navigation.push('AttachedResume')
+                    // navigation.push('AttachedResume')
+                    RootLoading.info('暂未开放')
                     break
                   case '隐私设置':
                     navigation.push('PrivacySetting')

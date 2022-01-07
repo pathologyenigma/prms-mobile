@@ -416,6 +416,12 @@ const userEditBasicInfoGql = gql`
 }
 `
 
+const userGetRecruitmentListGql = gql`
+  query UserGetRecruitmentList($keyword:String!,$appointment: Boolean!, $page: Int!, $pageSize: Int!){
+    UserGetRecruitmentList(keyword: $keyword, appointment: $appointment, page: $page, pageSize: $pageSize)
+  }
+`
+
 export {
   apolloClientShare,
   sendSMSGql,
@@ -444,5 +450,6 @@ export {
   candidateGetEnterpriseDetail_QAGql,
   userGetContractListGql,
   getUserGetBasicInfoGql,
-  userEditBasicInfoGql
+  userEditBasicInfoGql,
+  userGetRecruitmentListGql
 }
