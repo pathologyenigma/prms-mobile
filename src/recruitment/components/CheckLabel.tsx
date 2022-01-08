@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
   Text,
   StyleSheet,
@@ -6,29 +6,31 @@ import {
   StyleProp,
   TextStyle,
 } from 'react-native'
+import { CheckContext } from './CheckContext'
 
 interface CheckLabelProps {
-  title: string
-  checked: boolean
-  onCheckedChange?: (checked: boolean) => void
+  label: string
+  value: any
   style?: StyleProp<TextStyle>
 }
 
-export default function CheckLabel({
-  title,
-  checked,
-  onCheckedChange,
-  style,
-}: CheckLabelProps) {
+export default function CheckLabel({ label, value, style }: CheckLabelProps) {
+  const { checkedValues = [], setCheckedValues } = useContext(CheckContext)
+  const checked = checkedValues?.includes(value)
+
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        onCheckedChange && onCheckedChange(!checked)
+        if (checked) {
+          setCheckedValues(checkedValues.filter(v => v !== value))
+        } else {
+          setCheckedValues([...checkedValues, value])
+        }
       }}>
       <Text
         suppressHighlighting
         style={[styles.label, checked ? styles.checked : undefined, style]}>
-        {title}
+        {label}
       </Text>
     </TouchableWithoutFeedback>
   )

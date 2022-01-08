@@ -1,86 +1,34 @@
 import React, { useCallback, useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import TextButton from '../../components/TextButton'
-import CheckLabelGroup from '../../components/CheckLabelGroup'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import AlertModalWithTextInput from '../../components/AlertModalWithTextInput'
 import NavBar from '../../components/NavBar'
 import { StackScreenProps } from '@react-navigation/stack'
 import { JobParamList } from '../typings'
+import CheckGroup from '../../components/CheckGroup'
+import GridView from '../../components/GridView'
+import CheckLabel from '../../components/CheckLabel'
 
 const defaultLabels = [
-  {
-    title: '五险一金',
-    checked: false,
-  },
-  {
-    title: '年底双薪',
-    checked: false,
-  },
-  {
-    title: '绩效奖金',
-    checked: false,
-  },
-  {
-    title: '年终分红',
-    checked: false,
-  },
-  {
-    title: '股票期权',
-    checked: false,
-  },
-  {
-    title: '加班补助',
-    checked: false,
-  },
-  {
-    title: '全勤奖',
-    checked: false,
-  },
-  {
-    title: '员工旅行',
-    checked: false,
-  },
-  {
-    title: '节日福利',
-    checked: false,
-  },
-  {
-    title: '交通补助',
-    checked: false,
-  },
-  {
-    title: '餐补',
-    checked: false,
-  },
-  {
-    title: '房补',
-    checked: false,
-  },
-  {
-    title: '通讯补助',
-    checked: false,
-  },
-  {
-    title: '带薪年假',
-    checked: false,
-  },
-  {
-    title: '弹性工作',
-    checked: false,
-  },
-  {
-    title: '免费班车',
-    checked: false,
-  },
-  {
-    title: '定期体检',
-    checked: false,
-  },
-  {
-    title: '无试用期',
-    checked: false,
-  },
+  '五险一金',
+  '年底双薪',
+  '绩效奖金',
+  '年终分红',
+  '股票期权',
+  '加班补助',
+  '全勤奖',
+  '员工旅行',
+  '节日福利',
+  '交通补助',
+  '餐补',
+  '房补',
+  '通讯补助',
+  '带薪年假',
+  '弹性工作',
+  '免费班车',
+  '定期体检',
+  '无试用期',
 ]
 
 const limit = 8
@@ -90,20 +38,12 @@ export default function EditJobWelfare({
   route,
 }: StackScreenProps<JobParamList, 'EditJobWelfare'>) {
   const { initialTags = [] } = route.params || {}
-
   console.log('----------render EditJobWelfare---------------------')
 
+  const [checkedLabels, setChackedLabels] = useState(initialTags)
   const [labels, setLabels] = useState(() => {
-    const labels = defaultLabels.map(v => {
-      if (initialTags.includes(v.title)) {
-        return { ...v, checked: true }
-      }
-      return { ...v }
-    })
-    const titles = labels.map(v => v.title)
-    const customTags = initialTags.filter(t => !titles.includes(t))
-    const customLabels = customTags.map(t => ({ title: t, checked: true }))
-    return [...labels, ...customLabels]
+    const labels = initialTags.filter(l => !defaultLabels.includes(l))
+    return [...defaultLabels, ...labels]
   })
 
   const [modalVisible, setModalVisible] = useState(false)
@@ -116,10 +56,17 @@ export default function EditJobWelfare({
     if (value === '') {
       return
     }
-    setLabels(values => {
-      const count = values.filter(l => l.checked).length
-      const checked = count < limit
-      return [...values, { title: value, checked: checked }]
+    setLabels(labels => {
+      if (labels.includes(value)) {
+        return labels
+      }
+      return [...labels, value]
+    })
+    setChackedLabels(labels => {
+      if (labels.includes(value) || labels.length >= limit) {
+        return labels
+      }
+      return [...labels, value]
     })
   }, [])
 
@@ -132,7 +79,7 @@ export default function EditJobWelfare({
             title="保存"
             onPress={() =>
               navigation.navigate('PostJob', {
-                tags: labels.filter(v => v.checked).map(v => v.title),
+                tags: checkedLabels,
               })
             }
           />
@@ -140,15 +87,20 @@ export default function EditJobWelfare({
       />
       <View style={styles.content}>
         <Text style={styles.slogan}>提升职位吸引力，招聘更快捷</Text>
-        <Text style={styles.count}>{`已选${
-          labels.filter(l => l.checked).length
-        }/${limit}个标签`}</Text>
-        <CheckLabelGroup
-          style={styles.group}
-          labels={labels}
-          onValuesChange={setLabels}
-          limit={limit}
-        />
+        <Text
+          style={
+            styles.count
+          }>{`已选${checkedLabels.length}/${limit}个标签`}</Text>
+        <CheckGroup
+          limit={8}
+          values={checkedLabels}
+          onValuesChanged={setChackedLabels}>
+          <GridView style={styles.group}>
+            {labels.map(label => (
+              <CheckLabel key={label} label={label} value={label} />
+            ))}
+          </GridView>
+        </CheckGroup>
         <Text style={styles.custom}>自定义标签</Text>
         <TouchableOpacity onPress={handleAddLabel} activeOpacity={0.7}>
           <Text suppressHighlighting style={styles.add}>

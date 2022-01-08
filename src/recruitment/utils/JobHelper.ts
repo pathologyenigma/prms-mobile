@@ -1,4 +1,4 @@
-import { Education, FullTime } from '../typings'
+import { Education, FullTime, ResumeJobStatus } from '../typings'
 
 export function stringForFullTime(fullTime: FullTime) {
   switch (fullTime) {
@@ -122,5 +122,36 @@ export function stirngForSalary(salary: number[]) {
     } else {
       return `${salary[0] / 1000}-${salary[1] / 1000}k`
     }
+  }
+}
+
+export const jobStatusLabels = [
+  '不限',
+  '离职-暂不找工作',
+  '离职-正在找工作',
+  '在职-暂不找工作',
+  '在职-正在找工作',
+]
+
+export const jobStatusValues = [
+  undefined,
+  'NoJobButNoJob',
+  'NoJobButWantJob',
+  'OnTheJob',
+  'OnTheJobButLookingForAJob',
+]
+
+export function stringForJobStatus(jobStatus: ResumeJobStatus) {
+  switch (jobStatus) {
+    case 'NoJobButNoJob':
+      return '离职-暂不找工作'
+    case 'NoJobButWantJob':
+      return '离职-正在找工作'
+    case 'OnTheJobButLookingForAJob':
+      return '在职-正在找工作'
+    case 'OnTheJob':
+      return '在职-暂不找工作'
+    default:
+      return '不限'
   }
 }

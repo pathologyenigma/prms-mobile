@@ -47,7 +47,7 @@ function citiesForProvince(province: string) {
   return ['不可知之地', '无人区', '神之领域']
 }
 
-export default function CandidateCity() {
+export default function CandidateSearchCity() {
   const [checkedProvince, setCheckedProvince] = useState('热门')
   const [cities, setCities] = useState(citiesForProvince(checkedProvince))
   const [checkedCity, setCheckedCity] = useState(cities[0])

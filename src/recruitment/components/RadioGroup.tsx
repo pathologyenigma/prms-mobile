@@ -1,9 +1,7 @@
 import React, { PropsWithChildren } from 'react'
-import { ViewStyle, StyleProp } from 'react-native'
 import { RadioContext } from './RadioContext'
 
 interface RadioGroupProps {
-  style?: StyleProp<ViewStyle>
   value?: string | number | boolean
   onValueChecked?: (value: any) => void
 }

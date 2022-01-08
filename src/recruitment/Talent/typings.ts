@@ -1,5 +1,5 @@
 import { ParamListBase } from '@react-navigation/native'
-import { Education } from '../typings'
+import { Education, ResumeJobStatus } from '../typings'
 
 interface JobCategory {
   primary: string
@@ -14,13 +14,13 @@ interface IndustryCategory {
 
 export interface TalentParamList extends ParamListBase {
   TalentList: undefined
-  TalentJobCategory: {
+  CandidateFilterJobCategory: {
     categories?: JobCategory[]
   }
-  TalentIndustryCategory: {
+  CandidateFilterIndustryCategory: {
     categories?: IndustryCategory[]
   }
-  JobCity: {
+  CandidateFilterCity: {
     cities?: string[]
   }
   CandidateFilter: {
@@ -31,5 +31,7 @@ export interface TalentParamList extends ParamListBase {
     age?: number[]
     salary?: number[]
     cities?: string[]
+    gender?: boolean
+    resumeJobStatus?: Array<ResumeJobStatus | undefined>
   }
 }

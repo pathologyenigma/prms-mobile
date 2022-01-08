@@ -1,13 +1,5 @@
-import React, { useState } from 'react'
-import {
-  ViewStyle,
-  StyleProp,
-  TextStyle,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-} from 'react-native'
+import React from 'react'
+import { ViewStyle, StyleProp, View, Image } from 'react-native'
 //@ts-ignore
 import Slider from 'rn-range-slider'
 

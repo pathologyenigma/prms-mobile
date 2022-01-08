@@ -20,10 +20,10 @@ import RootLoading from '../../../utils/rootLoading'
 
 const cityLimit = 3
 
-export default function JobCity({
+export default function CandidateFilterCity({
   navigation,
   route,
-}: StackScreenProps<TalentParamList, 'JobCity'>) {
+}: StackScreenProps<TalentParamList, 'CandidateFilterCity'>) {
   const { cities: jobCities = [] } = route.params || {}
 
   const { provinces } = useProvinces()

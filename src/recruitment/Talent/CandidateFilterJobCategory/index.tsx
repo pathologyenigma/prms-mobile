@@ -30,10 +30,10 @@ interface Category {
 
 const categoryLimit = 3
 
-export default function TalentJobCategory({
+export default function CandidateFilterJobCategory({
   navigation,
   route,
-}: StackScreenProps<TalentParamList, 'TalentJobCategory'>) {
+}: StackScreenProps<TalentParamList, 'CandidateFilterJobCategory'>) {
   const { primaryCategories, secondaryCategories, finalCategories } =
     useJobCategory()
 

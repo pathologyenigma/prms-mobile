@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react'
 import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import LabelAndDetail from './LabelAndDetail'
-import CheckLabelGroup from '../../components/CheckLabelGroup'
 import RangeSlider from './RangeSlider'
 import SecondaryButton from '../../components/SecondaryButton'
 import GradientButton from '../../components/GradientButton'
@@ -20,7 +19,11 @@ import {
   experienceLabels,
   experienceValues,
   stirngForSalary,
+  jobStatusLabels,
+  jobStatusValues,
 } from '../../utils/JobHelper'
+import CheckGroup from '../../components/CheckGroup'
+import CheckLabel from '../../components/CheckLabel'
 
 function getAgeRangeDesc(low?: number, high?: number) {
   if (low === undefined || high === undefined) {
@@ -36,6 +39,9 @@ function getAgeRangeDesc(low?: number, high?: number) {
   return low + '-' + high + '岁'
 }
 
+const genderLabels = ['不限', '男', '女']
+const genderValues = [undefined, true, false]
+
 export default function CandidateFilter({
   navigation,
   route,
@@ -48,23 +54,11 @@ export default function CandidateFilter({
     salary,
     industryCategories,
     cities,
+    gender,
+    resumeJobStatus,
   } = route.params || {}
 
-  const [intentions, setIntentions] = useState([
-    { title: '不限', checked: true },
-    { title: '离职-正在找工作', checked: false },
-    { title: '在职-正在找工作', checked: false },
-    { title: '在职-正在找工作', checked: false },
-    { title: '在职-暂时不找工作', checked: false },
-  ])
-
-  const [genders, setGenders] = useState([
-    { title: '不限', checked: true },
-    { title: '男', checked: false },
-    { title: '女', checked: false },
-  ])
-
-  const handleValueChange = useCallback((low, high) => {
+  const handleValueChange = useCallback((low: number, high: number) => {
     navigation.setParams({ age: [low, high] })
   }, [])
 
@@ -81,7 +75,7 @@ export default function CandidateFilter({
             label="职位类别"
             detail={jobCategories && jobCategories.length > 0 ? '' : '不限'}
             onPress={() =>
-              navigation.navigate('TalentJobCategory', {
+              navigation.navigate('CandidateFilterJobCategory', {
                 categories: jobCategories,
               })
             }
@@ -165,7 +159,7 @@ export default function CandidateFilter({
               industryCategories && industryCategories.length > 0 ? '' : '不限'
             }
             onPress={() =>
-              navigation.navigate('TalentIndustryCategory', {
+              navigation.navigate('CandidateFilterIndustryCategory', {
                 categories: industryCategories,
               })
             }
@@ -185,7 +179,9 @@ export default function CandidateFilter({
           <LabelAndDetail
             label="期望城市"
             detail={cities && cities.length > 0 ? '' : '不限'}
-            onPress={() => navigation.navigate('JobCity', { cities })}
+            onPress={() =>
+              navigation.navigate('CandidateFilterCity', { cities })
+            }
           />
           <CancelableTagGroup
             values={cities}
@@ -198,29 +194,55 @@ export default function CandidateFilter({
         </View>
         <View style={styles.section}>
           <SectionHeader title="求职状态" desc="/多选" />
-          <CheckLabelGroup
-            style={styles.sectionBody}
-            labels={intentions}
-            onValuesChange={setIntentions}
-            limit={5}
-            numOfRow={2}
-            horizontalSpace={53}
-          />
+          <CheckGroup
+            values={resumeJobStatus}
+            onValuesChanged={values => {
+              navigation.setParams({ resumeJobStatus: values })
+            }}>
+            <GridView style={styles.sectionBody} spacing={53} numOfRow={2}>
+              {jobStatusLabels.map((e, index) => (
+                <CheckLabel key={e} label={e} value={jobStatusValues[index]} />
+              ))}
+            </GridView>
+          </CheckGroup>
         </View>
         <View style={styles.section}>
           <SectionHeader title="性别" />
-          <CheckLabelGroup
-            style={styles.sectionBody}
-            labels={genders}
-            onValuesChange={setGenders}
-            limit={1}
-            numOfRow={3}
-            horizontalSpace={9}
-          />
+          <RadioGroup
+            value={gender}
+            onValueChecked={e => navigation.setParams({ gender: e })}>
+            <GridView style={styles.sectionBody} spacing={9}>
+              {genderLabels.map((e, index) => (
+                <RadioLabel
+                  key={e}
+                  label={e}
+                  value={genderValues[index]}
+                  style={styles.label}
+                  checkedStyle={styles.checked}
+                />
+              ))}
+            </GridView>
+          </RadioGroup>
         </View>
       </ScrollView>
       <View style={styles.buttons}>
-        <SecondaryButton style={styles.secondary} title="重置" />
+        <SecondaryButton
+          style={styles.secondary}
+          title="重置"
+          onPress={() =>
+            navigation.setParams({
+              jobCategories: undefined,
+              education: undefined,
+              experience: undefined,
+              age: undefined,
+              salary: undefined,
+              industryCategories: undefined,
+              cities: undefined,
+              gender: undefined,
+              resumeJobStatus: undefined,
+            })
+          }
+        />
         <GradientButton style={styles.primary} title="确定" />
       </View>
       <JobSalaryModal

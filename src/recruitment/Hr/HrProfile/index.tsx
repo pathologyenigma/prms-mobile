@@ -8,12 +8,13 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native'
 
-import CheckLabel from '../../components/CheckLabel'
 import GradientButton from '../../components/GradientButton'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import NavBar from '../../components/NavBar'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { useNavigation } from '@react-navigation/native'
+import RadioGroup from '../../components/RadioGroup'
+import RadioLabel from '../../components/RadioLabel'
 interface ItemProps {
   title: string
   detail: string
@@ -56,21 +57,23 @@ export default function HrProfile() {
         <Item title="名称显示" detail="李小冉" onPress={() => {}} />
         <View style={styles.gender}>
           <Text style={styles.genderTitle}>性别</Text>
-          <CheckLabel
-            title="男"
-            checked={false}
-            style={[styles.labelButton, styles.genderButton]}
-          />
-          <CheckLabel
-            title="女"
-            checked={true}
-            style={[
-              { marginLeft: 15 },
-              styles.labelButton,
-              styles.genderButton,
-              styles.labelButtonChecked,
-            ]}
-          />
+          <RadioGroup value={true}>
+            <RadioLabel
+              label="男"
+              value={true}
+              style={[styles.labelButton, styles.genderButton]}
+              checkedStyle={styles.labelButtonChecked}
+            />
+            <RadioLabel
+              label="女"
+              style={[
+                { marginLeft: 15 },
+                styles.labelButton,
+                styles.genderButton,
+              ]}
+              checkedStyle={styles.labelButtonChecked}
+            />
+          </RadioGroup>
         </View>
         <Item title="所在公司" detail="猎德科技有限公司" />
         <Item title="当前职位" detail="人事主管" onPress={() => {}} />
@@ -79,30 +82,32 @@ export default function HrProfile() {
         <View style={styles.capacityContainer}>
           <Text style={styles.title}>选择身份</Text>
           <View style={styles.capacity}>
-            <CheckLabel
-              title="主管/员工"
-              checked={false}
-              style={[styles.labelButton, styles.capacityButton]}
-            />
-            <CheckLabel
-              title="HR/HRBP"
-              checked={true}
-              style={[
-                { marginLeft: 11 },
-                styles.labelButton,
-                styles.capacityButton,
-                styles.labelButtonChecked,
-              ]}
-            />
-            <CheckLabel
-              title="暂时保密"
-              checked={false}
-              style={[
-                { marginLeft: 11 },
-                styles.labelButton,
-                styles.capacityButton,
-              ]}
-            />
+            <RadioGroup value="HR/HRBP">
+              <RadioLabel
+                label="主管/员工"
+                style={[styles.labelButton, styles.capacityButton]}
+                checkedStyle={styles.labelButtonChecked}
+              />
+              <RadioLabel
+                label="HR/HRBP"
+                value="HR/HRBP"
+                style={[
+                  { marginLeft: 11 },
+                  styles.labelButton,
+                  styles.capacityButton,
+                ]}
+                checkedStyle={styles.labelButtonChecked}
+              />
+              <RadioLabel
+                label="暂时保密"
+                style={[
+                  { marginLeft: 11 },
+                  styles.labelButton,
+                  styles.capacityButton,
+                ]}
+                checkedStyle={styles.labelButtonChecked}
+              />
+            </RadioGroup>
           </View>
         </View>
         <GradientButton title="保存" style={styles.button} />

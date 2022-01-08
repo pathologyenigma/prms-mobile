@@ -25,10 +25,10 @@ interface Category {
 
 const industryLimit = 3
 
-export default function TalentIndustryCategory({
+export default function CandidateFilterIndustryCategory({
   navigation,
   route,
-}: StackScreenProps<TalentParamList, 'TalentIndustryCategory'>) {
+}: StackScreenProps<TalentParamList, 'CandidateFilterIndustryCategory'>) {
   const { categories = [] } = route.params || {}
 
   const { loading, primaryCategories, secondaryCategories } =

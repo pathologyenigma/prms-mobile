@@ -28,6 +28,7 @@ export default function CandidateSearch({
           style={styles.city}
           icon={require('./location.png')}
           label="深圳"
+          onPress={() => navigation.navigate('CandidateSearchCity')}
         />
         <SearchBar
           placeholder="搜索职位/公司/学校"
