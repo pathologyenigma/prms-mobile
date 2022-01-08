@@ -15,5 +15,8 @@ export interface TalentParamList extends ParamListBase {
   CandidateFilter: {
     categories?: Category[]
     education?: Education
+    experience?: number
+    age?: number[]
+    salary?: number[]
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { View, StyleSheet, StatusBar, ScrollView } from 'react-native'
 import GradientButton from '../../components/GradientButton'
 import AdmissionPicker from './AdmissionPicker'
@@ -9,15 +9,14 @@ import JobNatureModal from './JobNatureModal'
 import JobAdmissionModal from './JobAdmissionModal'
 import NavBar from '../../components/NavBar'
 import { StackScreenProps } from '@react-navigation/stack'
-import { Education, JobParamList } from '../typings'
+import { JobParamList } from '../typings'
 import {
   stirngForSalary,
   stringForEducation,
   stringForExperience,
   stringForFullTime,
-} from '../JobHelper'
+} from '../../utils/JobHelper'
 import { usePostJob } from './usePostJob'
-import RootLoading from '../../../utils/rootLoading'
 
 function computeDisplayAddress(workingAddress?: string[]) {
   if (!workingAddress) {
@@ -135,11 +134,7 @@ function PostJob({ navigation, route }: Props) {
           salary={salary}
           visible={jobAdmissionModalVisible}
           onDismiss={() => setJobAdmissionModalVisible(false)}
-          onJobAdmissionSelected={(
-            experience: number,
-            education: Education,
-            salary: number[],
-          ) =>
+          onJobAdmissionSelected={(experience, education, salary) =>
             navigation.setParams({
               experience,
               education,

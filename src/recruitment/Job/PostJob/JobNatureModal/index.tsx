@@ -5,7 +5,7 @@ import BottomModal from '../../../components/BottomModal'
 import { getBottomSpace } from 'react-native-iphone-x-helper'
 import TextButton from '../../../components/TextButton'
 import { FullTime } from '../../typings'
-import { stringForFullTime } from '../../JobHelper'
+import { stringForFullTime } from '../../../utils/JobHelper'
 
 interface JobNatureModalProps {
   visible?: boolean

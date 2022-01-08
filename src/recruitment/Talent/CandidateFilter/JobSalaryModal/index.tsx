@@ -1,78 +1,93 @@
-import React, { useState } from 'react'
-import {
-  ViewStyle,
-  StyleProp,
-  TextStyle,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  Platform,
-} from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, View, Platform } from 'react-native'
 import { getBottomSpace, isIphoneX } from 'react-native-iphone-x-helper'
 import BottomModal from '../../../components/BottomModal'
 import Picker from '../../../components/Picker'
 import TextButton from '../../../components/TextButton'
+import {
+  maxSalaryLabels,
+  maxSalaryValues,
+  minSalaryLabels,
+  minSalaryValues,
+} from '../../../utils/JobHelper'
 
 interface JobSalaryModalProps {
   visible: boolean
-  onCancel?: () => void
-}
-
-function range(start: number, end: number, step: number) {
-  return Array(end / step - start / step)
-    .fill(0)
-    .map((el, i) => start + i * step)
-    .map(el => String(el))
+  salary?: number[]
+  onPickSalary?: (salary: number[]) => void
+  onDismiss?: () => void
 }
 
 export default function JobSalaryModal({
   visible,
-  onCancel,
+  onDismiss,
+  salary,
+  onPickSalary,
 }: JobSalaryModalProps) {
-  const [lowSalary, setLowSalary] = useState(5000)
-  const [highSalary, setHighSalary] = useState(6000)
-
-  const handleLowValueChange = (value: number) => {
-    if (value <= highSalary) {
-      setLowSalary(value)
+  // 最低薪资
+  const [selectedMinSalary, setSelectedMinSalary] = useState(15 * 1000)
+  useEffect(() => {
+    if (salary !== undefined) {
+      setSelectedMinSalary(salary[0])
     }
-  }
+  }, [salary])
 
-  const handleHighValueChange = (value: number) => {
-    if (value >= lowSalary) {
-      setHighSalary(value)
+  // 最高薪资
+  const [selectedMaxSalary, setSelectedMaxSalary] = useState(30 * 1000)
+  useEffect(() => {
+    if (salary !== undefined) {
+      setSelectedMaxSalary(salary[1])
     }
-  }
+  }, [salary])
 
   return (
-    <BottomModal visible={visible} contentStyle={styles.content}>
+    <BottomModal
+      visible={visible}
+      contentStyle={styles.content}
+      onDismiss={onDismiss}
+      onRequestClose={onDismiss}>
       <View style={styles.header}>
         <TextButton
           title="取消"
-          onPress={onCancel}
+          onPress={onDismiss}
           style={styles.leftButton}
           textStyle={styles.leftButtonText}
         />
         <Text style={styles.title}>期望薪资</Text>
         <TextButton
           title="确定"
+          onPress={() => {
+            onPickSalary?.([selectedMinSalary, selectedMaxSalary])
+            onDismiss?.()
+          }}
           style={styles.rightButton}
           textStyle={styles.rightButtonText}
         />
       </View>
       <View style={styles.pickerContainer}>
         <Picker
-          style={styles.picker}
-          selectedValue={String(lowSalary)}
-          values={range(0, 100000, 1000)}
-          onValueChange={value => handleLowValueChange(Number(value))}
+          roundRectType="left"
+          style={[
+            styles.picker,
+            { marginRight: Platform.OS === 'ios' ? -9 : 0 },
+          ]}
+          values={minSalaryLabels}
+          selectedValue={`${selectedMinSalary / 1000}k`}
+          onValueChange={(_, index) =>
+            setSelectedMinSalary(minSalaryValues[index])
+          }
         />
         <Picker
-          style={styles.picker}
-          selectedValue={String(highSalary)}
-          values={range(1000, 100000, 1000)}
-          onValueChange={value => handleHighValueChange(Number(value))}
+          roundRectType="right"
+          style={[
+            styles.picker,
+            { marginLeft: Platform.OS === 'ios' ? -9 : 0 },
+          ]}
+          values={maxSalaryLabels}
+          selectedValue={`${selectedMaxSalary / 1000}k`}
+          onValueChange={(_, index) =>
+            setSelectedMaxSalary(maxSalaryValues[index])
+          }
         />
       </View>
     </BottomModal>

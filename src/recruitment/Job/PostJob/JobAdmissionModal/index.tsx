@@ -1,10 +1,23 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, Platform } from 'react-native'
 import { getBottomSpace, isIphoneX } from 'react-native-iphone-x-helper'
 import BottomModal from '../../../components/BottomModal'
 import GradientButton from '../../../components/GradientButton'
 import Picker from '../../../components/Picker'
-import { stringForEducation, stringForExperience } from '../../JobHelper'
+import {
+  educationLabels,
+  educationValues,
+  experienceLabels,
+  experienceValues,
+  maxSalaryLabels,
+  maxSalaryValues,
+  minSalaryLabels,
+  minSalaryValues,
+  stringForEducation,
+  stringForExperience,
+  yearEndSalaryLabels,
+  yearEndSalaryValues,
+} from '../../../utils/JobHelper'
 import { Education } from '../../typings'
 import Tab from './Tab'
 
@@ -17,49 +30,11 @@ interface JobAdmissionModalProps {
   visible?: boolean
   onDismiss?: () => void
   onJobAdmissionSelected?: (
-    experience: number,
-    education: Education,
-    salary: number[],
+    experience?: number,
+    education?: Education,
+    salary?: number[],
   ) => void
 }
-
-function range(min: number, max: number, suffix: string) {
-  return Array(max - min + 1)
-    .fill(1)
-    .map((_, index) => `${index + min}${suffix}`)
-}
-
-function nrange(min: number, max: number, step = 1000) {
-  return Array(max - min + 1)
-    .fill(1)
-    .map((_, index) => (index + min) * step)
-}
-
-const experienceLabels = [
-  '不限',
-  '1 年以下',
-  '1-3 年',
-  '3-5 年',
-  '5-10 年',
-  '10 年以上',
-]
-const experienceValues = [-1, 0, 1, 3, 5, 10]
-
-const educationLabels = ['不限', '大专', '本科', '研究生', '博士']
-const educationValues: Education[] = [
-  'High',
-  'JuniorCollege',
-  'RegularCollege',
-  'Postgraduate',
-  'Doctor',
-]
-
-const minSalaryLabels = range(1, 490, 'k')
-const minSalaryValues = nrange(1, 490)
-const maxSalaryLabels = range(2, 500, 'k')
-const maxSalaryValues = nrange(2, 500)
-const yearEndSalaryLabels = ['不设置', ...range(13, 24, '薪')]
-const yearEndSalaryValues = nrange(12, 24, 1)
 
 export default function JobAdmissionModal({
   tabIndex,
@@ -72,7 +47,7 @@ export default function JobAdmissionModal({
   onJobAdmissionSelected,
 }: JobAdmissionModalProps) {
   // 工作经验
-  const [selectedExperience, setSelectedExperience] = useState(-1)
+  const [selectedExperience, setSelectedExperience] = useState<number>()
   useEffect(() => {
     if (experience !== undefined) {
       setSelectedExperience(experience)
@@ -81,8 +56,9 @@ export default function JobAdmissionModal({
   const [isExperienceSelected, setExperienceSelected] = useState(false)
 
   // 最低学历
-  const [selectedEducation, setSelectedEducation] =
-    useState<Education>('RegularCollege')
+  const [selectedEducation, setSelectedEducation] = useState<
+    Education | undefined
+  >('RegularCollege')
   useEffect(() => {
     if (education) {
       setSelectedEducation(education)

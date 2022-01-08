@@ -8,6 +8,8 @@ export type Education =
   | 'Postgraduate'
   | 'Doctor'
 
+export type FullTime = 'Full' | 'Part' | 'InternShip'
+
 export type ResumeJobStatus =
   | 'NoJobButNoJob'
   | 'NoJobButWantJob'

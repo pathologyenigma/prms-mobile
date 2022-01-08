@@ -1,4 +1,4 @@
-import { Education, FullTime } from './typings'
+import { Education, FullTime } from '../typings'
 
 export function stringForFullTime(fullTime: FullTime) {
   switch (fullTime) {
@@ -13,7 +13,21 @@ export function stringForFullTime(fullTime: FullTime) {
   }
 }
 
-export function stringForExperience(experience: number) {
+export const experienceLabels = [
+  '不限',
+  '1 年以下',
+  '1-3 年',
+  '3-5 年',
+  '5-10 年',
+  '10 年以上',
+]
+export const experienceValues = [undefined, 0, 1, 3, 5, 10]
+
+export function stringForExperience(experience?: number) {
+  if (experience === undefined) {
+    return '不限'
+  }
+
   if (experience >= 10) {
     return '10 年以上'
   }
@@ -37,7 +51,25 @@ export function stringForExperience(experience: number) {
   return '不限'
 }
 
-export function stringForEducation(education: Education) {
+export const educationLabels = [
+  '不限',
+  '高中',
+  '大专',
+  '本科',
+  '研究生',
+  '博士',
+]
+
+export const educationValues: Array<Education | undefined> = [
+  undefined,
+  'High',
+  'JuniorCollege',
+  'RegularCollege',
+  'Postgraduate',
+  'Doctor',
+]
+
+export function stringForEducation(education?: Education) {
   // | 'LessThanPrime'
   // | 'Primary'
   // | 'Junior'
@@ -61,6 +93,25 @@ export function stringForEducation(education: Education) {
       return '不限'
   }
 }
+
+function range(min: number, max: number, suffix: string) {
+  return Array(max - min + 1)
+    .fill(1)
+    .map((_, index) => `${index + min}${suffix}`)
+}
+
+function nrange(min: number, max: number, step = 1000) {
+  return Array(max - min + 1)
+    .fill(1)
+    .map((_, index) => (index + min) * step)
+}
+
+export const minSalaryLabels = range(1, 490, 'k')
+export const minSalaryValues = nrange(1, 490)
+export const maxSalaryLabels = range(2, 500, 'k')
+export const maxSalaryValues = nrange(2, 500)
+export const yearEndSalaryLabels = ['不设置', ...range(13, 24, '薪')]
+export const yearEndSalaryValues = nrange(12, 24, 1)
 
 export function stirngForSalary(salary: number[]) {
   if (salary.length === 2) {

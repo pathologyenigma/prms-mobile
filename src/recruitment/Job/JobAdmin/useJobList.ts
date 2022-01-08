@@ -4,7 +4,7 @@ import {
   stringForEducation,
   stringForExperience,
   stringForFullTime,
-} from '../JobHelper'
+} from '../../utils/JobHelper'
 import { useCallback, useMemo } from 'react'
 
 interface JobData {

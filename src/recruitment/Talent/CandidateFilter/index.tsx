@@ -14,23 +14,19 @@ import CancelableTagGroup from './CancelableTagGroup'
 import RadioGroup from '../../components/RadioGroup'
 import GridView from '../../components/GridView'
 import RadioLabel from '../../components/RadioLabel'
-import { educationLabels, educationValues } from '../../utils/Educations'
+import {
+  educationLabels,
+  educationValues,
+  experienceLabels,
+  experienceValues,
+  stirngForSalary,
+} from '../../utils/JobHelper'
 
 export default function CandidateFilter({
   navigation,
   route,
 }: StackScreenProps<TalentParamList, 'CandidateFilter'>) {
-  const { categories, education } = route.params || {}
-
-  const [experiences, setExperiences] = useState([
-    { title: '不限', checked: true },
-    { title: '在校/应届', checked: false },
-    { title: '1 年以下', checked: false },
-    { title: '1-3 年', checked: false },
-    { title: '3-5 年', checked: false },
-    { title: '5-10 年', checked: false },
-    { title: '10 年以上', checked: false },
-  ])
+  const { categories, education, experience, age, salary } = route.params || {}
 
   const [intentions, setIntentions] = useState([
     { title: '不限', checked: true },
@@ -46,14 +42,15 @@ export default function CandidateFilter({
     { title: '女', checked: false },
   ])
 
-  const [ageLow, setAgeLow] = useState(16)
-  const [ageHigh, setAgeHigh] = useState(40)
   const handleValueChange = useCallback((low, high) => {
-    setAgeLow(low)
-    setAgeHigh(high)
+    navigation.setParams({ age: [low, high] })
   }, [])
 
-  function getAgeCondition(low: number, high: number) {
+  function getAgeCondition(low?: number, high?: number) {
+    if (low === undefined || high === undefined) {
+      return '不限'
+    }
+
     if (high >= 40 && low <= 16) {
       return '不限'
     }
@@ -115,19 +112,28 @@ export default function CandidateFilter({
         </View>
         <View style={styles.section}>
           <SectionHeader title="工作经验" />
-          <CheckLabelGroup
-            style={styles.sectionBody}
-            labels={experiences}
-            onValuesChange={setExperiences}
-            limit={1}
-            numOfRow={3}
-            horizontalSpace={9}
-          />
+          <RadioGroup
+            value={experience}
+            onValueChecked={e => navigation.setParams({ experience: e })}>
+            <GridView style={styles.sectionBody} spacing={9}>
+              {experienceLabels.map((e, index) => (
+                <RadioLabel
+                  key={e}
+                  label={e}
+                  value={experienceValues[index]}
+                  style={styles.label}
+                  checkedStyle={styles.checked}
+                />
+              ))}
+            </GridView>
+          </RadioGroup>
         </View>
         <View style={styles.section}>
           <SectionHeader title="年龄" />
           <View style={styles.ageRangeSliderContainer}>
-            <Text style={styles.age}>{getAgeCondition(ageLow, ageHigh)}</Text>
+            <Text style={styles.age}>
+              {getAgeCondition(age?.[0], age?.[1])}
+            </Text>
             <RangeSlider
               style={styles.range}
               min={16}
@@ -143,7 +149,7 @@ export default function CandidateFilter({
         <View style={styles.section}>
           <LabelAndDetail
             label="期望薪资"
-            detail="不限"
+            detail={salary ? stirngForSalary(salary) : '不限'}
             onPress={() => setSalaryModalVisible(true)}
           />
         </View>
@@ -190,7 +196,9 @@ export default function CandidateFilter({
       </View>
       <JobSalaryModal
         visible={salaryModalVisible}
-        onCancel={() => setSalaryModalVisible(false)}
+        onDismiss={() => setSalaryModalVisible(false)}
+        salary={salary}
+        onPickSalary={salary => navigation.setParams({ salary })}
       />
     </View>
   )
@@ -298,7 +306,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     borderRadius: 4,
     overflow: 'hidden',
-    marginBottom: 15,
   },
   checked: {
     color: '#79D398',
