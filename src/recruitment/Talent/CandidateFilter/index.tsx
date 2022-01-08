@@ -22,12 +22,33 @@ import {
   stirngForSalary,
 } from '../../utils/JobHelper'
 
+function getAgeRangeDesc(low?: number, high?: number) {
+  if (low === undefined || high === undefined) {
+    return '不限'
+  }
+
+  if (high >= 40 && low <= 16) {
+    return '不限'
+  }
+  if (high >= 40) {
+    return low + '岁以上'
+  }
+  return low + '-' + high + '岁'
+}
+
 export default function CandidateFilter({
   navigation,
   route,
 }: StackScreenProps<TalentParamList, 'CandidateFilter'>) {
-  const { categories, education, experience, age, salary, industryCategories } =
-    route.params || {}
+  const {
+    jobCategories,
+    education,
+    experience,
+    age,
+    salary,
+    industryCategories,
+    cities,
+  } = route.params || {}
 
   const [intentions, setIntentions] = useState([
     { title: '不限', checked: true },
@@ -47,23 +68,7 @@ export default function CandidateFilter({
     navigation.setParams({ age: [low, high] })
   }, [])
 
-  function getAgeCondition(low?: number, high?: number) {
-    if (low === undefined || high === undefined) {
-      return '不限'
-    }
-
-    if (high >= 40 && low <= 16) {
-      return '不限'
-    }
-    if (high >= 40) {
-      return low + '岁以上'
-    }
-    return low + '-' + high + '岁'
-  }
-
   const [salaryModalVisible, setSalaryModalVisible] = useState(false)
-
-  const [selectedCities, setSelectedCities] = useState(['深圳'])
 
   return (
     <View style={styles.container}>
@@ -74,16 +79,20 @@ export default function CandidateFilter({
         <View style={styles.section}>
           <LabelAndDetail
             label="职位类别"
-            detail={categories && categories.length > 0 ? '' : '不限'}
+            detail={jobCategories && jobCategories.length > 0 ? '' : '不限'}
             onPress={() =>
-              navigation.navigate('TalentJobCategory', { categories })
+              navigation.navigate('TalentJobCategory', {
+                categories: jobCategories,
+              })
             }
           />
           <CancelableTagGroup
-            values={categories?.map(c => c.final)}
+            values={jobCategories?.map(c => c.final)}
             onValuesChange={values =>
               navigation.setParams({
-                categories: categories?.filter(c => values.includes(c.final)),
+                jobCategories: jobCategories?.filter(c =>
+                  values.includes(c.final),
+                ),
               })
             }
           />
@@ -128,7 +137,7 @@ export default function CandidateFilter({
           <SectionHeader title="年龄" />
           <View style={styles.ageRangeSliderContainer}>
             <Text style={styles.age}>
-              {getAgeCondition(age?.[0], age?.[1])}
+              {getAgeRangeDesc(age?.[0], age?.[1])}
             </Text>
             <RangeSlider
               style={styles.range}
@@ -173,10 +182,18 @@ export default function CandidateFilter({
           />
         </View>
         <View style={styles.section}>
-          <LabelAndDetail label="期望工作地点" detail="不限" />
+          <LabelAndDetail
+            label="期望城市"
+            detail={cities && cities.length > 0 ? '' : '不限'}
+            onPress={() => navigation.navigate('JobCity', { cities })}
+          />
           <CancelableTagGroup
-            values={selectedCities}
-            onValuesChange={setSelectedCities}
+            values={cities}
+            onValuesChange={values =>
+              navigation.setParams({
+                cities: cities?.filter(c => values.includes(c)),
+              })
+            }
           />
         </View>
         <View style={styles.section}>

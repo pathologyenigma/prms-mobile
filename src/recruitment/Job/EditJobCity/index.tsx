@@ -9,8 +9,8 @@ import {
 } from 'react-native'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import NavBar from '../../components/NavBar'
-import { Province, useProvinces } from './useProvinces'
-import { City, useCities } from './useCities'
+import { Province, useProvinces } from '../../hooks/useProvinces'
+import { City, useCities } from '../../hooks/useCities'
 import { StackScreenProps } from '@react-navigation/stack'
 import { JobParamList } from '../typings'
 import { useGeoLocation } from '../../hooks/useGeoLocation'
@@ -66,16 +66,17 @@ export default function EditJobCity({
   }
 
   const renderCityItem: ListRenderItem<City> = ({ item }) => {
-    const { name } = item
+    let { name } = item
+
+    if (name === '市辖区' || name === '县') {
+      name = province!.name
+    }
+
     return (
       <TouchableWithoutFeedback
         onPress={() => {
-          let city = name
-          if (name === '市辖区') {
-            city = province!.name
-          }
-          if (city !== '定位中...') {
-            navigation.navigate('SearchJobAddress', { city })
+          if (name !== '定位中...') {
+            navigation.navigate('SearchJobAddress', { city: name })
           }
         }}>
         <View style={[styles.item]}>

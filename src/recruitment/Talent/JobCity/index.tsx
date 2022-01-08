@@ -8,76 +8,62 @@ import {
   ListRenderItem,
   TouchableWithoutFeedback,
 } from 'react-native'
-import TextButton from '../../../components/TextButton'
-import CancelableTag from '../../components/CancelableTag'
+import TextButton from '../../components/TextButton'
+import CancelableTag from '../components/CancelableTag'
 import { isIphoneX } from 'react-native-iphone-x-helper'
-import NavBar from '../../../components/NavBar'
+import NavBar from '../../components/NavBar'
+import { StackScreenProps } from '@react-navigation/stack'
+import { TalentParamList } from '../typings'
+import { Province, useProvinces } from '../../hooks/useProvinces'
+import { City, useCities } from '../../hooks/useCities'
+import RootLoading from '../../../utils/rootLoading'
 
-const provinces = [
-  '热门',
-  '安徽',
-  '福建',
-  '甘肃',
-  '广东',
-  '广西',
-  '贵州',
-  '海南',
-  '河北',
-  '黑龙江',
-  '河南',
-]
+const cityLimit = 3
 
-const hotCities = [
-  '北京',
-  '深圳',
-  '广州',
-  '上海',
-  '南京',
-  '西安',
-  '成都',
-  '大连',
-  '长春',
-  '沈阳',
-  '杭州',
-  '苏州',
-]
+export default function JobCity({
+  navigation,
+  route,
+}: StackScreenProps<TalentParamList, 'JobCity'>) {
+  const { cities: jobCities = [] } = route.params || {}
 
-function citiesForProvince(province: string) {
-  if (province === '热门') {
-    return hotCities
-  }
-  return ['不可知之地', '无人区', '神之领域']
-}
-
-export default function JobCity() {
-  const [checkedProvince, setCheckedProvince] = useState('热门')
-  const [cities, setCities] = useState(citiesForProvince(checkedProvince))
-  const cityLimit = 3
-  const [selectedCities, setSelectedCities] = useState(['深圳'])
-
-  const handleCityChecked = (city: string, checked: boolean) => {
-    if (!checked) {
-      setSelectedCities(cities => cities.filter(c => c !== city))
-      return
-    }
-
-    if (selectedCities.length >= cityLimit) {
-      // TODO: toast
-      return
-    }
-
-    setSelectedCities(cities => [...cities, city])
-  }
+  const { provinces } = useProvinces()
+  const [province, setProvince] = useState<Province>()
+  const { cities, getCities } = useCities()
 
   useEffect(() => {
-    const cities = citiesForProvince(checkedProvince)
-    setCities(cities)
-  }, [checkedProvince])
+    if (provinces) {
+      setProvince(provinces[0])
+    }
+  }, [provinces])
 
-  const renderProviceItem: ListRenderItem<string> = ({ item }) => {
-    const checked = item === checkedProvince
+  useEffect(() => {
+    if (province && province.id !== '0') {
+      getCities(province.id)
+    }
+  }, [province])
+
+  const handleCityChecked = (city: City, checked: boolean) => {
+    if (!checked) {
+      navigation.setParams({
+        cities: jobCities.filter(c => c !== city.name),
+      })
+      return
+    }
+
+    if (jobCities.length >= cityLimit) {
+      RootLoading.info(`最多可选 ${cityLimit} 项`)
+      return
+    }
+    navigation.setParams({
+      cities: [...jobCities, city.name],
+    })
+  }
+
+  const renderProviceItem: ListRenderItem<Province> = ({ item }) => {
+    const { name, id } = item
+    const checked = id === province?.id
     return (
-      <TouchableWithoutFeedback onPress={() => setCheckedProvince(item)}>
+      <TouchableWithoutFeedback onPress={() => setProvince(item)}>
         <View style={styles.item}>
           {checked && <View style={styles.provinceCheckedIndicator}></View>}
           <Text
@@ -85,30 +71,35 @@ export default function JobCity() {
               styles.provinceText,
               checked ? styles.itemTextChecked : undefined,
             ]}>
-            {item}
+            {name}
           </Text>
         </View>
       </TouchableWithoutFeedback>
     )
   }
 
-  const renderCityItem: ListRenderItem<string> = ({ item }) => {
-    const checked = selectedCities.includes(item)
+  const renderCityItem: ListRenderItem<City> = ({ item }) => {
+    let { name, id } = item
+    if (name === '市辖区' || name === '县') {
+      name = province!.name
+    }
+
+    const checked = jobCities.includes(name)
     return (
       <TouchableWithoutFeedback
-        onPress={() => handleCityChecked(item, !checked)}>
+        onPress={() => handleCityChecked({ name, id }, !checked)}>
         <View style={[styles.item]}>
           <Text
             style={[
               styles.cityText,
               checked ? styles.itemTextChecked : undefined,
             ]}>
-            {item}
+            {name}
           </Text>
           {checked && (
             <Image
               style={styles.cityCheckedIndicator}
-              source={require('../../images/checked.png')}
+              source={require('../images/checked.png')}
             />
           )}
         </View>
@@ -119,25 +110,30 @@ export default function JobCity() {
   return (
     <View style={styles.container}>
       <NavBar
-        title="期望工作地"
+        title="期望城市"
         headerRight={() => (
-          <TextButton title="保存" textStyle={styles.rightButton} />
+          <TextButton
+            title="保存"
+            onPress={() =>
+              navigation.navigate('CandidateFilter', { cities: jobCities })
+            }
+          />
         )}
       />
       <View style={styles.selectedTagContainer}>
         <Text style={styles.count}>
-          已选（{selectedCities.length}/{cityLimit}）
+          已选（{jobCities.length}/{cityLimit}）
         </Text>
         <View style={styles.tags}>
-          {selectedCities.map(tag => (
+          {jobCities.map(city => (
             <CancelableTag
               style={styles.tag}
-              tag={tag}
-              key={tag}
+              tag={city}
+              key={city}
               onClose={() =>
-                setSelectedCities(
-                  selectedCities.filter(category => category !== tag),
-                )
+                navigation.setParams({
+                  cities: jobCities.filter(c => c !== city),
+                })
               }
             />
           ))}
@@ -146,7 +142,7 @@ export default function JobCity() {
       <View style={styles.listContainer}>
         <FlatList
           data={provinces}
-          keyExtractor={item => item}
+          keyExtractor={item => item.id}
           renderItem={renderProviceItem}
           style={styles.provinceContainer}
           contentContainerStyle={styles.content}
@@ -154,7 +150,7 @@ export default function JobCity() {
         />
         <FlatList
           data={cities}
-          keyExtractor={item => item}
+          keyExtractor={item => item.id}
           renderItem={renderCityItem}
           style={styles.cityContainer}
           contentContainerStyle={styles.content}

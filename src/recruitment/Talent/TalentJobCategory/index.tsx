@@ -145,7 +145,9 @@ export default function TalentJobCategory({
           <TextButton
             title="保存"
             onPress={() =>
-              navigation.navigate('CandidateFilter', { categories })
+              navigation.navigate('CandidateFilter', {
+                jobCategories: categories,
+              })
             }
           />
         )}

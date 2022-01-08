@@ -20,12 +20,16 @@ export interface TalentParamList extends ParamListBase {
   TalentIndustryCategory: {
     categories?: IndustryCategory[]
   }
+  JobCity: {
+    cities?: string[]
+  }
   CandidateFilter: {
-    categories?: JobCategory[]
+    jobCategories?: JobCategory[]
     industryCategories?: IndustryCategory[]
     education?: Education
     experience?: number
     age?: number[]
     salary?: number[]
+    cities?: string[]
   }
 }

@@ -58,7 +58,7 @@ export default function TalentIndustryCategory({
     })
   }
 
-  const renderProviceItem: ListRenderItem<string> = ({ item }) => {
+  const renderPrimaryItem: ListRenderItem<string> = ({ item }) => {
     const checked = item === primaryCategory
     return (
       <TouchableWithoutFeedback onPress={() => setPrimaryCategory(item)}>
@@ -76,7 +76,7 @@ export default function TalentIndustryCategory({
     )
   }
 
-  const renderCityItem: ListRenderItem<string> = ({ item }) => {
+  const renderSencodaryItem: ListRenderItem<string> = ({ item }) => {
     const checked = categories.map(c => c.secondary).includes(item)
     return (
       <TouchableWithoutFeedback
@@ -147,7 +147,7 @@ export default function TalentIndustryCategory({
             <FlatList
               data={primaryCategories}
               keyExtractor={item => item}
-              renderItem={renderProviceItem}
+              renderItem={renderPrimaryItem}
               style={styles.primaryTradeContainer}
               contentContainerStyle={styles.content}
               showsVerticalScrollIndicator={false}
@@ -155,7 +155,7 @@ export default function TalentIndustryCategory({
             <FlatList
               data={secondaryCategories(primaryCategory)}
               keyExtractor={item => item}
-              renderItem={renderCityItem}
+              renderItem={renderSencodaryItem}
               style={styles.secondaryTradeContainer}
               contentContainerStyle={styles.content}
               showsVerticalScrollIndicator={false}

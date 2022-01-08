@@ -6,7 +6,7 @@ import CandidateSearch from './CandidateSearch'
 import CandidateCity from './CandidateCity'
 import CandidateFilter from './CandidateFilter'
 import TalentJobCategory from './TalentJobCategory'
-import JobCity from './CandidateFilter/JobCity'
+import JobCity from './JobCity'
 import TalentIndustryCategory from './TalentIndustryCategory'
 
 const screens = {

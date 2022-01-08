@@ -21,7 +21,7 @@ export function useCities() {
     () =>
       data?.StaticGetCities.map(
         ({ name, city_id }) => ({ id: city_id, name } as City),
-      ),
+      ).filter(c => c.name !== '县'),
     [data],
   )
 
