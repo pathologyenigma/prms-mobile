@@ -1,4 +1,5 @@
 import { ParamListBase } from '@react-navigation/native'
+import { Education } from '../typings'
 
 interface Category {
   primary: string
@@ -13,5 +14,6 @@ export interface TalentParamList extends ParamListBase {
   }
   CandidateFilter: {
     categories?: Category[]
+    education?: Education
   }
 }

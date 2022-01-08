@@ -12,21 +12,15 @@ import NavBar from '../../components/NavBar'
 import { TalentParamList } from '../typings'
 import CancelableTagGroup from './CancelableTagGroup'
 import RadioGroup from '../../components/RadioGroup'
+import GridView from '../../components/GridView'
+import RadioLabel from '../../components/RadioLabel'
+import { educationLabels, educationValues } from '../../utils/Educations'
 
 export default function CandidateFilter({
   navigation,
   route,
 }: StackScreenProps<TalentParamList, 'CandidateFilter'>) {
-  const { categories } = route.params || {}
-
-  const [educations, setEducations] = useState([
-    { title: '不限', checked: true },
-    { title: '高中', checked: false },
-    { title: '大专', checked: false },
-    { title: '本科', checked: false },
-    { title: '硕士', checked: false },
-    { title: '博士', checked: false },
-  ])
+  const { categories, education } = route.params || {}
 
   const [experiences, setExperiences] = useState([
     { title: '不限', checked: true },
@@ -103,14 +97,21 @@ export default function CandidateFilter({
         </View>
         <View style={styles.section}>
           <SectionHeader title="学历" />
-          <CheckLabelGroup
-            style={styles.sectionBody}
-            labels={educations}
-            onValuesChange={setEducations}
-            limit={1}
-            numOfRow={3}
-            horizontalSpace={9}
-          />
+          <RadioGroup
+            value={education}
+            onValueChecked={e => navigation.setParams({ education: e })}>
+            <GridView style={styles.sectionBody} spacing={9}>
+              {educationLabels.map((e, index) => (
+                <RadioLabel
+                  key={e}
+                  label={e}
+                  value={educationValues[index]}
+                  style={styles.label}
+                  checkedStyle={styles.checked}
+                />
+              ))}
+            </GridView>
+          </RadioGroup>
         </View>
         <View style={styles.section}>
           <SectionHeader title="工作经验" />
@@ -287,5 +288,21 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 34,
     marginLeft: 9,
+  },
+  label: {
+    color: '#666666',
+    fontSize: 13,
+    backgroundColor: '#F0F0F0',
+    height: 34,
+    lineHeight: 34,
+    textAlign: 'center',
+    borderRadius: 4,
+    overflow: 'hidden',
+    marginBottom: 15,
+  },
+  checked: {
+    color: '#79D398',
+    backgroundColor: '#E7FEF1',
+    fontWeight: 'bold',
   },
 })

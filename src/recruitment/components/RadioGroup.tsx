@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect, useState } from 'react'
+import React, { PropsWithChildren } from 'react'
 import { ViewStyle, StyleProp } from 'react-native'
 import { RadioContext } from './RadioContext'
 
@@ -13,13 +13,9 @@ export default function RadioGroup({
   onValueChecked,
   children,
 }: PropsWithChildren<RadioGroupProps>) {
-  const [checkedValue, setCheckedValue] = useState<string | number | boolean>()
-
-  useEffect(() => {
-    if (checkedValue !== undefined) {
-      onValueChecked?.(checkedValue)
-    }
-  }, [checkedValue, onValueChecked])
+  const setCheckedValue = (v: any) => {
+    onValueChecked?.(v)
+  }
 
   return (
     <RadioContext.Provider value={{ checkedValue: value, setCheckedValue }}>

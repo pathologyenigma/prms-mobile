@@ -1,6 +1,6 @@
 import { gql, useLazyQuery } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
-import { Education, ResumeJobStatus } from '../../typing'
+import { Education, ResumeJobStatus } from '../../typings'
 
 interface CandidateData {
   id: number
