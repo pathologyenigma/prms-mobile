@@ -26,7 +26,8 @@ export default function CandidateFilter({
   navigation,
   route,
 }: StackScreenProps<TalentParamList, 'CandidateFilter'>) {
-  const { categories, education, experience, age, salary } = route.params || {}
+  const { categories, education, experience, age, salary, industryCategories } =
+    route.params || {}
 
   const [intentions, setIntentions] = useState([
     { title: '不限', checked: true },
@@ -62,13 +63,6 @@ export default function CandidateFilter({
 
   const [salaryModalVisible, setSalaryModalVisible] = useState(false)
 
-  // 期望行业
-  const [selectedTrades, setSelectedTrades] = useState([
-    '人工智能',
-    '信息安全',
-    '计算机硬件',
-  ])
-
   const [selectedCities, setSelectedCities] = useState(['深圳'])
 
   return (
@@ -81,7 +75,9 @@ export default function CandidateFilter({
           <LabelAndDetail
             label="职位类别"
             detail={categories && categories.length > 0 ? '' : '不限'}
-            onPress={() => navigation.navigate('JobCategory', { categories })}
+            onPress={() =>
+              navigation.navigate('TalentJobCategory', { categories })
+            }
           />
           <CancelableTagGroup
             values={categories?.map(c => c.final)}
@@ -154,10 +150,26 @@ export default function CandidateFilter({
           />
         </View>
         <View style={styles.section}>
-          <LabelAndDetail label="期望行业" detail="不限" />
+          <LabelAndDetail
+            label="期望行业"
+            detail={
+              industryCategories && industryCategories.length > 0 ? '' : '不限'
+            }
+            onPress={() =>
+              navigation.navigate('TalentIndustryCategory', {
+                categories: industryCategories,
+              })
+            }
+          />
           <CancelableTagGroup
-            values={selectedTrades}
-            onValuesChange={setSelectedTrades}
+            values={industryCategories?.map(c => c.secondary)}
+            onValuesChange={values =>
+              navigation.setParams({
+                industryCategories: industryCategories?.filter(c =>
+                  values.includes(c.secondary),
+                ),
+              })
+            }
           />
         </View>
         <View style={styles.section}>

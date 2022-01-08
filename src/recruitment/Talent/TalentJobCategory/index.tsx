@@ -12,7 +12,7 @@ import {
 import TextButton from '../../components/TextButton'
 import CancelableTag from '../components/CancelableTag'
 import NavBar from '../../components/NavBar'
-import { useJobCategory } from '../../Job/EditJobCategory/useJobCategory'
+import { useJobCategory } from '../../hooks/useJobCategory'
 import { StackScreenProps } from '@react-navigation/stack'
 import { TalentParamList } from '../typings'
 import RootLoading from '../../../utils/rootLoading'
@@ -30,10 +30,10 @@ interface Category {
 
 const categoryLimit = 3
 
-export default function JobCategory({
+export default function TalentJobCategory({
   navigation,
   route,
-}: StackScreenProps<TalentParamList, 'JobCategory'>) {
+}: StackScreenProps<TalentParamList, 'TalentJobCategory'>) {
   const { primaryCategories, secondaryCategories, finalCategories } =
     useJobCategory()
 

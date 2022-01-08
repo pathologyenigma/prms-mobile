@@ -1,19 +1,28 @@
 import { ParamListBase } from '@react-navigation/native'
 import { Education } from '../typings'
 
-interface Category {
+interface JobCategory {
   primary: string
   secondary: string
   final: string
 }
 
+interface IndustryCategory {
+  primary: string
+  secondary: string
+}
+
 export interface TalentParamList extends ParamListBase {
   TalentList: undefined
-  JobCategory: {
-    categories?: Category[]
+  TalentJobCategory: {
+    categories?: JobCategory[]
+  }
+  TalentIndustryCategory: {
+    categories?: IndustryCategory[]
   }
   CandidateFilter: {
-    categories?: Category[]
+    categories?: JobCategory[]
+    industryCategories?: IndustryCategory[]
     education?: Education
     experience?: number
     age?: number[]

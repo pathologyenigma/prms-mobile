@@ -5,9 +5,9 @@ import TalentDetailWithJudgment from './TalentDetailWithJudgment'
 import CandidateSearch from './CandidateSearch'
 import CandidateCity from './CandidateCity'
 import CandidateFilter from './CandidateFilter'
-import JobCategory from './JobCategory'
+import TalentJobCategory from './TalentJobCategory'
 import JobCity from './CandidateFilter/JobCity'
-import JobTrade from './CandidateFilter/JobTrade'
+import TalentIndustryCategory from './TalentIndustryCategory'
 
 const screens = {
   TalentDetail,
@@ -17,9 +17,9 @@ const screens = {
   CandidateSearch,
   CandidateFilter,
   CandidateCity,
-  JobCategory,
+  TalentJobCategory,
   JobCity,
-  JobTrade,
+  TalentIndustryCategory,
 }
 
 export default screens

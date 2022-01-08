@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import NavBar from '../../components/NavBar'
 import { JobParamList } from '../typings'
-import { useJobCategory } from './useJobCategory'
+import { useJobCategory } from '../../hooks/useJobCategory'
 
 interface CascadedCategory {
   primary: string
