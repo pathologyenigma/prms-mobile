@@ -5,7 +5,7 @@ import BottomModal from '../../../components/BottomModal'
 import GradientButton from '../../../components/GradientButton'
 import Picker from '../../../components/Picker'
 import { stringForEducation, stringForExperience } from '../../JobHelper'
-import { Education } from '../../typing'
+import { Education } from '../../typings'
 import Tab from './Tab'
 
 interface JobAdmissionModalProps {

@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { useCallback, useEffect, useMemo } from 'react'
 import RootLoading from '../../../utils/rootLoading'
-import { Education, FullTime, JobParamList } from '../typing'
+import { Education, FullTime, JobParamList } from '../typings'
 
 export interface PostJobInput {
   jobTitle: string

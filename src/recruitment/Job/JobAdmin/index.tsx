@@ -7,7 +7,7 @@ import TabBar from '../../components/TabBar'
 import NavBar from '../../components/NavBar'
 import GradientButton from '../../components/GradientButton'
 import { isIphoneX } from 'react-native-iphone-x-helper'
-import { JobStatus } from '../typing'
+import { JobStatus } from '../typings'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 

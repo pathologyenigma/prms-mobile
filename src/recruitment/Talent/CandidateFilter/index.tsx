@@ -1,19 +1,22 @@
 import React, { useCallback, useState } from 'react'
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native'
-import { StackNavigationProp } from '@react-navigation/stack'
+import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import { StackScreenProps } from '@react-navigation/stack'
 import LabelAndDetail from './LabelAndDetail'
 import CheckLabelGroup from '../../components/CheckLabelGroup'
 import RangeSlider from './RangeSlider'
 import SecondaryButton from '../../components/SecondaryButton'
 import GradientButton from '../../components/GradientButton'
 import { isIphoneX } from 'react-native-iphone-x-helper'
-import { useNavigation } from '@react-navigation/native'
 import JobSalaryModal from './JobSalaryModal'
 import CancelableTag from './CancelableTag'
 import NavBar from '../../components/NavBar'
+import { TalentParamList } from '../typings'
 
-export default function CandidateFilter() {
-  const [selectedCategories, setSelectedCategories] = useState(['产品经理'])
+export default function CandidateFilter({
+  navigation,
+  route,
+}: StackScreenProps<TalentParamList, 'CandidateFilter'>) {
+  const { categories } = route.params || {}
 
   const [educations, setEducations] = useState([
     { title: '不限', checked: true },
@@ -76,8 +79,6 @@ export default function CandidateFilter() {
 
   const [selectedCities, setSelectedCities] = useState(['深圳'])
 
-  const navigation = useNavigation<StackNavigationProp<any>>()
-
   return (
     <View style={styles.container}>
       <NavBar title="筛选" />
@@ -87,12 +88,16 @@ export default function CandidateFilter() {
         <View style={styles.section}>
           <LabelAndDetail
             label="职位类别"
-            detail="不限"
-            onPress={() => navigation.navigate('JobCategory')}
+            detail={categories && categories.length > 0 ? '' : '不限'}
+            onPress={() => navigation.navigate('JobCategory', { categories })}
           />
           <CancelableTagGroup
-            values={selectedCategories}
-            onValuesChange={setSelectedCategories}
+            values={categories?.map(c => c.final)}
+            onValuesChange={values =>
+              navigation.setParams({
+                categories: categories?.filter(c => values.includes(c.final)),
+              })
+            }
           />
         </View>
         <View style={styles.section}>
@@ -204,12 +209,12 @@ function SectionHeader({ title, desc }: SectionHeaderProps) {
 }
 
 interface CancelableTagGroupProps {
-  values: string[]
+  values?: string[]
   onValuesChange: (values: string[]) => void
 }
 
 function CancelableTagGroup({
-  values,
+  values = [],
   onValuesChange,
 }: CancelableTagGroupProps) {
   return (

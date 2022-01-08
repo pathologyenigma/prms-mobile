@@ -5,7 +5,7 @@ import JobInfoItem from '../PostJob/JobInfoItem'
 import TextInputWithCounter from '../../components/TextInputWithCounter'
 import { StackScreenProps } from '@react-navigation/stack'
 import NavBar from '../../components/NavBar'
-import { JobParamList } from '../typing'
+import { JobParamList } from '../typings'
 import { PoiItem } from '../../../bridge/geolocation'
 import RootLoading from '../../../utils/rootLoading'
 

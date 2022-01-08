@@ -5,7 +5,7 @@ import TextButton from '../../components/TextButton'
 import { useKeyboard } from '@react-native-community/hooks'
 import { getBottomSpace, isIphoneX } from 'react-native-iphone-x-helper'
 import NavBar from '../../components/NavBar'
-import { JobParamList } from '../typing'
+import { JobParamList } from '../typings'
 
 const placeholder = `请输入岗位职责、任职要求等描述，至少10个字，建 议使用以下格式逐条列出： 
 1、…… 

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { StyleSheet, View, FlatList, ListRenderItem } from 'react-native'
 import { JobItem, useJobList } from './useJobList'
-import { JobStatus } from '../typing'
+import { JobStatus } from '../typings'
 import Empty from './Empty'
 import JobAdminItem from './JobAdminItem'
 import { useFocusEffect } from '@react-navigation/native'

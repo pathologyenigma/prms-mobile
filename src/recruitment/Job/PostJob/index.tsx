@@ -9,7 +9,7 @@ import JobNatureModal from './JobNatureModal'
 import JobAdmissionModal from './JobAdmissionModal'
 import NavBar from '../../components/NavBar'
 import { StackScreenProps } from '@react-navigation/stack'
-import { Education, JobParamList } from '../typing'
+import { Education, JobParamList } from '../typings'
 import {
   stirngForSalary,
   stringForEducation,

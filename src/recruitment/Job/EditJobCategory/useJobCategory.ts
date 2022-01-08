@@ -34,11 +34,11 @@ export function useJobCategory() {
     }
   }, [])
 
-  const secondaryCategoris = useCallback((primaryCategory: string) => {
+  const secondaryCategories = useCallback((primaryCategory: string) => {
     return Object.keys(cache![primaryCategory])
   }, [])
 
-  const specificCategoris = useCallback(
+  const finalCategories = useCallback(
     (primaryCategory: string, secondaryCategory: string) => {
       return cache![primaryCategory][secondaryCategory]
     },
@@ -47,5 +47,5 @@ export function useJobCategory() {
 
   console.log('------------useJobCategory---------------')
 
-  return { loading, primaryCategories, secondaryCategoris, specificCategoris }
+  return { loading, primaryCategories, secondaryCategories, finalCategories }
 }

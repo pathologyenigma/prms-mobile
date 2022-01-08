@@ -22,7 +22,6 @@ export default function TalentPage({
       searchCandidates({
         expectation: jobName,
         sortByUpdatedTime,
-        page: 0,
       })
     }
   }, [sortByUpdatedTime, jobName])

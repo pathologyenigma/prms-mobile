@@ -12,7 +12,7 @@ import NavBar from '../../components/NavBar'
 import { Province, useProvinces } from './useProvinces'
 import { City, useCities } from './useCities'
 import { StackScreenProps } from '@react-navigation/stack'
-import { JobParamList } from '../typing'
+import { JobParamList } from '../typings'
 import { useGeoLocation } from '../../hooks/useGeoLocation'
 
 const dumpProvince: Province = { id: '0', name: '定位城市' }

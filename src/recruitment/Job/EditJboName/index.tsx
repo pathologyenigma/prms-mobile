@@ -4,7 +4,7 @@ import { View, StyleSheet } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 import NavBar from '../../components/NavBar'
 import TextButton from '../../components/TextButton'
-import { JobParamList } from '../typing'
+import { JobParamList } from '../typings'
 
 type Props = StackScreenProps<JobParamList, 'EditJobName'>
 

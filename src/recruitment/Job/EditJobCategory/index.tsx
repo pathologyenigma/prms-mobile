@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native'
 import NavBar from '../../components/NavBar'
-import { JobParamList } from '../typing'
+import { JobParamList } from '../typings'
 import { useJobCategory } from './useJobCategory'
 
 interface CascadedCategory {
@@ -20,7 +20,7 @@ interface CascadedCategory {
 type Props = StackScreenProps<JobParamList, 'EditJobCategory'>
 
 export default function EditJobCategory({ navigation }: Props) {
-  const { loading, primaryCategories, secondaryCategoris, specificCategoris } =
+  const { loading, primaryCategories, secondaryCategories, finalCategories } =
     useJobCategory()
 
   const [cascadedCategory, setCascadedCategory] = useState<CascadedCategory>()
@@ -34,7 +34,7 @@ export default function EditJobCategory({ navigation }: Props) {
         onPress={() => {
           setCascadedCategory({
             primary: category,
-            secondary: secondaryCategoris(category)[0],
+            secondary: secondaryCategories(category)[0],
           })
           setOverlayVisible(true)
         }}>
@@ -69,7 +69,7 @@ export default function EditJobCategory({ navigation }: Props) {
     )
   }
 
-  const renderThirdCategoryItem: ListRenderItem<string> = ({ item }) => {
+  const renderFinalCategoryItem: ListRenderItem<string> = ({ item }) => {
     return (
       <TouchableWithoutFeedback
         onPress={() =>
@@ -81,8 +81,8 @@ export default function EditJobCategory({ navigation }: Props) {
             ],
           })
         }>
-        <View style={styles.specificItem}>
-          <Text style={styles.specificText}>{item}</Text>
+        <View style={styles.finalItem}>
+          <Text style={styles.finalText}>{item}</Text>
         </View>
       </TouchableWithoutFeedback>
     )
@@ -107,19 +107,19 @@ export default function EditJobCategory({ navigation }: Props) {
             </TouchableWithoutFeedback>
             <FlatList
               style={styles.secondaryContainer}
-              data={secondaryCategoris(cascadedCategory.primary)}
+              data={secondaryCategories(cascadedCategory.primary)}
               keyExtractor={item => item}
               renderItem={renderSecondaryCategoryItem}
               bounces={false}
             />
             <FlatList
-              style={styles.specificContainer}
-              data={specificCategoris(
+              style={styles.finalContainer}
+              data={finalCategories(
                 cascadedCategory.primary,
                 cascadedCategory.secondary,
               )}
               keyExtractor={item => item}
-              renderItem={renderThirdCategoryItem}
+              renderItem={renderFinalCategoryItem}
               bounces={false}
             />
           </View>
@@ -177,16 +177,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
   },
-  specificContainer: {
+  finalContainer: {
     flex: 1,
     backgroundColor: '#EEEEEE',
   },
-  specificItem: {
+  finalItem: {
     height: 60,
     flexDirection: 'row',
     alignItems: 'center',
   },
-  specificText: {
+  finalText: {
     color: '#666666',
     fontSize: 15,
     marginHorizontal: 16,

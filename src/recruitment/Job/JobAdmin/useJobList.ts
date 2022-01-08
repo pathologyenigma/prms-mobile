@@ -1,5 +1,5 @@
 import { gql, useLazyQuery, useQuery } from '@apollo/client'
-import { Education, FullTime, JobStatus } from '../typing'
+import { Education, FullTime, JobStatus } from '../typings'
 import {
   stringForEducation,
   stringForExperience,

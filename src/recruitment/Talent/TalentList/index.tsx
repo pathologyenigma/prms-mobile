@@ -5,8 +5,8 @@ import FocusAwareStatusBar from '../../components/FocusAwareStatusBar'
 import TalentListEmpty from './TalentListEmpty'
 import NavBar from './NavBar'
 import { useSimpleOnlineJobs } from './useSimpleOnlineJobs'
-import { StackScreenProps, useHeaderHeight } from '@react-navigation/stack'
-import { TalentParamList } from '../typing'
+import { StackScreenProps } from '@react-navigation/stack'
+import { TalentParamList } from '../typings'
 import RadioGroup from '../../components/RadioGroup'
 import RadioLabel from '../../components/RadioLabel'
 import LoadingAndError from '../../components/LoadingAndError'
@@ -101,7 +101,7 @@ export default function TalentList({
         <FilterButton
           text={'筛选'}
           style={styles.filterButton}
-          onPress={() => navigation.navigate('CandidateFilter')}
+          onPress={() => navigation.navigate('CandidateFilter', {})}
         />
       </View>
       <AnimatedPagerView

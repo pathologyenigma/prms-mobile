@@ -1,4 +1,4 @@
-import { Education, FullTime } from './typing'
+import { Education, FullTime } from './typings'
 
 export function stringForFullTime(fullTime: FullTime) {
   switch (fullTime) {

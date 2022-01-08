@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import AlertModalWithTextInput from '../../components/AlertModalWithTextInput'
 import NavBar from '../../components/NavBar'
 import { StackScreenProps } from '@react-navigation/stack'
-import { JobParamList } from '../typing'
+import { JobParamList } from '../typings'
 
 const defaultLabels = [
   {
