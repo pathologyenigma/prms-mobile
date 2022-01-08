@@ -25,7 +25,7 @@ export default function Avatar({
     <View style={style}>
       <Image
         style={styles.avatar}
-        source={uri ? uri : require('../../assets/avatar_default.png')}
+        source={uri ? uri : require('../../../assets/avatar_default.png')}
         resizeMode="cover"
       />
       <Image

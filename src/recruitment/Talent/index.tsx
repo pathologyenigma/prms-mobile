@@ -5,7 +5,7 @@ import TalentDetailWithJudgment from './TalentDetailWithJudgment'
 import CandidateSearch from './CandidateSearch'
 import CandidateCity from './CandidateCity'
 import CandidateFilter from './CandidateFilter'
-import JobCategory from './CandidateFilter/JobCategory'
+import JobCategory from './JobCategory'
 import JobCity from './CandidateFilter/JobCity'
 import JobTrade from './CandidateFilter/JobTrade'
 

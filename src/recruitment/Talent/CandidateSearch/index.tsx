@@ -1,59 +1,25 @@
-import React, { useState, useCallback, useRef, useMemo } from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
-  FlatList,
-  ListRenderItem,
-  Animated,
-} from 'react-native'
+import React, { useState, useCallback } from 'react'
+import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import SearchBar from '../../components/SearchBar'
 import IconLabelButton from '../../components/IconLabelButton'
 import TextButton from '../../components/TextButton'
 import IconButton from '../../components/IconButton'
 import OnlineJobItem from './OnlineJobItem'
-import TalentListItem from '../TalentList/TalentListItem'
-import RadioLabelGroup from '../../components/RadioLabelGroup'
-import FilterButton from '../../components/FilterButton'
-import PagerView, {
-  PagerViewOnPageSelectedEventData,
-} from 'react-native-pager-view'
 import NavBar from '../../components/NavBar'
-
-const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
+import TalentPager from '../TalentList/TalentPager'
+import { StackScreenProps } from '@react-navigation/stack'
+import { TalentParamList } from '../typings'
 
 const histories = ['产品经理', '德科科技有限公司']
 
-export default function CandidateSearch() {
+export default function CandidateSearch({
+  navigation,
+}: StackScreenProps<TalentParamList, 'CandidateSearch'>) {
   const [searchValue, setSearchValue] = useState('')
   const handleSearchTextChange = useCallback((text: string) => {
     setSearchValue(text)
   }, [])
   const showSearchResult = !!searchValue
-
-  const data = ['a', 'b']
-  const renderSearchResultItem: ListRenderItem<string> = ({ index, item }) => {
-    return <TalentListItem key={index} />
-  }
-
-  const [selectedPageIndex, setSelectedPageIndex] = useState(0)
-  const pagerRef = useRef<PagerView>(null)
-  const pagePositionAnimatedValue = React.useRef(new Animated.Value(0)).current
-  const onPageSelected = useMemo(
-    () =>
-      Animated.event<PagerViewOnPageSelectedEventData>(
-        [{ nativeEvent: { position: pagePositionAnimatedValue } }],
-        {
-          listener: ({ nativeEvent: { position } }) => {
-            setSelectedPageIndex(position)
-          },
-          useNativeDriver: true,
-        },
-      ),
-    [],
-  )
 
   return (
     <View style={styles.container}>
@@ -67,7 +33,11 @@ export default function CandidateSearch() {
           placeholder="搜索职位/公司/学校"
           onChangeText={handleSearchTextChange}
         />
-        <TextButton style={styles.cancel} title="取消" />
+        <TextButton
+          style={styles.cancel}
+          title="取消"
+          onPress={() => navigation.goBack()}
+        />
       </NavBar>
       {!showSearchResult && (
         <ScrollView
@@ -108,45 +78,7 @@ export default function CandidateSearch() {
       )}
       {showSearchResult && (
         <View style={styles.container}>
-          <View style={styles.filterbar}>
-            <RadioLabelGroup
-              style={styles.labelGroup}
-              labelStyle={styles.labelStyle}
-              labelInactiveStyle={styles.labelInactiveStyle}
-              labelSpace={20}
-              labels={['推荐', '最新']}
-              checkedIndex={selectedPageIndex}
-              onValueChange={(_, index) =>
-                pagerRef.current?.setPageWithoutAnimation(index)
-              }
-            />
-            <FilterButton
-              text={`筛选 3`}
-              activated
-              style={styles.filterButton}
-            />
-          </View>
-          <AnimatedPagerView
-            ref={pagerRef}
-            style={styles.container}
-            onPageSelected={onPageSelected}>
-            <FlatList
-              key="推荐"
-              style={StyleSheet.absoluteFillObject}
-              contentContainerStyle={styles.content}
-              data={data}
-              keyExtractor={item => item}
-              renderItem={renderSearchResultItem}
-            />
-            <FlatList
-              key="活跃"
-              style={StyleSheet.absoluteFillObject}
-              contentContainerStyle={styles.content}
-              data={data}
-              keyExtractor={item => item}
-              renderItem={renderSearchResultItem}
-            />
-          </AnimatedPagerView>
+          <TalentPager navigation={navigation} />
         </View>
       )}
     </View>

@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native'
 import TextButton from '../../../components/TextButton'
-import CancelableTag from '../CancelableTag'
+import CancelableTag from '../../components/CancelableTag'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import NavBar from '../../../components/NavBar'
 

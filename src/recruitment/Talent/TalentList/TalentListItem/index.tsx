@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, StyleSheet, Text, Image } from 'react-native'
-import Avatar from '../../Avatar'
+import Avatar from '../../components/Avatar'
 import { CandidateItem } from '../useSearchCandidates'
 
 export default function TalentListItem({

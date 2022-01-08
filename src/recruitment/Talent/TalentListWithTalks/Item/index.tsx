@@ -9,7 +9,7 @@ import {
   Image,
   TouchableWithoutFeedback,
 } from 'react-native'
-import Avatar from '../../Avatar'
+import Avatar from '../../components/Avatar'
 
 interface ItemProps {
   gender: 'male' | 'female'

@@ -9,13 +9,13 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native'
 
-import TextButton from '../../../components/TextButton'
-import CancelableTag from '../CancelableTag'
-import NavBar from '../../../components/NavBar'
-import { useJobCategory } from '../../../Job/EditJobCategory/useJobCategory'
+import TextButton from '../../components/TextButton'
+import CancelableTag from '../components/CancelableTag'
+import NavBar from '../../components/NavBar'
+import { useJobCategory } from '../../Job/EditJobCategory/useJobCategory'
 import { StackScreenProps } from '@react-navigation/stack'
-import { TalentParamList } from '../../typings'
-import RootLoading from '../../../../utils/rootLoading'
+import { TalentParamList } from '../typings'
+import RootLoading from '../../../utils/rootLoading'
 
 interface CascadedCategory {
   primary: string
@@ -129,7 +129,7 @@ export default function JobCategory({
           {checked && (
             <Image
               style={styles.finalIndicator}
-              source={require('../../images/checked.png')}
+              source={require('../images/checked.png')}
             />
           )}
         </View>

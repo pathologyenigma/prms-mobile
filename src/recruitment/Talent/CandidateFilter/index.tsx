@@ -8,9 +8,10 @@ import SecondaryButton from '../../components/SecondaryButton'
 import GradientButton from '../../components/GradientButton'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import JobSalaryModal from './JobSalaryModal'
-import CancelableTag from './CancelableTag'
 import NavBar from '../../components/NavBar'
 import { TalentParamList } from '../typings'
+import CancelableTagGroup from './CancelableTagGroup'
+import RadioGroup from '../../components/RadioGroup'
 
 export default function CandidateFilter({
   navigation,
@@ -101,12 +102,12 @@ export default function CandidateFilter({
           />
         </View>
         <View style={styles.section}>
-          <SectionHeader title="学历" desc="/多选" />
+          <SectionHeader title="学历" />
           <CheckLabelGroup
             style={styles.sectionBody}
             labels={educations}
             onValuesChange={setEducations}
-            limit={5}
+            limit={1}
             numOfRow={3}
             horizontalSpace={9}
           />
@@ -208,31 +209,6 @@ function SectionHeader({ title, desc }: SectionHeaderProps) {
   )
 }
 
-interface CancelableTagGroupProps {
-  values?: string[]
-  onValuesChange: (values: string[]) => void
-}
-
-function CancelableTagGroup({
-  values = [],
-  onValuesChange,
-}: CancelableTagGroupProps) {
-  return (
-    <View style={styles.tags}>
-      {values.map(value => (
-        <CancelableTag
-          style={styles.tag}
-          textStyle={styles.tagText}
-          iconStyle={styles.tagIcon}
-          tag={value}
-          key={value}
-          onClose={() => onValuesChange(values.filter(v => v !== value))}
-        />
-      ))}
-    </View>
-  )
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -311,24 +287,5 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 34,
     marginLeft: 9,
-  },
-  tags: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: 12,
-  },
-  tag: {
-    marginRight: 9,
-    marginBottom: 9,
-    height: 30,
-    paddingLeft: 12,
-    paddingRight: 6,
-  },
-  tagText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  tagIcon: {
-    marginLeft: 6,
   },
 })
