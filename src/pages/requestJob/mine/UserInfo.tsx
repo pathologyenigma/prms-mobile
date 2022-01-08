@@ -29,7 +29,6 @@ interface IState {
   education: any
   first_time_working: any
   first_time_working_pick: boolean
-  localDateOfWorking: any,
   current_city: string,
   logo: string,
 }
@@ -85,7 +84,6 @@ class UserInfo extends Component<IProps, IState> {
       education: education || '',
       first_time_working: first_time_working || '',
       first_time_working_pick: false,
-      localDateOfWorking: first_time_working || new Date(),
       current_city: current_city || '',
       logo: logo || ''
     }
@@ -249,7 +247,7 @@ class UserInfo extends Component<IProps, IState> {
 
   render() {
     const { userInfo, navigation } = this.props
-    const { genderActionVisible, datePickVisible, localDateOfBirth, userName, localDateOfWorking, current_city,
+    const { genderActionVisible, datePickVisible, localDateOfBirth, userName, current_city,
       phoneNumber, education, first_time_working, first_time_working_pick } = this.state
     console.log('userInfo: ', userInfo)
     return (
@@ -300,7 +298,7 @@ class UserInfo extends Component<IProps, IState> {
           {this.renderCell('您的学历', selectEducation(education), true, () => {
             this.setState({ genderActionVisible: true })
           })}
-          {this.renderCell('首次参加工作时间', localDateOfWorking, true, () => {
+          {this.renderCell('首次参加工作时间', first_time_working, true, () => {
             this.setState({ first_time_working_pick: true })
           })}
         </ScrollView>
@@ -335,13 +333,13 @@ class UserInfo extends Component<IProps, IState> {
         />
         <DatePickerModal
           visible={first_time_working_pick}
-          currentDate={new Date(Date.parse(localDateOfWorking))}
+          currentDate={new Date(Date.parse(first_time_working))}
           leftPress={() => {
             this.setState({ first_time_working_pick: false })
           }}
           rightPress={(newDate) => {
             this.setState({
-              localDateOfWorking: newDate.toISOString().split('T')[0],
+              first_time_working: newDate.toISOString().split('T')[0],
               first_time_working_pick: false,
             })
           }}

@@ -176,8 +176,9 @@ class Jobfair extends Component<TProps, IState> {
           automaticallyAdjustContentInsets={false}
           data={dataSource}
           renderItem={({ item }: any) => this.renderItem(item)}
-          onFooterRefresh={() => this.handleEndReached}
+          onFooterRefresh={() => this.handleEndReached()}
           keyExtractor={item => item && item.id && item.id.toString()}
+          onEndReachedThreshold={0.1}
           footerRefreshingText="加载更多"
           footerNoMoreDataText="没有更多了"
         />

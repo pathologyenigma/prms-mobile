@@ -12,6 +12,7 @@ export default StyleSheet.create({
     paddingHorizontal: 11,
   },
   contentStyle: {
+    paddingBottom: 20,
   },
   tipsView: {
     width: SystemHelper.width,

@@ -168,7 +168,7 @@ export default class InterviewDetail extends Component<IProps, IState> {
         </View>
         <View style={styles.titleCell}>
           <Text style={styles.titleCellText}>时间</Text>
-          <Text style={styles.titleCellDetail}>{format(new Date(dataSource.time), 'yyyy-MM-dd hh:mm')}</Text>
+          <Text style={styles.titleCellDetail}>{format(new Date(dataSource.time), 'yyyy-MM-dd HH:mm')}</Text>
         </View>
         <View style={styles.titleCell}>
           <Text style={styles.titleCellText}>职位</Text>
