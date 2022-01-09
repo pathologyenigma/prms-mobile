@@ -1,24 +1,28 @@
-import React, { useState } from 'react'
-import {
-  ViewStyle,
-  StyleProp,
-  TextStyle,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
-} from 'react-native'
+import React from 'react'
+import { StyleSheet, Text, View, Image } from 'react-native'
+import { CompanyItem } from '../useJobDetail'
 
-const labels = ['创业公司', '少于50人', '计算机软件']
+interface CompanyInfoProps {
+  company: CompanyItem
+}
 
-export default function CompanyInfo() {
+export default function CompanyInfo({
+  company: { logo, name, labels, address, coordinate },
+}: CompanyInfoProps) {
+  const key = 'dd24ba9afebd6c9c303a2e79c0c3d7f2'
+  const { latitude, longitude } = coordinate
+  const label = `公园,0,1,12,0x333333,0xFFFFFF:${longitude},${latitude}`
+  const mapUri = `https://restapi.amap.com/v3/staticmap?location=${longitude},${latitude}&zoom=16&size=720*360&markers=mid,,A:${longitude},${latitude}&key=${key}`
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>公司信息</Text>
       <View style={styles.meta}>
-        <Image source={require('./company_default.png')} style={styles.logo} />
-        <Text style={styles.name}>深圳智慧网络有限公司</Text>
+        <Image
+          source={logo ? { uri: logo } : require('./company_default.png')}
+          style={styles.logo}
+        />
+        <Text style={styles.name}>{name}</Text>
         <Image style={styles.authn} source={require('./authn.png')} />
         <Image style={styles.indicator} source={require('./indicator.png')} />
       </View>
@@ -29,7 +33,14 @@ export default function CompanyInfo() {
           </Text>
         ))}
       </View>
-      <View style={styles.map}></View>
+      <View style={styles.map}>
+        <Image
+          source={{
+            uri: mapUri,
+          }}
+          style={{ flex: 1 }}
+        />
+      </View>
     </View>
   )
 }
@@ -86,9 +97,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   map: {
-    backgroundColor: '#FF0000',
     borderRadius: 8,
     aspectRatio: 333 / 180,
     width: '100%',
+    overflow: 'hidden',
   },
 })

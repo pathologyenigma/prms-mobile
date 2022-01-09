@@ -1,20 +1,7 @@
 import { ParamListBase } from '@react-navigation/native'
 import { PoiItem } from '../../bridge/geolocation'
 import { LatLng } from '../../bridge/MapView'
-
-export type JobStatus = 'NotPublishedYet' | 'InRecruitment' | 'OffLine'
-
-export type Education =
-  | 'LessThanPrime'
-  | 'Primary'
-  | 'Junior'
-  | 'High'
-  | 'JuniorCollege'
-  | 'RegularCollege'
-  | 'Postgraduate'
-  | 'Doctor'
-
-export type FullTime = 'Full' | 'Part' | 'InternShip'
+import { Education, FullTime } from '../typings'
 
 export interface JobParamList extends ParamListBase {
   EditJobName: {
@@ -51,5 +38,8 @@ export interface JobParamList extends ParamListBase {
     headcount?: number
     coordinates?: [number, number]
     workingAddress?: string[]
+  }
+  JobDetail: {
+    jobId: number
   }
 }

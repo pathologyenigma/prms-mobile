@@ -1,4 +1,10 @@
-import { Education, FullTime, ResumeJobStatus } from '../typings'
+import {
+  Education,
+  EnterpriseNature,
+  EnterpriseSize,
+  FullTime,
+  ResumeJobStatus,
+} from '../typings'
 
 export function stringForFullTime(fullTime: FullTime) {
   switch (fullTime) {
@@ -23,7 +29,7 @@ export const experienceLabels = [
 ]
 export const experienceValues = [undefined, 0, 1, 3, 5, 10]
 
-export function stringForExperience(experience?: number) {
+export function stringForExperience(experience?: number, prefix = true) {
   if (experience === undefined) {
     return '不限'
   }
@@ -48,7 +54,7 @@ export function stringForExperience(experience?: number) {
     return '1 年以下'
   }
 
-  return '不限'
+  return prefix ? '经验不限' : '不限'
 }
 
 export const educationLabels = [
@@ -69,7 +75,7 @@ export const educationValues: Array<Education | undefined> = [
   'Doctor',
 ]
 
-export function stringForEducation(education?: Education) {
+export function stringForEducation(education?: Education, prefix = false) {
   // | 'LessThanPrime'
   // | 'Primary'
   // | 'Junior'
@@ -90,7 +96,7 @@ export function stringForEducation(education?: Education) {
     case 'Doctor':
       return '博士'
     default:
-      return '不限'
+      return prefix ? '学历不限' : '不限'
   }
 }
 
@@ -154,4 +160,12 @@ export function stringForJobStatus(jobStatus: ResumeJobStatus) {
     default:
       return '不限'
   }
+}
+
+export function stringForEnterpriseNature(nature: EnterpriseNature) {
+  return '创业公司'
+}
+
+export function stringForEnterpriseSize(size: EnterpriseSize) {
+  return '少于 15 人'
 }

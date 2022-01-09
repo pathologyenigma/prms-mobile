@@ -1,13 +1,6 @@
-import React from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
-  StatusBar,
-} from 'react-native'
-import { StackNavigationProp } from '@react-navigation/stack'
+import React, { useState } from 'react'
+import { StyleSheet, View, ScrollView } from 'react-native'
+import { StackScreenProps } from '@react-navigation/stack'
 import IconButton from '../../components/IconButton'
 import JobMeta from './JobMeta'
 import Collaborator from './Collaborator'
@@ -17,14 +10,22 @@ import Audit from './Audit'
 import GhostButton from '../../components/GhostButton'
 import GradientButton from '../../components/GradientButton'
 import { getBottomSpace, isIphoneX } from 'react-native-iphone-x-helper'
-import { useNavigation } from '@react-navigation/native'
 import AlertModal from '../../components/AlertModal'
-import { useState } from 'react'
 import NavBar from '../../components/NavBar'
+import { JobParamList } from '../typings'
+import useJobDetail from './useJobDetail'
+import LoadingAndError from '../../components/LoadingAndError'
 
-export default function JobDescription() {
-  const navigation = useNavigation<StackNavigationProp<any>>()
+export default function JobDetail({
+  navigation,
+  route,
+}: StackScreenProps<JobParamList, 'JobDetail'>) {
   const [stopHireModalVisible, setStopHireModalvisible] = useState(false)
+  const { jobId } = route.params
+
+  const { detail, loading } = useJobDetail(jobId)
+
+  console.log(detail)
 
   return (
     <View style={styles.container}>
@@ -38,20 +39,22 @@ export default function JobDescription() {
           />
         )}
       />
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.content}>
-        <Audit status="已拒绝" />
-        <JobMeta />
-        <Collaborator />
-        <JobIntro />
-        <CompanyInfo />
-      </ScrollView>
+      <LoadingAndError loading={loading}>
+        {detail && (
+          <ScrollView
+            style={styles.container}
+            contentContainerStyle={styles.content}>
+            <JobMeta job={detail.job} />
+            <JobIntro job={detail.job} />
+            <CompanyInfo company={detail.company} />
+          </ScrollView>
+        )}
+      </LoadingAndError>
       <View style={styles.buttons}>
         <GhostButton
           style={styles.ghost}
           title="编辑职位"
-          onPress={() => navigation.navigate('PostJob')}
+          onPress={() => navigation.navigate('PostJob', {})}
         />
         <GradientButton
           style={styles.gradient}

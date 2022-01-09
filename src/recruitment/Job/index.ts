@@ -9,7 +9,7 @@ import EditJobWelfare from './EditJobWelfare'
 import RechargeExplain from './RechargeExplain'
 import RechargeFeekback from './RechargeFeekback'
 import JobAdmin from './JobAdmin'
-import JobDescription from './JobDescription'
+import JobDetail from './JobDetail'
 import RecruitCoordination from './RecruitCoordination'
 import EditJobCategory from './EditJobCategory'
 import EditJobCity from './EditJobCity'
@@ -28,7 +28,7 @@ const screens = {
   RechargeExplain,
   RechargeFeekback,
   JobAdmin,
-  JobDescription,
+  JobDetail,
   RecruitCoordination,
 }
 

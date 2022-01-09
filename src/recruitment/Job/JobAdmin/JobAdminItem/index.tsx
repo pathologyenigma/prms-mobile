@@ -1,14 +1,10 @@
-import React, { useState } from 'react'
-import {
-  ViewStyle,
-  StyleProp,
-  TextStyle,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-} from 'react-native'
+import React from 'react'
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { JobItem } from '../useJobList'
+
+interface JobAdminItemProps extends JobItem {
+  onPress?: () => void
+}
 
 export default function JobAdminItem({
   title,
@@ -16,28 +12,31 @@ export default function JobAdminItem({
   labels,
   salary,
   status,
-}: JobItem) {
+  onPress,
+}: JobAdminItemProps) {
   return (
-    <View style={styles.container}>
-      <View style={styles.titleRow}>
-        <Text style={styles.title}>{title}</Text>
-        {tags.map(({ text, color }) => (
-          <Text
-            key={text}
-            style={[styles.tag, { color: color, borderColor: color }]}>
-            {text}
-          </Text>
-        ))}
-        <Text style={styles.sarary}>{salary}</Text>
+    <TouchableWithoutFeedback onPress={onPress}>
+      <View style={styles.container}>
+        <View style={styles.titleRow}>
+          <Text style={styles.title}>{title}</Text>
+          {tags.map(({ text, color }) => (
+            <Text
+              key={text}
+              style={[styles.tag, { color: color, borderColor: color }]}>
+              {text}
+            </Text>
+          ))}
+          <Text style={styles.sarary}>{salary}</Text>
+        </View>
+        <View style={styles.labelRow}>
+          {labels.map(label => (
+            <Text key={label} style={styles.label}>
+              {label}
+            </Text>
+          ))}
+        </View>
       </View>
-      <View style={styles.labelRow}>
-        {labels.map(label => (
-          <Text key={label} style={styles.label}>
-            {label}
-          </Text>
-        ))}
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   )
 }
 

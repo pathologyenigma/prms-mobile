@@ -1,10 +1,13 @@
 import React, { useCallback, useState } from 'react'
 import { StyleSheet, View, FlatList, ListRenderItem } from 'react-native'
 import { JobItem, useJobList } from './useJobList'
-import { JobStatus } from '../typings'
+import { JobParamList } from '../typings'
 import Empty from './Empty'
 import JobAdminItem from './JobAdminItem'
-import { useFocusEffect } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { StackNavigationProp } from '@react-navigation/stack'
+import LoadingAndError from '../../components/LoadingAndError'
+import { JobStatus } from '../../typings'
 
 interface PageProps {
   status: JobStatus
@@ -13,6 +16,8 @@ interface PageProps {
 
 export default function JobPage({ status, isActive }: PageProps) {
   const { getJobList, items, loading } = useJobList()
+
+  const navigation = useNavigation<StackNavigationProp<JobParamList>>()
 
   useFocusEffect(
     useCallback(() => {
@@ -25,11 +30,19 @@ export default function JobPage({ status, isActive }: PageProps) {
   console.log('---------JobPage----------')
 
   const renderItem: ListRenderItem<JobItem> = ({ item, index }) => {
-    return <JobAdminItem {...item} />
+    return (
+      <JobAdminItem
+        {...item}
+        onPress={() => navigation.navigate('JobDetail', { jobId: item.jobId })}
+      />
+    )
   }
 
   return (
-    <View style={StyleSheet.absoluteFillObject} collapsable={false}>
+    <LoadingAndError
+      loading={loading && items === undefined}
+      style={StyleSheet.absoluteFillObject}
+      collapsable={false}>
       {items && (
         <FlatList
           style={styles.container}
@@ -40,7 +53,7 @@ export default function JobPage({ status, isActive }: PageProps) {
           ListEmptyComponent={Empty}
         />
       )}
-    </View>
+    </LoadingAndError>
   )
 }
 

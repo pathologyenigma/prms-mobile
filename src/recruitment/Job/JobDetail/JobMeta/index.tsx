@@ -1,30 +1,29 @@
-import React, { useState } from 'react'
-import {
-  ViewStyle,
-  StyleProp,
-  TextStyle,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-} from 'react-native'
+import React from 'react'
+import { StyleSheet, Text, View, Image } from 'react-native'
+import { JobItem } from '../useJobDetail'
 
-export default function JobMeta() {
+interface JobMetaProps {
+  job: JobItem
+}
+
+export default function JobMeta({
+  job: { title, salary, jobNature, headcount, experience, education, address },
+}: JobMetaProps) {
   return (
     <View style={styles.container}>
       <View style={styles.titleRow}>
-        <Text style={styles.title}>项目经理</Text>
-        <Text style={styles.salary}>15K-30K</Text>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.salary}>{salary}</Text>
       </View>
       <View style={styles.conditionRow}>
-        <Text style={styles.condition}>全职</Text>
-        <Text style={styles.condition}>招2人</Text>
-        <Text style={styles.condition}>5-10年</Text>
-        <Text style={styles.condition}>5-10年</Text>
+        <Text style={styles.condition}>{jobNature}</Text>
+        <Text style={styles.condition}>{headcount}</Text>
+        <Text style={styles.condition}>{experience}</Text>
+        <Text style={styles.condition}>{education}</Text>
       </View>
       <View style={styles.addressRow}>
         <Image style={styles.addressIcon} source={require('./dizhi.png')} />
-        <Text style={styles.address}>深圳·南山区·大学城</Text>
+        <Text style={styles.address}>{address}</Text>
       </View>
     </View>
   )
