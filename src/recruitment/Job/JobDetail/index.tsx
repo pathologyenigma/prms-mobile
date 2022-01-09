@@ -41,27 +41,34 @@ export default function JobDetail({
       />
       <LoadingAndError loading={loading}>
         {detail && (
-          <ScrollView
-            style={styles.container}
-            contentContainerStyle={styles.content}>
-            <JobMeta job={detail.job} />
-            <JobIntro job={detail.job} />
-            <CompanyInfo company={detail.company} />
-          </ScrollView>
+          <>
+            <ScrollView
+              style={styles.container}
+              contentContainerStyle={styles.content}>
+              <JobMeta job={detail.job} />
+              <JobIntro job={detail.job} />
+              <CompanyInfo company={detail.company} />
+            </ScrollView>
+            <View style={styles.buttons}>
+              <GhostButton
+                style={styles.ghost}
+                title="编辑职位"
+                onPress={() =>
+                  navigation.navigate('PostJob', {
+                    ...detail.jobInput,
+                  })
+                }
+              />
+              <GradientButton
+                style={styles.gradient}
+                title="停止招聘"
+                onPress={() => setStopHireModalvisible(true)}
+              />
+            </View>
+          </>
         )}
       </LoadingAndError>
-      <View style={styles.buttons}>
-        <GhostButton
-          style={styles.ghost}
-          title="编辑职位"
-          onPress={() => navigation.navigate('PostJob', {})}
-        />
-        <GradientButton
-          style={styles.gradient}
-          title="停止招聘"
-          onPress={() => setStopHireModalvisible(true)}
-        />
-      </View>
+
       <AlertModal
         visible={stopHireModalVisible}
         title="温馨提示"

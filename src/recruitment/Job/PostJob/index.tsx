@@ -9,6 +9,8 @@ import JobNatureModal from './JobNatureModal'
 import JobAdmissionModal from './JobAdmissionModal'
 import NavBar from '../../components/NavBar'
 import { StackScreenProps } from '@react-navigation/stack'
+import { usePostJob } from './usePostJob'
+import { useEditJob } from './useEditJob'
 import { JobParamList } from '../typings'
 import {
   stirngForSalary,
@@ -16,7 +18,6 @@ import {
   stringForExperience,
   stringForFullTime,
 } from '../../utils/JobHelper'
-import { usePostJob } from './usePostJob'
 
 function computeDisplayAddress(workingAddress?: string[]) {
   if (!workingAddress) {
@@ -38,6 +39,7 @@ type Props = StackScreenProps<JobParamList, 'PostJob'>
 
 function PostJob({ navigation, route }: Props) {
   const {
+    jobId,
     jobName,
     jobDescription,
     jobNature = 'Full',
@@ -54,6 +56,7 @@ function PostJob({ navigation, route }: Props) {
   console.log(route.params)
 
   const postJob = usePostJob()
+  const editJob = useEditJob()
 
   const [jobNatureModalVisible, setJobNatureModalVisible] = useState(false)
   const [jobAdmissionIndex, setJobAdmissionIndex] = useState(0)
@@ -179,20 +182,38 @@ function PostJob({ navigation, route }: Props) {
           title="立即发布"
           style={styles.postButton}
           onPress={() => {
-            postJob({
-              jobTitle: jobName,
-              workingAddress,
-              experience,
-              salary,
-              education,
-              description: jobDescription,
-              requiredNum: headcount,
-              isFullTime: jobNature,
-              tags: tags || [],
-              coordinates,
-              publishNow: true,
-              category: jobCategory,
-            })
+            if (jobId) {
+              editJob({
+                id: jobId,
+                jobTitle: jobName,
+                workingAddress,
+                experience,
+                salary,
+                education,
+                description: jobDescription,
+                requiredNum: headcount,
+                isFullTime: jobNature,
+                tags: tags || [],
+                coordinates,
+                publishNow: true,
+                category: jobCategory,
+              })
+            } else {
+              postJob({
+                jobTitle: jobName,
+                workingAddress,
+                experience,
+                salary,
+                education,
+                description: jobDescription,
+                requiredNum: headcount,
+                isFullTime: jobNature,
+                tags: tags || [],
+                coordinates,
+                publishNow: true,
+                category: jobCategory,
+              })
+            }
           }}
         />
       </ScrollView>

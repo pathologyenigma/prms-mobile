@@ -1,7 +1,12 @@
 import { gql, useQuery } from '@apollo/client'
 import { useMemo } from 'react'
 import { LatLng } from '../../../bridge/MapView'
-import { EnterpriseNature, EnterpriseSize, FullTime } from '../../typings'
+import {
+  Education,
+  EnterpriseNature,
+  EnterpriseSize,
+  FullTime,
+} from '../../typings'
 import {
   stirngForSalary,
   stringForEducation,
@@ -10,6 +15,7 @@ import {
   stringForExperience,
   stringForFullTime,
 } from '../../utils/JobHelper'
+import { JobParamList } from '../typings'
 
 interface Hr {
   id: number
@@ -28,7 +34,7 @@ interface Job {
   address_description: string[]
   salaryExpected: number[]
   experience: number
-  education: null
+  education: Education | null
   required_num: number
   full_time_job: FullTime
   tags: string[]
@@ -50,6 +56,7 @@ interface JobDetailData {
   hr: Hr
   job: Job
   company: Company
+  jobInput: JobInput
 }
 
 interface JobDetailResult {
@@ -76,8 +83,11 @@ export interface CompanyItem {
   coordinate: LatLng
 }
 
+type JobInput = JobParamList['PostJob']
+
 interface JobDetailItem {
   job: JobItem
+  jobInput: JobInput
   company: CompanyItem
 }
 
@@ -120,6 +130,20 @@ export default function useJobDetail(jobId: number) {
           latitude: job.address_coordinate[1],
           longitude: job.address_coordinate[0],
         },
+      },
+      jobInput: {
+        jobId: job.id,
+        jobName: job.title,
+        jobDescription: job.detail,
+        jobNature: job.full_time_job,
+        jobCategory: job.category,
+        experience: job.experience,
+        education: job.education || undefined,
+        salary: job.salaryExpected,
+        tags: job.tags,
+        headcount: job.required_num,
+        coordinates: job.address_coordinate as [number, number],
+        workingAddress: job.address_description,
       },
     }
   }, [data])
