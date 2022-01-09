@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { View, Image, StatusBar } from 'react-native'
+import React, { Component, useCallback, useEffect, useMemo, useState } from 'react'
+import { View, Image, StatusBar, Keyboard, StyleSheet, Text, ImageBackground } from 'react-native'
 import styles from './styles/MapLocate.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import SystemHelper from '../../../utils/system'
@@ -7,25 +7,90 @@ import { greenColor } from '../../../utils/constant'
 import GradientButton from '../../components/GradientButton'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import RootLoading from '../../../utils/rootLoading'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { useGeoLocation } from '../../../recruitment/hooks/useGeoLocation'
+import { usePoiItems } from '../../../recruitment/hooks/usePoiItems'
+import MapView, { LatLng, MoveEvent } from '../../../bridge/MapView'
+import { useInputTips } from '../../../recruitment/hooks/useInputTips'
 
 type IProps = GenProps<'MapLocate'> & {
 
 }
 
-interface IState {
+export default function MapLocate(props: IProps) {
+  // export default class MapLocate extends Component<IProps, IState> {
 
-}
+  const { navigation, route } = props
+  const [isMoveing, setIsMoveing] = useState(false)
+  const [isShowMarkerBox, setIsShowMarkerBox] = useState(false)
 
-export default class MapLocate extends Component<IProps, IState> {
-  constructor(props: IProps) {
-    super(props)
-    this.state = {
+  const geoLocation = useGeoLocation()
+  const { city, coordinates } = route.params || {}
 
+  useEffect(() => {
+    if (!city && geoLocation?.city) {
+      navigation.setParams({ city: geoLocation.city })
     }
-  }
+    console.log(geoLocation)
+  }, [geoLocation, city])
 
-  renderNavBar() {
-    const { navigation } = this.props
+  // 地图，兴趣点搜索
+  const centerLatLng = useMemo<LatLng | undefined>(() => {
+    if (coordinates) {
+      return coordinates
+    }
+
+    if (geoLocation) {
+      const { latitude, longitude } = geoLocation
+      return {
+        latitude,
+        longitude,
+      }
+    }
+  }, [geoLocation, coordinates])
+
+  const { poiItems, getPoiItems } = usePoiItems()
+
+  const onMoveEnd = useCallback(
+    async ({ wasUserAction, latitude, longitude }: MoveEvent) => {
+      console.log(
+        'wasUserAction',
+        wasUserAction,
+        'latitude',
+        latitude,
+        'longitude',
+        longitude,
+      )
+      getPoiItems(latitude, longitude)
+      setIsMoveing(false)
+    },
+    [],
+  )
+
+  useEffect(() => {
+    console.log('poiItems123: ', poiItems)
+    if (poiItems && poiItems.length === 0) {
+      RootLoading.info('请重新选择附近的位置')
+    }
+    setIsShowMarkerBox(true)
+  }, [poiItems])
+
+  console.log('-------------------SearchJobAddress-----------------------')
+
+  // 关键字搜索
+  const [text, setText] = useState<string>('')
+  const [showsSearchResult, setShowsSearchResult] = useState(false)
+
+  useEffect(() => {
+    setShowsSearchResult(text !== '')
+  }, [text])
+
+  const inputTips = useInputTips(text, city)
+  useEffect(() => {
+    console.log(inputTips)
+  }, [inputTips])
+
+  const renderNavBar = () => {
     return (
       <NextTouchableOpacity
         style={styles.leftBtn}
@@ -41,46 +106,72 @@ export default class MapLocate extends Component<IProps, IState> {
     )
   }
 
-  renderMap() {
+  const renderMap = () => {
     return (
-      <View style={{
-        flex: 1,
-        width: SystemHelper.width,
-        backgroundColor: greenColor,
-        marginTop: -SystemHelper.safeTop
-      }} />
+      <View style={styles.mapWrapper}>
+        <MapView
+          style={styles.map}
+          zoomLevel={17}
+          centerLatLng={centerLatLng}
+          onMoveStart={() => {
+            setIsShowMarkerBox(false)
+            setIsMoveing(true)
+          }}
+          onMoveEnd={onMoveEnd}
+        />
+        <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
+          <View style={styles.mapMarkerBox}>
+            {!isMoveing && isShowMarkerBox && poiItems && poiItems.length > 0 && (
+              <ImageBackground
+                resizeMode="stretch"
+                source={require('../../../assets/requestJobs/map_toast_bg.png')}
+                style={styles.mapMarkerBg}
+              >
+                <Text style={styles.mapMarkerText}>{poiItems[0].name}</Text>
+              </ImageBackground>
+            )}
+            <Image source={require('../../../../src/recruitment/Job/SearchJobAddress/images/marker.png')} />
+          </View>
+          <View style={styles.mapMarkerBox}></View>
+        </View>
+      </View>
     )
   }
 
-  renderBottom() {
+  const renderBottom = () => {
+    const disabled = !poiItems || poiItems.length === 0
     return (
       <View
         style={styles.bottomContainer}
       >
         <GradientButton
+          disabled={disabled}
           containerStyle={styles.btnContainer}
-          text="使用该定位做为家的位置"
+          text={disabled ? '正在加载中,请稍候...' : '使用该定位做为家的位置'}
+          textStyle={disabled ? {
+            color: '#666', fontSize: 13,
+            fontWeight: 'normal'
+          } : null}
           onPress={() => {
-            RootLoading.success()
+            // 设置家的位置接口
+            RootLoading.info(`您选择了位置: ${poiItems && poiItems[0].name}`)
           }}
         />
       </View>
     )
   }
 
-  render() {
-    return (
-      <View style={[styles.container]}>
-        <StatusBar
-          translucent
-          backgroundColor="transparent"
-          animated
-          barStyle={'dark-content'}
-        />
-        {this.renderNavBar()}
-        {this.renderMap()}
-        {this.renderBottom()}
-      </View>
-    )
-  }
+  return (
+    <View style={[styles.container]}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        animated
+        barStyle={'dark-content'}
+      />
+      {renderNavBar()}
+      {renderMap()}
+      {renderBottom()}
+    </View>
+  )
 }

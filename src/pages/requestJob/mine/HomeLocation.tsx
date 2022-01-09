@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import { Text, View, TextInput, Image } from 'react-native'
 import styles from './styles/HomeLocation.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
@@ -6,6 +6,7 @@ import RootLoading from '../../../utils/rootLoading'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import SystemHelper from '../../../utils/system'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import { useGeoLocation } from '../../../recruitment/hooks/useGeoLocation'
 
 type IProps = GenProps<'HomeLocation'> & {
 
@@ -15,21 +16,21 @@ interface IState {
   location: string
 }
 
-export default class HomeLocation extends Component<IProps, IState> {
-  constructor(props: IProps) {
-    super(props)
-    this.state = {
-      location: ''
+export default function HomeLocation(props: IProps) {
+
+
+  const { navigation } = props
+  const geoLocation = useGeoLocation()
+  const [location, setLocation] = useState('')
+  console.log('geoLocation: ', geoLocation)
+
+  useEffect(() => {
+    if (geoLocation) {
+      setLocation(geoLocation.address)
     }
-  }
+  }, [geoLocation])
 
-  componentDidMount() {
-
-  }
-
-  renderNavBar() {
-    const { navigation } = this.props
-
+  const renderNavBar = () => {
     return (
       <NavBar
         statusBarTheme="dark-content"
@@ -59,35 +60,39 @@ export default class HomeLocation extends Component<IProps, IState> {
     )
   }
 
-  renderEdit() {
-    const { location } = this.state
+  const renderEdit = () => {
     return (
-      <View>
-        <View style={styles.inputView}>
-          <TextInput
-            underlineColorAndroid="transparent"
-            returnKeyType="done"
-            autoCorrect={false}
-            autoCapitalize="none"
-            style={styles.contentInput}
-            placeholder="输入家的位置，用于推荐您家附近的职位"
-            placeholderTextColor="#AAAAAA"
-            value={location}
-            maxLength={100}
-            onChangeText={(value) => {
-              this.setState({ location: value })
-            }}
-          />
-        </View>
+      <View style={styles.inputView}>
+        <TextInput
+          multiline={true}
+          editable={false}
+          underlineColorAndroid="transparent"
+          returnKeyType="done"
+          autoCorrect={false}
+          autoCapitalize="none"
+          style={styles.contentInput}
+          placeholder="输入家的位置，用于推荐您家附近的职位"
+          placeholderTextColor="#AAAAAA"
+          value={location}
+          numberOfLines={3}
+          maxLength={100}
+          onChangeText={(value) => {
+            setLocation(value)
+          }}
+        />
       </View>
     )
   }
 
-  renderBtn() {
-    const { navigation } = this.props
+  const renderBtn = () => {
     return (
       <View style={styles.locationView}>
-        <NextTouchableOpacity style={styles.locationItem}>
+        <NextTouchableOpacity
+          style={styles.locationItem}
+          onPress={() => {
+            navigation.push('SearchJobAddress')
+          }}
+        >
           <Image
             style={styles.currentIcon}
             source={require('../../../assets/requestJobs/location-current.png')}
@@ -111,13 +116,11 @@ export default class HomeLocation extends Component<IProps, IState> {
     )
   }
 
-  render() {
-    return (
-      <View style={styles.container}>
-        {this.renderNavBar()}
-        {this.renderEdit()}
-        {this.renderBtn()}
-      </View>
-    )
-  }
+  return (
+    <View style={styles.container}>
+      {renderNavBar()}
+      {renderEdit()}
+      {renderBtn()}
+    </View>
+  )
 }

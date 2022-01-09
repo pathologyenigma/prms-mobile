@@ -502,6 +502,10 @@ class JobSelectCity extends Component<IProps, IState> {
         </NextTouchableOpacity>
         <GradientButton
           disabled={!selectedCity}
+          textStyle={!selectedCity ? {
+            color: '#666', fontSize: 13,
+            fontWeight: 'normal'
+          } : null}
           containerStyle={styles.confirmBtn}
           linearStyle={styles.linearStyle}
           text="确定"
