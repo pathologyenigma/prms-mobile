@@ -15,6 +15,8 @@ import NavBar from '../../components/NavBar'
 import { JobParamList } from '../typings'
 import useJobDetail from './useJobDetail'
 import LoadingAndError from '../../components/LoadingAndError'
+import useHideJob from './useHideJob'
+import RootLoading from '../../../utils/rootLoading'
 
 export default function JobDetail({
   navigation,
@@ -23,9 +25,10 @@ export default function JobDetail({
   const [stopHireModalVisible, setStopHireModalvisible] = useState(false)
   const { jobId } = route.params
 
-  const { detail, loading } = useJobDetail(jobId)
+  const { detail, loading, error, refetch } = useJobDetail(jobId)
+  const hideJob = useHideJob(jobId)
 
-  console.log(detail)
+  console.log(detail, error)
 
   return (
     <View style={styles.container}>
@@ -39,7 +42,11 @@ export default function JobDetail({
           />
         )}
       />
-      <LoadingAndError loading={loading}>
+      <LoadingAndError
+        style={{ backgroundColor: '#F8F8F8' }}
+        loading={loading}
+        error={error}
+        retry={refetch}>
         {detail && (
           <>
             <ScrollView
@@ -74,7 +81,16 @@ export default function JobDetail({
         title="温馨提示"
         msg="停止招聘后，职位信息将不会在求职端展示"
         onNegativePress={() => setStopHireModalvisible(false)}
-        onPositivePress={() => setStopHireModalvisible(false)}
+        onPositivePress={async () => {
+          setStopHireModalvisible(false)
+          try {
+            RootLoading.loading('请稍后...')
+            await hideJob()
+            RootLoading.info('操作成功！')
+          } catch (e) {
+            RootLoading.info(e.message)
+          }
+        }}
       />
     </View>
   )
