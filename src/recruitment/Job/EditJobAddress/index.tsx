@@ -1,27 +1,112 @@
-import React, { useState } from 'react'
-import { View, Text, Image, StyleSheet, StatusBar } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Text, StyleSheet } from 'react-native'
 import TextButton from '../../components/TextButton'
 import JobInfoItem from '../PostJob/JobInfoItem'
 import TextInputWithCounter from '../../components/TextInputWithCounter'
-import { useNavigation } from '@react-navigation/core'
-import { StackNavigationProp } from '@react-navigation/stack'
+import { StackScreenProps } from '@react-navigation/stack'
 import NavBar from '../../components/NavBar'
+import { JobParamList } from '../typings'
+import { PoiItem } from '../../../bridge/geolocation'
+import RootLoading from '../../../utils/rootLoading'
 
-export default function EditJobAddress() {
-  const [text, setText] = useState<string>()
+function computeBuildingName(poiItem?: PoiItem) {
+  if (poiItem) {
+    const { city, district, name } = poiItem
+    return `${city}${district}${name}`
+  }
+  return undefined
+}
 
-  const navigation = useNavigation<StackNavigationProp<any>>()
+function computeWorkingAddress(poiItem: PoiItem) {
+  const { adcode, province, city, district } = poiItem
+  return [
+    `${adcode.substr(0, 2)}0000000000`,
+    `${adcode.substr(0, 4)}00000000`,
+    `${adcode}000000`,
+    province,
+    city,
+    district,
+  ]
+}
+
+export default function EditJobAddress({
+  navigation,
+  route,
+}: StackScreenProps<JobParamList, 'EditJobAddress'>) {
+  const { poiItem, workingAddress, coordinates } = route.params || {}
+
+  const [buildingName, setBuildingName] = useState(workingAddress?.[6])
+  const [floorNum, setFloorNum] = useState(
+    workingAddress && workingAddress.length >= 7 ? workingAddress[7] : '',
+  )
+
+  useEffect(() => {
+    if (poiItem) {
+      setBuildingName(computeBuildingName(poiItem))
+      const { latitude, longitude } = poiItem
+      navigation.setParams({ coordinates: [longitude, latitude] })
+    }
+  }, [poiItem])
+
+  console.log(
+    '-------------------------EditJobAddress--------------------------',
+  )
+
+  const handleSave = () => {
+    if (!buildingName) {
+      RootLoading.info('请填写上班地址')
+      return
+    }
+
+    if (!floorNum) {
+      RootLoading.info('请填写门牌号')
+      return
+    }
+
+    if (!coordinates) {
+      RootLoading.info('请重新填写上班地址')
+      return
+    }
+
+    let newAddress = ['']
+
+    if (poiItem) {
+      // 重新填写了上班地址
+      newAddress = computeWorkingAddress(poiItem)
+      newAddress.push(buildingName)
+    } else if (workingAddress) {
+      // 仅仅修改了门牌号
+      newAddress = [...workingAddress]
+      newAddress.length = 7
+    }
+    newAddress.push(floorNum)
+
+    console.log(newAddress)
+
+    navigation.navigate('PostJob', {
+      coordinates: coordinates,
+      workingAddress: newAddress,
+    })
+  }
 
   return (
     <View style={styles.container}>
       <NavBar
         title="上班地址"
-        headerRight={() => <TextButton title="保存" />}
+        headerRight={() => <TextButton title="保存" onPress={handleSave} />}
       />
       <JobInfoItem
         title="上班地址（必填）"
-        content="深圳市南山区创智云城（建设中）创智云城A218楼 302"
-        onPress={() => navigation.navigate('SearchJobAddress')}
+        content={buildingName}
+        placeholder="请填写工作地点"
+        onPress={() =>
+          navigation.navigate('SearchJobAddress', {
+            city: workingAddress?.[4],
+            coordinates: coordinates
+              ? { latitude: coordinates[1], longitude: coordinates[0] }
+              : undefined,
+          })
+        }
       />
       <Text style={styles.doors}>门牌号</Text>
       <TextInputWithCounter
@@ -29,8 +114,8 @@ export default function EditJobAddress() {
         maxLength={50}
         autoFocus={false}
         style={styles.input}
-        value={text}
-        onChangeText={setText}
+        value={floorNum}
+        onChangeText={setFloorNum}
       />
     </View>
   )

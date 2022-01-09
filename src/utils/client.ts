@@ -57,6 +57,15 @@ const errorLink = onError(
                 return false
               }
 
+              const headers = operation.getContext().headers
+              if (headers) {
+                const usedToken = headers['Authorization'] as string
+                // token 已经刷新了
+                if (usedToken && usedToken !== token) {
+                  return true
+                }
+              }
+
               try {
                 await refreshToken()
                 return true

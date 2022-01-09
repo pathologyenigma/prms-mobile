@@ -3,11 +3,11 @@ import ComplaintCandidate from './ComplaintCandidate'
 import TalentListWithTalks from './TalentListWithTalks'
 import TalentDetailWithJudgment from './TalentDetailWithJudgment'
 import CandidateSearch from './CandidateSearch'
-import CandidateCity from './CandidateCity'
+import CandidateSearchCity from './CandidateSearchCity'
 import CandidateFilter from './CandidateFilter'
-import JobCategory from './CandidateFilter/JobCategory'
-import JobCity from './CandidateFilter/JobCity'
-import JobTrade from './CandidateFilter/JobTrade'
+import CandidateFilterJobCategory from './CandidateFilterJobCategory'
+import CandidateFilterCity from './CandidateFilterCity'
+import CandidateFilterIndustryCategory from './CandidateFilterIndustryCategory'
 
 const screens = {
   TalentDetail,
@@ -15,11 +15,11 @@ const screens = {
   TalentListWithTalks,
   TalentDetailWithJudgment,
   CandidateSearch,
+  CandidateSearchCity,
   CandidateFilter,
-  CandidateCity,
-  JobCategory,
-  JobCity,
-  JobTrade,
+  CandidateFilterJobCategory,
+  CandidateFilterCity,
+  CandidateFilterIndustryCategory,
 }
 
 export default screens

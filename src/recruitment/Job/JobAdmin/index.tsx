@@ -1,14 +1,20 @@
 import React, { useRef } from 'react'
 import { StyleSheet, View, Animated } from 'react-native'
 import PagerView from 'react-native-pager-view'
-import Page from './Page'
+import JobPage from './JobPage'
 import usePagerView from '../../hooks/usePagerView'
 import TabBar from '../../components/TabBar'
 import NavBar from '../../components/NavBar'
+import GradientButton from '../../components/GradientButton'
+import { isIphoneX } from 'react-native-iphone-x-helper'
+import { useNavigation } from '@react-navigation/native'
+import { StackNavigationProp } from '@react-navigation/stack'
+import { JobStatus } from '../../typings'
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
 const tabs = ['在线中', '审核中', '已下线']
+const states: JobStatus[] = ['InRecruitment', 'NotPublishedYet', 'OffLine']
 
 export default function JobAdmin() {
   const ref = useRef<PagerView>(null)
@@ -20,6 +26,8 @@ export default function JobAdmin() {
     onPageScroll,
   } = usePagerView()
 
+  const navigation = useNavigation<StackNavigationProp<any>>()
+
   return (
     <View style={styles.container}>
       <NavBar title="职位管理" />
@@ -28,7 +36,7 @@ export default function JobAdmin() {
         selectedIndex={selectedIndex}
         positionAnimatedValue={positionAnimatedValue}
         scrollOffsetAnimatedValue={scrollOffsetAnimatedValue}
-        onTabPress={index => ref.current?.setPageWithoutAnimation(index)}
+        onTabPress={index => ref.current?.setPage(index)}
         style={styles.tabbar}
         tabStyle={styles.tab}
         labelStyle={styles.tabText}
@@ -39,13 +47,23 @@ export default function JobAdmin() {
       <AnimatedPagerView
         ref={ref}
         style={styles.pages}
+        scrollEnabled={false}
         initialPage={selectedIndex}
         onPageScroll={onPageScroll}
         onPageSelected={onPageSelected}>
-        {tabs.map((tab: string, index: number) => (
-          <Page key={tab} tab={tab} />
+        {states.map((status: JobStatus, index: number) => (
+          <JobPage
+            key={status}
+            status={status}
+            isActive={index === selectedIndex}
+          />
         ))}
       </AnimatedPagerView>
+      <GradientButton
+        style={styles.button}
+        title="发布职位"
+        onPress={() => navigation.navigate('PostJob')}
+      />
     </View>
   )
 }
@@ -80,5 +98,10 @@ const styles = StyleSheet.create({
   },
   pages: {
     flex: 1,
+  },
+  button: {
+    marginBottom: isIphoneX() ? 37 : 8,
+    marginHorizontal: 22,
+    marginTop: 8,
   },
 })

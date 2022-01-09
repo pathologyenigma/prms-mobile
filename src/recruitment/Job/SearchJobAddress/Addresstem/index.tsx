@@ -8,14 +8,16 @@ import {
 } from 'react-native'
 
 interface AddressItemProps {
-  title: string
-  detail: string
+  index: number
+  name: string
+  address: string
   onPress?: () => void
 }
 
 export default function AddressItem({
-  title,
-  detail,
+  index,
+  name,
+  address,
   onPress,
 }: AddressItemProps) {
   return (
@@ -23,12 +25,22 @@ export default function AddressItem({
       <View style={styles.container}>
         <Image
           style={styles.image}
-          source={require('./daohangdizhi.png')}
+          source={
+            index === 0
+              ? require('./poi_location.png')
+              : require('./daohangdizhi.png')
+          }
           resizeMode="center"
         />
         <View style={styles.column}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.detail}>{detail}</Text>
+          <Text
+            style={[
+              styles.title,
+              { color: index === 0 ? '#57DE9E' : '#333333' },
+            ]}>
+            {name}
+          </Text>
+          <Text style={styles.detail}>{address}</Text>
         </View>
       </View>
     </TouchableWithoutFeedback>

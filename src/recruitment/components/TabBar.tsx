@@ -1,5 +1,10 @@
-import React, { PropsWithChildren, useCallback, useRef, useState } from 'react'
-import { useEffect } from 'react'
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useRef,
+  useState,
+  useMemo,
+} from 'react'
 import { StyleProp, TextStyle, ViewStyle } from 'react-native'
 import {
   StyleSheet,
@@ -52,10 +57,15 @@ export default function TabBar({
   const layouts = useRef<Array<Layout>>([]).current
 
   const indicatorWidth = getIndicatorWidth(indicatorStyle)
-  const inputRange = [...tabs.map((_, index) => index), tabs.length]
+  const inputRange = useMemo(
+    () => [...tabs.map((_, index) => index), tabs.length],
+    [tabs],
+  )
   const [outputRange, setOutputRange] = useState(
     inputRange.map(() => indicatorWidth / 2),
   )
+
+  console.log('---------------TabBar-------------------')
 
   const onTabLayout = useCallback(
     (index: number, layout: Layout) => {
@@ -71,6 +81,7 @@ export default function TabBar({
             range.push(x + width)
           }
         }
+        console.log('---------------onTabLayout-------------------')
         setOutputRange(range)
         onTabsLayout?.(layouts)
       }

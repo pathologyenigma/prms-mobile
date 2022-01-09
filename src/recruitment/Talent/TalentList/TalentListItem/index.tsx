@@ -1,34 +1,57 @@
 import React from 'react'
 import { View, StyleSheet, Text, Image } from 'react-native'
-import Avatar from '../../Avatar'
+import Avatar from '../../components/Avatar'
+import { CandidateItem } from '../useSearchCandidates'
 
-export default function TalentListItem() {
+export default function TalentListItem({
+  name,
+  online,
+  onlineDesc,
+  advantage,
+  experience,
+  education,
+  salary,
+  job,
+  skills,
+  gender,
+  avatar,
+}: CandidateItem) {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
         <View style={[styles.row, styles.nameRow]}>
-          <Text style={styles.name}>胡女士</Text>
-          <View style={styles.activeState} />
-          <Text style={styles.activeTime}>1小时前在线</Text>
+          <Text style={styles.name}>{name}</Text>
+          <View
+            style={[
+              styles.activeState,
+              online ? undefined : styles.inactiveState,
+            ]}
+          />
+          <Text
+            style={[
+              styles.activeTime,
+              online ? undefined : styles.inactiveTime,
+            ]}>
+            {onlineDesc}
+          </Text>
         </View>
         <View style={[styles.row, styles.experienceRow]}>
-          <Text style={styles.experience}>工作2年</Text>
+          <Text style={styles.experience}>{experience}</Text>
           <View style={styles.experienceDivider} />
-          <Text style={styles.experience}>大专</Text>
+          <Text style={styles.experience}>{education}</Text>
           <View style={styles.experienceDivider} />
-          <Text style={styles.experience}>7千-1万</Text>
+          <Text style={styles.experience}>{salary}</Text>
         </View>
-        <Text style={styles.expected}>期望：产品助理</Text>
+        <Text style={styles.expected}>{job}</Text>
         <View style={[styles.row, styles.jobRow]}>
           <Image style={styles.jobIcon} source={require('./zhiwei.png')} />
-          <Text style={styles.jobName}>大疆创新･科技行政总务･1年</Text>
+          <Text style={styles.jobName}>{skills}</Text>
         </View>
         <Text style={styles.advantage} ellipsizeMode="tail" numberOfLines={2}>
-          本人性格沉稳谨慎且有耐心，具有良好的沟通能力、
-          适应能力及学习摸索能力，对工作有较强的上进心哈哈哈哈
+          {advantage}
         </Text>
       </View>
-      <Avatar style={styles.avatar} gender="male" />
+      <Avatar style={styles.avatar} gender={gender} uri={avatar} />
       <View style={styles.divider}></View>
     </View>
   )
@@ -63,10 +86,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#7BD69C',
     marginLeft: 13,
   },
+  inactiveState: {
+    backgroundColor: '#AAAAAA',
+  },
   activeTime: {
-    color: '#AAAAAA',
+    color: '#7BD69C',
     fontSize: 10,
     marginLeft: 5.5,
+  },
+  inactiveTime: {
+    color: '#AAAAAA',
   },
   experienceRow: {
     marginTop: 9,

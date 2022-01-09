@@ -21,7 +21,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.czzapp"
+        applicationId "com.chenzaozhao.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -49,6 +49,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('release.keystore')
+            storePassword 'czzapp123456'
+            keyAlias 'czzapp'
+            keyPassword 'czzapp123456'
+        }
     }
     buildTypes {
         debug {
@@ -57,7 +63,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
@@ -74,6 +80,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation project(':react-native-picker-android')
+    implementation project(':react-native-location')
+    implementation project(':react-native-mapview')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

@@ -5,6 +5,11 @@ import { useIsFocused } from '@react-navigation/native'
 export default function FocusAwareStatusBar(props: StatusBarProps) {
   const isFocused = useIsFocused()
   return isFocused ? (
-    <StatusBar translucent backgroundColor="transparent" animated {...props} />
+    <StatusBar
+      translucent
+      backgroundColor="transparent"
+      animated={false}
+      {...props}
+    />
   ) : null
 }

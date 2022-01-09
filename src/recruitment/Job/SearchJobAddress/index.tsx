@@ -1,41 +1,71 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, Image, StyleSheet, FlatList } from 'react-native'
-import { StackNavigationProp } from '@react-navigation/stack'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
+import { View, StyleSheet, FlatList, Image, Keyboard } from 'react-native'
+import { StackScreenProps } from '@react-navigation/stack'
 import SearchBar from '../../components/SearchBar'
 import TextButton from '../../components/TextButton'
 import AddressItem from './Addresstem'
-import AddressHeader from './AddressHeader'
-import { useNavigation } from '@react-navigation/core'
 import NavBar from '../../components/NavBar'
+import IconLabelButton from '../../components/IconLabelButton'
+import { JobParamList } from '../typings'
+import { useGeoLocation } from '../../hooks/useGeoLocation'
+import { useInputTips } from '../../hooks/useInputTips'
+import MapView, { LatLng, MoveEvent } from '../../../bridge/MapView'
+import { usePoiItems } from '../../hooks/usePoiItems'
 
-const data = [
-  {
-    title: '米陀饭团',
-    detail: '粤海街道科技园中区科苑路15号科兴科学园臻食美食广场 100铺',
-  },
-  {
-    title: '谷典煎饼果',
-    detail: '粤海街道科技园中区科苑路15号科兴科学园臻食美食广场 100铺',
-  },
-  {
-    title: '皇牌自助餐科兴',
-    detail: '粤海街道科技园中区科苑路15号科兴科学园臻食美食广场 100铺',
-  },
-  {
-    title: '科兴科学园',
-    detail: '科苑路15号',
-  },
-  {
-    title: '科兴科学园D1栋',
-    detail: '高新中二道',
-  },
-  {
-    title: '科兴科学园（北门）',
-    detail: '高新中一道9号后侧',
-  },
-]
+export default function SearchJobAddress({
+  navigation,
+  route,
+}: StackScreenProps<JobParamList, 'SearchJobAddress'>) {
+  // 当前城市
+  const geoLocation = useGeoLocation()
+  const { city, coordinates } = route.params || {}
 
-export default function SearchJobAddress() {
+  useEffect(() => {
+    if (!city && geoLocation?.city) {
+      navigation.setParams({ city: geoLocation.city })
+    }
+    console.log(geoLocation)
+  }, [geoLocation, city])
+
+  // 地图，兴趣点搜索
+  const centerLatLng = useMemo<LatLng | undefined>(() => {
+    if (coordinates) {
+      return coordinates
+    }
+
+    if (geoLocation) {
+      const { latitude, longitude } = geoLocation
+      return {
+        latitude,
+        longitude,
+      }
+    }
+  }, [geoLocation, coordinates])
+
+  const { poiItems, getPoiItems } = usePoiItems()
+
+  const onMoveEnd = useCallback(
+    async ({ wasUserAction, latitude, longitude }: MoveEvent) => {
+      console.log(
+        'wasUserAction',
+        wasUserAction,
+        'latitude',
+        latitude,
+        'longitude',
+        longitude,
+      )
+      getPoiItems(latitude, longitude)
+    },
+    [],
+  )
+
+  useEffect(() => {
+    console.log(poiItems)
+  }, [poiItems])
+
+  console.log('-------------------SearchJobAddress-----------------------')
+
+  // 关键字搜索
   const [text, setText] = useState<string>('')
   const [showsSearchResult, setShowsSearchResult] = useState(false)
 
@@ -43,11 +73,24 @@ export default function SearchJobAddress() {
     setShowsSearchResult(text !== '')
   }, [text])
 
-  const navigation = useNavigation<StackNavigationProp<any>>()
+  const inputTips = useInputTips(text, city)
+  useEffect(() => {
+    console.log(inputTips)
+  }, [inputTips])
 
   return (
     <View style={styles.container}>
       <NavBar>
+        <IconLabelButton
+          style={styles.city}
+          icon={require('./images/city_location.png')}
+          label={city || '定位中'}
+          onPress={() =>
+            navigation.navigate('EditJobCity', {
+              currentCity: geoLocation?.city,
+            })
+          }
+        />
         <SearchBar
           onChangeText={setText}
           style={styles.search}
@@ -60,24 +103,59 @@ export default function SearchJobAddress() {
         />
       </NavBar>
       <View style={{ flex: 1 }}>
-        <View style={styles.map}></View>
+        <View style={styles.mapWrapper}>
+          <MapView
+            style={styles.map}
+            zoomLevel={17}
+            centerLatLng={centerLatLng}
+            onMoveStart={() => Keyboard.dismiss()}
+            onMoveEnd={onMoveEnd}
+            onSingleTap={() => Keyboard.dismiss()}
+          />
+          <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
+            <View style={styles.mapMarkerBox}>
+              <Image source={require('./images/marker.png')} />
+            </View>
+            <View style={styles.mapMarkerBox}></View>
+          </View>
+        </View>
         <FlatList
-          data={data}
-          keyExtractor={item => item.title}
-          renderItem={({ item }) => <AddressItem {...item} />}
-          ListHeaderComponent={
-            <AddressHeader
-              title="卤潮鲜"
-              detail="粤海街道科技园中区科苑路15号科兴科学园臻食美食广场 100铺"
+          key="poiItems"
+          data={poiItems}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          keyExtractor={item => item.poiID}
+          renderItem={({ item, index }) => (
+            <AddressItem
+              {...item}
+              index={index}
+              onPress={() =>
+                navigation.navigate('EditJobAddress', {
+                  poiItem: { ...item },
+                })
+              }
             />
-          }
+          )}
         />
         {showsSearchResult && (
           <FlatList
+            key="inputTips"
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode={'on-drag'}
             style={styles.searchList}
-            data={data}
-            keyExtractor={item => item.title}
-            renderItem={({ item }) => <AddressItem {...item} />}
+            data={inputTips}
+            keyExtractor={item => item.poiID}
+            renderItem={({ item }) => (
+              <AddressItem
+                {...item}
+                index={-1}
+                onPress={() =>
+                  navigation.navigate('EditJobAddress', {
+                    poiItem: { ...item },
+                  })
+                }
+              />
+            )}
           />
         )}
       </View>
@@ -90,9 +168,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
+  city: {
+    marginLeft: 11,
+    marginRight: 19,
+  },
   search: {
     flex: 1,
-    marginLeft: 11,
   },
   cancel: {
     marginLeft: 24,
@@ -107,10 +188,16 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
   },
-  mapList: {},
-  map: {
+  mapWrapper: {
     width: '100%',
     aspectRatio: 375 / 350,
-    backgroundColor: '#FF0000',
+  },
+  map: {
+    flex: 1,
+  },
+  mapMarkerBox: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
 })

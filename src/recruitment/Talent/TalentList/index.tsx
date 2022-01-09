@@ -1,42 +1,58 @@
-import React from 'react'
-import { View, StyleSheet, FlatList, ListRenderItem } from 'react-native'
-import FilterButton from '../../components/FilterButton'
+import React, { useState, useEffect } from 'react'
+import { View, StyleSheet } from 'react-native'
 import FocusAwareStatusBar from '../../components/FocusAwareStatusBar'
-import RadioLabelGroup from '../../components/RadioLabelGroup'
+import TalentListEmpty from './TalentListEmpty'
 import NavBar from './NavBar'
-import NoMoreFooter from './NoMoreFooter'
-import TalentListItem from './TalentListItem'
-import UpgradeFeature from './UpgradeFeature'
+import { useSimpleOnlineJobs } from './useSimpleOnlineJobs'
+import { StackScreenProps } from '@react-navigation/stack'
+import { TalentParamList } from '../typings'
+import LoadingAndError from '../../components/LoadingAndError'
+import { headerHeight } from '../../theme'
+import TalentPager from './TalentPager'
 
-export default function TalentList() {
-  const data = ['a', 'b']
+export default function TalentList({
+  navigation,
+}: StackScreenProps<TalentParamList, 'TalentList'>) {
+  let { jobs: jobItems, loading } = useSimpleOnlineJobs()
 
-  const renderItem: ListRenderItem<string> = ({ index, item }) => {
-    return <TalentListItem key={index} />
+  const [checkedJobId, setCheckedJobId] = useState<number>()
+
+  useEffect(() => {
+    if (jobItems && jobItems.length > 0) {
+      const index = jobItems.findIndex(item => item.jobId === checkedJobId)
+      if (index === -1) {
+        setCheckedJobId(jobItems[0].jobId)
+      }
+    }
+  }, [jobItems, checkedJobId])
+
+  const jobName = jobItems?.find(job => job.jobId === checkedJobId)?.title
+
+  if ((loading && !jobItems) || (jobItems && jobItems.length === 0)) {
+    return (
+      <LoadingAndError
+        loadingStyle={{ paddingTop: headerHeight() + 40 }}
+        loading={loading}
+        error={''}>
+        <FocusAwareStatusBar barStyle={'dark-content'} />
+        <TalentListEmpty
+          onPublishPress={() => navigation.navigate('PostJob')}
+        />
+      </LoadingAndError>
+    )
   }
 
   return (
     <View style={styles.container}>
       <FocusAwareStatusBar barStyle={'light-content'} />
-      <NavBar />
-      <View style={styles.filterbar}>
-        <RadioLabelGroup
-          style={styles.labelGroup}
-          labelStyle={styles.labelStyle}
-          labelInactiveStyle={styles.labelInactiveStyle}
-          labelSpace={20}
-          labels={['推荐', '最新']}
-          checkedIndex={0}
-        />
-        <FilterButton text={'筛选'} style={styles.filterButton} />
-      </View>
-      <FlatList
-        data={data}
-        keyExtractor={item => item}
-        renderItem={renderItem}
-        ListHeaderComponent={UpgradeFeature}
-        ListFooterComponent={NoMoreFooter}
+      <NavBar
+        jobs={jobItems || []}
+        checkedJobId={checkedJobId}
+        onJobItemChecked={setCheckedJobId}
+        onPlusPress={() => navigation.navigate('JobAdmin')}
+        onSearchPress={() => navigation.navigate('CandidateSearch')}
       />
+      <TalentPager navigation={navigation} jobName={jobName} />
     </View>
   )
 }
@@ -44,30 +60,5 @@ export default function TalentList() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  filterButton: {
-    marginRight: 11,
-  },
-  filterbar: {
-    height: 40,
-    flexDirection: 'row',
-  },
-  labelGroup: {
-    flex: 1,
-    paddingHorizontal: 10.5,
-  },
-  labelStyle: {
-    color: '#7DDBA3',
-    fontSize: 13,
-    fontWeight: '500',
-    // ios 垂直居中
-    lineHeight: 40,
-  },
-  labelInactiveStyle: {
-    color: '#666666',
-    fontSize: 13,
-    fontWeight: 'normal',
-    lineHeight: 40,
   },
 })

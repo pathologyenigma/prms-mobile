@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Provider } from 'react-redux'
 import store from './store'
 import { Provider as AntProvider } from '@ant-design/react-native'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { NavigationContainer } from '@react-navigation/native'
 import { ApolloProvider } from '@apollo/client'
 import { client, reset } from './utils/client'
@@ -12,7 +13,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import RequestJobRouterStacks from './navigator/requestJob/stack'
 import { Route as RenderRequestZhaopinTabs } from './recruitment'
 import RequestLoginStacks from './navigator/loginPages/stack'
-import { DeviceEventEmitter } from 'react-native'
+import { DeviceEventEmitter, StatusBar } from 'react-native'
 import Splash from './bridge/splash'
 import { setApolloClient } from './utils/postQuery'
 import { Identity, getTargetIdentity } from './utils/auth'
@@ -133,7 +134,10 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <Provider store={store}>
-        <AntProvider>{container}</AntProvider>
+        <SafeAreaProvider>
+          <StatusBar translucent backgroundColor="transparent" />
+          <AntProvider>{container}</AntProvider>
+        </SafeAreaProvider>
       </Provider>
     </ApolloProvider>
   )

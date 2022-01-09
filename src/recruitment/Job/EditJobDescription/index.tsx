@@ -1,20 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  StatusBar,
-  Platform,
-  Insets,
-} from 'react-native'
-import { StackNavigationProp } from '@react-navigation/stack'
+import { View, Text, StyleSheet, Platform, TextInput } from 'react-native'
+import { StackScreenProps } from '@react-navigation/stack'
 import TextButton from '../../components/TextButton'
-import { useNavigation } from '@react-navigation/core'
-import { TextInput } from 'react-native-gesture-handler'
 import { useKeyboard } from '@react-native-community/hooks'
 import { getBottomSpace, isIphoneX } from 'react-native-iphone-x-helper'
 import NavBar from '../../components/NavBar'
+import { JobParamList } from '../typings'
 
 const placeholder = `请输入岗位职责、任职要求等描述，至少10个字，建 议使用以下格式逐条列出： 
 1、…… 
@@ -26,8 +17,12 @@ const placeholder = `请输入岗位职责、任职要求等描述，至少10个
 
 const offset = isIphoneX() ? getBottomSpace() : 10
 
-export default function EditJobDescription() {
-  const navigation = useNavigation<StackNavigationProp<any>>()
+type Props = StackScreenProps<JobParamList, 'EditJobDescription'>
+
+export default function EditJobDescription({ navigation, route }: Props) {
+  const { initialDescription } = route.params
+
+  const [description, setDescription] = useState(initialDescription || '')
 
   const [bottomHeight, setBottomHeight] = useState(offset)
   const { keyboardShown, keyboardHeight } = useKeyboard()
@@ -41,7 +36,14 @@ export default function EditJobDescription() {
     <View style={styles.container}>
       <NavBar
         title="职位描述"
-        headerRight={() => <TextButton title="保存" />}
+        headerRight={() => (
+          <TextButton
+            title="保存"
+            onPress={() =>
+              navigation.navigate('PostJob', { jobDescription: description })
+            }
+          />
+        )}
       />
       <View style={styles.box}>
         <Text style={styles.note}>
@@ -60,6 +62,8 @@ export default function EditJobDescription() {
         multiline={true}
         maxLength={1000}
         placeholder={placeholder}
+        value={description}
+        onChangeText={setDescription}
         placeholderTextColor="#CCCCCC"
         textAlignVertical="top"
         autoFocus={true}
