@@ -1,6 +1,5 @@
-import { useMemo } from 'react'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { StyleProp, ViewStyle } from 'react-native'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { StyleProp } from 'react-native'
 import {
   Animated,
   Easing,

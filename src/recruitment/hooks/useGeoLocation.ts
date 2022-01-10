@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { Platform } from 'react-native'
 import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions'
 import GeoLocationManager from '../../bridge/geolocation'
-import { useAsync } from './useAsync'
+import useAsync from './useAsync'
 
 type Callback<T> = (() => Promise<T>) | (() => T)
 
@@ -79,5 +79,7 @@ export function getLocation() {
 }
 
 export function useGeoLocation() {
-  return useAsync(useCallback(() => getLocation(), []))
+  const { value } = useAsync(useCallback(() => getLocation(), []))
+
+  return value
 }

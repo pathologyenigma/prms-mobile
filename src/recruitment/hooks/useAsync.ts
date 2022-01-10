@@ -1,26 +1,17 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import useAsyncFn, { FunctionReturningPromise, PromiseType } from './useAsyncFn'
 
-export function useAsync<T>(
-  callback: (...args: any) => Promise<T>,
-  initialValue?: T,
+export default function useAsync<T extends FunctionReturningPromise>(
+  fn: T,
+  initialValue?: PromiseType<ReturnType<T>>,
 ) {
-  const [state, set] = useState(initialValue)
+  const [state, callback] = useAsyncFn(fn, {
+    loading: true,
+    value: initialValue,
+  })
 
   useEffect(() => {
-    let live = true
-    ;(async () => {
-      try {
-        const state = await callback()
-        if (live) {
-          set(state)
-        }
-      } catch (e) {
-        console.warn(e)
-      }
-    })()
-    return () => {
-      live = false
-    }
+    callback()
   }, [callback])
 
   return state
