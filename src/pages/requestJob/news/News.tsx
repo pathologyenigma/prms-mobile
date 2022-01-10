@@ -11,6 +11,7 @@ import {
   requestNotifications,
   checkNotifications
 } from 'react-native-permissions'
+import RootLoading from '../../../utils/rootLoading'
 
 type TProps = GenProps<'News'>
 
@@ -80,7 +81,11 @@ export default class News extends Component<TProps, IState> {
                   style={styles.tabsBtn}
                   key={i.toString()}
                   onPress={() => {
-                    this.setState({ selectTabs: i })
+                    if (i === 1) {
+                      RootLoading.info('暂未开放')
+                    } else {
+                      this.setState({ selectTabs: i })
+                    }
                   }}
                 >
                   <Text style={[styles.tabsTitle, tabProps.activeTab === i && styles.selectedTitle]}>

@@ -942,6 +942,8 @@ class MessagePage extends Component<IProps, IState> {
         break
       case 3: // 换微信
         detail = '确定与对方交换微信吗?'
+        RootLoading.info('暂未开放')
+        return null
         break
       case 4: // 不合适
         detail = '确定与对方交换微信吗?'

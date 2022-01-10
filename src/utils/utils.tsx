@@ -49,7 +49,7 @@ const calculateSize = (originSize: number) => {
 }
 
 const reformEducation = (education: any) => {
-  if (!education) {
+  if (!education || education === 'Null') {
     return ''
   }
   let showEducation = education

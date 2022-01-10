@@ -121,12 +121,13 @@ export default class AccountSetting extends Component<IProps, IState> {
         {this.renderCell('邮箱绑定', bindedEmailShow, () => {
           navigation.push('EmailBinding', { email: bindedEmail || '' })
         })}
-        {this.renderCell('微信绑定', isBindWechatShow, () => {
-          if (isBindWechat) {
-            this.setState({ cancelBindWechatVisible: true })
-          } else {
-            RootLoading.info('前往微信绑定')
-          }
+        {this.renderCell('微信绑定', '', () => {
+          RootLoading.info('暂未开放')
+          // if (isBindWechat) {
+          //   this.setState({ cancelBindWechatVisible: true })
+          // } else {
+          //   RootLoading.info('前往微信绑定')
+          // }
         })}
       </View>
     )

@@ -66,7 +66,7 @@ class Mine extends Component<IProps, IState> {
           <Text style={styles.nameTitle}>{userInfo.username}</Text>
           <Text style={styles.detailInfo}>
             {
-            `${userInfo.first_time_working ? `工作${reformDistanceYears(userInfo.first_time_working)}年` : ''}${userInfo.birth_date ? `/${reformDistanceYears(userInfo.birth_date)}岁` : ''}${userInfo.education ? `/${reformEducation(userInfo.birth_date)}` : ''}`
+              `${userInfo.first_time_working ? `工作${reformDistanceYears(userInfo.first_time_working)}年` : ''}${userInfo.birth_date ? `/${reformDistanceYears(userInfo.birth_date)}岁` : ''}${userInfo.education ? `/${reformEducation(userInfo.birth_date)}` : ''}`
             }
           </Text>
           {/* <Text style={styles.detailInfo}>工作4年/27岁/本科</Text> */}
@@ -167,50 +167,80 @@ class Mine extends Component<IProps, IState> {
     return (
       <View style={styles.jianliViewContainer}>
         <View style={styles.jianliView}>
-          <View style={styles.jianliItem}>
+          <NextTouchableOpacity
+            style={styles.jianliItem}
+            onPress={() => {
+              RootLoading.info('暂未开放')
+            }}
+          >
             <Image
               style={styles.jianliIcon}
               source={require('../../../assets/requestJobs/jianlishuaxin.png')}
             />
             <Text style={styles.jianliTag}>简历刷新</Text>
-          </View>
-          <View style={styles.jianliItem}>
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            style={styles.jianliItem}
+            onPress={() => {
+              RootLoading.info('暂未开放')
+            }}
+          >
             <Image
               style={styles.jianliIcon}
               source={require('../../../assets/requestJobs/jianlizhiding.png')}
             />
             <Text style={styles.jianliTag}>简历置顶</Text>
-          </View>
-          <View style={styles.jianliItem}>
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            style={styles.jianliItem}
+            onPress={() => {
+              RootLoading.info('暂未开放')
+            }}
+          >
             <Image
               style={styles.jianliIcon}
               source={require('../../../assets/requestJobs/jianliyouhua.png')}
             />
             <Text style={styles.jianliTag}>简历优化</Text>
-          </View>
+          </NextTouchableOpacity>
         </View>
         <View style={styles.jianliView}>
-          <View style={styles.jianliItem}>
+          <NextTouchableOpacity
+            style={styles.jianliItem}
+            onPress={() => {
+              RootLoading.info('暂未开放')
+            }}
+          >
             <Image
               style={styles.jianliIcon}
               source={require('../../../assets/requestJobs/jianlimoban.png')}
             />
             <Text style={styles.jianliTag}>简历模板</Text>
-          </View>
-          <View style={styles.jianliItem}>
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            style={styles.jianliItem}
+            onPress={() => {
+              RootLoading.info('暂未开放')
+            }}
+          >
             <Image
               style={styles.jianliIcon}
               source={require('../../../assets/requestJobs/jianlitoudi.png')}
             />
             <Text style={styles.jianliTag}>简历投递</Text>
-          </View>
-          <View style={styles.jianliItem}>
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            style={styles.jianliItem}
+            onPress={() => {
+              RootLoading.info('暂未开放')
+            }}
+          >
             <Image
               style={styles.jianliIcon}
               source={require('../../../assets/requestJobs/zhiweizhixun.png')}
             />
             <Text style={styles.jianliTag}>职位咨询</Text>
-          </View>
+          </NextTouchableOpacity>
         </View>
       </View>
     )
@@ -310,7 +340,8 @@ class Mine extends Component<IProps, IState> {
                     navigation.push('PrivacySetting')
                     break
                   case '我的钱包':
-                    navigation.push('MyWallet')
+                    RootLoading.info('暂未开放')
+                    // navigation.push('MyWallet')
                     break
                   case '切换身份':
                     navigation.push('ChooseRole')

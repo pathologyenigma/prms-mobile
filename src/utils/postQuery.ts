@@ -275,9 +275,10 @@ const candidateGetEnterpriseDetail_QAGql = gql`
  * 获取职位详情
  */
 const getJobDetailGql = gql`
-  query CandidateGetJob($jobid: Int!) {
-    CandidateGetJob(jobid: $jobid) {
-      job {
+  query UserGetJob($jobid: Int!) {
+    UserGetJob(jobid: $jobid) {
+      ... on JobDetailPageReplyCandiate {
+        job {
         id
         title
         category
@@ -307,6 +308,7 @@ const getJobDetailGql = gql`
         enterprise_size
         business_nature
         #       enterprise_logo
+      }
       }
     }
   }
@@ -353,13 +355,15 @@ const getHrMoreJobListGql = gql`
       page: $page
     ) {
       data {
-        id
-        title
-        loc
-        experience
-        education
-        salary
-        createdAt
+        ... on JobDataForHRDetailPageOrEntJobList {
+          id
+          title
+          loc
+          experience
+          education
+          salary
+          createdAt
+        }
       }
       count
     }

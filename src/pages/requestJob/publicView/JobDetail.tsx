@@ -196,7 +196,7 @@ class JobDetail extends Component<IProps, IState> {
       if (!error && result) {
         this.setState({
           refreshing: false,
-          dataSource: result.CandidateGetJob
+          dataSource: result.UserGetJob
         })
       } else {
         this.setState({ refreshing: false })

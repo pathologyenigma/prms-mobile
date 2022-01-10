@@ -325,7 +325,7 @@ class HrPersonalInfo extends Component<IProps, IState> {
     const { shareVisible, refreshing } = this.state
     console.log('shareVisible: ', shareVisible)
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <StatusBar
           translucent={true}
           barStyle={'light-content'}
@@ -350,7 +350,7 @@ class HrPersonalInfo extends Component<IProps, IState> {
             this.setState({ shareVisible: false })
           }}
         />
-      </SafeAreaView>
+      </View>
     )
   }
 }
