@@ -20,6 +20,7 @@ import JobCell from '../../components/JobCell'
 import AlertContentModal from '../../components/AlertContentModal'
 import WhiteContentModal from '../../components/WhiteContentModal'
 import * as actions from '../../../action/newsAction'
+import { getId, logout } from '../../../utils/auth'
 
 type IProps = GenProps<'MessagePage'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 interface IState {
@@ -42,6 +43,7 @@ interface IState {
   rejectReason: string
   rejectModalVisible: boolean
   isLoadMoreData: boolean
+  userId: any
 }
 
 const inappropriateArray = [
@@ -69,6 +71,7 @@ class MessagePage extends Component<IProps, IState> {
       return
     }
     this.state = {
+      userId: '',
       targetItem,
       page: 0,
       pageSize: 10,
@@ -103,7 +106,20 @@ class MessagePage extends Component<IProps, IState> {
   }
 
   componentDidMount() {
-    this.loadData()
+    getId()
+      .then((res) => {
+        console.log('res', res)
+        if (res) {
+          this.setState({ userId: res }, () => {
+            this.loadData()
+          })
+        } else {
+          RootLoading.info('登录失效,请重新登录')
+        }
+      })
+      .catch((err) => {
+        RootLoading.info('登录失效,请重新登录')
+      })
   }
 
   componentWillUnmount() {
@@ -146,7 +162,13 @@ class MessagePage extends Component<IProps, IState> {
   }
 
   loadData() {
-    const { targetItem, pageSize, page, listDataSource } = this.state
+    const { targetItem, pageSize, page, listDataSource, userId } = this.state
+    const { userInfo, navigation } = this.props
+    if (!userId) {
+      RootLoading.fail('登录失效,请重新登录')
+      navigation.goBack()
+      return
+    }
     this.props.userGetMessages(targetItem.id, page, pageSize, (error, result) => {
       if (!error && result) {
         if (result.UserGetMessages
@@ -156,7 +178,10 @@ class MessagePage extends Component<IProps, IState> {
           newsList.forEach(e => {
             if (!this.messageListKey[e.uuid]) {
               this.messageListKey[e.uuid] = true
-              nextList.push(e)
+              nextList.push({
+                ...e,
+                currentJobId: 10
+              })
             }
           })
           this.setState({
@@ -363,7 +388,7 @@ class MessagePage extends Component<IProps, IState> {
   renderTextMessage(item: any) {
     const { userInfo } = this.props
     const isSend = userInfo.userInfo.username !== item.launch
-    if (userInfo.userInfo.id.toString() === item.from.toString()) {
+    if (this.state.userId === item.from.toString()) {
       // 发送方
       return (
         <View key={item.uuid.toString()} style={styles.cellSendMessage}>
@@ -432,6 +457,7 @@ class MessagePage extends Component<IProps, IState> {
   }
 
   renderInviteInterview(item: any) {
+    console.log('renderInviteInterview: ', item)
     return (
       <View style={styles.cellReceiveMessage}>
         <Image
@@ -547,9 +573,11 @@ class MessagePage extends Component<IProps, IState> {
 
   renderCellItem(item: any) {
     const { userInfo } = this.props
+    const { targetItem } = this.state
+    const showItem = []
     if (item.type === 'jianli') {
       // 打招呼简历
-      return (
+      showItem.push (
         <JobCell
           key={item.uuid.toString()}
           cellItem={item}
@@ -560,22 +588,27 @@ class MessagePage extends Component<IProps, IState> {
     }
     if (item.messageType === 'Normal') {
       // 文字消息
-      return this.renderTextMessage(item)
+      showItem.push(this.renderTextMessage(item))
     }
     if (item.type === 'requestResume') {
       // 请求简历
-      return this.renderRequestResume(item)
+      showItem.push(this.renderRequestResume(item))
     }
     if (item.type === 'inviteInterview') {
-      return this.renderInviteInterview(item)
+      showItem.push(this.renderInviteInterview(item))
     }
     if (item.type === 'acceptInterview') {
-      return this.renderAcceptInterview(item)
+      showItem.push(this.renderAcceptInterview(item))
     }
     if (item.type === 'rejectInterview') {
-      return this.renderRejectInterview(item)
+      showItem.push(this.renderRejectInterview(item))
     }
-    return null
+    if (targetItem && targetItem.job.id !== item.currentJobId) {
+      showItem.push(
+        <Text style={styles.changeJobText}>{ `你切换了职位: ${targetItem.job.title}`}</Text>
+      )
+    }
+    return showItem
   }
 
   handleRefresh() {

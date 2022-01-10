@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import React, { PureComponent } from 'react'
 import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -59,12 +60,12 @@ export default class JobfairCell extends PureComponent<ICell> {
     const end = { x: 1, y: 0.5 }
     return (
       <View style={styles.offlineView}>
-        <Text style={styles.organizersText}>{`主办方：${cellItem.organizers}`}</Text>
+        <Text style={styles.organizersText}>{`主办方：${cellItem.co_organizer}`}</Text>
         <Text style={styles.organizersText}>{`承办方：${cellItem.contractor}`}</Text>
-        <Text style={styles.offlineTime}>{`时间：${cellItem.time}`}</Text>
+        <Text style={styles.offlineTime}>{`时间：${format(new Date(cellItem.updatedAt), 'yyyy-MM-dd HH:mm')}`}</Text>
         <View style={styles.locationView}>
           <Image style={styles.locationIcon} source={require('../../../../assets/requestJobs/location.png')} />
-          <Text style={styles.locationText}>{cellItem.location}</Text>
+          <Text style={styles.locationText}>{`${cellItem.address_description[0] || ''} ${cellItem.address_description[1] || ''} ${cellItem.address_description[2] || ''}`}</Text>
         </View>
         <View style={styles.offlineProgressView}>
           <Text style={styles.offlineProgressText}>
@@ -104,8 +105,8 @@ export default class JobfairCell extends PureComponent<ICell> {
               <View style={{ flex: 1 }} />
             </View>
           ) : null}
-          {cellItem.summary ? (
-            <Text style={styles.summary}>{cellItem.summary}</Text>
+          {cellItem.detail ? (
+            <Text style={styles.summary}>{cellItem.detail}</Text>
           ) : null}
           {cellItem.liveTime ? (
             <View style={styles.liveTimeView}>
@@ -154,11 +155,11 @@ export default class JobfairCell extends PureComponent<ICell> {
             <Image style={styles.zhaoIcon} source={require('../../../../assets/requestJobs/zhao.png')} />
             <Text style={styles.nameText}>{cellItem.name}</Text>
           </View>
-          {cellItem.type === '1' ? (
+          {cellItem.seekers === 0 ? ( // 缺失该字段
             // 线下招聘
             this.renderOfflineView(cellItem)
           ) : (
-            //线上招聘
+            // 线上招聘
             this.renderOnlineView(cellItem)
           )}
         </View>

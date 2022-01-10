@@ -1,11 +1,7 @@
 import { StyleSheet } from 'react-native'
-import SystemHelper from '../../../utils/system'
 
 export default StyleSheet.create({
   datePicker: {
-    marginTop: 10,
-    width: SystemHelper.width * 5,
-    marginLeft: SystemHelper.width / 2 + 20,
     height: 210,
   },
   title: {

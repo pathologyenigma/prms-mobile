@@ -30,12 +30,15 @@ import * as actions from '../../../action/loginAction'
 import * as jobActions from '../../../action/jobsAction'
 import { Query } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
-import { getENTEditEnterpriseBasicInfo } from '../../../action/loginAction'
 import { CommonActions } from '@react-navigation/native'
 import JobCellData from '../../components/JobCellData'
 import { IStoreState } from '../../../reducer'
 import { urlToHttpOptions } from 'http'
 import SystemHelper from '../../../utils/system'
+import {
+  requestNotifications,
+  checkNotifications
+} from 'react-native-permissions'
 
 type IProps = GenProps<'Jobs'> &
   ReturnType<typeof mapStateToProps> &
@@ -67,7 +70,13 @@ class Jobs extends Component<IProps, IState> {
   }
 
   componentDidMount() {
+    this.getNotificationPermission()
     RootLoading.loading()
+    this.loadUserBasicInfo()
+    // 注意:当前服务端不支持 subscription 和 其他接口同时调用,暂时修改为延迟获取
+    setTimeout(() => {
+      this.subscribeMessage()
+    }, 5000)
     this.loadJobExpections()
     StatusBar.setBarStyle('light-content', true)
     this.props.navigation.addListener('focus', () => {
@@ -75,8 +84,35 @@ class Jobs extends Component<IProps, IState> {
     })
   }
 
+  getNotificationPermission() {
+    checkNotifications()
+      .then(({ status, settings }) => {
+        // …
+        console.log('checkNotifications: ', status, settings)
+        // 'unavailable' | 'denied' | 'limited' | 'granted' | 'blocked';
+        if (status !== 'granted') {
+          // 已经被拒绝或不可达,尝试再次申请
+          requestNotifications(['alert', 'sound'])
+            .then(({ status: nextStatus, settings: nextSetting }) => {
+              // …
+              console.log('requestNotifications: ', nextStatus, nextSetting)
+            })
+            .catch((error) => {
+              console.log('request-error: ', error)
+            })
+        }
+      })
+      .catch((error) => {
+
+      })
+  }
+
   componentWillUnmount() {
-    this.props.navigation.removeListener('focus', () => {})
+    this.props.navigation.removeListener('focus', () => { })
+  }
+
+  loadUserBasicInfo() {
+    this.props.getUserGetBasicInfo()
   }
 
   loadJobExpections() {
@@ -84,20 +120,18 @@ class Jobs extends Component<IProps, IState> {
     this.props.getCandidateGetAllJobExpectations((error, result) => {
       console.log('getCandidateGetAllJobExpectations1: ', error, result)
       if (!error && result && result.CandidateGetAllJobExpectations) {
-        this.loadData()
-        this.setState(
-          { selectJobsArray: result.CandidateGetAllJobExpectations },
-          () => {
-            this.lodJobList()
-          },
-        )
+        this.setState({
+          selectJobsArray: result.CandidateGetAllJobExpectations
+        }, () => {
+          this.loadJobList()
+        })
       } else {
         RootLoading.fail('职位加载失败,请重试')
       }
     })
   }
 
-  lodJobList() {
+  loadJobList() {
     // 根据个人类型加载列表
     const { selectJobsArray, selectJobIndex, listDataSource, page } = this.state
     if (!selectJobsArray) {
@@ -110,7 +144,7 @@ class Jobs extends Component<IProps, IState> {
     }
     console.log(
       'selectJobsArray[selectJobIndex]: ',
-      selectJobsArray[selectJobIndex],
+      selectJobsArray[selectJobIndex], selectJobIndex
     )
     const filter = {
       page,
@@ -118,6 +152,7 @@ class Jobs extends Component<IProps, IState> {
     }
     console.log('filter:', filter)
     this.props.getCandidateGetJobList(filter, (error, result) => {
+      console.log('CandidateGetJobList: ', filter, error, result)
       RootLoading.hide()
       if (
         !error &&
@@ -125,26 +160,25 @@ class Jobs extends Component<IProps, IState> {
         result.CandidateGetJobList &&
         result.CandidateGetJobList.data
       ) {
+        const originData = page === 0 ? [] : listDataSource
         this.setState({
-          listDataSource: listDataSource.concat(
+          listDataSource: originData.concat(
             result.CandidateGetJobList.data,
           ),
           refreshState: result.CandidateGetJobList.data.length === 10 ? 0 : 3,
         })
       } else {
         this.setState({
-          refreshState: 4,
+          refreshState: 0,
         })
         RootLoading.fail('职位加载失败,请重试')
       }
     })
   }
 
-  loadData() {
-    // 测试订阅
-    console.log('111111111: loadData ')
+  subscribeMessage() {
+    // 订阅相关
     this.props.subscriptionMessage((error, result) => {
-      console.log('subscriptionMessage: ', error, result)
       if (
         !error &&
         result &&
@@ -244,10 +278,9 @@ class Jobs extends Component<IProps, IState> {
       {
         page: 0,
         refreshState: 1,
-        listDataSource: [],
       },
       () => {
-        this.lodJobList()
+        this.loadJobList()
       },
     )
   }
@@ -259,7 +292,7 @@ class Jobs extends Component<IProps, IState> {
         refreshState: 2,
       },
       () => {
-        this.lodJobList()
+        this.loadJobList()
       },
     )
   }
@@ -529,8 +562,9 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
       getCandidateGetAllJobExpectations:
         jobActions.getCandidateGetAllJobExpectations,
       getCandidateGetJobList: jobActions.getCandidateGetJobList,
+      getUserGetBasicInfo: actions.getUserGetBasicInfo,
     },
-    dispatch,
+    dispatch
   )
 }
 

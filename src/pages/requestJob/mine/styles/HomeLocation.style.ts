@@ -21,10 +21,9 @@ export default StyleSheet.create({
   },
   contentInput: {
     width: '100%',
-    color: '#cccccc',
+    color: '#333',
     fontSize: 15,
     fontWeight: 'bold',
-    height: 18,
     padding: 0,
   },
   locationView: {

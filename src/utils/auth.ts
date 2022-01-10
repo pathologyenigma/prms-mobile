@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage'
 import { DeviceEventEmitter } from 'react-native'
-import { Login_Token, Login_Identity, Log_Out } from './constant'
+import { Login_Token, Login_Identity, Log_Out, Login_User_Id } from './constant'
 
 export type Identity =
   | 'PersonalUser'
@@ -10,6 +10,7 @@ export type Identity =
 
 let _token: string | null = null
 let _identity: string | null = null
+let _id: string | null = null
 
 export async function logout() {
   _token = null
@@ -35,6 +36,21 @@ export async function getToken() {
   const token = await AsyncStorage.getItem(Login_Token)
   _token = token
   return token
+}
+
+// 登录用户 id (该id现在只有在登录接口中会有返回)
+export function setId(id: string) {
+  _id = id
+  return AsyncStorage.setItem(Login_User_Id, id.toString())
+}
+
+export async function getId() {
+  if (_id) {
+    return _id
+  }
+  const id = await AsyncStorage.getItem(Login_User_Id)
+  _id = id
+  return id
 }
 
 export async function setTargetIdentity(identity: Identity) {

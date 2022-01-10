@@ -43,6 +43,7 @@ const loginGql = gql`
       username
       token
       createdAt
+      id
     }
   }
 `
@@ -115,7 +116,16 @@ const getAllRegionGql = gql`
         Cities {
           name
           city_id
+          Counties {
+            county_id
+            name
+            Towns {
+              town_id
+              name
+            }
+          }
         }
+        province_id
         name
       }
     }
@@ -164,7 +174,7 @@ const getCandidateGetJobListGql = gql`
         min_experience
         full_time_job
         min_education
-        expired_at
+        # expired_at
         max_salary
         min_salary
         comp_size
@@ -280,7 +290,6 @@ const getJobDetailGql = gql`
         required_num
         full_time_job
         tags
-        updatedAt
       }
       hr {
         id
@@ -367,14 +376,49 @@ const sendMessageGql = gql`
 const userGetContractListGql = gql`
   query UserGetContractList {
     UserGetContractList {
-      id
-      name
-      pos
-      ent
-      last_msg
-      last_msg_time
+      ... on Contract {
+        id name pos ent last_msg last_msg_time job
+        # logo
+      }
+      ... on Talent {
+        age
+      }
+      # id
+      # name
+      # pos
+      # ent
+      # last_msg
+      # last_msg_time
       # logo
     }
+  }
+`
+
+const getUserGetBasicInfoGql = gql`
+  query{
+    UserGetBasicInfo{
+      username
+  #     image_url
+      gender
+      birth_date
+      current_city
+      first_time_working
+      education
+      phone_number
+      email
+    }
+}
+`
+
+const userEditBasicInfoGql = gql`
+  mutation UserEditBasicInfo($info: BasicData!){
+    UserEditBasicInfo(info: $info)
+}
+`
+
+const userGetRecruitmentListGql = gql`
+  query UserGetRecruitmentList($keyword:String!,$appointment: Boolean!, $page: Int!, $pageSize: Int!){
+    UserGetRecruitmentList(keyword: $keyword, appointment: $appointment, page: $page, pageSize: $pageSize)
   }
 `
 
@@ -405,4 +449,7 @@ export {
   candidateGetEnterpriseDetail_InterviewRecommentGql,
   candidateGetEnterpriseDetail_QAGql,
   userGetContractListGql,
+  getUserGetBasicInfoGql,
+  userEditBasicInfoGql,
+  userGetRecruitmentListGql
 }

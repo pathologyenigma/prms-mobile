@@ -3,6 +3,7 @@ import {
   Image, ImageRequireSource, StatusBar, Text,
   TouchableOpacity, View, StyleProp, TextStyle, ImageStyle,
 } from 'react-native'
+import SystemHelper from '../../../utils/system'
 import Styles from './styles'
 
 export enum EButtonType {
@@ -81,6 +82,7 @@ export default class NavBar extends Component<INavBarProps> {
       return <View style={Styles.right} />
     }
     let content
+    console.log('SystemHelper.safeTop: ', SystemHelper.safeTop, SystemHelper.safeTop + 44,)
     if (right.type === EButtonType.IMAGE) {
       content = (
         <Image
@@ -114,6 +116,7 @@ export default class NavBar extends Component<INavBarProps> {
 
   render() {
     const { barStyle, statusBarTheme } = this.props
+    console.log('SystemHelper.safeTop: ', SystemHelper.safeTop, SystemHelper.safeTop + 44,)
     return (
       <View>
         <StatusBar

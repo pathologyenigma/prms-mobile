@@ -232,6 +232,19 @@ export default StyleSheet.create({
     justifyContent: 'flex-end',
     transform: [{ rotateZ: '180deg' }]
   },
+  changeJobText: {
+    marginTop: 5,
+    marginBottom: 10,
+    transform: [{ rotateZ: '180deg' }],
+    alignSelf: 'center',
+    backgroundColor: '#E8E9EB',
+    color: '#A5A7A8',
+    height: 30,
+    lineHeight: 30,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    overflow: 'hidden',
+  },
   accpetIcon: {
     width: 17,
     height: 12,

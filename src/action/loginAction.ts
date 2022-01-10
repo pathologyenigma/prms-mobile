@@ -8,11 +8,13 @@ import {
   chooseOrSwitchIdentityGql,
   getENTEditEnterpriseBasicInfoGql,
   getUserEditPersonalDataGql,
+  getUserGetBasicInfoGql,
   loginGql,
   numberCheckGql,
   registerGql,
   resetPasswordGql,
   sendSMSGql,
+  userEditBasicInfoGql,
   subscriptionGqlServerGql,
   testGql,
 } from '../utils/postQuery'
@@ -27,6 +29,16 @@ const reset_reducer = () => {
 const update_kv = (key: string, value: string) => {
   return {
     type: 'loginInfo/update_kv',
+    payload: {
+      key,
+      value,
+    },
+  }
+}
+
+const update_user_kv = (key: string, value: string) => {
+  return {
+    type: 'userInfo/update_kv',
     payload: {
       key,
       value,
@@ -235,7 +247,7 @@ const sendResetCode = (
   mobileNumber?: string,
   email?: string,
   callback?: (error: any, result?: any) => void,
-) => {}
+) => { }
 
 // 检查验证码(operation 中不同参数对应不同接口功能)
 const checkUserVerifyCodeConsume = (
@@ -312,6 +324,61 @@ const chooseRole = (
   }
 }
 
+// 获取个人信息
+const getUserGetBasicInfo = (
+  callback?: (error: any, result?: any) => void,
+) => {
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare
+      .mutate({
+        mutation: getUserGetBasicInfoGql,
+        fetchPolicy: 'no-cache', // 设置缓存策略
+      })
+      .then(res => {
+        console.log('res1: ', res)
+        if (res && res.data) {
+          dispatch(
+            update_user_kv('userInfo', res.data.UserGetBasicInfo)
+          )
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error: ApolloError) => {
+        errorHandler(error)
+      })
+  }
+}
+
+// 修改个人信息
+const setUserEditBasicInfo = (
+  info: any,
+  callback?: (error: any, result?: any) => void
+) => {
+  return (dispatch: Dispatch<AnyAction>) => {
+    apolloClientShare
+      .mutate({
+        mutation: userEditBasicInfoGql,
+        fetchPolicy: 'no-cache', // 设置缓存策略
+        variables: {
+          info
+        }
+      })
+      .then(res => {
+        if (res && res.data) {
+          dispatch(getUserGetBasicInfo())
+          if (callback) {
+            callback(undefined, res.data)
+          }
+        }
+      })
+      .catch((error: ApolloError) => {
+        errorHandler(error)
+      })
+  }
+}
+
 // 重置密码
 const resetPassword = (
   phone: string,
@@ -357,25 +424,27 @@ const subscriptionMessage = (callback?: (error: any, result?: any) => void) => {
         fetchPolicy: 'no-cache', // 设置缓存策略
       })
       .subscribe(
-        res => {
+        (value) => {
           // 注意:在浏览器中 debug 的模式中未打印出值.待排查原因
-          console.log('subscriptionMessage-res: ', res)
-          if (res && callback) {
-            callback(undefined, res)
+          console.log('subscriptionMessage-res: ', value)
+          if (value && callback) {
+            callback(undefined, value)
           }
         },
-        error => {
+        (error) => {
+          console.log('subscriptionMessage-111: ')
           errorHandler(error)
           console.log('error: ', error)
           console.log('subscription断开了')
           RootLoading.fail('subscription断开了')
         },
         () => {
+          console.log('subscriptionMessage-222complete ')
           console.log('subscription断开了')
           RootLoading.fail('subscription断开了')
           console.log('complete: ')
-        },
-      )
+        }
+    )
   }
 }
 
@@ -396,7 +465,7 @@ const verificationResetCode = (
   password?: string,
   email?: string,
   callback?: (error: any, result?: any) => void,
-) => {}
+) => { }
 
 export {
   reset_reducer,
@@ -412,4 +481,6 @@ export {
   resetPassword,
   subscriptionMessage,
   chooseRole,
+  getUserGetBasicInfo,
+  setUserEditBasicInfo,
 }

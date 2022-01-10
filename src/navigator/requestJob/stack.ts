@@ -26,6 +26,7 @@ import SubmitCompanyQuestion from '../../pages/requestJob/publicView/SubmitCompa
 import CompanyResponse from '../../pages/requestJob/publicView/CompanyResponse'
 import CompanySubQuestion from '../../pages/requestJob/publicView/CompanySubQuestion'
 import UserInfo from '../../pages/requestJob/mine/UserInfo'
+import UserInfoEdit from '../../pages/requestJob/mine/UserInfoEdit'
 import EditOnlineResume from '../../pages/requestJob/mine/EditOnlineResume'
 import EditPersonalGoods from '../../pages/requestJob/mine/EditPersonalGoods'
 import EditWorkExperience from '../../pages/requestJob/mine/EditWorkExperience'
@@ -88,6 +89,8 @@ import AllMessages from '../../pages/requestJob/news/AllMessages'
 import ChooseRole from '../../pages/loginInfo/ChooseRole'
 import VideoComponent from '../../pages/components/VideoComponent'
 import MessagePage from '../../pages/requestJob/news/MessagePage'
+import SearchJobAddress from '../../recruitment/Job/SearchJobAddress'
+import EditJobCity from '../../recruitment/Job/EditJobCity'
 
 type TRouterParams = {
   Find: any,
@@ -99,7 +102,7 @@ type TRouterParams = {
   JobExpectDetail: any,
   JobSelectZhiwei: { selectJobTypeCallback: (selectJobType: any) => void }
   JobSelectIndustry: { selectJobIndustryCallback: (selectJobIndustry: any) => void }
-  JobSelectCity: { selectJobCityCallback: (selectJobIndustry: any) => void }
+  JobSelectCity: { selectJobCityCallback: (selectJobIndustry: any) => void, mode?: number, } // 0: 默认表示详细位置 1: 表示城市
   JobSelectSalary: { selectJobSalaryCallback: (selectJobSalary: any) => void }
   JobSearch: any
   JobSearchResult: any
@@ -115,6 +118,7 @@ type TRouterParams = {
   CompanyResponse: any,
   CompanySubQuestion: any,
   UserInfo: any,
+  UserInfoEdit: { title: string, inputCallback: (value: string) => void },
   EditOnlineResume: any,
   EditPersonalGoods: { personalGoods: string, personalGoodsCallback: (editContents: string) => void },
   EditWorkExperience: { workItemCallback: (workItem: any) => void, workItem?: any, }
@@ -177,6 +181,8 @@ type TRouterParams = {
   ChooseRole: any
   VideoComponent: { videoUri: string, closeCallback: () => void }
   MessagePage: { targetItem: any }
+  SearchJobAddress: any,
+  EditJobCity: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -218,6 +224,7 @@ export default class RouterStacks {
       CompanyResponse,
       CompanySubQuestion,
       UserInfo,
+      UserInfoEdit,
       EditOnlineResume,
       EditPersonalGoods,
       EditWorkExperience,
@@ -279,6 +286,8 @@ export default class RouterStacks {
       AllMessages,
       ChooseRole,
       VideoComponent,
-      MessagePage
+      MessagePage,
+      SearchJobAddress,
+      EditJobCity,
     }
 }

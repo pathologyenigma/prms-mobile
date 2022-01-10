@@ -6,14 +6,19 @@ export interface IUserInfoState {
       username: string,
       token: string,
       createdAt: string,
+      id: string,
     },
-    id: string,
-    avatar: string,
+    birth_date: string,
+    current_city: string,
+    education: string | null
+    email: string | null,
+    first_time_working: string
+    gender: boolean | null,
+    phone_number: string
     username: string,
-    mobileNumber: string,
-    dateOfBirth: string,
-    gender: string,
-    city: string,
+    logo: string,
+
+    avatar: string,
     lastOnlineAt: string,
     lastLoginAt: string,
     updatedAt: string,
@@ -28,16 +33,20 @@ const initState: IUserInfoState = {
     UserLogIn: {
       username: '',
       token: '',
-      createdAt: ''
+      createdAt: '',
+      id: '',
     },
-    // TODO: 临时代码 , 对应账号 18800001012 /  word_12
-    id: '49',
-    avatar: '',
+    birth_date: '',
+    current_city: '',
+    education: null,
+    email: null,
+    first_time_working: '',
+    gender: null,
+    phone_number: '',
     username: '',
-    mobileNumber: '',
-    dateOfBirth: '',
-    gender: '',
-    city: '',
+    logo: '',
+
+    avatar: '',
     lastOnlineAt: '',
     lastLoginAt: '',
     updatedAt: '',
@@ -68,7 +77,6 @@ const userInfo = (state = initState, action: IUserInfoAction) => {
       break
     case 'userInfo/update_kv':
       // saveUserinfo(payload.userInfo)
-      if (payload.key === 'token') { global.token = payload.value }
       nextState = {
         ...state,
         [payload.key]: payload.value,

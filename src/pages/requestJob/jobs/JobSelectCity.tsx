@@ -53,11 +53,16 @@ class JobSelectCity extends Component<IProps, IState> {
     getAllRegion((error, result) => {
       console.log('getAll:" ', error, result)
       RootLoading.hide()
-      if (!error && result) {
+      if (!error && result && result.StaticGetAllRegion && result.StaticGetAllRegion.data) {
         this.setState({
-          dataSource: result,
-          selectItem: result[0],
-          selectItemSecond: result[0].Cities,
+          dataSource: result.StaticGetAllRegion.data,
+          selectItem: result.StaticGetAllRegion.data[0],
+          selectItemSecond: result.StaticGetAllRegion.data[0].Cities,
+          // if (!error && result) {
+          //   this.setState({
+          //     dataSource: result,
+          //     selectItem: result[0],
+          //     selectItemSecond: result[0].Cities,
         })
         // if (result.StaticGetAllRegion
         //   && result.StaticGetAllRegion.data
@@ -278,6 +283,7 @@ class JobSelectCity extends Component<IProps, IState> {
           type: EButtonType.IMAGE,
           value: require('../../../assets/requestJobs/job-select-back.png'),
           act: () => {
+            const { navigation } = this.props
             navigation.pop()
           },
         }}
@@ -397,9 +403,13 @@ class JobSelectCity extends Component<IProps, IState> {
                 ]}
                 key={index.toString()}
                 onPress={() => {
-                  this.setState({
-                    selectArea: e
-                  })
+                  if (index > 0) {
+                    RootLoading.info('敬请期待')
+                  } else {
+                    this.setState({
+                      selectArea: e
+                    })
+                  }
                 }}
               >
                 <Text style=
@@ -492,12 +502,20 @@ class JobSelectCity extends Component<IProps, IState> {
         </NextTouchableOpacity>
         <GradientButton
           disabled={!selectedCity}
+          textStyle={!selectedCity ? {
+            color: '#666', fontSize: 13,
+            fontWeight: 'normal'
+          } : null}
           containerStyle={styles.confirmBtn}
           linearStyle={styles.linearStyle}
           text="确定"
           onPress={() => {
-            if (isSelectDetailArea) {
-              const { navigation, route: { params: { selectJobCityCallback } } } = this.props
+            const { navigation, route: { params: { selectJobCityCallback, mode } } } = this.props
+            if (mode === 1) {
+              // 选择城市级别
+              selectJobCityCallback(`${selectItem.name} ${selectedCity.name}`)
+              navigation.goBack()
+            } else if (isSelectDetailArea) {
               // 临时把名称返回,具体的等后述需求
               selectJobCityCallback(`${selectItem.name} ${selectedCity.name} ${selectQu.name} ${selectZhen.name}`)
               navigation.goBack()

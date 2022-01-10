@@ -27,6 +27,9 @@ function errorHandler(error: any) {
       // 切换角色,当没有该角色时会报错,具体错误暂不处理
       errorMsg = '您还没有该身份信息,无法切换'
       break
+    case 'Error: Validation error: Validation len on username failed':
+      errorMsg = '姓名长度不合法,请重新输入'
+      break
     default:
   }
   if (

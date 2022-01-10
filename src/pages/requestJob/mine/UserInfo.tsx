@@ -5,14 +5,32 @@ import { GenProps } from '../../../navigator/requestJob/stack'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import GradientButton from '../../components/GradientButton'
+import { IStoreState } from '../../../reducer'
+import { bindActionCreators, Dispatch, AnyAction } from 'redux'
+import { connect } from 'react-redux'
+import { loginAction } from '../../../action'
+import { EducationType, reformEducation, selectEducation } from '../../../utils/utils'
+import ActionSheet from '../../../recruitment/components/ActionSheet'
+import DatePickerModal from '../../components/DatePickerModal'
+import RootLoading from '../../../utils/rootLoading'
 
-type IProps = GenProps<'UserInfo'> & {
-
-}
+type IProps = GenProps<'UserInfo'> &
+  ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>
 
 interface IState {
   dataSource: any,
-  selectGender: number | undefined
+  selectGender: any,
+  genderActionVisible: boolean,
+  datePickVisible: boolean
+  localDateOfBirth: any,
+  userName: string
+  phoneNumber: string
+  education: any
+  first_time_working: any
+  first_time_working_pick: boolean
+  current_city: string,
+  logo: string,
 }
 
 const listData = [
@@ -51,12 +69,23 @@ const listData = [
   }
 ]
 
-export default class UserInfo extends Component<IProps, IState> {
+class UserInfo extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
+    const { userInfo: { gender, birth_date, username, phone_number, education, first_time_working, current_city, logo } } = props
     this.state = {
       dataSource: listData,
-      selectGender: undefined
+      selectGender: gender,
+      genderActionVisible: false,
+      datePickVisible: false,
+      localDateOfBirth: birth_date || new Date(),
+      userName: username || '',
+      phoneNumber: phone_number || '',
+      education: education || '',
+      first_time_working: first_time_working || '',
+      first_time_working_pick: false,
+      current_city: current_city || '',
+      logo: logo || ''
     }
   }
 
@@ -82,18 +111,19 @@ export default class UserInfo extends Component<IProps, IState> {
   }
 
   renderIcon() {
+    const { userInfo } = this.props
     return (
       <View style={styles.iconView}>
         <Text style={styles.iconText}>头像</Text>
         <Image
-          source={require('../../../assets/requestJobs/icon-example.png')}
+          source={userInfo.logo ? { uri: userInfo.logo } : require('../../../assets/requestJobs/icon-example.png')}
           style={styles.iconStyle}
         />
       </View>
     )
   }
 
-  renderCell(title: string, detail: string, arrow: boolean, onPress?: () => {}) {
+  renderCell(title: string, detail: string, arrow: boolean, onPress?: () => void) {
     return (
       <NextTouchableOpacity
         style={styles.cell}
@@ -125,18 +155,18 @@ export default class UserInfo extends Component<IProps, IState> {
         <View style={styles.genderDetail}>
           <NextTouchableOpacity
             onPress={() => {
-              this.setState({ selectGender: 0 })
+              this.setState({ selectGender: true })
             }}
             style={[
               styles.genderDetailBtn,
-              selectGender === 0 && {
+              selectGender === true && {
                 backgroundColor: '#E9FFF0',
                 borderColor: '#7AD398'
               }
             ]}
           >
             <Text style={[styles.genderDetailText,
-            selectGender === 0 && {
+            selectGender === true && {
               fontWeight: 'bold',
               color: '#7AD398'
             }
@@ -144,18 +174,18 @@ export default class UserInfo extends Component<IProps, IState> {
           </NextTouchableOpacity>
           <NextTouchableOpacity
             onPress={() => {
-              this.setState({ selectGender: 1 })
+              this.setState({ selectGender: false })
             }}
             style={[
               styles.genderDetailBtn,
-              selectGender === 1 && {
+              selectGender === false && {
                 backgroundColor: '#E9FFF0',
                 borderColor: '#7AD398'
               }
             ]}
           >
             <Text style={[styles.genderDetailText,
-            selectGender === 1 && {
+            selectGender === false && {
               fontWeight: 'bold',
               color: '#7AD398'
             }
@@ -166,6 +196,39 @@ export default class UserInfo extends Component<IProps, IState> {
     )
   }
 
+  saveInfo() {
+    const { setUserEditBasicInfo, userInfo } = this.props
+    console.log('userInfo: ', userInfo)
+    const {
+      logo,
+      userName,
+      localDateOfBirth,
+      selectGender,
+      current_city,
+      education,
+      first_time_working
+    } = this.state
+    const info: any = {
+      username: userName,
+      birthday: localDateOfBirth,
+      gender: !!selectGender,
+      currentCity: current_city,
+      education,
+      firstTimeWorking: first_time_working
+    }
+    if (logo) {
+      info.logo = logo
+    }
+    console.log('info: ', info)
+    RootLoading.loading('正在加载中...')
+    setUserEditBasicInfo(info, (error, result) => {
+      console.log('editInfo: ', error, result)
+      if (!error) {
+        RootLoading.success('修改成功')
+      }
+    })
+  }
+
   renderSaveBtn() {
     return (
       <View
@@ -174,12 +237,19 @@ export default class UserInfo extends Component<IProps, IState> {
         <GradientButton
           text="保存"
           containerStyle={styles.btnContainer}
+          onPress={() => {
+            this.saveInfo()
+          }}
         />
       </View>
     )
   }
 
   render() {
+    const { userInfo, navigation } = this.props
+    const { genderActionVisible, datePickVisible, localDateOfBirth, userName, current_city,
+      phoneNumber, education, first_time_working, first_time_working_pick } = this.state
+    console.log('userInfo: ', userInfo)
     return (
       <View style={styles.container}>
         <StatusBar
@@ -194,16 +264,104 @@ export default class UserInfo extends Component<IProps, IState> {
           contentContainerStyle={{ paddingBottom: 20 }}
         >
           {this.renderIcon()}
-          {this.renderCell('姓名', '李小冉', false)}
-          {this.renderCell('出生日期', '1995.11', true)}
+          {this.renderCell('姓名', userName, true, () => {
+            navigation.push('UserInfoEdit', {
+              title: '姓名', inputCallback: (value) => {
+                this.setState({ userName: value })
+              }
+            })
+          })}
+          {this.renderCell('出生日期', localDateOfBirth, true, () => {
+            this.setState({ datePickVisible: true })
+          })}
           {this.renderGender()}
-          {this.renderCell('所在城市', '深圳', true)}
-          {this.renderCell('手机号码', '13100000000', true)}
-          {this.renderCell('您的学历', '本科', true)}
-          {this.renderCell('首次参加工作时间', '2016.12', true)}
+          {this.renderCell('所在城市', current_city, true, () => {
+            navigation.push('JobSelectCity', {
+              selectJobCityCallback: (value) => {
+                console.log('value: ', value)
+                const showValue = value.indexOf('市辖区') > -1 ? value.split(' ')[0] : `${value.split(' ')[0]}${value.split(' ').length > 1 ? `-${value.split(' ')[1]}` : ''}`
+                this.setState({
+                  // 设置城市
+                  current_city: showValue
+                })
+              },
+              mode: 1
+            })
+          })}
+          {this.renderCell('手机号码', phoneNumber, true, () => {
+            navigation.push('UserInfoEdit', {
+              title: '手机号码', inputCallback: (value) => {
+                this.setState({ phoneNumber: value })
+              }
+            })
+          })}
+          {this.renderCell('您的学历', selectEducation(education), true, () => {
+            this.setState({ genderActionVisible: true })
+          })}
+          {this.renderCell('首次参加工作时间', first_time_working, true, () => {
+            this.setState({ first_time_working_pick: true })
+          })}
         </ScrollView>
         {this.renderSaveBtn()}
+        <ActionSheet
+          visible={genderActionVisible}
+          onDismiss={() => this.setState({ genderActionVisible: false })}
+          actions={[
+            { title: '无', onPress: () => this.setState({ education: 'LessThanPrime' }) },
+            { title: '小学', onPress: () => this.setState({ education: 'Primary' }) },
+            { title: '初中', onPress: () => this.setState({ education: 'Junior' }) },
+            { title: '高中', onPress: () => this.setState({ education: 'High' }) },
+            { title: '大专', onPress: () => this.setState({ education: 'JuniorCollege' }) },
+            { title: '本科', onPress: () => this.setState({ education: 'RegularCollege' }) },
+            { title: '研究生', onPress: () => this.setState({ education: 'Postgraduate' }) },
+            { title: '博士', onPress: () => this.setState({ education: 'Doctor' }) }
+          ]}
+        />
+        <DatePickerModal
+          visible={datePickVisible}
+          currentDate={new Date(Date.parse(localDateOfBirth))}
+          leftPress={() => {
+            this.setState({ datePickVisible: false })
+          }}
+          rightPress={(newDate) => {
+            this.setState({
+              // localDateOfBirth: `${newDate.getFullYear()}-${newDate.getMonth()}-${newDate.getDay()}`,
+              localDateOfBirth: newDate.toISOString().split('T')[0],
+              datePickVisible: false,
+            })
+          }}
+        />
+        <DatePickerModal
+          visible={first_time_working_pick}
+          currentDate={new Date(Date.parse(first_time_working))}
+          leftPress={() => {
+            this.setState({ first_time_working_pick: false })
+          }}
+          rightPress={(newDate) => {
+            this.setState({
+              first_time_working: newDate.toISOString().split('T')[0],
+              first_time_working_pick: false,
+            })
+          }}
+        />
       </View>
     )
   }
 }
+
+const mapStateToProps = (state: IStoreState) => {
+  return {
+    userInfo: state.userInfo.userInfo,
+  }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
+  return bindActionCreators(
+    {
+      setUserEditBasicInfo: loginAction.setUserEditBasicInfo
+    },
+    dispatch
+  )
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserInfo)

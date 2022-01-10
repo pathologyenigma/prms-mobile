@@ -30,7 +30,7 @@
     "no-parameter-reassignment": true,
     "prefer-for-of": true,
     "no-namespace": false,
-    "only-arrow-functions": true,
+    "only-arrow-functions": false,
     "no-shadowed-variable": true,
     "no-string-literal": false,
     "ban-types": false,

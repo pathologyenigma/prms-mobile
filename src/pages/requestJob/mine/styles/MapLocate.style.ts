@@ -23,10 +23,40 @@ export default StyleSheet.create({
     width: SystemHelper.width,
     height: 54,
     marginHorizontal: 22,
-    paddingTop: 7
+    paddingTop: 7,
+    marginBottom: SystemHelper.safeBottom,
   },
   btnContainer: {
     width: SystemHelper.width - 44,
     height: 40,
-  }
+    backgroundColor: '#F0F0F0',
+  },
+  mapMarkerBg: {
+    minWidth: 50,
+    minHeight: 35,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 5,
+    overflow: 'hidden'
+  },
+  mapMarkerText: {
+    fontSize: 10,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    marginBottom: 3,
+  },
+  mapWrapper: {
+    width: '100%',
+    aspectRatio: SystemHelper.width / (SystemHelper.height - SystemHelper.safeBottom - 54),
+  },
+  map: {
+    flex: 1,
+  },
+  mapMarkerBox: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
 })

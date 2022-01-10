@@ -1,4 +1,15 @@
-import { differenceInHours } from "date-fns"
+import { differenceInHours } from 'date-fns'
+
+export enum EducationType {
+  LessThanPrime,
+  Primary,
+  Junior,
+  High,
+  JuniorCollege,
+  RegularCollege,
+  Postgraduate,
+  Doctor
+}
 
 const formatHintsIndex = (originIndex: string | number) => {
   return Number(originIndex) > 9 ? originIndex.toString() : `0${Number(originIndex)}`
@@ -37,7 +48,7 @@ const calculateSize = (originSize: number) => {
   return status
 }
 
-const reformEducation = (education: string) => {
+const reformEducation = (education: any) => {
   if (!education) {
     return ''
   }
@@ -66,6 +77,42 @@ const reformEducation = (education: string) => {
       break;
     case 'Doctor':
       showEducation = '博士及以上'
+      break;
+    default:
+      break;
+  }
+  return showEducation
+}
+
+const selectEducation = (education: any) => {
+  if (!education) {
+    return ''
+  }
+  let showEducation = education
+  switch (education) {
+    case 'LessThanPrime':
+      showEducation = '无'
+      break;
+    case 'Primary':
+      showEducation = '小学'
+      break;
+    case 'Junior':
+      showEducation = '初中'
+      break;
+    case 'High':
+      showEducation = '高中'
+      break;
+    case 'JuniorCollege':
+      showEducation = '大专'
+      break;
+    case 'RegularCollege':
+      showEducation = '本科'
+      break;
+    case 'Postgraduate':
+      showEducation = '研究生'
+      break;
+    case 'Doctor':
+      showEducation = '博士'
       break;
     default:
       break;
@@ -157,6 +204,17 @@ const reformFullTime = (full_time_job: string) => {
   return ''
 }
 
+const reformDistanceYears = (first_time_working: string) => {
+  if (!first_time_working) {
+    return ''
+  }
+  const fromYears = first_time_working.split('-')[0]
+  if (!fromYears) {
+    return ''
+  }
+  return (new Date().getFullYear() - Number(fromYears))
+}
+
 export {
   formatHintsIndex,
   calculateTime,
@@ -164,5 +222,7 @@ export {
   reformEducation,
   reformCompanySize,
   reformComFinancing,
-  reformFullTime
+  reformFullTime,
+  reformDistanceYears,
+  selectEducation,
 }
