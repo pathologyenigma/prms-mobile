@@ -18,6 +18,7 @@ import {
   stringForExperience,
   stringForFullTime,
 } from '../../utils/JobHelper'
+import RootLoading from '../../../utils/rootLoading'
 
 function computeDisplayAddress(workingAddress?: string[]) {
   if (!workingAddress) {
@@ -57,6 +58,7 @@ function PostJob({ navigation, route }: Props) {
 
   const postJob = usePostJob()
   const editJob = useEditJob()
+  const editing = jobId !== undefined
 
   const [jobNatureModalVisible, setJobNatureModalVisible] = useState(false)
   const [jobAdmissionIndex, setJobAdmissionIndex] = useState(0)
@@ -65,7 +67,7 @@ function PostJob({ navigation, route }: Props) {
 
   return (
     <View style={{ flex: 1 }}>
-      <NavBar title="发布职位" />
+      <NavBar title={editing ? '编辑职位' : '发布职位'} />
       <ScrollView contentContainerStyle={styles.container}>
         <StatusBar barStyle="dark-content" />
         <JobInfoItem
@@ -179,40 +181,54 @@ function PostJob({ navigation, route }: Props) {
           onValueChange={value => navigation.setParams({ headcount: value })}
         />
         <GradientButton
-          title="立即发布"
+          title={editing ? '保存' : '立即发布'}
           style={styles.postButton}
-          onPress={() => {
-            if (jobId) {
-              editJob({
-                id: jobId,
-                jobTitle: jobName,
-                workingAddress,
-                experience,
-                salary,
-                education,
-                description: jobDescription,
-                requiredNum: headcount,
-                isFullTime: jobNature,
-                tags: tags || [],
-                coordinates,
-                publishNow: true,
-                category: jobCategory,
-              })
+          onPress={async () => {
+            if (editing) {
+              try {
+                RootLoading.loading('请稍后...')
+                await editJob({
+                  id: jobId,
+                  jobTitle: jobName,
+                  workingAddress,
+                  experience,
+                  salary,
+                  education,
+                  description: jobDescription,
+                  requiredNum: headcount,
+                  isFullTime: jobNature,
+                  tags: tags || [],
+                  coordinates,
+                  publishNow: true,
+                  category: jobCategory,
+                })
+                RootLoading.info('操作成功')
+                navigation.goBack()
+              } catch (e) {
+                RootLoading.info(e.message)
+              }
             } else {
-              postJob({
-                jobTitle: jobName,
-                workingAddress,
-                experience,
-                salary,
-                education,
-                description: jobDescription,
-                requiredNum: headcount,
-                isFullTime: jobNature,
-                tags: tags || [],
-                coordinates,
-                publishNow: true,
-                category: jobCategory,
-              })
+              try {
+                RootLoading.loading('请稍后...')
+                await postJob({
+                  jobTitle: jobName,
+                  workingAddress,
+                  experience,
+                  salary,
+                  education,
+                  description: jobDescription,
+                  requiredNum: headcount,
+                  isFullTime: jobNature,
+                  tags: tags || [],
+                  coordinates,
+                  publishNow: true,
+                  category: jobCategory,
+                })
+                RootLoading.info('操作成功')
+                navigation.goBack()
+              } catch (e) {
+                RootLoading.info(e.message)
+              }
             }
           }}
         />

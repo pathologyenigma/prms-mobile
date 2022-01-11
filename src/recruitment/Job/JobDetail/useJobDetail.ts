@@ -1,4 +1,5 @@
-import { gql, useQuery } from '@apollo/client'
+import { gql, useLazyQuery, useQuery } from '@apollo/client'
+import { useFocusEffect } from '@react-navigation/native'
 import { useMemo } from 'react'
 import { LatLng } from '../../../bridge/MapView'
 import {
@@ -6,6 +7,7 @@ import {
   EnterpriseNature,
   EnterpriseSize,
   FullTime,
+  JobStatus,
 } from '../../typings'
 import {
   stirngForSalary,
@@ -39,6 +41,7 @@ interface Job {
   full_time_job: FullTime
   tags: string[]
   updated_at: string
+  status: JobStatus
 }
 
 interface Company {
@@ -73,6 +76,7 @@ export interface JobItem {
   address: string
   tags: string[]
   description: string
+  status: JobStatus
 }
 
 export interface CompanyItem {
@@ -92,11 +96,13 @@ interface JobDetailItem {
 }
 
 export default function useJobDetail(jobId: number) {
-  const { data, loading, error, refetch } = useQuery<JobDetailResult>(query, {
+  const [fn, { data, loading, error }] = useLazyQuery<JobDetailResult>(query, {
     variables: {
       jobid: jobId,
     },
   })
+
+  useFocusEffect(fn)
 
   const detail = useMemo<JobDetailItem | undefined>(() => {
     if (!data) {
@@ -120,6 +126,7 @@ export default function useJobDetail(jobId: number) {
         address: `${job.address_description[4]}·${job.address_description[5]}·${job.address_description[6]}`,
         tags: job.tags,
         description: job.detail,
+        status: job.status,
       },
       company: {
         logo: company.enterprise_logo,
@@ -148,7 +155,7 @@ export default function useJobDetail(jobId: number) {
     }
   }, [data])
 
-  return { detail, loading, error, refetch }
+  return { detail, loading, error, refetch: fn }
 }
 
 const query = gql`
@@ -175,6 +182,7 @@ const query = gql`
         full_time_job
         tags
         updated_at
+        status
       }
       company {
         id

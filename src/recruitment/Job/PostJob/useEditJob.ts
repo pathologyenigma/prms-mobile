@@ -1,10 +1,6 @@
-import { gql, useLazyQuery, useMutation } from '@apollo/client'
-import { useNavigation } from '@react-navigation/native'
-import { StackNavigationProp } from '@react-navigation/stack'
-import { useCallback, useEffect, useMemo } from 'react'
-import RootLoading from '../../../utils/rootLoading'
+import { gql, useMutation } from '@apollo/client'
+import { useCallback } from 'react'
 import { Education, FullTime } from '../../typings'
-import { JobParamList } from '../typings'
 
 export interface EditJobInput {
   id: number
@@ -24,25 +20,7 @@ export interface EditJobInput {
 }
 
 export function useEditJob() {
-  const [fn, { data, loading, error }] =
-    useMutation<{ HRPostJob: null }>(mutation)
-
-  const navigation = useNavigation<StackNavigationProp<JobParamList>>()
-
-  useEffect(() => {
-    if (error) {
-      console.warn('----useEditJob----', error)
-    }
-  }, [error])
-
-  useEffect(() => {
-    if (loading) {
-      RootLoading.loading('发布中...')
-    }
-    return () => {
-      RootLoading.hide()
-    }
-  }, [loading])
+  const [fn] = useMutation<{ HREditJob: null }>(mutation)
 
   const editJob = useCallback(
     async (input: Partial<EditJobInput>) => {
@@ -57,58 +35,47 @@ export function useEditJob() {
         coordinates,
         requiredNum,
       } = input
+
       if (!jobTitle) {
-        RootLoading.info('请填写职位名称')
-        return
+        throw new Error('请填写职位名称')
       }
 
       if (!category || category.length === 0) {
-        RootLoading.info('请选择职位类别')
-        return
+        throw new Error('请选择职位类别')
       }
 
       if (experience === undefined) {
-        RootLoading.info('请选择工作经验')
-        return
+        throw new Error('请选择工作经验')
       }
 
       if (!education) {
-        RootLoading.info('请选择最低学历')
-        return
+        throw new Error('请选择最低学历')
       }
 
       if (!salary || salary.length < 2) {
-        RootLoading.info('请选择薪资范围')
-        return
+        throw new Error('请选择薪资范围')
       }
 
       if (!description) {
-        RootLoading.info('请填写职位描述')
-        return
+        throw new Error('请填写职位描述')
       }
 
       if (!workingAddress || workingAddress.length < 8) {
-        RootLoading.info('请填写工作地址')
-        return
+        throw new Error('请填写工作地址')
       }
 
       if (!coordinates || coordinates.length < 2) {
-        RootLoading.info('请重新填写工作地址')
-        return
+        throw new Error('请重新填写工作地址')
       }
 
       if (requiredNum === undefined || requiredNum < 1) {
-        RootLoading.info('请填写招聘人数')
-        return
+        throw new Error('请填写招聘人数')
       }
 
       await fn({ variables: { info: input } })
-      navigation.goBack()
     },
     [fn],
   )
-
-  console.log('useEditJob', data)
 
   return editJob
 }
