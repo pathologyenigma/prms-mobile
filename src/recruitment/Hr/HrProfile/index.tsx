@@ -11,17 +11,18 @@ import {
 import GradientButton from '../../components/GradientButton'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import NavBar from '../../components/NavBar'
-import { StackNavigationProp } from '@react-navigation/stack'
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack'
 import { useNavigation } from '@react-navigation/native'
 import RadioGroup from '../../components/RadioGroup'
 import RadioLabel from '../../components/RadioLabel'
-interface ItemProps {
+import { HrParamList } from '../typings'
+interface HrProfileItemProps {
   title: string
   detail: string
   onPress?: () => void
 }
 
-const Item = ({ title, detail, onPress }: ItemProps) => {
+const HrProfileItem = ({ title, detail, onPress }: HrProfileItemProps) => {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.item}>
@@ -37,8 +38,9 @@ const Item = ({ title, detail, onPress }: ItemProps) => {
   )
 }
 
-export default function HrProfile() {
-  const navigation = useNavigation<StackNavigationProp<any>>()
+export default function HrProfile({
+  navigation,
+}: StackScreenProps<HrParamList, 'HrProfile'>) {
   return (
     <View style={styles.container}>
       <NavBar title="个人资料" />
@@ -52,7 +54,7 @@ export default function HrProfile() {
             <Image source={require('../../assets/avatar_default.png')} />
           </TouchableWithoutFeedback>
         </View>
-        <Item title="姓名" detail="李小冉" onPress={() => {}} />
+        <HrProfileItem title="姓名" detail="李小冉" onPress={() => {}} />
         <View style={styles.gender}>
           <Text style={styles.genderTitle}>性别</Text>
           <RadioGroup value={true}>
@@ -73,11 +75,14 @@ export default function HrProfile() {
             />
           </RadioGroup>
         </View>
-        <Item title="公司" detail="猎德科技有限公司" />
-        <Item title="职位" detail="人事主管" onPress={() => {}} />
-        <Item title="手机号码" detail="1348004433" onPress={() => {}} />
-        <Item title="邮箱" detail="Lixiaoran@163.com" onPress={() => {}} />
-
+        <HrProfileItem title="公司" detail="猎德科技有限公司" />
+        <HrProfileItem title="职位" detail="人事主管" onPress={() => {}} />
+        <HrProfileItem title="手机号码" detail="请填写" onPress={() => {}} />
+        <HrProfileItem
+          title="邮箱"
+          detail="Lixiaoran@163.com"
+          onPress={() => navigation.navigate('EditHrEmail', {})}
+        />
         <GradientButton title="保存" style={styles.button} />
       </ScrollView>
     </View>

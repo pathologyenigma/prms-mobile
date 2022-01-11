@@ -1,11 +1,46 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, TextInput } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import TextButton from '../../components/TextButton'
 import GradientButton from '../../components/GradientButton'
 import NavBar from '../../components/NavBar'
+import { StackScreenProps } from '@react-navigation/stack'
+import { HrParamList } from '../typings'
+import useEmailVerifyCode from './useEmailVerifyCode'
+import useEditEmail from './useEditEmail'
+import RootLoading from '../../../utils/rootLoading'
+import { useCountdown } from '../../hooks/useCountdown'
 
-export default function EditCompanyEmail() {
+function isValidEmail(email: string) {
+  const regx = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/
+  return regx.test(email)
+}
+
+export default function EditHrEmail({
+  navigation,
+  route,
+}: StackScreenProps<HrParamList, 'EditHrEmail'>) {
+  const { email } = route.params
+  const [emailInput, setEmailInput] = useState(email || '')
+  const emailValid = isValidEmail(emailInput)
+
+  const { requestEmailVerifyCode, loading, error } = useEmailVerifyCode()
+  const { countdown, startCountdown } = useCountdown(30)
+
+  useEffect(() => {
+    if (error) {
+      RootLoading.info(error.message)
+    }
+  }, [error])
+
+  const codeButtonDisabled = !emailValid || loading || countdown !== 0
+
+  console.log('countdown', countdown)
+
+  const [code, setCode] = useState('')
+  const confirmButtonDisabled = !emailValid || !code
+  const editEmail = useEditEmail()
+
   return (
     <View style={styles.container}>
       <NavBar title="公司邮箱" />
@@ -22,11 +57,17 @@ export default function EditCompanyEmail() {
           </Text>
           <TextInput
             style={styles.input}
+            value={emailInput}
+            onChangeText={setEmailInput}
             placeholder="请输入公司邮箱"
             placeholderTextColor="#BBBBBB"
             keyboardType="email-address"
+            autoCapitalize="none"
+            autoCompleteType="email"
           />
-          <Text style={styles.error}>提示：您输入的邮箱地址有误</Text>
+          {!emailValid && (
+            <Text style={styles.error}>提示：您输入的邮箱地址有误</Text>
+          )}
           <Text style={styles.hint}>{`1、不建议使用个人邮箱
 2、验证公司邮箱可提供公司招聘的安全级别`}</Text>
         </View>
@@ -34,19 +75,43 @@ export default function EditCompanyEmail() {
           <Text style={styles.title}>邮箱验证码</Text>
           <TextInput
             style={styles.input}
+            value={code}
+            onChangeText={setCode}
             placeholder="请输入验证码"
             placeholderTextColor="#BBBBBB"
             keyboardType="number-pad"
+            autoCapitalize="none"
+            autoCompleteType="off"
           />
           <TextButton
-            title="获取验证码"
+            title={countdown > 0 ? `重新获取${countdown}s` : '获取验证码'}
             style={styles.captchaButton}
-            disabled
-            textStyle={[styles.captchaText, styles.captchaTextDisabled]}
+            disabled={codeButtonDisabled}
+            textStyle={[
+              styles.captchaText,
+              codeButtonDisabled ? styles.captchaTextDisabled : undefined,
+            ]}
+            onPress={() => {
+              startCountdown()
+              requestEmailVerifyCode(emailInput)
+            }}
           />
         </View>
-
-        <GradientButton title="确认" style={styles.button} />
+        <GradientButton
+          title="确认"
+          style={styles.button}
+          disabled={confirmButtonDisabled}
+          onPress={async () => {
+            try {
+              RootLoading.loading('请稍后...')
+              await editEmail(emailInput, code)
+              RootLoading.info('邮箱修改成功!')
+              navigation.goBack()
+            } catch (e) {
+              RootLoading.info(e.message)
+            }
+          }}
+        />
       </KeyboardAwareScrollView>
     </View>
   )

@@ -25,11 +25,7 @@ export function useSimpleOnlineJobs() {
     fetchPolicy: 'cache-and-network',
   })
 
-  useFocusEffect(
-    useCallback(() => {
-      fetch()
-    }, [fetch]),
-  )
+  useFocusEffect(fetch)
 
   const jobs = data?.UserGetJobListByEntId.data.map(({ job_id, title }) => {
     return {
