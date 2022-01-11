@@ -21,11 +21,18 @@ export default function Avatar({
   style = { width: 48, height: 48 },
   genderStyle,
 }: AvatarProps) {
+  const { width = 48 } = StyleSheet.flatten(style)
+
   return (
     <View style={style}>
       <Image
-        style={styles.avatar}
-        source={uri ? uri : require('../../../assets/avatar_default.png')}
+        style={{
+          width: width,
+          height: width,
+          borderRadius: Number(width) / 2,
+          overflow: 'hidden',
+        }}
+        source={uri ? { uri } : require('../../../assets/avatar_default.png')}
         resizeMode="cover"
       />
       <Image

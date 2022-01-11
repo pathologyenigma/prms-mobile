@@ -47,14 +47,12 @@ export default function HrProfile() {
         contentContainerStyle={styles.content}>
         <View style={styles.head}>
           <Text style={styles.detail}>头像</Text>
-
           <TouchableWithoutFeedback
             onPress={() => navigation.navigate('AvatarViewer')}>
             <Image source={require('../../assets/avatar_default.png')} />
           </TouchableWithoutFeedback>
         </View>
-        <Item title="名称显示" detail="李小冉" />
-        <Item title="名称显示" detail="李小冉" onPress={() => {}} />
+        <Item title="姓名" detail="李小冉" onPress={() => {}} />
         <View style={styles.gender}>
           <Text style={styles.genderTitle}>性别</Text>
           <RadioGroup value={true}>
@@ -75,41 +73,11 @@ export default function HrProfile() {
             />
           </RadioGroup>
         </View>
-        <Item title="所在公司" detail="猎德科技有限公司" />
-        <Item title="当前职位" detail="人事主管" onPress={() => {}} />
+        <Item title="公司" detail="猎德科技有限公司" />
+        <Item title="职位" detail="人事主管" onPress={() => {}} />
         <Item title="手机号码" detail="1348004433" onPress={() => {}} />
-        <Item title="公司邮箱" detail="Lixiaoran@163.com" onPress={() => {}} />
-        <View style={styles.capacityContainer}>
-          <Text style={styles.title}>选择身份</Text>
-          <View style={styles.capacity}>
-            <RadioGroup value="HR/HRBP">
-              <RadioLabel
-                label="主管/员工"
-                style={[styles.labelButton, styles.capacityButton]}
-                checkedStyle={styles.labelButtonChecked}
-              />
-              <RadioLabel
-                label="HR/HRBP"
-                value="HR/HRBP"
-                style={[
-                  { marginLeft: 11 },
-                  styles.labelButton,
-                  styles.capacityButton,
-                ]}
-                checkedStyle={styles.labelButtonChecked}
-              />
-              <RadioLabel
-                label="暂时保密"
-                style={[
-                  { marginLeft: 11 },
-                  styles.labelButton,
-                  styles.capacityButton,
-                ]}
-                checkedStyle={styles.labelButtonChecked}
-              />
-            </RadioGroup>
-          </View>
-        </View>
+        <Item title="邮箱" detail="Lixiaoran@163.com" onPress={() => {}} />
+
         <GradientButton title="保存" style={styles.button} />
       </ScrollView>
     </View>
