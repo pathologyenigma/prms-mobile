@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   StyleSheet,
   Text,
@@ -11,11 +11,12 @@ import {
 import GradientButton from '../../components/GradientButton'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import NavBar from '../../components/NavBar'
-import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack'
-import { useNavigation } from '@react-navigation/native'
+import { StackScreenProps } from '@react-navigation/stack'
 import RadioGroup from '../../components/RadioGroup'
 import RadioLabel from '../../components/RadioLabel'
 import { HrParamList } from '../typings'
+import useProfile from './useProfile'
+import LoadingAndError from '../../components/LoadingAndError'
 interface HrProfileItemProps {
   title: string
   detail: string
@@ -40,51 +41,103 @@ const HrProfileItem = ({ title, detail, onPress }: HrProfileItemProps) => {
 
 export default function HrProfile({
   navigation,
+  route,
 }: StackScreenProps<HrParamList, 'HrProfile'>) {
+  const { avatar, username, gender, company, title, phoneNumber, email } =
+    route.params || {}
+
+  const { profile, loading, error, refetch } = useProfile()
+
+  useEffect(() => {
+    if (profile) {
+      navigation.setParams({
+        ...profile,
+      })
+    }
+  }, [profile])
+
   return (
     <View style={styles.container}>
       <NavBar title="个人资料" />
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.content}>
-        <View style={styles.head}>
-          <Text style={styles.detail}>头像</Text>
-          <TouchableWithoutFeedback
-            onPress={() => navigation.navigate('AvatarViewer')}>
-            <Image source={require('../../assets/avatar_default.png')} />
-          </TouchableWithoutFeedback>
-        </View>
-        <HrProfileItem title="姓名" detail="李小冉" onPress={() => {}} />
-        <View style={styles.gender}>
-          <Text style={styles.genderTitle}>性别</Text>
-          <RadioGroup value={true}>
-            <RadioLabel
-              label="男"
-              value={true}
-              style={[styles.labelButton, styles.genderButton]}
-              checkedStyle={styles.labelButtonChecked}
+      <LoadingAndError
+        loading={loading && !profile}
+        error={error}
+        refetch={refetch}>
+        {profile && (
+          <ScrollView
+            style={styles.container}
+            contentContainerStyle={styles.content}>
+            <View style={styles.head}>
+              <Text style={styles.detail}>头像</Text>
+              <TouchableWithoutFeedback
+                onPress={() =>
+                  navigation.navigate('AvatarViewer', {
+                    avatar: profile.avatar,
+                    targetRouteName: 'HrProfile',
+                  })
+                }>
+                <Image
+                  style={styles.avatar}
+                  source={
+                    avatar
+                      ? { uri: avatar }
+                      : require('../../assets/avatar_default.png')
+                  }
+                />
+              </TouchableWithoutFeedback>
+            </View>
+            <HrProfileItem
+              title="姓名"
+              detail={username || '请完善'}
+              onPress={() => navigation.navigate('EditHrName', { username })}
             />
-            <RadioLabel
-              label="女"
-              style={[
-                { marginLeft: 15 },
-                styles.labelButton,
-                styles.genderButton,
-              ]}
-              checkedStyle={styles.labelButtonChecked}
+            <View style={styles.gender}>
+              <Text style={styles.genderTitle}>性别</Text>
+              <RadioGroup
+                value={gender}
+                onValueChecked={v => navigation.setParams({ gender: v })}>
+                <RadioLabel
+                  label="男"
+                  value="male"
+                  style={[styles.labelButton, styles.genderButton]}
+                  checkedStyle={styles.labelButtonChecked}
+                />
+                <RadioLabel
+                  label="女"
+                  value="female"
+                  style={[
+                    { marginLeft: 15 },
+                    styles.labelButton,
+                    styles.genderButton,
+                  ]}
+                  checkedStyle={styles.labelButtonChecked}
+                />
+              </RadioGroup>
+            </View>
+            <HrProfileItem title="公司" detail={company || ''} />
+            <HrProfileItem
+              title="职位"
+              detail={title || '请完善'}
+              onPress={() => navigation.navigate('EditHrTitle', { title })}
             />
-          </RadioGroup>
-        </View>
-        <HrProfileItem title="公司" detail="猎德科技有限公司" />
-        <HrProfileItem title="职位" detail="人事主管" onPress={() => {}} />
-        <HrProfileItem title="手机号码" detail="请填写" onPress={() => {}} />
-        <HrProfileItem
-          title="邮箱"
-          detail="Lixiaoran@163.com"
-          onPress={() => navigation.navigate('EditHrEmail', {})}
-        />
-        <GradientButton title="保存" style={styles.button} />
-      </ScrollView>
+            <HrProfileItem
+              title="手机号码"
+              detail={profile.phoneNumber || '请完善'}
+              onPress={() =>
+                navigation.navigate('EditHrPhoneNumber', {
+                  phoneNumber,
+                })
+              }
+            />
+            <HrProfileItem
+              title="邮箱"
+              detail={email || '请完善'}
+              onPress={() => navigation.navigate('EditHrEmail', { email })}
+            />
+            <GradientButton title="保存" style={styles.button} />
+          </ScrollView>
+        )}
+      </LoadingAndError>
     </View>
   )
 }
@@ -106,8 +159,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 11,
   },
   avatar: {
-    width: 65,
-    height: 65,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    overflow: 'hidden',
   },
   item: {
     height: 80,

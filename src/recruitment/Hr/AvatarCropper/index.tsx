@@ -3,10 +3,17 @@ import { StyleSheet, View, Dimensions } from 'react-native'
 import NavBar from '../../components/NavBar'
 import TextButton from '../../components/TextButton'
 import Crop from '../../components/Crop'
+import { StackScreenProps } from '@react-navigation/stack'
+import { HrParamList } from '../typings'
 
-export default function AvatarCropper() {
+export default function AvatarCropper({
+  navigation,
+  route,
+}: StackScreenProps<HrParamList, 'AvatarCropper'>) {
   const { width: SCREEN_WIDTH } = Dimensions.get('window')
   let crop = async (quality?: number) => ({ uri: '', width: 0, height: 0 })
+
+  const { uri, targetRouteName } = route.params || {}
 
   return (
     <View style={styles.container}>
@@ -18,7 +25,9 @@ export default function AvatarCropper() {
             textStyle={styles.saveText}
             onPress={async () => {
               const cropped = await crop(1)
-              console.log(cropped)
+              navigation.navigate(targetRouteName || 'HrProfile', {
+                avatar: cropped.uri,
+              })
             }}
           />
         )}
@@ -32,7 +41,7 @@ export default function AvatarCropper() {
         }}>
         <Crop
           source={{
-            uri: 'https://img95.699pic.com/photo/50034/7165.jpg_wh300.jpg',
+            uri: uri,
           }}
           cropShape={'circle'}
           width={SCREEN_WIDTH}

@@ -9,8 +9,8 @@ import {
   View,
   Image,
 } from 'react-native'
-import ActionSheet, { ActionSheetProps } from '../../components/ActionSheet'
-import BottomModal from '../../components/BottomModal'
+import ActionSheet, { ActionSheetProps } from '../../../components/ActionSheet'
+import BottomModal from '../../../components/BottomModal'
 
 interface Ungraded {
   icon: ImageSourcePropType

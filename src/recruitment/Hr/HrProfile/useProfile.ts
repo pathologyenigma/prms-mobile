@@ -1,5 +1,4 @@
-import { gql, useLazyQuery } from '@apollo/client'
-import { useFocusEffect } from '@react-navigation/native'
+import { gql, useQuery } from '@apollo/client'
 import { useMemo } from 'react'
 
 interface ProfileData {
@@ -26,9 +25,9 @@ interface Profile {
 }
 
 export default function useProfile() {
-  const [fetch, { loading, error, data }] = useLazyQuery<ProfileData>(query)
-
-  useFocusEffect(fetch)
+  const { loading, error, data, refetch } = useQuery<ProfileData>(query, {
+    fetchPolicy: 'cache-and-network',
+  })
 
   const profile = useMemo<Profile | undefined>(() => {
     if (!data) {
@@ -42,7 +41,8 @@ export default function useProfile() {
 
     return {
       username: username,
-      avatar: image_url,
+      avatar:
+        image_url || 'https://img95.699pic.com/photo/50034/7165.jpg_wh300.jpg',
       gender: gender ? 'male' : 'female',
       company: enterprise_name,
       title: '待完善',
@@ -51,7 +51,7 @@ export default function useProfile() {
     }
   }, [data])
 
-  return { loading, error, profile, refetch: fetch }
+  return { loading, error, profile, refetch }
 }
 
 const query = gql`

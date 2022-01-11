@@ -5,10 +5,12 @@ import EditHrNameDisplay from './EditHrNameDisplay'
 import EditHrEmail from './EditHrEmail'
 import AvatarViewer from './AvatarViewer'
 import AvatarCropper from './AvatarCropper'
+import EditHrName from './EditHrName'
 
 const screens = {
   HrProfile,
   EditHrTitle,
+  EditHrName,
   EditHrPhoneNumber,
   EditHrNameDisplay,
   EditHrEmail,

@@ -6,41 +6,40 @@ import { StackScreenProps } from '@react-navigation/stack'
 import { HrParamList } from '../typings'
 import RootLoading from '../../../utils/rootLoading'
 
-export default function EditHrTitle({
+export default function EditHrName({
   navigation,
   route,
-}: StackScreenProps<HrParamList, 'EditHrTitle'>) {
-  const { title } = route.params
+}: StackScreenProps<HrParamList, 'EditHrName'>) {
+  const { username } = route.params
 
   return (
     <View style={styles.container}>
       <NavBar
-        title="当前职位"
+        title="姓名"
         headerRight={() => (
           <TextButton
             title="保存"
             textStyle={styles.buttonTextStyle}
             onPress={() => {
-              if (!title) {
-                RootLoading.info('职位名称不能为空')
+              if (!username) {
+                RootLoading.info('姓名不能为空')
                 return
               }
-
-              navigation.navigate('HrProfile', { title })
+              navigation.navigate('HrProfile', { username })
             }}
           />
         )}
       />
       <TextInput
         style={styles.input}
-        value={title}
+        value={username}
         onChangeText={text =>
           navigation.setParams({
-            title: text,
+            username: text,
           })
         }
         placeholderTextColor="#BBBBBB"
-        placeholder="请填写职位名称"
+        placeholder="请填写姓名"
         multiline={false}
         returnKeyType="done"
         returnKeyLabel="保存"
