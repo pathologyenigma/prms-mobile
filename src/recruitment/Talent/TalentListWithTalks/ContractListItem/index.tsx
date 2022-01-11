@@ -1,42 +1,51 @@
-import React, { useState } from 'react'
-import {
-  ViewStyle,
-  StyleProp,
-  TextStyle,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableWithoutFeedback,
-} from 'react-native'
+import React from 'react'
+import { StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native'
 import Avatar from '../../components/Avatar'
+import { ContractItem } from '../useContractList'
 
 interface ItemProps {
-  gender: 'male' | 'female'
+  item: ContractItem
   onPress?: () => void
 }
 
-export default function Item({ gender, onPress }: ItemProps) {
+export default function ContractListItem({ item, onPress }: ItemProps) {
+  const {
+    job,
+    time,
+    name,
+    age,
+    experience,
+    education,
+    avatar,
+    gender,
+    expectation,
+  } = item
+  const { city, salary, jobCategory } = expectation
+
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.container}>
         <View style={styles.jobContainer}>
-          <Text style={styles.job}>职位：项目经理</Text>
-          <Text style={styles.time}>今天 09:30</Text>
+          <Text style={styles.job}>沟通职位：{job}</Text>
+          <Text style={styles.time}>{time}</Text>
         </View>
-        <Text style={styles.name}>谭先生</Text>
+        <Text style={styles.name}>{name}</Text>
         <View style={styles.metaContainer}>
-          <Text style={styles.meta}>29岁</Text>
+          <Text style={styles.meta}>{age}</Text>
           <View style={styles.divider} />
-          <Text style={styles.meta}>工作6年</Text>
+          <Text style={styles.meta}>{experience}</Text>
           <View style={styles.divider} />
-          <Text style={styles.meta}>本科·211</Text>
-          <View style={styles.divider} />
-          <Text style={styles.meta}>期望2.5万-3万</Text>
+          <Text style={styles.meta}>{education}</Text>
         </View>
-        <Text style={styles.title}>医药销售代表</Text>
-        <Text style={styles.experience}>医疗销售(1年4个月)</Text>
-        <Avatar style={styles.avatar} gender={gender} />
+        <Text style={styles.title}>期望</Text>
+        <View style={styles.metaContainer}>
+          <Text style={styles.meta}>{city}</Text>
+          <View style={styles.divider} />
+          <Text style={styles.meta}>{jobCategory}</Text>
+          <View style={styles.divider} />
+          <Text style={styles.meta}>{salary}</Text>
+        </View>
+        <Avatar style={styles.avatar} gender={gender} uri={avatar} />
       </View>
     </TouchableWithoutFeedback>
   )
@@ -47,6 +56,7 @@ const styles = StyleSheet.create({
     height: 136,
     flex: 1,
     paddingHorizontal: 11,
+    justifyContent: 'center',
   },
   avatar: {
     width: 48,
@@ -58,7 +68,6 @@ const styles = StyleSheet.create({
   jobContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 12,
   },
   job: {
     color: '#888888',
@@ -69,13 +78,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   name: {
-    marginTop: 10,
+    marginTop: 8,
     color: '#333333',
     fontSize: 13,
     fontWeight: 'bold',
   },
   metaContainer: {
-    marginTop: 6,
+    marginTop: 8,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -90,7 +99,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   title: {
-    marginTop: 10,
+    marginTop: 8,
     color: '#333333',
     fontSize: 13,
     fontWeight: 'bold',

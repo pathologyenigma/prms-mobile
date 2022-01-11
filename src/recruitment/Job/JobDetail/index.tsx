@@ -46,7 +46,7 @@ export default function JobDetail({
         style={{ backgroundColor: '#F8F8F8' }}
         loading={loading}
         error={error}
-        retry={refetch}>
+        refetch={refetch}>
         {detail && (
           <>
             <ScrollView

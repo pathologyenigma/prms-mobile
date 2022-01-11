@@ -9,7 +9,7 @@ interface LoadingAnErrorProps {
   collapsable?: boolean
   loading: boolean
   error?: Error
-  retry?: Function
+  refetch?: Function
 }
 
 export default function LoadingAndError({
@@ -17,7 +17,7 @@ export default function LoadingAndError({
   loadingStyle,
   loading,
   error,
-  retry,
+  refetch,
   collapsable,
   children,
 }: PropsWithChildren<LoadingAnErrorProps>) {
@@ -45,7 +45,7 @@ export default function LoadingAndError({
         <SecondaryButton
           style={styles.retry}
           title="点击重试"
-          onPress={() => retry?.()}
+          onPress={() => refetch?.()}
         />
       </View>
     )
