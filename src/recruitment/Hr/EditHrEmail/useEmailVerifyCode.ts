@@ -8,7 +8,6 @@ export default function useEmailVerifyCode() {
 
   const requestEmailVerifyCode = useCallback(
     (email: string) => {
-      console.log('-------useEmailVerifyCode-----------')
       fetch({
         variables: {
           email: email,

@@ -122,7 +122,7 @@ export default function HrProfile({
             />
             <HrProfileItem
               title="手机号码"
-              detail={profile.phoneNumber || '请完善'}
+              detail={phoneNumber || '请完善'}
               onPress={() =>
                 navigation.navigate('EditHrPhoneNumber', {
                   phoneNumber,
