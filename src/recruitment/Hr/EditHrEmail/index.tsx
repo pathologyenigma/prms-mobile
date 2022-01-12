@@ -35,8 +35,6 @@ export default function EditHrEmail({
 
   const codeButtonDisabled = !emailValid || loading || countdown !== 0
 
-  console.log('countdown', countdown)
-
   const [code, setCode] = useState('')
   const confirmButtonDisabled = !emailValid || !code
   const editEmail = useEditEmail()
@@ -106,7 +104,7 @@ export default function EditHrEmail({
               RootLoading.loading('请稍后...')
               await editEmail(emailInput, code)
               RootLoading.info('邮箱修改成功!')
-              navigation.goBack()
+              navigation.navigate('HrProfile', { email: emailInput })
             } catch (e) {
               RootLoading.info(e.message)
             }
