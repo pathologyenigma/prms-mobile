@@ -5,6 +5,7 @@ import TextButton from '../../components/TextButton'
 import Crop from '../../components/Crop'
 import { StackScreenProps } from '@react-navigation/stack'
 import { HrParamList } from '../typings'
+import useUploadFile from './useUploadFile'
 
 export default function AvatarCropper({
   navigation,
@@ -14,6 +15,8 @@ export default function AvatarCropper({
   let crop = async (quality?: number) => ({ uri: '', width: 0, height: 0 })
 
   const { uri, targetRouteName } = route.params || {}
+
+  const uploadFile = useUploadFile()
 
   return (
     <View style={styles.container}>
@@ -25,9 +28,10 @@ export default function AvatarCropper({
             textStyle={styles.saveText}
             onPress={async () => {
               const cropped = await crop(1)
-              navigation.navigate(targetRouteName || 'HrProfile', {
-                avatar: cropped.uri,
-              })
+              await uploadFile(cropped.uri)
+              // navigation.navigate(targetRouteName || 'HrProfile', {
+              //   avatar: cropped.uri,
+              // })
             }}
           />
         )}

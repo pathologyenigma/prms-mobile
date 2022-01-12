@@ -15,6 +15,7 @@ import { setContext } from '@apollo/client/link/context'
 import * as Auth from './auth'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { refreshToken } from './refreshToken'
+import { createUploadLink } from 'apollo-upload-client'
 
 const wsClient = new SubscriptionClient(wssUri, {
   reconnect: true,
@@ -115,6 +116,8 @@ const loggingLink = new ApolloLink((operation, forward) => {
   })
 })
 
+const uploadLink = createUploadLink({ uri: hostUri })
+
 const newLink = split(
   ({ query }) => {
     const def = getMainDefinition(query)
@@ -123,7 +126,7 @@ const newLink = split(
     )
   },
   from([errorLink, wsLink]),
-  from([errorLink, authLink, loggingLink, httpLink]),
+  from([errorLink, authLink, loggingLink, uploadLink as any]),
 )
 
 const client = new ApolloClient({
