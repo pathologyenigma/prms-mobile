@@ -9,7 +9,7 @@ export const headerHeight = () => {
       return 64
     }
   } else {
-    return 56 + statusBarHeight()
+    return 48 + statusBarHeight()
   }
 }
 

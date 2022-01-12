@@ -5,7 +5,8 @@ import TextButton from '../../components/TextButton'
 import Crop from '../../components/Crop'
 import { StackScreenProps } from '@react-navigation/stack'
 import { HrParamList } from '../typings'
-import useUploadFile from './useUploadFile'
+import useUploadFile from '../../hooks/useUploadFile'
+import RootLoading from '../../../utils/rootLoading'
 
 export default function AvatarCropper({
   navigation,
@@ -13,9 +14,7 @@ export default function AvatarCropper({
 }: StackScreenProps<HrParamList, 'AvatarCropper'>) {
   const { width: SCREEN_WIDTH } = Dimensions.get('window')
   let crop = async (quality?: number) => ({ uri: '', width: 0, height: 0 })
-
   const { uri, targetRouteName } = route.params || {}
-
   const uploadFile = useUploadFile()
 
   return (
@@ -27,11 +26,21 @@ export default function AvatarCropper({
             title="保存"
             textStyle={styles.saveText}
             onPress={async () => {
-              const cropped = await crop(1)
-              await uploadFile(cropped.uri)
-              // navigation.navigate(targetRouteName || 'HrProfile', {
-              //   avatar: cropped.uri,
-              // })
+              try {
+                RootLoading.loading('请稍后...')
+                const cropped = await crop(1)
+                const url = await uploadFile(cropped.uri)
+                if (url) {
+                  navigation.navigate(targetRouteName || 'HrProfile', {
+                    avatar: url,
+                  })
+                } else {
+                  throw new Error('上传头像失败')
+                }
+                RootLoading.hide()
+              } catch (e) {
+                RootLoading.info(e.message)
+              }
             }}
           />
         )}
