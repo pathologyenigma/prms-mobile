@@ -43,134 +43,6 @@ interface IState {
   showMoreDetail: boolean
 }
 
-const commentList = [
-  {
-    id: 1,
-    name: '莫春婷',
-    job: 'UI设计师',
-    tag: '面试官人很好 面试效率高 环境高大上',
-    score: 4,
-    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
-    time: '2021年12月24日',
-    like: 10,
-    isLike: false,
-  }, {
-    id: 2,
-    name: '莫春婷',
-    job: 'UI设计师',
-    tag: '面试官人很好 面试效率高 环境高大上',
-    score: 1,
-    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
-    time: '2021年12月24日',
-    like: 1,
-    isLike: true,
-  }, {
-    id: 3,
-    name: '莫春婷',
-    job: 'UI设计师',
-    tag: '面试官人很好 面试效率高 环境高大上',
-    score: 3,
-    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
-    time: '2021年12月24日',
-    like: 10,
-    isLike: false,
-  }, {
-    id: 4,
-    name: '莫春婷',
-    job: 'UI设计师',
-    tag: '面试官人很好 面试效率高 环境高大上',
-    score: 4,
-    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
-    time: '2021年12月24日',
-    like: 10,
-    isLike: false,
-  },
-  {
-    id: 5,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '李女士·产品线HRBP'
-  }, {
-    id: 6,
-    name: '莫春婷',
-    job: 'UI设计师',
-    tag: '面试官人很好 面试效率高 环境高大上',
-    score: 4,
-    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
-    time: '2021年12月24日',
-    like: 10,
-    isLike: false,
-  }, {
-    id: 7,
-    name: '莫春婷',
-    job: 'UI设计师',
-    tag: '面试官人很好 面试效率高 环境高大上',
-    score: 4,
-    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
-    time: '2021年12月24日',
-    like: 10,
-    isLike: false,
-  }, {
-    id: 8,
-    name: '莫春婷',
-    job: 'UI设计师',
-    tag: '面试官人很好 面试效率高 环境高大上',
-    score: 4,
-    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
-    time: '2021年12月24日',
-    like: 10,
-    isLike: false,
-  },
-  {
-    id: 9,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '李女士·产品线HRBP'
-  }, {
-    id: 10,
-    name: '莫春婷',
-    job: 'UI设计师',
-    tag: '面试官人很好 面试效率高 环境高大上',
-    score: 4,
-    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
-    time: '2021年12月24日',
-    like: 10,
-    isLike: false,
-  }, {
-    id: 11,
-    name: '莫春婷',
-    job: 'UI设计师',
-    tag: '面试官人很好 面试效率高 环境高大上',
-    score: 4,
-    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
-    time: '2021年12月24日',
-    like: 10,
-    isLike: false,
-  }, {
-    id: 12,
-    name: '莫春婷',
-    job: 'UI设计师',
-    tag: '面试官人很好 面试效率高 环境高大上',
-    score: 4,
-    content: '各位主管和hr在面试的时候很贴心很专业，面试效率也很高，岗位的工作和我未来预期一致，希望能成为一起共事的同事，共同学习共同努力。',
-    time: '2021年12月24日',
-    like: 10,
-    isLike: false,
-  },
-]
-
 class CompanyDetail extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
@@ -225,65 +97,6 @@ class CompanyDetail extends Component<IProps, IState> {
         RootLoading.fail('公司信息获取失败,请重试')
       }
     })
-    return
-
-    RootLoading.loading()
-    setTimeout(() => {
-      RootLoading.hide()
-      this.setState({
-        dataSource: {
-          id: 1,
-          name: '项目经理1',
-          salary: '15K-30K',
-          jobNature: '全职',
-          jobQuantity: 2,
-          experience: '5-10年',
-          education: '本科及以上',
-          location: '深圳·宝安区·大学城1号楼',
-          company: '深圳市创意智慧有限公司',
-          financing: '不需要融资',
-          staffAmount: '0-20人',
-          feature: '计算机软件',
-          jobTime: '8:00-17:00',
-          jobRest: '周末双休',
-          isFlexibleWork: '弹性工作',
-          isWuxianyijin: true,
-          isNianzhongjiang: true,
-          isCanbu: true,
-          isJiaotongbuzhu: true,
-          interviewer: '廖女士·人事经理',
-          onlineTime: '1小时前在线',
-          companyTag: '技术管理,硬件设施,产品设计,需求采集,产品开发,产品验收,产品内部评审',
-          jobContent: '1、项目管理:统筹并管理项目，规划和跟踪项目范围、成本、质量、风险等;组织项目各关键节点评审，总结和评定项目阶段性成果，优化项目流程和方法，提升团队工作效率和执行力;\n2、预研阶段:评估项目可行性，选择更优的组配件降低成本，制定和执行项目预算和项目计划;\n3、研发阶段:沟通和实现需求，跟进项目进度确保迭代顺利\n4、打样阶段:确认产品结构、电路等可行性和产品总体成本分析核对;\n5、量产阶段:督促供应商按时按量完成预定生产计划，跟进和解决项目量产后的技术问题，优化升级产品并总结经验。',
-          jobRequire: '1、统招本科及以上学历，2~5年以上工作经验;\n2、2年以上智能硬件/智能家居等项目管理经验;',
-          jobAddPoints: '1、从事过区块链相关行业;\n2、从事过软件开发行业',
-          companyXingzhi: '创业公司',
-          companyAmount: '少于50人',
-          companyIndustry: '计算机软件',
-          commentRefresh: RefreshState.Idle,
-          commentList: commentList,
-          companyQuestion: [{
-            id: 1,
-            question: '你如何看待智慧网络的企业发展/前景？',
-            answer: '公司发展前景不错，会定期组织员工团建和培训。',
-            answerAmount: 1,
-            focus: 1,
-          }],
-          onlineJobs: 18,
-          imageList: [{
-            url: 'https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png',
-          }, {
-            url: 'https://search-operate.cdn.bcebos.com/166bf3b072119c9ce60cc33c551369bc.jpg',
-          }, {
-            url: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.cubui.com%2Fwp-content%2Fuploads%2F2018%2F01%2Freact-native-lesson.png&refer=http%3A%2F%2Fwww.cubui.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1638094787&t=3043e6ae76d0b9fc72c97f4a96d02ef5',
-          }, {
-            url: 'https://alifei03.cfp.cn/creative/vcg/veer/800/new/VCG41N113145561.jpg',
-          }, {
-            url: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.cubui.com%2Fwp-content%2Fuploads%2F2018%2F01%2Freact-native-lesson.png&refer=http%3A%2F%2Fwww.cubui.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1638094787&t=3043e6ae76d0b9fc72c97f4a96d02ef5',
-          }]
-        },
-      })
-    }, 300);
   }
 
   getHrListData() {
@@ -291,7 +104,7 @@ class CompanyDetail extends Component<IProps, IState> {
       console.log('getCandidateGetEnterpriseDetail_HRList ', error, result)
       if (!error && result) {
         this.setState({
-          hrList: result.CandidateGetEnterpriseDetail_HRList,
+          hrList: result.UserGetEnterpriseDetail_WorkerList,
           refreshing: false
         })
       } else {

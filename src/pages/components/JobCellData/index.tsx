@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import { reformComFinancing, reformCompanySize, reformEducation } from '../../../utils/utils'
+import { reformComFinancing, reformCompanySize, reformEducation, reformSalary } from '../../../utils/utils'
 import NextTouchableOpacity from '../NextTouchableOpacity'
 import styles from './styles'
 
@@ -117,7 +117,7 @@ export default class JobCellData extends PureComponent<ICell> {
             </Text>
           ) : (
             <Text style={styles.cellSalary}>
-              {`${cellItem.min_salary}-${cellItem.max_salary}`}
+              {`${reformSalary(cellItem.min_salary)}-${reformSalary(cellItem.max_salary)}`}
             </Text>
           )}
         </View>

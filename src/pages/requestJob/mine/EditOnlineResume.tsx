@@ -7,6 +7,7 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import GradientButton from '../../components/GradientButton'
 import RootLoading from '../../../utils/rootLoading'
 import { greenColor } from '../../../utils/constant'
+import { reformSalary } from '../../../utils/utils'
 
 type IProps = GenProps<'EditOnlineResume'> & {
 
@@ -157,7 +158,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
               style={styles.expectJobsView}
             >
               <View>
-                <Text style={styles.expectJobsText}>{`${item.type}   ${item.salary}`}</Text>
+                <Text style={styles.expectJobsText}>{`${item.type}   ${reformSalary(item.salary)}`}</Text>
                 <Text style={styles.expectJobsLocation}>{`${item.location}   ${item.status}`}</Text>
               </View>
               <Image

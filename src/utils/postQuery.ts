@@ -218,11 +218,11 @@ const candidateGetEnterpriseDetail_EntInfoGql = gql`
 `
 
 /**
- * 公司详情页的公司基本信息
+ * 公司详情页的热门招聘官
  */
 const candidateGetEnterpriseDetail_HRListGql = gql`
-  query CandidateGetEnterpriseDetail_HRList($entId: Int!) {
-    CandidateGetEnterpriseDetail_HRList(entId: $entId) {
+  query UserGetEnterpriseDetail_WorkerList($entId: Int!) {
+    UserGetEnterpriseDetail_WorkerList(entId: $entId, role: HR) {
       id
       name
       logo
@@ -275,9 +275,10 @@ const candidateGetEnterpriseDetail_QAGql = gql`
  * 获取职位详情
  */
 const getJobDetailGql = gql`
-  query CandidateGetJob($jobid: Int!) {
-    CandidateGetJob(jobid: $jobid) {
-      job {
+  query UserGetJob($jobid: Int!) {
+    UserGetJob(jobid: $jobid) {
+      ... on JobDetailPageReply {
+        job {
         id
         title
         category
@@ -307,6 +308,7 @@ const getJobDetailGql = gql`
         enterprise_size
         business_nature
         #       enterprise_logo
+      }
       }
     }
   }
@@ -353,13 +355,15 @@ const getHrMoreJobListGql = gql`
       page: $page
     ) {
       data {
-        id
-        title
-        loc
-        experience
-        education
-        salary
-        createdAt
+        ... on JobDataForHRDetailPageOrEntJobList {
+          id
+          title
+          loc
+          experience
+          education
+          salary
+          createdAt
+        }
       }
       count
     }

@@ -13,6 +13,7 @@ import { format } from 'date-fns'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import { BoxShadow } from 'react-native-shadow'
 import SystemHelper from '../../../utils/system'
+import { reformSalary } from '../../../utils/utils'
 
 type IProps = GenProps<'Interview'> & {
 
@@ -235,7 +236,7 @@ export default class Interview extends Component<IProps, IState> {
                 <Text style={styles.cellType}>{item.type}</Text>
               </View>
               <View style={styles.jobInfo}>
-                <Text style={styles.cellJobInfo}>{`${item.job}  |  ${item.salary}`}</Text>
+                <Text style={styles.cellJobInfo}>{`${item.job}  |  ${reformSalary(item.salary)}`}</Text>
                 <Text style={styles.cellStatus}>{item.status}</Text>
               </View>
               <View style={styles.interviewerInfo}>

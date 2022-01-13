@@ -11,6 +11,7 @@ import GradientButton from '../../components/GradientButton'
 import ListEmptyComponent from '../../components/ListEmptyComponent'
 import { format } from 'date-fns'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import { reformSalary } from '../../../utils/utils'
 
 type IProps = GenProps<'InterviewAll'> & {
 
@@ -190,7 +191,7 @@ export default class InterviewAll extends Component<IProps, IState> {
               <Text style={styles.cellStatus}>{item.status}</Text>
             </View>
             <View style={styles.cellCompanyDetail}>
-              <Text style={styles.cellJobInfo}>{`${item.job}  |  ${item.salary}`}</Text>
+              <Text style={styles.cellJobInfo}>{`${item.job}  |  ${reformSalary(item.salary)}`}</Text>
               <Text style={styles.timeHour}>{format(new Date(item.time), 'HH:mm')}</Text>
             </View>
           </View>

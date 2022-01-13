@@ -304,6 +304,7 @@ class HrPersonalInfo extends Component<IProps, IState> {
     return (
       <View style={styles.moreJobView}>
         <RefreshListView
+          showsVerticalScrollIndicator={false}
           style={styles.listView}
           ListHeaderComponent={this.renderMatchView()}
           onHeaderRefresh={() => this.onRefresh()}
@@ -325,7 +326,7 @@ class HrPersonalInfo extends Component<IProps, IState> {
     const { shareVisible, refreshing } = this.state
     console.log('shareVisible: ', shareVisible)
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <StatusBar
           translucent={true}
           barStyle={'light-content'}
@@ -350,7 +351,7 @@ class HrPersonalInfo extends Component<IProps, IState> {
             this.setState({ shareVisible: false })
           }}
         />
-      </SafeAreaView>
+      </View>
     )
   }
 }
