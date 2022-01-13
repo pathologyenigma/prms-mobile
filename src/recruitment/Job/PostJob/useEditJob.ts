@@ -6,7 +6,8 @@ import RootLoading from '../../../utils/rootLoading'
 import { Education, FullTime } from '../../typings'
 import { JobParamList } from '../typings'
 
-export interface PostJobInput {
+export interface EditJobInput {
+  id: number
   jobTitle: string
   workingAddress: string[]
   coordinates: [number, number]
@@ -22,7 +23,7 @@ export interface PostJobInput {
   category: string[]
 }
 
-export function usePostJob() {
+export function useEditJob() {
   const [fn, { data, loading, error }] =
     useMutation<{ HRPostJob: null }>(mutation)
 
@@ -30,7 +31,7 @@ export function usePostJob() {
 
   useEffect(() => {
     if (error) {
-      console.warn('----usePostJob----', error)
+      console.warn('----useEditJob----', error)
     }
   }, [error])
 
@@ -43,8 +44,8 @@ export function usePostJob() {
     }
   }, [loading])
 
-  const postJob = useCallback(
-    async (input: Partial<PostJobInput>) => {
+  const editJob = useCallback(
+    async (input: Partial<EditJobInput>) => {
       const {
         jobTitle,
         category,
@@ -107,13 +108,13 @@ export function usePostJob() {
     [fn],
   )
 
-  console.log('usePostJob', data)
+  console.log('useEditJob', data)
 
-  return postJob
+  return editJob
 }
 
 const mutation = gql`
-  mutation HRPostJob($info: JobPost!) {
-    HRPostJob(info: $info)
+  mutation HREditJob($info: JobEdit!) {
+    HREditJob(info: $info)
   }
 `

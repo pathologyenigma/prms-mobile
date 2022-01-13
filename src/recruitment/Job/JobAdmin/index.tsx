@@ -7,16 +7,18 @@ import TabBar from '../../components/TabBar'
 import NavBar from '../../components/NavBar'
 import GradientButton from '../../components/GradientButton'
 import { isIphoneX } from 'react-native-iphone-x-helper'
-import { useNavigation } from '@react-navigation/native'
-import { StackNavigationProp } from '@react-navigation/stack'
+import { StackScreenProps } from '@react-navigation/stack'
 import { JobStatus } from '../../typings'
+import { JobParamList } from '../typings'
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
 const tabs = ['在线中', '审核中', '已下线']
 const states: JobStatus[] = ['InRecruitment', 'NotPublishedYet', 'OffLine']
 
-export default function JobAdmin() {
+export default function JobAdmin({
+  navigation,
+}: StackScreenProps<JobParamList, 'JobAdmin'>) {
   const ref = useRef<PagerView>(null)
   const {
     selectedIndex,
@@ -25,8 +27,6 @@ export default function JobAdmin() {
     onPageSelected,
     onPageScroll,
   } = usePagerView()
-
-  const navigation = useNavigation<StackNavigationProp<any>>()
 
   return (
     <View style={styles.container}>
@@ -62,7 +62,7 @@ export default function JobAdmin() {
       <GradientButton
         style={styles.button}
         title="发布职位"
-        onPress={() => navigation.navigate('PostJob')}
+        onPress={() => navigation.navigate('PostJob', {})}
       />
     </View>
   )

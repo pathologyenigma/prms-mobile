@@ -27,6 +27,7 @@ export interface JobParamList extends ParamListBase {
     coordinates?: LatLng
   }
   PostJob: {
+    jobId?: number
     jobName?: string
     jobDescription?: string
     jobNature?: FullTime

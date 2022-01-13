@@ -6,11 +6,11 @@ import TextButton from '../../components/TextButton'
 import AddressItem from './Addresstem'
 import NavBar from '../../components/NavBar'
 import IconLabelButton from '../../components/IconLabelButton'
-import { JobParamList } from '../typings'
 import { useGeoLocation } from '../../hooks/useGeoLocation'
 import { useInputTips } from '../../hooks/useInputTips'
 import MapView, { LatLng, MoveEvent } from '../../../bridge/MapView'
 import { usePoiItems } from '../../hooks/usePoiItems'
+import { JobParamList } from '../typings'
 
 export default function SearchJobAddress({
   navigation,

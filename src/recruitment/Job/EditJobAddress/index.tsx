@@ -5,9 +5,9 @@ import JobInfoItem from '../PostJob/JobInfoItem'
 import TextInputWithCounter from '../../components/TextInputWithCounter'
 import { StackScreenProps } from '@react-navigation/stack'
 import NavBar from '../../components/NavBar'
-import { JobParamList } from '../typings'
 import { PoiItem } from '../../../bridge/geolocation'
 import RootLoading from '../../../utils/rootLoading'
+import { JobParamList } from '../typings'
 
 function computeBuildingName(poiItem?: PoiItem) {
   if (poiItem) {
