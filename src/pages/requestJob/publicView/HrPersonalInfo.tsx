@@ -304,6 +304,7 @@ class HrPersonalInfo extends Component<IProps, IState> {
     return (
       <View style={styles.moreJobView}>
         <RefreshListView
+          showsVerticalScrollIndicator={false}
           style={styles.listView}
           ListHeaderComponent={this.renderMatchView()}
           onHeaderRefresh={() => this.onRefresh()}

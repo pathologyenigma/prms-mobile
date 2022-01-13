@@ -218,11 +218,11 @@ const candidateGetEnterpriseDetail_EntInfoGql = gql`
 `
 
 /**
- * 公司详情页的公司基本信息
+ * 公司详情页的热门招聘官
  */
 const candidateGetEnterpriseDetail_HRListGql = gql`
-  query CandidateGetEnterpriseDetail_HRList($entId: Int!) {
-    CandidateGetEnterpriseDetail_HRList(entId: $entId) {
+  query UserGetEnterpriseDetail_WorkerList($entId: Int!) {
+    UserGetEnterpriseDetail_WorkerList(entId: $entId, role: HR) {
       id
       name
       logo
@@ -277,7 +277,7 @@ const candidateGetEnterpriseDetail_QAGql = gql`
 const getJobDetailGql = gql`
   query UserGetJob($jobid: Int!) {
     UserGetJob(jobid: $jobid) {
-      ... on JobDetailPageReplyCandiate {
+      ... on JobDetailPageReply {
         job {
         id
         title

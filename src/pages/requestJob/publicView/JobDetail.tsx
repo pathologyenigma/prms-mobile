@@ -17,7 +17,7 @@ import SystemHelper from '../../../utils/system'
 import InterviewerFooter from '../../components/InterviewerFooter'
 import ShareModal from '../../components/ShareModal'
 import * as jobActions from '../../../action/jobsAction'
-import { reformFullTime, reformCompanySize } from '../../../utils/utils'
+import { reformFullTime, reformCompanySize, reformSalary } from '../../../utils/utils'
 
 type IProps = GenProps<'JobDetail'> & ReturnType<typeof mapDispatchToProps>
 
@@ -279,8 +279,7 @@ class JobDetail extends Component<IProps, IState> {
             {title}
           </Text>
           <Text style={styles.headerSalary}>
-            {/* {salaryExpected.length === 2 ? `${salaryExpected[0] || ''}-${salaryExpected[1] || ''}` : ''} */}
-            {`${salaryExpected[0] || ''}-${salaryExpected[1] || ''}`}
+            {reformSalary(salaryExpected)}
           </Text>
         </View>
         <View style={styles.headerCompanyView}>

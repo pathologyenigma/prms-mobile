@@ -215,6 +215,28 @@ const reformDistanceYears = (first_time_working: string) => {
   return (new Date().getFullYear() - Number(fromYears))
 }
 
+const reformSalary = (salary: any) => {
+  if (!salary) {
+    return ''
+  }
+  if (typeof(salary) === 'string') {
+    return salary
+  }
+  if (typeof(salary) === 'number') {
+    return Number(salary) > 999 ? `${Number(salary) / 1000}K` : salary
+  }
+  let showSalary = ''
+  if (typeof(salary) === 'object') {
+    if (salary[0]) {
+      showSalary = Number(salary[0]) > 999 ? `${Number(salary[0]) / 1000}K` : salary[0]
+    }
+    if (salary[1]) {
+      showSalary = `${showSalary}-${Number(salary[1]) > 999 ? `${Number(salary[1]) / 1000}K` : salary[1]}`
+    }
+  }
+  return showSalary
+}
+
 export {
   formatHintsIndex,
   calculateTime,
@@ -225,4 +247,5 @@ export {
   reformFullTime,
   reformDistanceYears,
   selectEducation,
+  reformSalary,
 }

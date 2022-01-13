@@ -244,6 +244,7 @@ export default StyleSheet.create({
     marginRight: 0,
     paddingRight: 11,
     paddingBottom: 20,
+    minHeight: 100,
   },
   listView: {
     flex: 1,
