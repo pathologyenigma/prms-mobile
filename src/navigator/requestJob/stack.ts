@@ -91,6 +91,8 @@ import VideoComponent from '../../pages/components/VideoComponent'
 import MessagePage from '../../pages/requestJob/news/MessagePage'
 import SearchJobAddress from '../../recruitment/Job/SearchJobAddress'
 import EditJobCity from '../../recruitment/Job/EditJobCity'
+import AvatarViewer from '../../recruitment/Hr/AvatarViewer'
+import AvatarCropper from '../../recruitment/Hr/AvatarCropper'
 
 type TRouterParams = {
   Find: any,
@@ -182,7 +184,9 @@ type TRouterParams = {
   VideoComponent: { videoUri: string, closeCallback: () => void }
   MessagePage: { targetItem: any }
   SearchJobAddress: any,
-  EditJobCity: any
+  EditJobCity: any,
+  AvatarViewer: any,
+  AvatarCropper: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -289,5 +293,7 @@ export default class RouterStacks {
       MessagePage,
       SearchJobAddress,
       EditJobCity,
+      AvatarViewer,
+      AvatarCropper
     }
 }

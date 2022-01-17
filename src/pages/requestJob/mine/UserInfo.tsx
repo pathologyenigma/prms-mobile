@@ -13,6 +13,7 @@ import { EducationType, reformEducation, selectEducation } from '../../../utils/
 import ActionSheet from '../../../recruitment/components/ActionSheet'
 import DatePickerModal from '../../components/DatePickerModal'
 import RootLoading from '../../../utils/rootLoading'
+import AvatarPickerModal from '../../../recruitment/Hr/AvatarPickerMomal'
 
 type IProps = GenProps<'UserInfo'> &
   ReturnType<typeof mapStateToProps> &
@@ -31,6 +32,7 @@ interface IState {
   first_time_working_pick: boolean
   current_city: string,
   logo: string,
+  avatarModalVisible: boolean
 }
 
 const listData = [
@@ -85,7 +87,8 @@ class UserInfo extends Component<IProps, IState> {
       first_time_working: first_time_working || '',
       first_time_working_pick: false,
       current_city: current_city || '',
-      logo: logo || ''
+      logo: logo || '',
+      avatarModalVisible: false
     }
   }
 
@@ -111,14 +114,20 @@ class UserInfo extends Component<IProps, IState> {
   }
 
   renderIcon() {
-    const { userInfo } = this.props
+    const { userInfo, navigation } = this.props
     return (
       <View style={styles.iconView}>
         <Text style={styles.iconText}>头像</Text>
-        <Image
-          source={userInfo.logo ? { uri: userInfo.logo } : require('../../../assets/requestJobs/icon-example.png')}
-          style={styles.iconStyle}
-        />
+        <NextTouchableOpacity
+          onPress={() => {
+            // navigation.push('AvatarViewer')
+            this.setState({ avatarModalVisible: true })
+          }}>
+          <Image
+            source={userInfo.logo ? { uri: userInfo.logo } : require('../../../assets/requestJobs/icon-example.png')}
+            style={styles.iconStyle}
+          />
+        </NextTouchableOpacity>
       </View>
     )
   }
@@ -248,7 +257,7 @@ class UserInfo extends Component<IProps, IState> {
   render() {
     const { userInfo, navigation } = this.props
     const { genderActionVisible, datePickVisible, localDateOfBirth, userName, current_city,
-      phoneNumber, education, first_time_working, first_time_working_pick } = this.state
+      phoneNumber, education, first_time_working, first_time_working_pick, avatarModalVisible } = this.state
     console.log('userInfo: ', userInfo)
     return (
       <View style={styles.container}>
@@ -343,6 +352,20 @@ class UserInfo extends Component<IProps, IState> {
               first_time_working_pick: false,
             })
           }}
+        />
+        <AvatarPickerModal
+          visible={avatarModalVisible}
+          actions={[
+            {
+              title: '拍照',
+              onPress: () => navigation.navigate('AvatarCropper'),
+            },
+            {
+              title: '从相册上传',
+              onPress: () => navigation.navigate('AvatarCropper'),
+            }
+          ]}
+          onDismiss={() => this.setState({ avatarModalVisible: false })}
         />
       </View>
     )
