@@ -426,6 +426,30 @@ const userGetRecruitmentListGql = gql`
   }
 `
 
+// 新增工作经验(id 传入表示编辑,不传入表示新增)
+const candidateEditWorkExprienceGql = gql`
+  mutation CandidateEditWorkExprience($info: WorkExperience!){
+    CandidateEditWorkExprience(info: $info)
+  }
+`
+
+// 获取工作经验列表
+const candidateGetWorkExpsGql = gql`
+  query CandidateGetWorkExps{
+    CandidateGetWorkExps{
+      data {
+        id
+        comp_name
+        pos_name
+        department
+        start_at
+        end_at
+        working_detail
+      }
+    }
+  }
+`
+
 export {
   apolloClientShare,
   sendSMSGql,
@@ -455,5 +479,7 @@ export {
   userGetContractListGql,
   getUserGetBasicInfoGql,
   userEditBasicInfoGql,
-  userGetRecruitmentListGql
+  userGetRecruitmentListGql,
+  candidateEditWorkExprienceGql,
+  candidateGetWorkExpsGql,
 }

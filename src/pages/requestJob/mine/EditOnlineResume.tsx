@@ -8,6 +8,8 @@ import GradientButton from '../../components/GradientButton'
 import RootLoading from '../../../utils/rootLoading'
 import { greenColor } from '../../../utils/constant'
 import { reformSalary } from '../../../utils/utils'
+import { getOnlineResumeInfo } from '../../../action/mineAction'
+import { format } from 'date-fns'
 
 type IProps = GenProps<'EditOnlineResume'> & {
 
@@ -32,23 +34,23 @@ export default class EditOnlineResume extends Component<IProps, IState> {
         location: '深圳',
         status: '在职找工作·随时入职'
       }],
-      workExperience: [{
-        id: 1,
-        company: '广东智慧网络有限公司11',
-        apartment: '设计部',
-        beginTime: '2017.3',
-        endTime: '至今',
-        job: 'UI设计师  技术部',
-        content: '内容：1、负责线上APP的改版功能，更新迭代；2、根据产品及产品需求，独立完成项目设计，建立产品的界面设计规范；3、根据原型图完成出色的设计稿,交付给开发人员使用'
-      }, {
-        id: 2,
-        company: '广东智慧科技有限公司22',
-        apartment: '设计部',
-        beginTime: '2017.3',
-        endTime: '至今',
-        job: 'UI设计师  技术部',
-        content: '内容：1、负责线上APP的改版功能，更新迭代；2、根据产品及产品需求，独立完成项目设计，建立产品的界面设计规范；3、根据原型图完成出色的设计稿,交付给开发人员使用'
-      }],
+      // workExperience: [{
+      //   id: 1,
+      //   company: '广东智慧网络有限公司11',
+      //   apartment: '设计部',
+      //   beginTime: '2017.3',
+      //   endTime: '至今',
+      //   job: 'UI设计师  技术部',
+      //   content: '内容：1、负责线上APP的改版功能，更新迭代；2、根据产品及产品需求，独立完成项目设计，建立产品的界面设计规范；3、根据原型图完成出色的设计稿,交付给开发人员使用'
+      // }, {
+      //   id: 2,
+      //   company: '广东智慧科技有限公司22',
+      //   apartment: '设计部',
+      //   beginTime: '2017.3',
+      //   endTime: '至今',
+      //   job: 'UI设计师  技术部',
+      //   content: '内容：1、负责线上APP的改版功能，更新迭代；2、根据产品及产品需求，独立完成项目设计，建立产品的界面设计规范；3、根据原型图完成出色的设计稿,交付给开发人员使用'
+      // }],
       projectExperience: [{
         id: 1,
         project: '广东智慧网络公司官网',
@@ -71,6 +73,27 @@ export default class EditOnlineResume extends Component<IProps, IState> {
       }],
       personalGoods: '自信、爱心、责任感、强迫症'
     }
+  }
+
+  componentDidMount() {
+    this.loadOnlineResumeInfo()
+  }
+
+  loadOnlineResumeInfo() {
+    RootLoading.loading()
+    getOnlineResumeInfo((error, result) => {
+      RootLoading.hide()
+      console.log('object1: ', error, result)
+      if (!error && result) {
+        if (result.workExps) {
+          this.setState({ workExperience: result.workExps[0] })
+        }
+      } else {
+        RootLoading.fail('在线简历加载失败,请稍候重试或联系客服')
+        const { navigation } = this.props
+        navigation.goBack()
+      }
+    })
   }
 
   renderNavBar() {
@@ -198,15 +221,18 @@ export default class EditOnlineResume extends Component<IProps, IState> {
 
   renderWorkExperience() {
     const { workExperience } = this.state
+    console.log('workExperience1: ', workExperience)
     const { navigation } = this.props
+    if (!workExperience) {
+      return null
+    }
     return (
       <View style={styles.cellView}>
         <NextTouchableOpacity
           onPress={() => {
             navigation.push('EditWorkExperience', {
-              workItemCallback: (workItem: any) => {
-                workExperience.push({ ...workItem })
-                this.setState({ workExperience })
+              workItemCallback: () => {
+                this.loadOnlineResumeInfo()
               }
             })
           }}
@@ -224,34 +250,23 @@ export default class EditOnlineResume extends Component<IProps, IState> {
               onPress={() => {
                 navigation.push('EditWorkExperience', {
                   workItem: { ...item, index },
-                  workItemCallback: (workItem: any) => {
-                    console.log('workItem222: ', workItem)
-                    for (let i = 0; i < workExperience.length; i++) {
-                      if (i === workItem.index) {
-                        if (workItem.deleteItem) {
-                          workExperience.splice(i, 1)
-                        } else {
-                          workExperience.splice(i, 1, workItem)
-                        }
-                        break
-                      }
-                    }
-                    this.setState({ workExperience })
+                  workItemCallback: () => {
+                    this.loadOnlineResumeInfo()
                   }
                 })
               }}
               style={styles.workExperienceView}>
               <View style={styles.companyInfo}>
-                <Text style={styles.workExperienceCompany}>{item.company}</Text>
-                <Text style={styles.workExperienceTime}>{`${item.beginTime}~${item.endTime}`}</Text>
+                <Text style={styles.workExperienceCompany}>{item.comp_name}</Text>
+                <Text style={styles.workExperienceTime}>{`${format(new Date(item.start_at), 'yyyy.MM')}~${format(new Date(item.end_at), 'yyyy.MM')}`}</Text>
                 <Image
                   source={require('../../../assets/requestJobs/next-gray.png')}
                   style={styles.nextIcon}
                 />
               </View>
               <View>
-                <Text style={styles.workExperienceText}>{item.job}</Text>
-                <Text numberOfLines={2} style={styles.workExperienceLocation}>{item.content}</Text>
+                <Text style={styles.workExperienceText}>{`${item.pos_name} ${item.department}`}</Text>
+                <Text numberOfLines={2} style={styles.workExperienceLocation}>{item.working_detail}</Text>
               </View>
             </NextTouchableOpacity>
           )

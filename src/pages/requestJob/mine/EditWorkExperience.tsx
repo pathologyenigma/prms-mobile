@@ -9,6 +9,9 @@ import JobStatusModal from '../jobs/JobStatusModal'
 import AlertContentModal from '../../components/AlertContentModal'
 import SystemHelper from '../../../utils/system'
 import GradientButton from '../../components/GradientButton'
+import RootLoading from '../../../utils/rootLoading'
+import { format } from 'date-fns'
+import { editOnlineResumeInfo } from '../../../action/mineAction'
 
 type IProps = GenProps<'EditWorkExperience'> & {
 
@@ -37,12 +40,12 @@ export default class EditWorkExperience extends Component<IProps, IState> {
     const { route: { params: { workItem } } } = props
     BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
     this.state = {
-      company: (workItem && workItem.company) || '',
-      job: (workItem && workItem.job) || '',
-      apartment: (workItem && workItem.apartment) || '',
-      beginTime: (workItem && workItem.beginTime) || '',
-      endTime: (workItem && workItem.endTime) || '',
-      content: (workItem && workItem.content) || '',
+      company: (workItem && workItem.comp_name) || '',
+      job: (workItem && workItem.pos_name) || '',
+      apartment: (workItem && workItem.department) || '',
+      beginTime: (workItem && workItem.start_at) || '',
+      endTime: (workItem && workItem.end_at) || '',
+      content: (workItem && workItem.working_detail) || '',
       hideInfo: (workItem && workItem.hideInfo) || false,
       selectImage: [],
       beginTimeVisible: false,
@@ -85,6 +88,38 @@ export default class EditWorkExperience extends Component<IProps, IState> {
     BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid)
   }
 
+  saveInfo() {
+    const { navigation, route: { params: { workItem, workItemCallback } } } = this.props
+    const { company, job, apartment, beginTime, endTime, content, hideInfo } = this.state
+    const info: any = {
+      resumeId: 12,
+      compName: company,
+      posName: job,
+      department: apartment,
+      startAt: beginTime,
+      endAt: endTime,
+      workDetail: content,
+      hideFromThisCompany: true
+    }
+    if (workItem && workItem.id) {
+      info.id = workItem.id
+    }
+    console.log('infoinfo: ', info)
+    RootLoading.loading()
+    editOnlineResumeInfo(info, (error) => {
+      console.log('save: ', error)
+      if (!error) {
+        if (workItemCallback) {
+          workItemCallback()
+        }
+        navigation.goBack()
+        RootLoading.success('保存成功')
+      } else {
+        RootLoading.fail(`报错失败: ${error.toString()}`)
+      }
+    })
+  }
+
   onBackAndroid = () => {
     // 安卓返回按钮弹出退出确认框
     const { company, job, apartment, beginTime, endTime, content } = this.state
@@ -123,10 +158,11 @@ export default class EditWorkExperience extends Component<IProps, IState> {
           value: workItem ? '' : ' 保存',
           disable: !disableSave,
           act: () => {
-            if (workItemCallback) {
-              workItemCallback({ company, job, apartment, beginTime, endTime, content, hideInfo, index: workItem && workItem.index })
-            }
-            navigation.pop()
+            this.saveInfo()
+            // if (workItemCallback) {
+            //   workItemCallback({ company, job, apartment, beginTime, endTime, content, hideInfo, index: workItem && workItem.index })
+            // }
+            // navigation.pop()
           },
         }}
       />
@@ -215,7 +251,7 @@ export default class EditWorkExperience extends Component<IProps, IState> {
             }}
           >
             <Text style={[styles.beginTime, beginTime.length !== 0 && { color: '#333333' }]}>
-              {beginTime || '入职时间'}
+              {beginTime && format(new Date(beginTime), 'yyyy.MM') || '入职时间'}
             </Text>
           </NextTouchableOpacity>
           <Text style={styles.timeTips}>至</Text>
@@ -226,7 +262,7 @@ export default class EditWorkExperience extends Component<IProps, IState> {
             }}
           >
             <Text style={[styles.beginTime, { textAlign: 'right' }, endTime.length !== 0 && { color: '#333333' }]}>
-              {endTime || '离职时间'}
+              {endTime && format(new Date(endTime), 'yyyy.MM') || '离职时间'}
             </Text>
           </NextTouchableOpacity>
         </View>
@@ -268,12 +304,19 @@ export default class EditWorkExperience extends Component<IProps, IState> {
     return (
       <View style={styles.hideView}>
         <Text style={styles.hideText}>对这家公司隐藏我的信息</Text>
-        <Switch
-          onValueChange={(res: boolean) => this.setState({ hideInfo: res })}
-          thumbColor='#fff'
-          trackColor={{ false: '#ddd', true: '#57DE9E' }}
-          value={hideInfo}
-        />
+        <NextTouchableOpacity
+          onPress={() => {
+            RootLoading.info('暂未开放')
+          }}
+        >
+          <Switch
+            onValueChange={(res: boolean) => this.setState({ hideInfo: res })}
+            thumbColor="#ffffff"
+            trackColor={{ false: '#ddd', true: '#57DE9E' }}
+            value={hideInfo}
+            disabled={true}
+          />
+        </NextTouchableOpacity>
       </View>
     )
   }
@@ -300,10 +343,11 @@ export default class EditWorkExperience extends Component<IProps, IState> {
           linearStyle={[styles.linearStyle, !workItem && { width: SystemHelper.width - 42, marginLeft: 0 }]}
           text="完成"
           onPress={() => {
-            if (workItemCallback) {
-              workItemCallback({ company, job, apartment, beginTime, endTime, content, hideInfo, index: workItem && workItem.index })
-            }
-            navigation.pop()
+            this.saveInfo()
+            // if (workItemCallback) {
+            //   workItemCallback({ company, job, apartment, beginTime, endTime, content, hideInfo, index: workItem && workItem.index })
+            // }
+            // navigation.pop()
           }}
         />
       </View>

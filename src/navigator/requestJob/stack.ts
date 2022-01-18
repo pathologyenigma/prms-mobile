@@ -123,7 +123,7 @@ type TRouterParams = {
   UserInfoEdit: { title: string, inputCallback: (value: string) => void },
   EditOnlineResume: any,
   EditPersonalGoods: { personalGoods: string, personalGoodsCallback: (editContents: string) => void },
-  EditWorkExperience: { workItemCallback: (workItem: any) => void, workItem?: any, }
+  EditWorkExperience: { workItemCallback: () => void, workItem?: any, }
   EditProjectExperience: { projectItemCallback: (projectItem: any) => void, projectItem?: any, }
   EditEducation: { educationItemCallback: (educationItem: any) => void, educationItem?: any, },
   InterviewEvaluation: any,
