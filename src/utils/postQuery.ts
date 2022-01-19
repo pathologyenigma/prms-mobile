@@ -261,8 +261,18 @@ const candidateGetEnterpriseDetail_InterviewRecommentGql = gql`
  * 公司详情页的公司问答
  */
 const candidateGetEnterpriseDetail_QAGql = gql`
-  query CandidateGetEnterpriseDetail_QA($entId: Int!) {
-    CandidateGetEnterpriseDetail_QA(entId: $entId) {
+  query UserGetEnterpriseQuestions(
+    $entId: Int!,
+    $needAnswerPreview: Int!
+    $page: Int!
+    $pageSize: Int!
+    ) {
+    UserGetEnterpriseQuestions(
+      entId: $entId,
+      needAnswerPreview: $needAnswerPreview,
+      page: $page,
+      pageSize: $pageSize
+      ) {
       questionCount
       answerCount
       question
@@ -426,14 +436,14 @@ const userGetRecruitmentListGql = gql`
   }
 `
 
-// 新增工作经验(id 传入表示编辑,不传入表示新增)
+// 在线简历-新增工作经验(id 传入表示编辑,不传入表示新增)
 const candidateEditWorkExprienceGql = gql`
   mutation CandidateEditWorkExprience($info: WorkExperience!){
     CandidateEditWorkExprience(info: $info)
   }
 `
 
-// 获取工作经验列表
+// 在线简历-获取工作经验列表
 const candidateGetWorkExpsGql = gql`
   query CandidateGetWorkExps{
     CandidateGetWorkExps{
@@ -446,6 +456,23 @@ const candidateGetWorkExpsGql = gql`
         end_at
         working_detail
       }
+    }
+  }
+`
+
+// 在线简历-编辑个人优势
+const personalAdvantageGql = gql`
+  mutation CandidateEditPersonalAdvantage($info: advantage!){
+    CandidateEditPersonalAdvantage(info: $info)
+  }
+`
+
+// 在线简历-获取技能和个人优势
+const candidateGetOnlineResumeBasicInfoGql = gql`
+  query CandidateGetOnlineResumeBasicInfo(){
+    CandidateGetOnlineResumeBasicInfo{
+      skills
+      personal_advantage
     }
   }
 `
@@ -480,6 +507,11 @@ export {
   getUserGetBasicInfoGql,
   userEditBasicInfoGql,
   userGetRecruitmentListGql,
+  // 在线简历 相关接口
   candidateEditWorkExprienceGql,
   candidateGetWorkExpsGql,
+  personalAdvantageGql,
+  candidateGetOnlineResumeBasicInfoGql
+  //
+
 }

@@ -92,14 +92,13 @@ export default class EditWorkExperience extends Component<IProps, IState> {
     const { navigation, route: { params: { workItem, workItemCallback } } } = this.props
     const { company, job, apartment, beginTime, endTime, content, hideInfo } = this.state
     const info: any = {
-      resumeId: 12,
       compName: company,
       posName: job,
       department: apartment,
       startAt: beginTime,
       endAt: endTime,
       workDetail: content,
-      hideFromThisCompany: true
+      hideFromThisCompany: false // TODO:一期对公司隐藏功能暂未开放
     }
     if (workItem && workItem.id) {
       info.id = workItem.id
@@ -112,8 +111,10 @@ export default class EditWorkExperience extends Component<IProps, IState> {
         if (workItemCallback) {
           workItemCallback()
         }
-        navigation.goBack()
         RootLoading.success('保存成功')
+        setTimeout(() => {
+          navigation.goBack()
+        }, 1000)
       } else {
         RootLoading.fail(`报错失败: ${error.toString()}`)
       }

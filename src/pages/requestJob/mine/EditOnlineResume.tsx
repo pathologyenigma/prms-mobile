@@ -8,7 +8,7 @@ import GradientButton from '../../components/GradientButton'
 import RootLoading from '../../../utils/rootLoading'
 import { greenColor } from '../../../utils/constant'
 import { reformSalary } from '../../../utils/utils'
-import { getOnlineResumeInfo } from '../../../action/mineAction'
+import { getCandidateGetOnlineResumeBasicInfo, getOnlineResumeInfo } from '../../../action/mineAction'
 import { format } from 'date-fns'
 
 type IProps = GenProps<'EditOnlineResume'> & {
@@ -20,7 +20,8 @@ interface IState {
   workExperience: any,
   projectExperience: any,
   educationExperience: any,
-  personalGoods: string
+  personalGoods: string,
+  personalSkills: string  // 个人技能标签
 }
 
 export default class EditOnlineResume extends Component<IProps, IState> {
@@ -71,7 +72,8 @@ export default class EditOnlineResume extends Component<IProps, IState> {
         professional: '视觉传达',
         schoolExperience: '内容：1、在校担任宣传部社长；获得XXXX荣誉称号'
       }],
-      personalGoods: '自信、爱心、责任感、强迫症'
+      personalGoods: '自信、爱心、责任感、强迫症',
+      personalSkills: ''
     }
   }
 
@@ -81,6 +83,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
 
   loadOnlineResumeInfo() {
     RootLoading.loading()
+    this.loadBasicInfo()
     getOnlineResumeInfo((error, result) => {
       RootLoading.hide()
       console.log('object1: ', error, result)
@@ -92,6 +95,18 @@ export default class EditOnlineResume extends Component<IProps, IState> {
         RootLoading.fail('在线简历加载失败,请稍候重试或联系客服')
         const { navigation } = this.props
         navigation.goBack()
+      }
+    })
+  }
+
+  loadBasicInfo() {
+    // 获取个人优势和技能标签
+    getCandidateGetOnlineResumeBasicInfo((error, result) => {
+      if (!error && result) {
+        this.setState({
+          personalGoods: result.personal_advantage,
+          personalSkills: result.skill, // 个人技能标签需要更新UI
+        })
       }
     })
   }
@@ -416,8 +431,10 @@ export default class EditOnlineResume extends Component<IProps, IState> {
           onPress={() => {
             navigation.push('EditPersonalGoods', {
               personalGoods,
-              personalGoodsCallback: (editContents: string) => {
-                this.setState({ personalGoods: editContents })
+              personalGoodsCallback: () => {
+                // 加载个人优势信息
+                this.loadOnlineResumeInfo()
+                // this.setState({ personalGoods: editContents })
               }
             })
           }}
