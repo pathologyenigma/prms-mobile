@@ -7,6 +7,7 @@ import { StackScreenProps } from '@react-navigation/stack'
 import { HrParamList } from '../typings'
 import useUploadFile from '../../hooks/useUploadFile'
 import RootLoading from '../../../utils/rootLoading'
+import useEditProfile from '../HrProfile/useEditProfile'
 
 export default function AvatarCropper({
   navigation,
@@ -16,6 +17,7 @@ export default function AvatarCropper({
   let crop = async (quality?: number) => ({ uri: '', width: 0, height: 0 })
   const { uri, targetRouteName } = route.params || {}
   const uploadFile = useUploadFile()
+  const editProfile = useEditProfile()
 
   return (
     <View style={styles.container}>
@@ -31,6 +33,9 @@ export default function AvatarCropper({
                 const cropped = await crop(1)
                 const url = await uploadFile(cropped.uri)
                 if (url) {
+                  await editProfile({
+                    logo: url,
+                  })
                   navigation.navigate(targetRouteName || 'HrProfile', {
                     avatar: url,
                   })

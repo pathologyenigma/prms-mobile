@@ -5,12 +5,15 @@ import NavBar from '../../components/NavBar'
 import { StackScreenProps } from '@react-navigation/stack'
 import { HrParamList } from '../typings'
 import RootLoading from '../../../utils/rootLoading'
+import useEditTitle from './useEditTitle'
 
 export default function EditHrTitle({
   navigation,
   route,
 }: StackScreenProps<HrParamList, 'EditHrTitle'>) {
   const { title } = route.params
+
+  const editTitle = useEditTitle()
 
   return (
     <View style={styles.container}>
@@ -19,14 +22,20 @@ export default function EditHrTitle({
         headerRight={() => (
           <TextButton
             title="保存"
-            textStyle={styles.buttonTextStyle}
-            onPress={() => {
+            onPress={async () => {
               if (!title) {
                 RootLoading.info('职位名称不能为空')
                 return
               }
 
-              navigation.navigate('HrProfile', { title })
+              try {
+                RootLoading.loading('请稍后...')
+                await editTitle(title)
+                RootLoading.info('职位修改成功')
+                navigation.navigate('HrProfile', { title })
+              } catch (e) {
+                RootLoading.info(e.message)
+              }
             }}
           />
         )}
@@ -55,10 +64,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-  },
-  buttonTextStyle: {
-    color: '#7AD398',
-    fontSize: 15,
   },
   input: {
     marginTop: 16,

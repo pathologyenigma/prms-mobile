@@ -1,16 +1,16 @@
-import { gql, useLazyQuery, useMutation } from '@apollo/client'
-import { useCallback, useEffect } from 'react'
+import { gql, useMutation } from '@apollo/client'
+import { useCallback } from 'react'
 
 interface ConsumeResult {
   UserVerifyCodeConsume: null
 }
 
 export default function useEditPhoneNumber(phoneNumber: string, code: string) {
-  const [fetch, { data }] = useLazyQuery<ConsumeResult>(query)
-  const [update] = useMutation(mutation)
+  const [verifyCodeConsume] = useMutation<ConsumeResult>(VerifyCodeConsume)
+  const [updatePhoneNumber] = useMutation(UpdatePhoneNumber)
 
   const editPhoneNumber = useCallback(async () => {
-    fetch({
+    await verifyCodeConsume({
       variables: {
         info: {
           phoneNumber: phoneNumber,
@@ -19,27 +19,22 @@ export default function useEditPhoneNumber(phoneNumber: string, code: string) {
         },
       },
     })
+    await updatePhoneNumber({
+      variables: {
+        newNum: phoneNumber,
+      },
+    })
   }, [fetch, phoneNumber, code])
-
-  useEffect(() => {
-    if (data) {
-      update({
-        variables: {
-          newNum: phoneNumber,
-        },
-      })
-    }
-  }, [update, data])
 
   return editPhoneNumber
 }
 
-const query = gql`
-  query UserVerifyCodeConsume($info: VerifyInfo) {
+const VerifyCodeConsume = gql`
+  mutation UserVerifyCodeConsume($info: VerifyInfo) {
     UserVerifyCodeConsume(info: $info)
   }
 `
-const mutation = gql`
+const UpdatePhoneNumber = gql`
   mutation UserChangePhoneNumber($newNum: String!) {
     UserChangePhoneNumber(newNum: $newNum)
   }

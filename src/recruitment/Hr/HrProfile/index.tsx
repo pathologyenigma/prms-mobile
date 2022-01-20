@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import {
   StyleSheet,
   Text,
@@ -17,6 +17,8 @@ import RadioLabel from '../../components/RadioLabel'
 import { HrParamList } from '../typings'
 import useProfile from './useProfile'
 import LoadingAndError from '../../components/LoadingAndError'
+import useEditProfile from './useEditProfile'
+import RootLoading from '../../../utils/rootLoading'
 interface HrProfileItemProps {
   title: string
   detail: string
@@ -47,6 +49,16 @@ export default function HrProfile({
     route.params || {}
 
   const { profile, loading, error, refetch } = useProfile()
+  const editProfile = useEditProfile()
+
+  const handleGenderChange = async (gender: 'male' | 'female') => {
+    try {
+      await editProfile({ gender: gender === 'male' })
+      navigation.setParams({ gender })
+    } catch (e) {
+      RootLoading.info(e.message)
+    }
+  }
 
   useEffect(() => {
     if (profile) {
@@ -95,7 +107,7 @@ export default function HrProfile({
               <Text style={styles.genderTitle}>性别</Text>
               <RadioGroup
                 value={gender}
-                onValueChecked={v => navigation.setParams({ gender: v })}>
+                onValueChecked={v => handleGenderChange(v)}>
                 <RadioLabel
                   label="男"
                   value="male"

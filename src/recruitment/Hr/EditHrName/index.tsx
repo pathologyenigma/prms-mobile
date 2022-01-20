@@ -5,12 +5,15 @@ import NavBar from '../../components/NavBar'
 import { StackScreenProps } from '@react-navigation/stack'
 import { HrParamList } from '../typings'
 import RootLoading from '../../../utils/rootLoading'
+import useEditProfile from '../HrProfile/useEditProfile'
 
 export default function EditHrName({
   navigation,
   route,
 }: StackScreenProps<HrParamList, 'EditHrName'>) {
   const { username } = route.params
+
+  const editProfile = useEditProfile()
 
   return (
     <View style={styles.container}>
@@ -19,13 +22,22 @@ export default function EditHrName({
         headerRight={() => (
           <TextButton
             title="保存"
-            textStyle={styles.buttonTextStyle}
-            onPress={() => {
+            onPress={async () => {
               if (!username) {
                 RootLoading.info('姓名不能为空')
                 return
               }
-              navigation.navigate('HrProfile', { username })
+
+              try {
+                RootLoading.loading('请稍后...')
+                await editProfile({
+                  username: username,
+                })
+                RootLoading.info('姓名修改成功')
+                navigation.navigate('HrProfile', { username })
+              } catch (e) {
+                RootLoading.info(e.message)
+              }
             }}
           />
         )}
@@ -54,10 +66,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-  },
-  buttonTextStyle: {
-    color: '#7AD398',
-    fontSize: 15,
   },
   input: {
     marginTop: 16,

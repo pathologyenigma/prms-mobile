@@ -13,7 +13,7 @@ import TalentPager from './TalentPager'
 export default function TalentList({
   navigation,
 }: StackScreenProps<TalentParamList, 'TalentList'>) {
-  let { jobs: jobItems, loading } = useSimpleOnlineJobs()
+  let { jobs: jobItems, loading, error } = useSimpleOnlineJobs()
 
   const [checkedJobId, setCheckedJobId] = useState<number>()
 
@@ -32,8 +32,8 @@ export default function TalentList({
     return (
       <LoadingAndError
         loadingStyle={{ paddingTop: headerHeight() + 40 }}
-        loading={loading}
-        error={''}>
+        loading={loading && !jobItems}
+        error={error}>
         <FocusAwareStatusBar barStyle={'dark-content'} />
         <TalentListEmpty
           onPublishPress={() => navigation.navigate('PostJob')}

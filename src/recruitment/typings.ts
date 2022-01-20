@@ -33,3 +33,13 @@ export type EnterpriseSize =
   | 'OneHundredFiftyToFiveHundreds'
   | 'FiveHundredsToTwoThousands'
   | 'MoreThanTwoThousands'
+
+export type EnterpriseFinancing =
+  | 'NotYet'
+  | 'AngelFinancing'
+  | 'A'
+  | 'B'
+  | 'C'
+  | 'D'
+  | 'Listed'
+  | 'NoNeed'
