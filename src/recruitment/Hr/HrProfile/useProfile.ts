@@ -12,6 +12,9 @@ interface ProfileData {
   UserGetEnterpriseDetail_EntInfo: {
     enterprise_name: string
   }
+  ENTGetAccountInfo: {
+    pos: string
+  }
 }
 
 interface Profile {
@@ -34,7 +37,11 @@ export default function useProfile() {
       return undefined
     }
 
-    const { UserGetBasicInfo, UserGetEnterpriseDetail_EntInfo } = data
+    const {
+      UserGetBasicInfo,
+      UserGetEnterpriseDetail_EntInfo,
+      ENTGetAccountInfo,
+    } = data
     const { username, image_url, gender, phone_number, email } =
       UserGetBasicInfo
     const { enterprise_name } = UserGetEnterpriseDetail_EntInfo
@@ -45,7 +52,7 @@ export default function useProfile() {
         image_url || 'https://img95.699pic.com/photo/50034/7165.jpg_wh300.jpg',
       gender: gender ? 'male' : 'female',
       company: enterprise_name,
-      title: '待完善',
+      title: ENTGetAccountInfo.pos || '待完善',
       phoneNumber: phone_number,
       email: email || '',
     }
@@ -66,6 +73,10 @@ const query = gql`
 
     UserGetEnterpriseDetail_EntInfo {
       enterprise_name
+    }
+
+    ENTGetAccountInfo {
+      pos
     }
   }
 `

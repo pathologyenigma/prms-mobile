@@ -9,7 +9,7 @@ export function useInputTips(key: string, city?: string) {
     [],
   )
 
-  const { value: poiItems } = useAsync(
+  const poiItems = useAsync(
     useCallback(async () => {
       if (key && city) {
         return throttleGetInputTips(key, city)

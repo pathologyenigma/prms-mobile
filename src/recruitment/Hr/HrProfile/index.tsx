@@ -146,7 +146,14 @@ export default function HrProfile({
               detail={email || '请完善'}
               onPress={() => navigation.navigate('EditHrEmail', { email })}
             />
-            <GradientButton title="保存" style={styles.button} />
+            <GradientButton
+              title="保存"
+              style={styles.button}
+              onPress={() => {
+                // 仅仅是安慰
+                navigation.goBack()
+              }}
+            />
           </ScrollView>
         )}
       </LoadingAndError>

@@ -5,7 +5,7 @@ export default function useAsync<T extends FunctionReturningPromise>(
   fn: T,
   initialValue?: PromiseType<ReturnType<T>>,
 ) {
-  const [state, callback] = useAsyncFn(fn, {
+  const [callback, state] = useAsyncFn(fn, {
     loading: true,
     value: initialValue,
   })
@@ -14,5 +14,5 @@ export default function useAsync<T extends FunctionReturningPromise>(
     callback()
   }, [callback])
 
-  return state
+  return state.value
 }

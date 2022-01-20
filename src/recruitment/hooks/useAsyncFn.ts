@@ -14,7 +14,7 @@ export type AsyncState<T> =
     }
   | {
       loading: true
-      error?: Error | undefined
+      error?: undefined
       value?: T
     }
   | {
@@ -33,7 +33,7 @@ type StateFromFunctionReturningPromise<T extends FunctionReturningPromise> =
 
 export type AsyncFnReturn<
   T extends FunctionReturningPromise = FunctionReturningPromise,
-> = [StateFromFunctionReturningPromise<T>, () => Promise<void>]
+> = [() => void, StateFromFunctionReturningPromise<T>]
 
 export default function useAsyncFn<T extends FunctionReturningPromise>(
   fn: T,
@@ -45,14 +45,14 @@ export default function useAsyncFn<T extends FunctionReturningPromise>(
     useState<StateFromFunctionReturningPromise<T>>(initialState)
 
   const callback = useCallback(
-    (...args: Parameters<T>): Promise<void> => {
+    (...args: Parameters<T>): void => {
       const callId = ++lastCallId.current
 
       if (!state.loading) {
-        set(prevState => ({ ...prevState, loading: true }))
+        set(prevState => ({ ...prevState, error: undefined, loading: true }))
       }
 
-      return fn(...args).then(
+      fn(...args).then(
         value => {
           isMounted() &&
             callId === lastCallId.current &&
@@ -68,5 +68,5 @@ export default function useAsyncFn<T extends FunctionReturningPromise>(
     [fn],
   )
 
-  return [state, callback]
+  return [callback, state]
 }

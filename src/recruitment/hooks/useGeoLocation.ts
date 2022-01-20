@@ -1,8 +1,14 @@
-import { useCallback } from 'react'
-import { Platform } from 'react-native'
-import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions'
+import { useCallback, useEffect } from 'react'
+import { Alert, AppState, AppStateStatus, Platform } from 'react-native'
+import {
+  check,
+  openSettings,
+  PERMISSIONS,
+  request,
+  RESULTS,
+} from 'react-native-permissions'
 import GeoLocationManager from '../../bridge/geolocation'
-import useAsync from './useAsync'
+import useAsyncFn from './useAsyncFn'
 
 type Callback<T> = (() => Promise<T>) | (() => T)
 
@@ -79,7 +85,33 @@ export function getLocation() {
 }
 
 export function useGeoLocation() {
-  const { value } = useAsync(useCallback(() => getLocation(), []))
+  const [fn, state] = useAsyncFn(useCallback(() => getLocation(), []))
+
+  useEffect(() => {
+    fn()
+  }, [fn])
+
+  const { value, error } = state
+
+  useEffect(() => {
+    if (error && error instanceof GeoLocationPermissionError) {
+      Alert.alert(error.message, '请前往设置页面，授予本应用定位权限', [
+        { text: '取消' },
+        { text: '确定', onPress: () => openSettings() },
+      ])
+    }
+  }, [error])
+
+  useEffect(() => {
+    const hanleAppActive = (state: AppStateStatus) => {
+      if (!value && state === 'active') {
+        fn()
+      }
+    }
+
+    AppState.addEventListener('change', hanleAppActive)
+    return () => AppState.removeEventListener('change', hanleAppActive)
+  }, [value, fn])
 
   return value
 }
