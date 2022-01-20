@@ -29,30 +29,54 @@ const update_kv = (key: string, value: string) => {
   }
 }
 
+const getWorkExps = new Promise((resolve, regect) => {
+  apolloClientShare
+    .query({
+      query: candidateGetWorkExpsGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
+    })
+    .then(res => {
+      console.log('res: ', res)
+      if (res && res.data && res.data.CandidateGetWorkExps && res.data.CandidateGetWorkExps.data) {
+        resolve(res.data.CandidateGetWorkExps.data)
+      } else {
+        regect(res || Error)
+      }
+    })
+    .catch(error => {
+      console.log('error: ', error)
+      regect(error)
+    })
+})
+
+// 编辑简历-获取技能标签和个人优势
+const getCandidateGetOnlineResumeBasicInfoExps = new Promise((resolve, regect) => {
+  apolloClientShare
+    .query({
+      query: candidateGetOnlineResumeBasicInfoGql,
+      fetchPolicy: 'no-cache', // 设置缓存策略
+    })
+    .then(res => {
+      if (res && res.data && res.data.CandidateGetOnlineResumeBasicInfo) {
+        resolve(res.data.CandidateGetOnlineResumeBasicInfo)
+      } else {
+        regect(res)
+      }
+    })
+    .catch(error => {
+      console.log('error: ', error)
+      regect(error)
+    })
+})
+
 // 编辑简历-获取 工作经验 列表
 const getOnlineResumeInfo = (callback?: (error: any, result?: any) => void) => {
-  const getWorkExps = new Promise((resolve, regect) => {
-    apolloClientShare
-      .query({ query: candidateGetWorkExpsGql })
-      .then(res => {
-        console.log('res: ', res)
-        if (res && res.data && res.data.CandidateGetWorkExps && res.data.CandidateGetWorkExps.data) {
-          resolve(res.data.CandidateGetWorkExps.data)
-        } else {
-          regect(res || Error)
-        }
-      })
-      .catch(error => {
-        console.log('error: ', error)
-        regect(error)
-      })
-  })
-  Promise.all([getWorkExps])
-    .then((workExps) => {
-      console.log('workExps: ', workExps)
+  Promise.all([getCandidateGetOnlineResumeBasicInfoExps, getWorkExps])
+    .then((infoResult) => {
+      console.log('workExps: ', infoResult)
       if (callback) {
-        if (workExps) {
-          callback(undefined, { workExps })
+        if (infoResult) {
+          callback(undefined, infoResult)
         }
       }
     })
@@ -91,14 +115,16 @@ const editOnlineResumeInfo = (info: any, callback?: (error: any, result?: any) =
 }
 
 // 编辑简历-编辑个人优势
-const editPersonalAdvantage = (info: any, callback?: (error: any, result?: any) => void) => {
+const editPersonalAdvantage = (detail: any, callback?: (error: any, result?: any) => void) => {
   apolloClientShare
     .mutate({
       mutation: personalAdvantageGql,
-      variables: { advantage: info },
+      variables: {
+        advantage: detail
+      },
     })
     .then(res => {
-      console.log('res: ', res)
+      console.log('editPersonalAdvantage-res: ', res)
       if (res && res.data && res.data.CandidateEditPersonalAdvantage === null) {
         if (callback) {
           callback(undefined)
@@ -124,10 +150,10 @@ const getCandidateGetOnlineResumeBasicInfo = (callback?: (error: any, result?: a
       query: candidateGetOnlineResumeBasicInfoGql,
     })
     .then(res => {
-      console.log('res: ', res)
-      if (res && res.data && res.data.CandidateGetOnlineResumeBasicInfo === null) {
+      console.log('res123: ', res)
+      if (res && res.data && res.data.CandidateGetOnlineResumeBasicInfo) {
         if (callback) {
-          callback(undefined)
+          callback(undefined, res.data.CandidateGetOnlineResumeBasicInfo)
         }
       } else {
         if (callback) {

@@ -29,6 +29,7 @@ import UserInfo from '../../pages/requestJob/mine/UserInfo'
 import UserInfoEdit from '../../pages/requestJob/mine/UserInfoEdit'
 import EditOnlineResume from '../../pages/requestJob/mine/EditOnlineResume'
 import EditPersonalGoods from '../../pages/requestJob/mine/EditPersonalGoods'
+import EditPersonalSkills from '../../pages/requestJob/mine/EditPersonalSkills'
 import EditWorkExperience from '../../pages/requestJob/mine/EditWorkExperience'
 import EditProjectExperience from '../../pages/requestJob/mine/EditProjectExperience'
 import EditEducation from '../../pages/requestJob/mine/EditEducation'
@@ -123,6 +124,7 @@ type TRouterParams = {
   UserInfoEdit: { title: string, inputCallback: (value: string) => void },
   EditOnlineResume: any,
   EditPersonalGoods: { personalGoods: string, personalGoodsCallback: () => void },
+  EditPersonalSkills: { personalSkills: any, personalSkillsCallback: () => void },
   EditWorkExperience: { workItemCallback: () => void, workItem?: any, }
   EditProjectExperience: { projectItemCallback: (projectItem: any) => void, projectItem?: any, }
   EditEducation: { educationItemCallback: (educationItem: any) => void, educationItem?: any, },
@@ -294,6 +296,7 @@ export default class RouterStacks {
       SearchJobAddress,
       EditJobCity,
       AvatarViewer,
-      AvatarCropper
+      AvatarCropper,
+      EditPersonalSkills
     }
 }

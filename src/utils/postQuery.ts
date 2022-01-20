@@ -462,14 +462,14 @@ const candidateGetWorkExpsGql = gql`
 
 // 在线简历-编辑个人优势
 const personalAdvantageGql = gql`
-  mutation CandidateEditPersonalAdvantage($info: advantage!){
-    CandidateEditPersonalAdvantage(info: $info)
+  mutation CandidateEditPersonalAdvantage($advantage: String!){
+    CandidateEditPersonalAdvantage(advantage: $advantage)
   }
 `
 
 // 在线简历-获取技能和个人优势
 const candidateGetOnlineResumeBasicInfoGql = gql`
-  query CandidateGetOnlineResumeBasicInfo(){
+  query CandidateGetOnlineResumeBasicInfo{
     CandidateGetOnlineResumeBasicInfo{
       skills
       personal_advantage

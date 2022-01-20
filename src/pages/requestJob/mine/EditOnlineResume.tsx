@@ -7,13 +7,15 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import GradientButton from '../../components/GradientButton'
 import RootLoading from '../../../utils/rootLoading'
 import { greenColor } from '../../../utils/constant'
-import { reformSalary } from '../../../utils/utils'
+import { reformDistanceYears, reformSalary, selectEducation } from '../../../utils/utils'
 import { getCandidateGetOnlineResumeBasicInfo, getOnlineResumeInfo } from '../../../action/mineAction'
 import { format } from 'date-fns'
+import { AnyAction, bindActionCreators, Dispatch } from 'redux'
+import { connect } from 'react-redux'
+import { IStoreState } from '../../../reducer'
 
-type IProps = GenProps<'EditOnlineResume'> & {
-
-}
+type IProps = GenProps<'EditOnlineResume'> & ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>
 
 interface IState {
   expectJobs: any,
@@ -21,10 +23,10 @@ interface IState {
   projectExperience: any,
   educationExperience: any,
   personalGoods: string,
-  personalSkills: string  // 个人技能标签
+  personalSkills: any  // 个人技能标签
 }
 
-export default class EditOnlineResume extends Component<IProps, IState> {
+class EditOnlineResume extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
@@ -72,8 +74,8 @@ export default class EditOnlineResume extends Component<IProps, IState> {
         professional: '视觉传达',
         schoolExperience: '内容：1、在校担任宣传部社长；获得XXXX荣誉称号'
       }],
-      personalGoods: '自信、爱心、责任感、强迫症',
-      personalSkills: ''
+      personalGoods: '',
+      personalSkills: []
     }
   }
 
@@ -83,30 +85,28 @@ export default class EditOnlineResume extends Component<IProps, IState> {
 
   loadOnlineResumeInfo() {
     RootLoading.loading()
-    this.loadBasicInfo()
+    const { navigation } = this.props
     getOnlineResumeInfo((error, result) => {
       RootLoading.hide()
       console.log('object1: ', error, result)
       if (!error && result) {
-        if (result.workExps) {
-          this.setState({ workExperience: result.workExps[0] })
+        // 严格按照数组顺序取值
+        //  个人优势+技能标签
+        //  工作经验
+        if (result.length === 2) {
+          console.log('resultresult: ', result)
+          this.setState({
+            personalSkills: result[0].skills || [],
+            personalGoods: result[0].personal_advantage || '',
+            workExperience: result[1]
+          })
+        } else {
+          RootLoading.fail('在线简历信息加载失败,请稍候重试或联系客服')
+          navigation.goBack()
         }
       } else {
-        RootLoading.fail('在线简历加载失败,请稍候重试或联系客服')
-        const { navigation } = this.props
+        RootLoading.fail('在线简历信息加载失败,请稍候重试或联系客服')
         navigation.goBack()
-      }
-    })
-  }
-
-  loadBasicInfo() {
-    // 获取个人优势和技能标签
-    getCandidateGetOnlineResumeBasicInfo((error, result) => {
-      if (!error && result) {
-        this.setState({
-          personalGoods: result.personal_advantage,
-          personalSkills: result.skill, // 个人技能标签需要更新UI
-        })
       }
     })
   }
@@ -141,16 +141,25 @@ export default class EditOnlineResume extends Component<IProps, IState> {
   }
 
   renderIcon() {
+    const { userInfo, navigation } = this.props
     return (
       <View style={styles.iconView}>
         <View>
           <View style={styles.nameView}>
-            <Text style={styles.iconText}>李小冉</Text>
-            <Image style={styles.editNameIcon}
-              source={require('../../../assets/requestJobs/edit-gray.png')}
-            />
+            <Text style={styles.iconText}>{userInfo.username}</Text>
+            <NextTouchableOpacity
+              onPress={() => {
+                navigation.push('UserInfo')
+              }}
+            >
+              <Image style={styles.editNameIcon}
+                source={require('../../../assets/requestJobs/edit-gray.png')}
+              />
+            </NextTouchableOpacity>
           </View>
-          <Text style={styles.userInfo}>5年工作经验/本科/25岁</Text>
+          <Text style={styles.userInfo}>
+            {`${reformDistanceYears(userInfo.first_time_working)}年工作经验/${selectEducation(userInfo.education)}/${reformDistanceYears(userInfo.birth_date)}岁`}
+          </Text>
         </View>
         <View>
           <Image
@@ -441,27 +450,60 @@ export default class EditOnlineResume extends Component<IProps, IState> {
           style={styles.titleView}>
           <Text style={styles.titleText}>个人优势</Text>
           <View style={styles.editPersonalView}>
-            <Text style={styles.editPersonalText}>待完善</Text>
+            {(!personalGoods || personalGoods.length === 0) &&
+              < Text style={styles.editPersonalText}>待完善</Text>
+            }
+            <Image
+              style={styles.editIcon}
+              source={require('../../../assets/requestJobs/edit-gray.png')}
+            />
+          </View>
+        </NextTouchableOpacity >
+        <Text style={
+          [styles.editPersonalDetail, personalGoods.length === 0 && { color: '#999' }]}
+        >{personalGoods || '如: 自信、爱心、责任感、强迫症'}</Text>
+      </View >
+    )
+  }
+
+  renderPersonalSkills() {
+    const { personalSkills } = this.state
+    const { navigation } = this.props
+    return (
+      <View style={[styles.cellView, {
+        borderBottomColor: '#ECECEC',
+        borderBottomWidth: 1,
+        paddingBottom: 12
+      }]}>
+        <NextTouchableOpacity
+          onPress={() => {
+            navigation.push('EditPersonalSkills', {
+              personalSkills,
+              personalSkillsCallback: () => {
+                // 加载技能标签
+                this.loadOnlineResumeInfo()
+                // this.setState({ personalGoods: editContents })
+              }
+            })
+          }}
+          style={styles.titleView}>
+          <Text style={styles.titleText}>技能标签</Text>
+          <View style={styles.editPersonalView}>
             <Image
               style={styles.editIcon}
               source={require('../../../assets/requestJobs/edit-gray.png')}
             />
           </View>
         </NextTouchableOpacity>
-        <Text style={styles.editPersonalDetail}>{personalGoods}</Text>
-      </View>
-    )
-  }
-
-  renderSaveBtn() {
-    return (
-      <View
-        style={styles.bottomContainer}
-      >
-        <GradientButton
-          text="保存"
-          containerStyle={styles.btnContainer}
-        />
+        <View style={styles.jobInfoTagView}>
+          {personalSkills && personalSkills.map((e: any, index: number) => {
+            return (
+              <Text key={index.toString()} style={styles.editPersonalSkills}>
+                {e}
+              </Text>
+            )
+          })}
+        </View>
       </View>
     )
   }
@@ -483,12 +525,29 @@ export default class EditOnlineResume extends Component<IProps, IState> {
           {this.renderIcon()}
           {this.renderRequestJobs()}
           {this.renderPersonalGoods()}
+          {this.renderPersonalSkills()}
           {this.renderWorkExperience()}
           {this.renderProjectExperience()}
           {this.renderEducationExperience()}
         </ScrollView>
-        {this.renderSaveBtn()}
       </View>
     )
   }
 }
+
+const mapStateToProps = (state: IStoreState) => {
+  return {
+    userInfo: state.userInfo.userInfo,
+  }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => {
+  return bindActionCreators(
+    {
+
+    },
+    dispatch
+  )
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditOnlineResume)

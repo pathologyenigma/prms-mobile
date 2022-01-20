@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, StatusBar, Platform } from 'react-native'
-import styles from './styles/EditPersonalGoods.style'
+import styles from './styles/EditPersonalSkills.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -10,7 +10,7 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
 import { editPersonalAdvantage } from '../../../action/mineAction'
 import RootLoading from '../../../utils/rootLoading'
 
-type IProps = GenProps<'EditPersonalGoods'> & {
+type IProps = GenProps<'EditPersonalSkills'> & {
 
 }
 
@@ -19,12 +19,12 @@ interface IState {
   selectImage: any
 }
 
-export default class EditPersonalGoods extends Component<IProps, IState> {
+export default class EditPersonalSkills extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
-    const { route: { params: { personalGoods } } } = props
+    const { route: { params: { personalSkills } } } = props
     this.state = {
-      detail: personalGoods || '',
+      detail: personalSkills || '',
       selectImage: []
     }
   }
@@ -98,7 +98,7 @@ export default class EditPersonalGoods extends Component<IProps, IState> {
         right={{
           type: EButtonType.TEXT,
           style: styles.confirmBtn,
-          value: '确定',
+          value: '保存',
           disable: detail.length === 0,
           act: () => {
             this.savePersonalAdvantage()
@@ -110,13 +110,13 @@ export default class EditPersonalGoods extends Component<IProps, IState> {
 
   savePersonalAdvantage() {
     const { detail } = this.state
-    const { navigation, route: { params: { personalGoodsCallback } } } = this.props
+    const { navigation, route: { params: { personalSkillsCallback } } } = this.props
     RootLoading.loading()
     editPersonalAdvantage(detail, (error) => {
       if (!error) {
         RootLoading.success('保存成功')
-        if (personalGoodsCallback) {
-          personalGoodsCallback()
+        if (personalSkillsCallback) {
+          personalSkillsCallback()
         }
         setTimeout(() => {
           navigation.goBack()
@@ -130,32 +130,31 @@ export default class EditPersonalGoods extends Component<IProps, IState> {
   renderTitle() {
     return (
       <View style={styles.titleView}>
-        <Text style={styles.title}>我的优势</Text>
-        <Text style={styles.description}>一句话介绍自己，突出核心优势</Text>
+        <Text style={styles.title}>拥有技能</Text>
+        <Text style={styles.description}>最多选择5个, 被选中的标签将展示在简历详情</Text>
       </View>
     )
   }
 
-  renderDetail() {
+  renderSelected() {
     const { detail } = this.state
     return (
-      <View style={styles.detailView}>
-        <TextInput
-          underlineColorAndroid="transparent"
-          returnKeyType="done"
-          autoCorrect={false}
-          autoCapitalize="none"
-          multiline={true}
-          style={styles.detailInput}
-          placeholder="补充更详细的说明"
-          placeholderTextColor="#AAAAAA"
-          value={detail}
-          maxLength={500}
-          onChangeText={(value) => {
-            this.setState({ detail: value })
-          }}
-        />
+      <View style={styles.selectedView}>
+        <Text style={styles.selectedTitle}>已选</Text>
+        <ScrollView horizontal={true} style={styles.selectedScrollview}>
+        </ScrollView>
       </View>
+    )
+  }
+
+  renderOptionalTags() {
+    // TODO 可选标签,暂未提供接口
+    return (
+      <ScrollView style={styles.tagsScrollview}>
+        <NextTouchableOpacity style={styles.customBtn}>
+          <Text style={styles.customText}>+ 自定义</Text>
+        </NextTouchableOpacity>
+      </ScrollView>
     )
   }
 
@@ -174,7 +173,8 @@ export default class EditPersonalGoods extends Component<IProps, IState> {
           contentContainerStyle={{ paddingBottom: 100 }}
         >
           {this.renderTitle()}
-          {this.renderDetail()}
+          {this.renderSelected()}
+          {this.renderOptionalTags()}
         </ScrollView>
       </View>
     )
