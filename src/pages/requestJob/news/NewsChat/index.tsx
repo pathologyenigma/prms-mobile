@@ -433,10 +433,11 @@ class NewsChat extends Component<TProps, IState> {
           style={styles.selectTypeBtn}
           onPress={() => {
             if (selectType !== 2) {
-              this.setState({ selectType: 2 }, () => {
-                // 刷新数据
-                this.handleRefresh()
-              })
+              RootLoading.info('暂未开放')
+              // this.setState({ selectType: 2 }, () => {
+              //   // 刷新数据
+              //   this.handleRefresh()
+              // })
             }
           }}
         >

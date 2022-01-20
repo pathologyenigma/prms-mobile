@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import React, { PureComponent } from 'react'
 import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 'react-native'
-import { reformEducation } from '../../../../utils/utils'
+import { reformEducation, reformSalary } from '../../../../utils/utils'
 import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
 import styles from './styles'
 
@@ -33,9 +33,7 @@ export default class CompanyJobCell extends PureComponent<ICell> {
             {cellItem.title || cellItem.name}
           </Text>
           <Text style={styles.cellSalary}>
-            {cellItem.salary ? (
-              `${cellItem.salary[0] || ''}-${cellItem.salary[1] || ''}`
-            ) : cellItem.salary}
+            {reformSalary(cellItem.salary)}
           </Text>
         </View>
         <View style={styles.cellJobView}>

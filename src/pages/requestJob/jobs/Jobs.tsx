@@ -489,29 +489,6 @@ class Jobs extends Component<IProps, IState> {
     const { refreshState, listDataSource } = this.state
     console.log('listDataSource: ', listDataSource)
     return (
-      //   <Query
-      //     query={gql`
-      //   {
-      //     rates(currency: "USD") {
-      //       currency
-      //       rate
-      //     }
-      //   }
-      // `}
-      //   >
-      //     {
-      //       ({ loading, error, data }) => {
-      //         console.log('222222222: ', loading, error, data)
-      //         if (loading) return <Text>Loading...</Text>;
-      //         if (error) return <Text>Error :(</Text>;
-
-      //         return data.rates.map(({ currency, rate }) => (
-      //           <View key={currency}>
-      //             <Text>{currency}: {rate}</Text>
-      //           </View>
-      //         ));
-      //       }
-      //     }
       <RefreshListView
         style={styles.listView}
         onHeaderRefresh={() => this.handleRefresh()}
@@ -525,7 +502,6 @@ class Jobs extends Component<IProps, IState> {
         footerRefreshingText="加载更多"
         footerNoMoreDataText="没有更多了"
       />
-      // </Query>
     )
   }
 
