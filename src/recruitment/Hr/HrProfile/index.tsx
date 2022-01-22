@@ -84,7 +84,7 @@ export default function HrProfile({
               <TouchableWithoutFeedback
                 onPress={() =>
                   navigation.navigate('AvatarViewer', {
-                    avatar: profile.avatar,
+                    avatar: avatar,
                     targetRouteName: 'HrProfile',
                   })
                 }>

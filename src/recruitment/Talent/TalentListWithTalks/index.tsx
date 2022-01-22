@@ -5,6 +5,7 @@ import { ListRenderItem } from 'react-native'
 import NavBar from '../../components/NavBar'
 import useContractList, { ContractItem } from './useContractList'
 import LoadingAndError from '../../components/LoadingAndError'
+import Empty from '../../components/Empty'
 
 function ItemSeparator() {
   return <View style={styles.separator} />
@@ -28,6 +29,7 @@ export default function TalentListwithTalks() {
           ItemSeparatorComponent={ItemSeparator}
           style={styles.container}
           contentContainerStyle={styles.content}
+          ListEmptyComponent={Empty}
         />
       </LoadingAndError>
     </View>
