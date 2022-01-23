@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView, StatusBar } from 'react-native'
+import { Text, View, Image, ScrollView, StatusBar, RefreshControl } from 'react-native'
 import styles from './styles/EditOnlineResume.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
 import NavBar, { EButtonType } from '../../components/NavBar'
@@ -8,7 +8,7 @@ import GradientButton from '../../components/GradientButton'
 import RootLoading from '../../../utils/rootLoading'
 import { greenColor } from '../../../utils/constant'
 import { reformDistanceYears, reformSalary, selectEducation } from '../../../utils/utils'
-import { getCandidateGetOnlineResumeBasicInfo, getOnlineResumeInfo } from '../../../action/mineAction'
+import { getCandidateGetOnlineResumeBasicInfo, getCandidateGetOnlineResumeBasicInfoExperience, getWorkExperience } from '../../../action/mineAction'
 import { format } from 'date-fns'
 import { AnyAction, bindActionCreators, Dispatch } from 'redux'
 import { connect } from 'react-redux'
@@ -23,13 +23,18 @@ interface IState {
   projectExperience: any,
   educationExperience: any,
   personalGoods: string,
-  personalSkills: any  // 个人技能标签
+  personalSkills: any  // 个人技能标签,
+  workExperienceRefresh: boolean,
+  basicInfoRefresh: boolean
 }
 
 class EditOnlineResume extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
+      workExperienceRefresh: true,
+      basicInfoRefresh: true,
+      workExperience: [],
       expectJobs: [{
         id: 1,
         type: 'UI/界面设计',
@@ -37,23 +42,6 @@ class EditOnlineResume extends Component<IProps, IState> {
         location: '深圳',
         status: '在职找工作·随时入职'
       }],
-      // workExperience: [{
-      //   id: 1,
-      //   company: '广东智慧网络有限公司11',
-      //   apartment: '设计部',
-      //   beginTime: '2017.3',
-      //   endTime: '至今',
-      //   job: 'UI设计师  技术部',
-      //   content: '内容：1、负责线上APP的改版功能，更新迭代；2、根据产品及产品需求，独立完成项目设计，建立产品的界面设计规范；3、根据原型图完成出色的设计稿,交付给开发人员使用'
-      // }, {
-      //   id: 2,
-      //   company: '广东智慧科技有限公司22',
-      //   apartment: '设计部',
-      //   beginTime: '2017.3',
-      //   endTime: '至今',
-      //   job: 'UI设计师  技术部',
-      //   content: '内容：1、负责线上APP的改版功能，更新迭代；2、根据产品及产品需求，独立完成项目设计，建立产品的界面设计规范；3、根据原型图完成出色的设计稿,交付给开发人员使用'
-      // }],
       projectExperience: [{
         id: 1,
         project: '广东智慧网络公司官网',
@@ -84,32 +72,46 @@ class EditOnlineResume extends Component<IProps, IState> {
   }
 
   loadOnlineResumeInfo() {
-    RootLoading.loading()
-    const { navigation } = this.props
-    getOnlineResumeInfo((error, result) => {
-      RootLoading.hide()
-      console.log('object1: ', error, result)
+    this.setState({
+      workExperienceRefresh: true,
+      basicInfoRefresh: true
+    }, () => {
+      this.loadWorkExperience()
+      this.loadBasicInfo()
+    })
+  }
+
+  loadWorkExperience() {
+    getWorkExperience((error, result) => {
+      console.log('1111111111111111111error, result: ', error, result)
       if (!error && result) {
-        // 严格按照数组顺序取值
-        //  个人优势+技能标签
-        //  工作经验
-        if (result.length === 2) {
-          console.log('resultresult: ', result)
-          this.setState({
-            personalSkills: result[0].skills || [],
-            personalGoods: result[0].personal_advantage || '',
-            workExperience: result[1]
-          })
-        } else {
-          RootLoading.fail('在线简历信息加载失败,请稍候重试或联系客服')
-          navigation.goBack()
-        }
+        this.setState({
+          workExperience: result,
+          workExperienceRefresh: false
+        })
       } else {
-        RootLoading.fail('在线简历信息加载失败,请稍候重试或联系客服')
-        navigation.goBack()
+        this.setState({ workExperienceRefresh: false })
+        RootLoading.info('工作经验加载失败,请刷新重试')
       }
     })
   }
+
+  loadBasicInfo() {
+    getCandidateGetOnlineResumeBasicInfoExperience((error, result) => {
+      console.log('getCandidateGetOnlineResumeBasicInfoExperience, result: ', error, result)
+      if (!error && result) {
+        this.setState({
+          personalGoods: result.personal_advantage || '',
+          personalSkills: result.skills || [],
+          basicInfoRefresh: false
+        })
+      } else {
+        this.setState({ basicInfoRefresh: false })
+        RootLoading.info('个人优势加载失败,请刷新重试')
+      }
+    })
+  }
+
 
   renderNavBar() {
     const { navigation } = this.props
@@ -256,7 +258,7 @@ class EditOnlineResume extends Component<IProps, IState> {
           onPress={() => {
             navigation.push('EditWorkExperience', {
               workItemCallback: () => {
-                this.loadOnlineResumeInfo()
+                this.loadWorkExperience()
               }
             })
           }}
@@ -442,8 +444,7 @@ class EditOnlineResume extends Component<IProps, IState> {
               personalGoods,
               personalGoodsCallback: () => {
                 // 加载个人优势信息
-                this.loadOnlineResumeInfo()
-                // this.setState({ personalGoods: editContents })
+                this.loadBasicInfo()
               }
             })
           }}
@@ -481,7 +482,7 @@ class EditOnlineResume extends Component<IProps, IState> {
               personalSkills,
               personalSkillsCallback: () => {
                 // 加载技能标签
-                this.loadOnlineResumeInfo()
+                this.loadBasicInfo()
                 // this.setState({ personalGoods: editContents })
               }
             })
@@ -508,6 +509,17 @@ class EditOnlineResume extends Component<IProps, IState> {
     )
   }
 
+  renderRefresh() {
+    const { workExperienceRefresh, basicInfoRefresh } = this.state
+    return (
+      <RefreshControl
+        refreshing={workExperienceRefresh || basicInfoRefresh}
+        onRefresh={() => this.loadOnlineResumeInfo()
+        }
+      />
+    )
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -521,6 +533,7 @@ class EditOnlineResume extends Component<IProps, IState> {
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={{ paddingBottom: 20 }}
+          refreshControl={this.renderRefresh()}
         >
           {this.renderIcon()}
           {this.renderRequestJobs()}

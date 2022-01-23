@@ -15,8 +15,8 @@ type IProps = GenProps<'EditPersonalSkills'> & {
 }
 
 interface IState {
-  detail: string,
-  selectImage: any
+  detail: any,
+  optionalTags: any,
 }
 
 export default class EditPersonalSkills extends Component<IProps, IState> {
@@ -24,58 +24,9 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
     super(props)
     const { route: { params: { personalSkills } } } = props
     this.state = {
-      detail: personalSkills || '',
-      selectImage: []
+      detail: personalSkills || [],
+      optionalTags: ['物流产品', '策略产品', '网页唱片', '阿诗丹顿', '正擦是多长', '签到却无多', '阿萨德', '阿萨德', '阿下次', 'cascade', '啊实打实']
     }
-  }
-
-  selectPhotoTapped = (removeItem?: number) => {
-    const options = {
-      title: null,
-      quality: 1.0,
-      storageOptions: {
-        path: 'images',
-        waitUntilSaved: true,
-        cameraRoll: true,
-      },
-      cameraType: 'front',
-      mediaType: 'photo',
-      allowEditing: true,
-      cancelButtonTitle: 'Cancel',
-      takePhotoButtonTitle: 'Take Photo',
-      chooseFromLibraryButtonTitle: 'Photo Library',
-    }
-    // @ts-ignore
-    launchImageLibrary(options, (response) => {
-      console.log('response: ', response)
-      console.log('Platform.OS: ', Platform.OS, (Platform.OS === 'android'))
-      if (response.didCancel) {
-        // 取消选择
-        console.log('cancel select')
-      } else if (response.error) {
-        // 选择失败
-        console.log('ImagePi8cker Error: ', response.error)
-      } else if (response.customButton) {
-        // 选择了取消
-        console.log('User tapped custom button: ', response.customButton)
-      } else {
-        console.log('response: ', response)
-        const { selectImage } = this.state
-        const nextImageArray = [...selectImage]
-        if (response && response.assets && response.assets.length > 0) {
-          const selectImage = response.assets[0]
-          if (removeItem !== undefined) {
-            nextImageArray.splice(removeItem, 1, selectImage)
-          } else {
-            nextImageArray.push(selectImage)
-          }
-        }
-        console.log('nextImage: ', nextImageArray)
-        this.setState({
-          selectImage: nextImageArray
-        })
-      }
-    })
   }
 
   renderNavBar() {
@@ -138,19 +89,68 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
 
   renderSelected() {
     const { detail } = this.state
+    console.log('detail: ', detail)
+    const aaa = ['aaa']
+    aaa.unshift('bbb')
+    console.log('aaa: ', aaa)
     return (
       <View style={styles.selectedView}>
         <Text style={styles.selectedTitle}>已选</Text>
-        <ScrollView horizontal={true} style={styles.selectedScrollview}>
+        <ScrollView horizontal={true}
+          style={styles.selectedScrollview}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.selectedScrollviewContainer}
+        >
+          {detail.map((e: any, i: number) => {
+            return (
+              <View
+                style={styles.selectedTagBtn}
+                key={i.toString()}
+              >
+                <Text style={styles.selectedTagText}>
+                  {e}
+                </Text>
+                <NextTouchableOpacity
+                  style={styles.closeTagBtn}
+                  onPress={() => {
+                    // 删除标签
+                    RootLoading.info('删除标签')
+                  }}
+                >
+                  <Text style={styles.closeTagText}>x</Text>
+                </NextTouchableOpacity>
+              </View>
+            )
+          })
+          }
         </ScrollView>
       </View>
     )
   }
 
   renderOptionalTags() {
-    // TODO 可选标签,暂未提供接口
+    const { optionalTags, detail } = this.state
     return (
       <ScrollView style={styles.tagsScrollview}>
+        <Text style={styles.optionalViewTitle}>可选标签</Text>
+        <View style={styles.optionalView}>
+          {optionalTags.map((e: any, i: number) => {
+            return (
+              <NextTouchableOpacity
+                style={styles.optionalViewBtn}
+                key={i.toString()}
+                onPress={() => {
+                  this.setState({
+                    detail: detail.concat(e)
+                  })
+                }}
+              >
+                <Text style={styles.optionalViewText}>{e}</Text>
+              </NextTouchableOpacity>
+            )
+          })}
+        </View>
         <NextTouchableOpacity style={styles.customBtn}>
           <Text style={styles.customText}>+ 自定义</Text>
         </NextTouchableOpacity>

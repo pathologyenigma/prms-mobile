@@ -34,7 +34,7 @@ export default StyleSheet.create({
   },
   customBtn: {
     marginTop: 20,
-    height: 40,
+    height: 35,
     width: 80,
     borderColor: greenColor,
     borderWidth: 1,
@@ -50,11 +50,64 @@ export default StyleSheet.create({
     height: 50,
     marginTop: 20,
     marginHorizontal: 11,
+    alignItems: 'center'
   },
   selectedScrollview: {
     height: 50,
+    marginLeft: 10,
+  },
+  selectedScrollviewContainer: {
+    alignItems: 'center'
   },
   selectedTitle: {
     color: '#666'
   },
+  selectedTagBtn: {
+    backgroundColor: '#E7FBFB',
+    borderRadius: 15,
+    height: 30,
+    paddingLeft: 10,
+    paddingRight: 10,
+    marginRight: 10,
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  selectedTagText: {
+    color: greenColor,
+    fontSize: 16,
+    lineHeight: 30,
+  },
+  closeTagBtn: {
+    height: 30,
+    width: 20,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  closeTagText: {
+    color: greenColor,
+    fontSize: 16,
+    lineHeight: 30,
+  },
+  optionalViewTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+  optionalView: {
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
+  optionalViewBtn: {
+    height: 35,
+    paddingHorizontal: 10,
+    backgroundColor: '#F7F7F7',
+    marginTop: 10,
+    marginRight: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 4,
+  },
+  optionalViewText: {
+    color: '#666666'
+  }
 })

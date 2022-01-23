@@ -29,7 +29,7 @@ const update_kv = (key: string, value: string) => {
   }
 }
 
-const getWorkExps = new Promise((resolve, regect) => {
+const getWorkExperience = (callback: (error: any, result?: any) => void) => {
   apolloClientShare
     .query({
       query: candidateGetWorkExpsGql,
@@ -38,52 +38,50 @@ const getWorkExps = new Promise((resolve, regect) => {
     .then(res => {
       console.log('res: ', res)
       if (res && res.data && res.data.CandidateGetWorkExps && res.data.CandidateGetWorkExps.data) {
-        resolve(res.data.CandidateGetWorkExps.data)
+        if (callback) {
+          callback(undefined, res.data.CandidateGetWorkExps.data)
+        }
       } else {
-        regect(res || Error)
+        if (callback) {
+          callback(res.data.CandidateGetWorkExps.data)
+        }
       }
     })
     .catch(error => {
       console.log('error: ', error)
-      regect(error)
+      if (callback) {
+        callback(error)
+      }
+      errorHandler(error)
     })
-})
+}
 
 // 编辑简历-获取技能标签和个人优势
-const getCandidateGetOnlineResumeBasicInfoExps = new Promise((resolve, regect) => {
+const getCandidateGetOnlineResumeBasicInfoExperience = (
+  callback: (error: any, result?: any) => void
+) => {
   apolloClientShare
     .query({
       query: candidateGetOnlineResumeBasicInfoGql,
       fetchPolicy: 'no-cache', // 设置缓存策略
     })
     .then(res => {
-      if (res && res.data && res.data.CandidateGetOnlineResumeBasicInfo) {
-        resolve(res.data.CandidateGetOnlineResumeBasicInfo)
+      console.log('res: ', res)
+      if (res && res.data && res.data.CandidateGetOnlineResumeBasicInfo && res.data.CandidateGetOnlineResumeBasicInfo) {
+        if (callback) {
+          callback(undefined, res.data.CandidateGetOnlineResumeBasicInfo)
+        }
       } else {
-        regect(res)
-      }
-    })
-    .catch(error => {
-      console.log('error: ', error)
-      regect(error)
-    })
-})
-
-// 编辑简历-获取 工作经验 列表
-const getOnlineResumeInfo = (callback?: (error: any, result?: any) => void) => {
-  Promise.all([getCandidateGetOnlineResumeBasicInfoExps, getWorkExps])
-    .then((infoResult) => {
-      console.log('workExps: ', infoResult)
-      if (callback) {
-        if (infoResult) {
-          callback(undefined, infoResult)
+        if (callback) {
+          callback(res.data.CandidateGetOnlineResumeBasicInfo.data)
         }
       }
     })
-    .catch((error) => {
+    .catch(error => {
       if (callback) {
         callback(error)
       }
+      errorHandler(error)
     })
 }
 
@@ -172,8 +170,10 @@ const getCandidateGetOnlineResumeBasicInfo = (callback?: (error: any, result?: a
 export {
   reset_reducer,
   update_kv,
-  getOnlineResumeInfo,
-  editOnlineResumeInfo,
-  editPersonalAdvantage,
-  getCandidateGetOnlineResumeBasicInfo,
+  // getOnlineResumeInfo,                  //  获取在线简历所有信息
+  editOnlineResumeInfo,                 //  编辑/新增 工作经验
+  editPersonalAdvantage,                //  编辑个人优势
+  getCandidateGetOnlineResumeBasicInfo, //  获取技能标签、个人优势
+  getWorkExperience,
+  getCandidateGetOnlineResumeBasicInfoExperience,
 }
