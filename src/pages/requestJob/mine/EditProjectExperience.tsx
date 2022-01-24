@@ -9,6 +9,8 @@ import JobStatusModal from '../jobs/JobStatusModal'
 import GradientButton from '../../components/GradientButton'
 import AlertContentModal from '../../components/AlertContentModal'
 import SystemHelper from '../../../utils/system'
+import { editProjectExperience } from '../../../action/mineAction'
+import RootLoading from '../../../utils/rootLoading'
 
 type IProps = GenProps<'EditProjectExperience'> & {
 
@@ -119,17 +121,36 @@ export default class EditProjectExperience extends Component<IProps, IState> {
         right={{
           type: EButtonType.TEXT,
           style: styles.saveBtn,
-          value: projectItem ? '' : "保存",
+          value: projectItem ? '' : '保存',
           disable: !disableSave,
           act: () => {
-            if (projectItemCallback) {
-              projectItemCallback({ project, role, beginTime, endTime, content, performance, index: projectItem && projectItem.index })
-            }
-            navigation.pop()
+            this.savePersonalProject()
           },
         }}
       />
     )
+  }
+
+  savePersonalProject() {
+    // const { project, role, beginTime, endTime, content } = this.state
+    // const { navigation, route: { params: { projectItemCallback } } } = this.props
+    // RootLoading.loading()
+    // const info = {
+
+    // }
+    // editProjectExperience(selectedSkills, (error) => {
+    //   if (!error) {
+    //     RootLoading.success('保存成功')
+    //     if (personalSkillsCallback) {
+    //       personalSkillsCallback()
+    //     }
+    //     setTimeout(() => {
+    //       navigation.goBack()
+    //     }, 1000)
+    //   } else {
+    //     RootLoading.fail(error.toString())
+    //   }
+    // })
   }
 
   renderProject() {
@@ -309,7 +330,6 @@ export default class EditProjectExperience extends Component<IProps, IState> {
       <View style={styles.container}>
         <StatusBar
           translucent
-          backgroundColor="transparent"
           animated
           barStyle={'dark-content'}
         />

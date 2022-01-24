@@ -7,16 +7,19 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import { TextInput } from 'react-native-gesture-handler'
 // import ImagePicker from 'react-native-image-picker'
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
-import { editPersonalAdvantage } from '../../../action/mineAction'
+import { editPersonalAdvantage, editSkills } from '../../../action/mineAction'
 import RootLoading from '../../../utils/rootLoading'
+import WhiteContentModal from '../../components/WhiteContentModal'
 
 type IProps = GenProps<'EditPersonalSkills'> & {
 
 }
 
 interface IState {
-  detail: any,
+  selectedSkills: any,
   optionalTags: any,
+  addModalVisible: boolean,
+  addText: string
 }
 
 export default class EditPersonalSkills extends Component<IProps, IState> {
@@ -24,14 +27,16 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
     super(props)
     const { route: { params: { personalSkills } } } = props
     this.state = {
-      detail: personalSkills || [],
-      optionalTags: ['物流产品', '策略产品', '网页唱片', '阿诗丹顿', '正擦是多长', '签到却无多', '阿萨德', '阿萨德', '阿下次', 'cascade', '啊实打实']
+      selectedSkills: personalSkills || [],
+      optionalTags: [],
+      addModalVisible: false,
+      addText: ''
     }
   }
 
   renderNavBar() {
     const { navigation } = this.props
-    const { detail } = this.state
+    const { selectedSkills } = this.state
     return (
       <NavBar
         statusBarTheme="dark-content"
@@ -50,20 +55,19 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
           type: EButtonType.TEXT,
           style: styles.confirmBtn,
           value: '保存',
-          disable: detail.length === 0,
           act: () => {
-            this.savePersonalAdvantage()
+            this.savePersonalSkills()
           },
         }}
       />
     )
   }
 
-  savePersonalAdvantage() {
-    const { detail } = this.state
+  savePersonalSkills() {
+    const { selectedSkills } = this.state
     const { navigation, route: { params: { personalSkillsCallback } } } = this.props
     RootLoading.loading()
-    editPersonalAdvantage(detail, (error) => {
+    editSkills(selectedSkills, (error) => {
       if (!error) {
         RootLoading.success('保存成功')
         if (personalSkillsCallback) {
@@ -88,11 +92,7 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
   }
 
   renderSelected() {
-    const { detail } = this.state
-    console.log('detail: ', detail)
-    const aaa = ['aaa']
-    aaa.unshift('bbb')
-    console.log('aaa: ', aaa)
+    const { selectedSkills } = this.state
     return (
       <View style={styles.selectedView}>
         <Text style={styles.selectedTitle}>已选</Text>
@@ -102,7 +102,7 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.selectedScrollviewContainer}
         >
-          {detail.map((e: any, i: number) => {
+          {selectedSkills.map((e: any, i: number) => {
             return (
               <View
                 style={styles.selectedTagBtn}
@@ -115,7 +115,14 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
                   style={styles.closeTagBtn}
                   onPress={() => {
                     // 删除标签
-                    RootLoading.info('删除标签')
+                    const nextSelectedSkills = []
+                    // tslint:disable-next-line:prefer-for-of
+                    for (let j = 0; j < selectedSkills.length; j++) {
+                      if (selectedSkills[j] !== e) {
+                        nextSelectedSkills.push(selectedSkills[j])
+                      }
+                    }
+                    this.setState({ selectedSkills: nextSelectedSkills })
                   }}
                 >
                   <Text style={styles.closeTagText}>x</Text>
@@ -130,10 +137,10 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
   }
 
   renderOptionalTags() {
-    const { optionalTags, detail } = this.state
+    const { optionalTags, selectedSkills } = this.state
     return (
       <ScrollView style={styles.tagsScrollview}>
-        <Text style={styles.optionalViewTitle}>可选标签</Text>
+        {/* <Text style={styles.optionalViewTitle}>可选标签</Text>
         <View style={styles.optionalView}>
           {optionalTags.map((e: any, i: number) => {
             return (
@@ -142,7 +149,7 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
                 key={i.toString()}
                 onPress={() => {
                   this.setState({
-                    detail: detail.concat(e)
+                    selectedSkills: selectedSkills.concat(e)
                   })
                 }}
               >
@@ -150,20 +157,77 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
               </NextTouchableOpacity>
             )
           })}
-        </View>
-        <NextTouchableOpacity style={styles.customBtn}>
+        </View> */}
+        <NextTouchableOpacity
+          style={styles.customBtn}
+          onPress={() => {
+            this.setState({
+              addModalVisible: true
+            })
+          }}
+        >
           <Text style={styles.customText}>+ 自定义</Text>
         </NextTouchableOpacity>
       </ScrollView>
     )
   }
 
+  renderModalContent() {
+    const { addText, selectedSkills } = this.state
+    return (
+      <View style={styles.modalView}>
+        <Text style={styles.modalTitle}>输入标签, 不超过 6 个字</Text>
+        <TextInput
+          underlineColorAndroid="transparent"
+          returnKeyType="done"
+          autoCorrect={false}
+          autoCapitalize="none"
+          style={styles.modalInput}
+          placeholder="请输入"
+          placeholderTextColor="rgba(32,33,38,0.3)"
+          value={addText}
+          maxLength={6}
+          onChangeText={(value) => this.setState({ addText: value })}
+        />
+        <View style={styles.modalFooterView}>
+          <NextTouchableOpacity
+            onPress={() => {
+              this.setState({ addModalVisible: false })
+            }}
+            style={styles.modalCancelBtn}>
+            <Text style={styles.modalCancelText}>取消</Text>
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            onPress={() => {
+              if (selectedSkills.includes(addText)) {
+                this.setState({
+                  addModalVisible: false,
+                }, () => {
+                  RootLoading.info('请勿添加重复的标签')
+                })
+              } else {
+                selectedSkills.push(addText)
+                this.setState({
+                  addText: '',
+                  addModalVisible: false,
+                  selectedSkills
+                })
+              }
+            }}
+            style={styles.modalConfirmBtn}>
+            <Text style={styles.modalConfirmText}>确认</Text>
+          </NextTouchableOpacity>
+        </View>
+      </View>
+    )
+  }
+
   render() {
+    const { addModalVisible } = this.state
     return (
       <View style={styles.container}>
         <StatusBar
           translucent
-          backgroundColor="transparent"
           animated
           barStyle={'dark-content'}
         />
@@ -176,6 +240,13 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
           {this.renderSelected()}
           {this.renderOptionalTags()}
         </ScrollView>
+        <WhiteContentModal
+          visible={addModalVisible}
+          contextChildrenStyle={{ paddingBottom: 0 }}
+          closeOnPress={() => this.setState({ addModalVisible: false })}
+        >
+          {this.renderModalContent()}
+        </WhiteContentModal>
       </View>
     )
   }

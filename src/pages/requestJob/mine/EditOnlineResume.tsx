@@ -8,7 +8,7 @@ import GradientButton from '../../components/GradientButton'
 import RootLoading from '../../../utils/rootLoading'
 import { greenColor } from '../../../utils/constant'
 import { reformDistanceYears, reformSalary, selectEducation } from '../../../utils/utils'
-import { getCandidateGetOnlineResumeBasicInfo, getCandidateGetOnlineResumeBasicInfoExperience, getWorkExperience } from '../../../action/mineAction'
+import { getCandidateGetOnlineResumeBasicInfo, getCandidateGetOnlineResumeBasicInfoExperience, getProjectExperience, getWorkExperience } from '../../../action/mineAction'
 import { format } from 'date-fns'
 import { AnyAction, bindActionCreators, Dispatch } from 'redux'
 import { connect } from 'react-redux'
@@ -25,7 +25,8 @@ interface IState {
   personalGoods: string,
   personalSkills: any  // 个人技能标签,
   workExperienceRefresh: boolean,
-  basicInfoRefresh: boolean
+  basicInfoRefresh: boolean,
+  projectExperienceRefresh: boolean
 }
 
 class EditOnlineResume extends Component<IProps, IState> {
@@ -34,6 +35,7 @@ class EditOnlineResume extends Component<IProps, IState> {
     this.state = {
       workExperienceRefresh: true,
       basicInfoRefresh: true,
+      projectExperienceRefresh: true,
       workExperience: [],
       expectJobs: [{
         id: 1,
@@ -42,16 +44,16 @@ class EditOnlineResume extends Component<IProps, IState> {
         location: '深圳',
         status: '在职找工作·随时入职'
       }],
-      projectExperience: [{
-        id: 1,
-        project: '广东智慧网络公司官网',
-        role: '设计师',
-        beginTime: '2017.3',
-        endTime: '至今',
-        job: '网页设计师',
-        content: '内容：1、负责线上APP的改版功能，更新迭代；2、根据产品及产品需求，独立完成项目设计，建立产品的界面设计规范；3、根据原型图完成出色的设计稿,交付给开发人员使用',
-        performance: '优先二等奖'
-      }],
+      // projectExperience: [{
+      //   id: 1,
+      //   project: '广东智慧网络公司官网',
+      //   role: '设计师',
+      //   beginTime: '2017.3',
+      //   endTime: '至今',
+      //   job: '网页设计师',
+      //   content: '内容：1、负责线上APP的改版功能，更新迭代；2、根据产品及产品需求，独立完成项目设计，建立产品的界面设计规范；3、根据原型图完成出色的设计稿,交付给开发人员使用',
+      //   performance: '优先二等奖'
+      // }],
       educationExperience: [{
         id: 1,
         name: '广东白云学院',
@@ -63,7 +65,8 @@ class EditOnlineResume extends Component<IProps, IState> {
         schoolExperience: '内容：1、在校担任宣传部社长；获得XXXX荣誉称号'
       }],
       personalGoods: '',
-      personalSkills: []
+      personalSkills: [],
+      projectExperience: [],
     }
   }
 
@@ -74,10 +77,12 @@ class EditOnlineResume extends Component<IProps, IState> {
   loadOnlineResumeInfo() {
     this.setState({
       workExperienceRefresh: true,
-      basicInfoRefresh: true
+      basicInfoRefresh: true,
+      projectExperienceRefresh: true
     }, () => {
       this.loadWorkExperience()
       this.loadBasicInfo()
+      this.projectExperienceRefresh()
     })
   }
 
@@ -112,6 +117,20 @@ class EditOnlineResume extends Component<IProps, IState> {
     })
   }
 
+  projectExperienceRefresh() {
+    getProjectExperience((error, result) => {
+      console.log('getCandidateGetOnlineResumeBasicInfoExperience, result: ', error, result)
+      if (!error && result) {
+        this.setState({
+          projectExperience: result || [],
+          projectExperienceRefresh: false
+        })
+      } else {
+        this.setState({ projectExperienceRefresh: false })
+        RootLoading.info('项目经历加载失败,请刷新重试')
+      }
+    })
+  }
 
   renderNavBar() {
     const { navigation } = this.props
@@ -474,7 +493,8 @@ class EditOnlineResume extends Component<IProps, IState> {
       <View style={[styles.cellView, {
         borderBottomColor: '#ECECEC',
         borderBottomWidth: 1,
-        paddingBottom: 12
+        paddingBottom: 12,
+        minHeight: 60,
       }]}>
         <NextTouchableOpacity
           onPress={() => {

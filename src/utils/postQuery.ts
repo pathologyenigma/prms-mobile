@@ -477,6 +477,37 @@ const candidateGetOnlineResumeBasicInfoGql = gql`
   }
 `
 
+// 在线简历-编辑技能
+const getSkillsGql = gql`
+  mutation CandidateEditSkills($skills: [String]!){
+    CandidateEditSkills(skills: $skills)
+  }
+`
+
+// 获取项目经历
+const candidateGetProjectExpsGql = gql`
+  query CandidateGetProjectExps{
+    CandidateGetProjectExps{
+      data {
+        id
+#       school_name
+#       education
+#       is_all_time
+#       major
+#       time
+#       exp_at_school
+      }
+    }
+  }
+`
+
+// 编辑教育经历
+const candidateEditEduExpGql = gql`
+  mutation CandidateEditEduExp($info: Eduexp){
+    CandidateEditEduExp(info:$info)
+  }
+`
+
 export {
   apolloClientShare,
   sendSMSGql,
@@ -511,7 +542,10 @@ export {
   candidateEditWorkExprienceGql,
   candidateGetWorkExpsGql,
   personalAdvantageGql,
-  candidateGetOnlineResumeBasicInfoGql
+  candidateGetOnlineResumeBasicInfoGql,
+  getSkillsGql,
+  candidateGetProjectExpsGql,
+  candidateEditEduExpGql,
   //
 
 }

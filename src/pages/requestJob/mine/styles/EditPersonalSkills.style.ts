@@ -109,5 +109,52 @@ export default StyleSheet.create({
   },
   optionalViewText: {
     color: '#666666'
-  }
+  },
+  modalView: {
+    alignItems: 'center',
+  },
+  modalTitle: {
+    height: 25,
+    lineHeight: 25,
+    fontSize: 20,
+    textAlign: 'center',
+    color: '#323338',
+  },
+  modalInput: {
+    width: 220,
+    height: 50,
+    borderRadius: 12,
+    backgroundColor: '#f5f6fa',
+    textAlign: 'center',
+    marginTop: 30,
+    fontSize: 16,
+    fontWeight: 'normal',
+  },
+  modalFooterView: {
+    flexDirection: 'row',
+    height: 50,
+    marginTop: 30,
+    borderTopColor: '#ddd',
+    borderTopWidth: 0.5
+  },
+  modalCancelBtn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '50%',
+  },
+  modalCancelText: {
+    color: '#666',
+    fontSize: 15
+  },
+  modalConfirmBtn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '50%',
+    borderLeftColor: '#ddd',
+    borderLeftWidth: 0.5
+  },
+  modalConfirmText: {
+    color: greenColor,
+    fontSize: 15
+  },
 })
