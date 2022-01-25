@@ -484,27 +484,51 @@ const getSkillsGql = gql`
   }
 `
 
-// 获取项目经历
+// 在线简历-获取项目经历
 const candidateGetProjectExpsGql = gql`
   query CandidateGetProjectExps{
     CandidateGetProjectExps{
       data {
         id
-#       school_name
-#       education
-#       is_all_time
-#       major
-#       time
-#       exp_at_school
+        project_name
+        role
+        start_at
+        end_at
+        project_description
+        project_performance
       }
     }
   }
 `
 
-// 编辑教育经历
+// 在线简历-编辑项目经历
+const candidateEditProExpGql = gql`
+  mutation CandidateEditProExp($info: ProExp!){
+    CandidateEditProExp(info:$info)
+  }
+`
+
+// 在线简历-编辑教育经历
 const candidateEditEduExpGql = gql`
-  mutation CandidateEditEduExp($info: Eduexp){
+  mutation CandidateEditEduExp($info: EduExp!){
     CandidateEditEduExp(info:$info)
+  }
+`
+
+//  在线简历-获取教育经历
+const candidateGetEduExpsGql = gql`
+  query CandidateGetEduExps{
+    CandidateGetEduExps{
+      data {
+        id
+        school_name
+        education
+        is_all_time
+        major
+        time
+        exp_at_school
+      }
+    }
   }
 `
 
@@ -544,8 +568,10 @@ export {
   personalAdvantageGql,
   candidateGetOnlineResumeBasicInfoGql,
   getSkillsGql,
+  candidateEditProExpGql,
   candidateGetProjectExpsGql,
   candidateEditEduExpGql,
+  candidateGetEduExpsGql,
   //
 
 }

@@ -7,8 +7,8 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import GradientButton from '../../components/GradientButton'
 import RootLoading from '../../../utils/rootLoading'
 import { greenColor } from '../../../utils/constant'
-import { reformDistanceYears, reformSalary, selectEducation } from '../../../utils/utils'
-import { getCandidateGetOnlineResumeBasicInfo, getCandidateGetOnlineResumeBasicInfoExperience, getProjectExperience, getWorkExperience } from '../../../action/mineAction'
+import { reformDistanceYears, reformEducation, reformSalary, selectEducation } from '../../../utils/utils'
+import { getCandidateGetOnlineResumeBasicInfo, getCandidateGetOnlineResumeBasicInfoExperience, getEduExperience, getProjectExperience, getWorkExperience } from '../../../action/mineAction'
 import { format } from 'date-fns'
 import { AnyAction, bindActionCreators, Dispatch } from 'redux'
 import { connect } from 'react-redux'
@@ -26,7 +26,8 @@ interface IState {
   personalSkills: any  // 个人技能标签,
   workExperienceRefresh: boolean,
   basicInfoRefresh: boolean,
-  projectExperienceRefresh: boolean
+  projectExperienceRefresh: boolean,
+  eduExperienceRefresh: boolean
 }
 
 class EditOnlineResume extends Component<IProps, IState> {
@@ -36,6 +37,7 @@ class EditOnlineResume extends Component<IProps, IState> {
       workExperienceRefresh: true,
       basicInfoRefresh: true,
       projectExperienceRefresh: true,
+      eduExperienceRefresh: true,
       workExperience: [],
       expectJobs: [{
         id: 1,
@@ -78,11 +80,13 @@ class EditOnlineResume extends Component<IProps, IState> {
     this.setState({
       workExperienceRefresh: true,
       basicInfoRefresh: true,
-      projectExperienceRefresh: true
+      projectExperienceRefresh: true,
+      eduExperienceRefresh: true
     }, () => {
       this.loadWorkExperience()
       this.loadBasicInfo()
-      this.projectExperienceRefresh()
+      this.loadProjectExperience()
+      this.loadEduExperience()
     })
   }
 
@@ -117,7 +121,7 @@ class EditOnlineResume extends Component<IProps, IState> {
     })
   }
 
-  projectExperienceRefresh() {
+  loadProjectExperience() {
     getProjectExperience((error, result) => {
       console.log('getCandidateGetOnlineResumeBasicInfoExperience, result: ', error, result)
       if (!error && result) {
@@ -127,6 +131,21 @@ class EditOnlineResume extends Component<IProps, IState> {
         })
       } else {
         this.setState({ projectExperienceRefresh: false })
+        RootLoading.info('项目经历加载失败,请刷新重试')
+      }
+    })
+  }
+
+  loadEduExperience() {
+    getEduExperience((error, result) => {
+      console.log('loadEduExperience, result: ', error, result)
+      if (!error && result) {
+        this.setState({
+          educationExperience: result || [],
+          eduExperienceRefresh: false
+        })
+      } else {
+        this.setState({ eduExperienceRefresh: false })
         RootLoading.info('项目经历加载失败,请刷新重试')
       }
     })
@@ -328,9 +347,8 @@ class EditOnlineResume extends Component<IProps, IState> {
         <NextTouchableOpacity
           onPress={() => {
             navigation.push('EditProjectExperience', {
-              projectItemCallback: (projectItem: any) => {
-                projectExperience.push({ ...projectItem })
-                this.setState({ projectExperience })
+              projectItemCallback: () => {
+                this.loadProjectExperience()
               }
             })
           }}
@@ -348,26 +366,19 @@ class EditOnlineResume extends Component<IProps, IState> {
               onPress={() => {
                 navigation.push('EditProjectExperience', {
                   projectItem: { ...item, index },
-                  projectItemCallback: (projectItem: any) => {
-                    for (let i = 0; i < projectExperience.length; i++) {
-                      if (i === projectItem.index) {
-                        if (projectItem.deleteItem) {
-                          projectExperience.splice(i, 1)
-                        } else {
-                          projectExperience.splice(i, 1, projectItem)
-                        }
-                        break
-                      }
-                    }
-                    this.setState({ projectExperience })
+                  projectItemCallback: () => {
+                    this.loadProjectExperience()
                   }
                 })
               }}
               style={styles.workExperienceView}
             >
               <View style={styles.companyInfo}>
-                <Text style={styles.workExperienceCompany}>{item.project}</Text>
-                <Text style={styles.workExperienceTime}>{`${item.beginTime}~${item.endTime}`}</Text>
+                <Text style={styles.workExperienceCompany}>{item.project_name}</Text>
+                <Text style={styles.workExperienceTime}>
+                  {
+                    `${item.start_at}~${item.end_at}`
+                  }</Text>
                 <Image
                   source={require('../../../assets/requestJobs/next-gray.png')}
                   style={styles.nextIcon}
@@ -375,7 +386,7 @@ class EditOnlineResume extends Component<IProps, IState> {
               </View>
               <View>
                 <Text style={styles.workExperienceText}>{item.role}</Text>
-                <Text numberOfLines={2} style={styles.workExperienceLocation}>{item.content}</Text>
+                <Text numberOfLines={2} style={styles.workExperienceLocation}>{item.project_description}</Text>
               </View>
             </NextTouchableOpacity>
           )
@@ -412,34 +423,24 @@ class EditOnlineResume extends Component<IProps, IState> {
               onPress={() => {
                 navigation.push('EditEducation', {
                   educationItem: { ...item, index },
-                  educationItemCallback: (educationItem: any) => {
-                    for (let i = 0; i < educationExperience.length; i++) {
-                      if (i === educationItem.index) {
-                        if (educationItem.deleteItem) {
-                          educationExperience.splice(i, 1)
-                        } else {
-                          educationExperience.splice(i, 1, educationItem)
-                        }
-                        break
-                      }
-                    }
-                    this.setState({ educationExperience })
+                  educationItemCallback: () => {
+                    this.loadEduExperience()
                   }
                 })
               }}
               style={styles.workExperienceView}
             >
               <View style={styles.companyInfo}>
-                <Text style={styles.workExperienceCompany}>{item.name}</Text>
-                <Text style={styles.workExperienceTime}>{`${item.beginTime}-${item.endTime}`}</Text>
+                <Text style={styles.workExperienceCompany}>{item.school_name}</Text>
+                <Text style={styles.workExperienceTime}>{item.time}</Text>
                 <Image
                   source={require('../../../assets/requestJobs/next-gray.png')}
                   style={styles.nextIcon}
                 />
               </View>
               <View>
-                <Text style={styles.workExperienceText}>{`${item.education}·${item.professional}`}</Text>
-                <Text numberOfLines={2} style={styles.workExperienceLocation}>{item.schoolExperience}</Text>
+                <Text style={styles.workExperienceText}>{`${selectEducation(item.education)}·${item.major}`}</Text>
+                <Text numberOfLines={2} style={styles.workExperienceLocation}>{item.exp_at_school}</Text>
               </View>
             </NextTouchableOpacity>
           )
@@ -530,10 +531,15 @@ class EditOnlineResume extends Component<IProps, IState> {
   }
 
   renderRefresh() {
-    const { workExperienceRefresh, basicInfoRefresh } = this.state
+    const {
+      workExperienceRefresh,
+      basicInfoRefresh,
+      projectExperienceRefresh,
+      eduExperienceRefresh
+    } = this.state
     return (
       <RefreshControl
-        refreshing={workExperienceRefresh || basicInfoRefresh}
+        refreshing={workExperienceRefresh || basicInfoRefresh || projectExperienceRefresh || eduExperienceRefresh}
         onRefresh={() => this.loadOnlineResumeInfo()
         }
       />

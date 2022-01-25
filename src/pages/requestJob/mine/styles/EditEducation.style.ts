@@ -80,8 +80,7 @@ export default StyleSheet.create({
   },
   contentInput: {
     width: '100%',
-    color: '#666666',
-    fontSize: 12,
+    fontSize: 14,
     textAlignVertical: 'top'
   },
   contentAmount: {

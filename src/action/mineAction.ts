@@ -4,7 +4,9 @@ import { ApolloError, gql } from '@apollo/client'
 import {
   apolloClientShare,
   candidateEditEduExpGql,
+  candidateEditProExpGql,
   candidateEditWorkExprienceGql,
+  candidateGetEduExpsGql,
   candidateGetOnlineResumeBasicInfoGql,
   candidateGetProjectExpsGql,
   candidateGetWorkExpsGql,
@@ -169,6 +171,33 @@ const editEduExperience = (info: any, callback?: (error: any, result?: any) => v
     })
 }
 
+// 编辑简历-编辑/新增 项目经历
+const editCandidateEditProExp = (info: any, callback?: (error: any, result?: any) => void) => {
+  apolloClientShare
+    .mutate({
+      mutation: candidateEditProExpGql,
+      variables: { info },
+    })
+    .then(res => {
+      console.log('res: ', res)
+      if (res && res.data && res.data.CandidateEditProExp === null) {
+        if (callback) {
+          callback(undefined)
+        }
+      } else {
+        if (callback) {
+          callback(res)
+        }
+      }
+    })
+    .catch(error => {
+      console.log('error: ', error)
+      if (callback) {
+        callback(error)
+      }
+    })
+}
+
 // 编辑简历-编辑个人优势
 const editPersonalAdvantage = (detail: any, callback?: (error: any, result?: any) => void) => {
   apolloClientShare
@@ -224,6 +253,32 @@ const getCandidateGetOnlineResumeBasicInfo = (callback?: (error: any, result?: a
     })
 }
 
+// 编辑简历-获取教育经历
+const getEduExperience = (callback?: (error: any, result?: any) => void) => {
+  apolloClientShare
+    .query({
+      query: candidateGetEduExpsGql,
+    })
+    .then(res => {
+      console.log('res123: ', res)
+      if (res && res.data && res.data.CandidateGetEduExps) {
+        if (callback) {
+          callback(undefined, res.data.CandidateGetEduExps.data)
+        }
+      } else {
+        if (callback) {
+          callback(res)
+        }
+      }
+    })
+    .catch(error => {
+      console.log('error: ', error)
+      if (callback) {
+        callback(error)
+      }
+    })
+}
+
 // 编辑简历-编辑技能
 const editSkills = (skills: any, callback?: (error: any, result?: any) => void) => {
   apolloClientShare
@@ -264,6 +319,7 @@ export {
   getWorkExperience,                    //  获取工作经历
   getCandidateGetOnlineResumeBasicInfoExperience,
   getProjectExperience,                 //  获取项目经历
+  editCandidateEditProExp,              //  编辑项目经历
   editEduExperience,                //  编辑/新增项目经历
-  // getEduExperience                      //  获取教育经历
+  getEduExperience                      //  获取教育经历
 }

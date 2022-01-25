@@ -9,7 +9,7 @@ import JobStatusModal from '../jobs/JobStatusModal'
 import GradientButton from '../../components/GradientButton'
 import AlertContentModal from '../../components/AlertContentModal'
 import SystemHelper from '../../../utils/system'
-import { editProjectExperience } from '../../../action/mineAction'
+import { editCandidateEditProExp, editProjectExperience } from '../../../action/mineAction'
 import RootLoading from '../../../utils/rootLoading'
 
 type IProps = GenProps<'EditProjectExperience'> & {
@@ -38,12 +38,12 @@ export default class EditProjectExperience extends Component<IProps, IState> {
     const { route: { params: { projectItem } } } = props
     BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
     this.state = {
-      project: (projectItem && projectItem.project) || '',
+      project: (projectItem && projectItem.project_name) || '',
       role: (projectItem && projectItem.role) || '',
-      beginTime: (projectItem && projectItem.beginTime) || '',
-      endTime: (projectItem && projectItem.endTime) || '',
-      content: (projectItem && projectItem.content) || '',
-      performance: (projectItem && projectItem.performance) || '',
+      beginTime: (projectItem && projectItem.start_at) || '',
+      endTime: (projectItem && projectItem.end_at) || '',
+      content: (projectItem && projectItem.project_description) || '',
+      performance: (projectItem && projectItem.project_performance) || '',
       selectImage: [],
       beginTimeVisible: false,
       endTimeVisible: false,
@@ -124,33 +124,42 @@ export default class EditProjectExperience extends Component<IProps, IState> {
           value: projectItem ? '' : '保存',
           disable: !disableSave,
           act: () => {
-            this.savePersonalProject()
+            this.saveProjectExperience()
           },
         }}
       />
     )
   }
 
-  savePersonalProject() {
-    // const { project, role, beginTime, endTime, content } = this.state
-    // const { navigation, route: { params: { projectItemCallback } } } = this.props
-    // RootLoading.loading()
-    // const info = {
-
-    // }
-    // editProjectExperience(selectedSkills, (error) => {
-    //   if (!error) {
-    //     RootLoading.success('保存成功')
-    //     if (personalSkillsCallback) {
-    //       personalSkillsCallback()
-    //     }
-    //     setTimeout(() => {
-    //       navigation.goBack()
-    //     }, 1000)
-    //   } else {
-    //     RootLoading.fail(error.toString())
-    //   }
-    // })
+  saveProjectExperience() {
+    const { project, role, beginTime, endTime, content, performance } = this.state
+    const { navigation, route: { params: { projectItem, projectItemCallback } } } = this.props
+    RootLoading.loading()
+    const info: any = {
+      projectName: project,
+      role,
+      start_at: beginTime,
+      end_at: endTime,
+      description: content,
+      performance,
+    }
+    if (projectItem && projectItem.id) {
+      info.id = projectItem.id
+    }
+    console.log('infoinfoinfo: ', info)
+    editCandidateEditProExp(info, (error) => {
+      if (!error) {
+        RootLoading.success('保存成功')
+        if (projectItemCallback) {
+          projectItemCallback()
+        }
+        setTimeout(() => {
+          navigation.goBack()
+        }, 1000)
+      } else {
+        RootLoading.fail(error.toString())
+      }
+    })
   }
 
   renderProject() {
@@ -163,7 +172,6 @@ export default class EditProjectExperience extends Component<IProps, IState> {
           returnKeyType="done"
           autoCorrect={false}
           autoCapitalize="none"
-          multiline={true}
           style={styles.cellInput}
           placeholder="请填写"
           placeholderTextColor="#AAAAAA"
@@ -186,7 +194,6 @@ export default class EditProjectExperience extends Component<IProps, IState> {
           returnKeyType="done"
           autoCorrect={false}
           autoCapitalize="none"
-          multiline={true}
           style={styles.cellInput}
           placeholder="请填写"
           placeholderTextColor="#AAAAAA"
@@ -311,10 +318,7 @@ export default class EditProjectExperience extends Component<IProps, IState> {
           linearStyle={[styles.linearStyle, !projectItem && { width: SystemHelper.width - 42, marginLeft: 0 }]}
           text="完成"
           onPress={() => {
-            if (projectItemCallback) {
-              projectItemCallback({ project, role, beginTime, endTime, content, performance, index: projectItem && projectItem.index })
-            }
-            navigation.pop()
+            this.saveProjectExperience()
           }}
         />
       </View>
@@ -398,7 +402,7 @@ export default class EditProjectExperience extends Component<IProps, IState> {
                 // 删除操作
                 this.setState({ deleteVisible: false }, () => {
                   if (projectItemCallback) {
-                    projectItemCallback({ index: projectItem && projectItem.index, deleteItem: true })
+                    projectItemCallback()
                   }
                   navigation.pop()
                 })
