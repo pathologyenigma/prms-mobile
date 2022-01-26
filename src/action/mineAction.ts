@@ -10,6 +10,9 @@ import {
   candidateGetOnlineResumeBasicInfoGql,
   candidateGetProjectExpsGql,
   candidateGetWorkExpsGql,
+  candidateRemoveEduExpGql,
+  candidateRemoveProExpGql,
+  candidateRemoveWorkExpGql,
   getSkillsGql,
   personalAdvantageGql,
   userGetRecruitmentListGql,
@@ -49,6 +52,34 @@ const getWorkExperience = (callback: (error: any, result?: any) => void) => {
       } else {
         if (callback) {
           callback(res.data.CandidateGetWorkExps.data)
+        }
+      }
+    })
+    .catch(error => {
+      console.log('error: ', error)
+      if (callback) {
+        callback(error)
+      }
+      errorHandler(error)
+    })
+}
+
+const removeWorkExperience = (id: any, callback: (error: any, result?: any) => void) => {
+  apolloClientShare
+    .query({
+      query: candidateRemoveWorkExpGql,
+      variables: { id },
+      fetchPolicy: 'no-cache', // 设置缓存策略
+    })
+    .then(res => {
+      console.log('res: ', res)
+      if (res && res.data && res.data.CandidateRemoveWorkExp === null) {
+        if (callback) {
+          callback(undefined)
+        }
+      } else {
+        if (callback) {
+          callback(res)
         }
       }
     })
@@ -198,6 +229,33 @@ const editCandidateEditProExp = (info: any, callback?: (error: any, result?: any
     })
 }
 
+// 编辑简历-删除项目经历
+const removeCandidateEditProExp = (id: any, callback?: (error: any, result?: any) => void) => {
+  apolloClientShare
+    .mutate({
+      mutation: candidateRemoveProExpGql,
+      variables: { id },
+    })
+    .then(res => {
+      console.log('res: ', res)
+      if (res && res.data && res.data.CandidateRemoveProExp === null) {
+        if (callback) {
+          callback(undefined)
+        }
+      } else {
+        if (callback) {
+          callback(res)
+        }
+      }
+    })
+    .catch(error => {
+      console.log('error: ', error)
+      if (callback) {
+        callback(error)
+      }
+    })
+}
+
 // 编辑简历-编辑个人优势
 const editPersonalAdvantage = (detail: any, callback?: (error: any, result?: any) => void) => {
   apolloClientShare
@@ -279,6 +337,33 @@ const getEduExperience = (callback?: (error: any, result?: any) => void) => {
     })
 }
 
+// 编辑简历-删除教育经历
+const removeCandidateEditEduExp = (id: any, callback?: (error: any, result?: any) => void) => {
+  apolloClientShare
+    .mutate({
+      mutation: candidateRemoveEduExpGql,
+      variables: { id },
+    })
+    .then(res => {
+      console.log('res: ', res)
+      if (res && res.data && res.data.CandidateRemoveEduExp === null) {
+        if (callback) {
+          callback(undefined)
+        }
+      } else {
+        if (callback) {
+          callback(res)
+        }
+      }
+    })
+    .catch(error => {
+      console.log('error: ', error)
+      if (callback) {
+        callback(error)
+      }
+    })
+}
+
 // 编辑简历-编辑技能
 const editSkills = (skills: any, callback?: (error: any, result?: any) => void) => {
   apolloClientShare
@@ -317,9 +402,12 @@ export {
   getCandidateGetOnlineResumeBasicInfo, //  获取技能标签、个人优势
   editSkills,                           //  编辑技能标签
   getWorkExperience,                    //  获取工作经历
+  removeWorkExperience,                 //  删除工作经历
   getCandidateGetOnlineResumeBasicInfoExperience,
-  getProjectExperience,                 //  获取项目经历
-  editCandidateEditProExp,              //  编辑项目经历
-  editEduExperience,                //  编辑/新增项目经历
-  getEduExperience                      //  获取教育经历
+  getProjectExperience,                 //  项目经历-获取
+  editCandidateEditProExp,              //  项目经历-编辑/新增
+  removeCandidateEditProExp,            //  项目经历-删除
+  editEduExperience,                //  编辑/新增教育经历
+  getEduExperience,                      //  获取教育经历
+  removeCandidateEditEduExp              // 删除教育经历
 }

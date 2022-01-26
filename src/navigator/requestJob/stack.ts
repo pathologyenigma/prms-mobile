@@ -122,7 +122,7 @@ type TRouterParams = {
   CompanySubQuestion: any,
   UserInfo: any,
   UserInfoEdit: { title: string, inputCallback: (value: string) => void },
-  EditOnlineResume: any,
+  EditOnlineResume: { isPreview: boolean },
   EditPersonalGoods: { personalGoods: string, personalGoodsCallback: () => void },
   EditPersonalSkills: { personalSkills: any, personalSkillsCallback: () => void },
   EditWorkExperience: { workItemCallback: () => void, workItem?: any, }

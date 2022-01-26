@@ -11,7 +11,7 @@ import SystemHelper from '../../../utils/system'
 import GradientButton from '../../components/GradientButton'
 import RootLoading from '../../../utils/rootLoading'
 import { format } from 'date-fns'
-import { editOnlineResumeInfo } from '../../../action/mineAction'
+import { editOnlineResumeInfo, removeWorkExperience } from '../../../action/mineAction'
 
 type IProps = GenProps<'EditWorkExperience'> & {
 
@@ -117,6 +117,28 @@ export default class EditWorkExperience extends Component<IProps, IState> {
         }, 1000)
       } else {
         RootLoading.fail(`报错失败: ${error.toString()}`)
+      }
+    })
+  }
+
+  removeWorkExp() {
+    const { navigation, route: { params: { workItem, workItemCallback } } } = this.props
+    if (!workItem || !workItem.id) {
+      RootLoading.info('配置错误,请重试或联系客服')
+      return
+    }
+    RootLoading.loading()
+    removeWorkExperience(workItem.id, (error) => {
+      if (!error) {
+        RootLoading.success('删除成功')
+        if (workItemCallback) {
+          workItemCallback()
+        }
+        setTimeout(() => {
+          navigation.goBack()
+        }, 1000)
+      } else {
+        RootLoading.fail(error.toString())
       }
     })
   }
@@ -433,10 +455,7 @@ export default class EditWorkExperience extends Component<IProps, IState> {
               if (deleteVisible) {
                 // 删除操作
                 this.setState({ deleteVisible: false }, () => {
-                  if (workItemCallback) {
-                    workItemCallback({ index: workItem && workItem.index, deleteItem: true })
-                  }
-                  navigation.pop()
+                  this.removeWorkExp()
                 })
               } else {
                 // 退出操作

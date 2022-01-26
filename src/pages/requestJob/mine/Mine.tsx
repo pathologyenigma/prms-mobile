@@ -79,7 +79,9 @@ class Mine extends Component<IProps, IState> {
           <NextTouchableOpacity
             onPress={() => {
               const { navigation } = this.props
-              navigation.push('EditOnlineResume')
+              navigation.push('EditOnlineResume', {
+                isPreview: false
+              })
             }}>
             <View style={styles.onlineJianliTop}>
               <Text style={styles.onlineJianli}>在线简历</Text>

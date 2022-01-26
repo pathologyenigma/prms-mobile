@@ -11,7 +11,7 @@ import GradientButton from '../../components/GradientButton'
 import AlertContentModal from '../../components/AlertContentModal'
 import SystemHelper from '../../../utils/system'
 import RootLoading from '../../../utils/rootLoading'
-import { editEduExperience } from '../../../action/mineAction'
+import { editEduExperience, removeCandidateEditEduExp } from '../../../action/mineAction'
 import { selectEducation } from '../../../utils/utils'
 
 type IProps = GenProps<'EditEducation'> & {
@@ -172,6 +172,28 @@ export default class EditEducation extends Component<IProps, IState> {
     editEduExperience(info, (error) => {
       if (!error) {
         RootLoading.success('保存成功')
+        if (educationItemCallback) {
+          educationItemCallback()
+        }
+        setTimeout(() => {
+          navigation.goBack()
+        }, 1000)
+      } else {
+        RootLoading.fail(error.toString())
+      }
+    })
+  }
+
+  removeEduExperience() {
+    const { navigation, route: { params: { educationItem, educationItemCallback } } } = this.props
+    if (!educationItem || !educationItem.id) {
+      RootLoading.info('配置错误,请重试或联系客服')
+      return
+    }
+    RootLoading.loading()
+    removeCandidateEditEduExp(educationItem.id, (error) => {
+      if (!error) {
+        RootLoading.success('删除成功')
         if (educationItemCallback) {
           educationItemCallback()
         }
@@ -388,9 +410,9 @@ export default class EditEducation extends Component<IProps, IState> {
           leftPress={() => {
             this.setState({ educationVisible: false })
           }}
-          rightPress={(selectEducation, selectFullTime) => {
+          rightPress={(selectedEducation, selectFullTime) => {
             this.setState({
-              education: selectEducation,
+              education: selectedEducation,
               fullTime: selectFullTime,
               educationVisible: false,
             })
@@ -415,7 +437,7 @@ export default class EditEducation extends Component<IProps, IState> {
                 // 删除操作
                 this.setState({ deleteVisible: false }, () => {
                   // 缺少删除接口
-                  RootLoading.info('删除操作')
+                  this.removeEduExperience()
                 })
               } else {
                 // 退出操作

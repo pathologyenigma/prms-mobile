@@ -9,7 +9,7 @@ import JobStatusModal from '../jobs/JobStatusModal'
 import GradientButton from '../../components/GradientButton'
 import AlertContentModal from '../../components/AlertContentModal'
 import SystemHelper from '../../../utils/system'
-import { editCandidateEditProExp, editProjectExperience } from '../../../action/mineAction'
+import { editCandidateEditProExp, editProjectExperience, removeCandidateEditProExp } from '../../../action/mineAction'
 import RootLoading from '../../../utils/rootLoading'
 
 type IProps = GenProps<'EditProjectExperience'> & {
@@ -138,8 +138,8 @@ export default class EditProjectExperience extends Component<IProps, IState> {
     const info: any = {
       projectName: project,
       role,
-      start_at: beginTime,
-      end_at: endTime,
+      startAt: beginTime,
+      endAt: endTime,
       description: content,
       performance,
     }
@@ -150,6 +150,29 @@ export default class EditProjectExperience extends Component<IProps, IState> {
     editCandidateEditProExp(info, (error) => {
       if (!error) {
         RootLoading.success('保存成功')
+        if (projectItemCallback) {
+          projectItemCallback()
+        }
+        setTimeout(() => {
+          navigation.goBack()
+        }, 1000)
+      } else {
+        RootLoading.fail(error.toString())
+      }
+    })
+  }
+
+  removeProjectExp() {
+    const { navigation, route: { params: { projectItem, projectItemCallback } } } = this.props
+    if (!projectItem || !projectItem.id) {
+      RootLoading.info('配置错误,请重试或联系客服')
+      return
+    }
+
+    RootLoading.loading()
+    removeCandidateEditProExp(projectItem.id, (error) => {
+      if (!error) {
+        RootLoading.success('删除成功')
         if (projectItemCallback) {
           projectItemCallback()
         }
@@ -401,10 +424,8 @@ export default class EditProjectExperience extends Component<IProps, IState> {
               if (deleteVisible) {
                 // 删除操作
                 this.setState({ deleteVisible: false }, () => {
-                  if (projectItemCallback) {
-                    projectItemCallback()
-                  }
-                  navigation.pop()
+                  // 缺少删除接口
+                  this.removeProjectExp()
                 })
               } else {
                 // 退出操作

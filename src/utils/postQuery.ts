@@ -460,6 +460,13 @@ const candidateGetWorkExpsGql = gql`
   }
 `
 
+// 在线简历-删除工作经历
+const candidateRemoveWorkExpGql = gql`
+  mutation CandidateRemoveWorkExp($id: Int!){
+    CandidateRemoveWorkExp(id: $id)
+  }
+`
+
 // 在线简历-编辑个人优势
 const personalAdvantageGql = gql`
   mutation CandidateEditPersonalAdvantage($advantage: String!){
@@ -508,6 +515,13 @@ const candidateEditProExpGql = gql`
   }
 `
 
+// 在线简历-删除项目经历
+const candidateRemoveProExpGql = gql`
+  mutation CandidateRemoveProExp($id: Int!){
+    CandidateRemoveProExp(id: $id)
+  }
+`
+
 // 在线简历-编辑教育经历
 const candidateEditEduExpGql = gql`
   mutation CandidateEditEduExp($info: EduExp!){
@@ -529,6 +543,13 @@ const candidateGetEduExpsGql = gql`
         exp_at_school
       }
     }
+  }
+`
+
+// 在线简历-删除教育经历
+const candidateRemoveEduExpGql = gql`
+  mutation CandidateRemoveEduExp($id: Int!){
+    CandidateRemoveEduExp(id: $id)
   }
 `
 
@@ -572,6 +593,9 @@ export {
   candidateGetProjectExpsGql,
   candidateEditEduExpGql,
   candidateGetEduExpsGql,
+  candidateRemoveProExpGql,
+  candidateRemoveWorkExpGql,
+  candidateRemoveEduExpGql
   //
 
 }

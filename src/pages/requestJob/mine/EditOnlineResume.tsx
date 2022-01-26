@@ -27,13 +27,16 @@ interface IState {
   workExperienceRefresh: boolean,
   basicInfoRefresh: boolean,
   projectExperienceRefresh: boolean,
-  eduExperienceRefresh: boolean
+  eduExperienceRefresh: boolean,
+  isPreview: boolean
 }
 
 class EditOnlineResume extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
+    const { route: { params: { isPreview } } } = props
     this.state = {
+      isPreview,
       workExperienceRefresh: true,
       basicInfoRefresh: true,
       projectExperienceRefresh: true,
@@ -160,7 +163,7 @@ class EditOnlineResume extends Component<IProps, IState> {
           elevation: 0,
           borderBottomColor: '#ECECEC'
         }}
-        title="编辑在线简历"
+        title={this.state.isPreview ? '预览在线简历' : '编辑在线简历'}
         left={{
           type: EButtonType.IMAGE,
           value: require('../../../assets/black_back.png'),
@@ -170,10 +173,11 @@ class EditOnlineResume extends Component<IProps, IState> {
         }}
         right={{
           type: EButtonType.TEXT,
-          value: '预览',
+          value: this.state.isPreview ? '' : '预览',
           style: { color: greenColor, fontSize: 15 },
           act: () => {
-            RootLoading.info('预览简历')
+            // RootLoading.info('预览简历')
+            navigation.push('EditOnlineResume', { isPreview: true })
           }
         }}
       />
@@ -182,20 +186,24 @@ class EditOnlineResume extends Component<IProps, IState> {
 
   renderIcon() {
     const { userInfo, navigation } = this.props
+    const { isPreview } = this.state
     return (
       <View style={styles.iconView}>
         <View>
           <View style={styles.nameView}>
             <Text style={styles.iconText}>{userInfo.username}</Text>
-            <NextTouchableOpacity
-              onPress={() => {
-                navigation.push('UserInfo')
-              }}
-            >
-              <Image style={styles.editNameIcon}
-                source={require('../../../assets/requestJobs/edit-gray.png')}
-              />
-            </NextTouchableOpacity>
+            {!isPreview && (
+
+              <NextTouchableOpacity
+                onPress={() => {
+                  navigation.push('UserInfo')
+                }}
+              >
+                <Image style={styles.editNameIcon}
+                  source={require('../../../assets/requestJobs/edit-gray.png')}
+                />
+              </NextTouchableOpacity>
+            )}
           </View>
           <Text style={styles.userInfo}>
             {`${reformDistanceYears(userInfo.first_time_working)}年工作经验/${selectEducation(userInfo.education)}/${reformDistanceYears(userInfo.birth_date)}岁`}
@@ -216,7 +224,7 @@ class EditOnlineResume extends Component<IProps, IState> {
   }
 
   renderRequestJobs() {
-    const { expectJobs } = this.state
+    const { expectJobs, isPreview } = this.state
     const { navigation } = this.props
     return (
       <View style={[styles.cellView, {
@@ -225,20 +233,24 @@ class EditOnlineResume extends Component<IProps, IState> {
         paddingBottom: 12
       }]}>
         <NextTouchableOpacity
+          disabled={isPreview}
           onPress={() => {
             navigation.push('JobExpectations')
           }}
           style={styles.titleView}>
           <Text style={styles.titleText}>求职意向</Text>
-          <Image
-            style={styles.addIcon}
-            source={require('../../../assets/requestJobs/add-gray.png')}
-          />
+          {!isPreview && (
+            <Image
+              style={styles.addIcon}
+              source={require('../../../assets/requestJobs/add-gray.png')}
+            />
+          )}
         </NextTouchableOpacity>
         {expectJobs.map((item: any, index: number) => {
           return (
             <NextTouchableOpacity
               key={index.toString()}
+              disabled={isPreview}
               onPress={() => {
                 navigation.push('JobExpectations')
               }}
@@ -248,10 +260,12 @@ class EditOnlineResume extends Component<IProps, IState> {
                 <Text style={styles.expectJobsText}>{`${item.type}   ${reformSalary(item.salary)}`}</Text>
                 <Text style={styles.expectJobsLocation}>{`${item.location}   ${item.status}`}</Text>
               </View>
-              <Image
-                source={require('../../../assets/requestJobs/next-gray.png')}
-                style={styles.nextIcon}
-              />
+              {!isPreview && (
+                <Image
+                  source={require('../../../assets/requestJobs/next-gray.png')}
+                  style={styles.nextIcon}
+                />
+              )}
             </NextTouchableOpacity>
           )
         })}
@@ -284,8 +298,7 @@ class EditOnlineResume extends Component<IProps, IState> {
   }
 
   renderWorkExperience() {
-    const { workExperience } = this.state
-    console.log('workExperience1: ', workExperience)
+    const { workExperience, isPreview } = this.state
     const { navigation } = this.props
     if (!workExperience) {
       return null
@@ -293,6 +306,7 @@ class EditOnlineResume extends Component<IProps, IState> {
     return (
       <View style={styles.cellView}>
         <NextTouchableOpacity
+          disabled={isPreview}
           onPress={() => {
             navigation.push('EditWorkExperience', {
               workItemCallback: () => {
@@ -302,15 +316,18 @@ class EditOnlineResume extends Component<IProps, IState> {
           }}
           style={styles.titleView}>
           <Text style={styles.titleText}>工作经验</Text>
-          <Image
-            style={styles.addIcon}
-            source={require('../../../assets/requestJobs/add-gray.png')}
-          />
+          {!isPreview && (
+            <Image
+              style={styles.addIcon}
+              source={require('../../../assets/requestJobs/add-gray.png')}
+            />
+          )}
         </NextTouchableOpacity>
         {workExperience.map((item: any, index: number) => {
           return (
             <NextTouchableOpacity
               key={index.toString()}
+              disabled={isPreview}
               onPress={() => {
                 navigation.push('EditWorkExperience', {
                   workItem: { ...item, index },
@@ -323,10 +340,12 @@ class EditOnlineResume extends Component<IProps, IState> {
               <View style={styles.companyInfo}>
                 <Text style={styles.workExperienceCompany}>{item.comp_name}</Text>
                 <Text style={styles.workExperienceTime}>{`${format(new Date(item.start_at), 'yyyy.MM')}~${format(new Date(item.end_at), 'yyyy.MM')}`}</Text>
-                <Image
-                  source={require('../../../assets/requestJobs/next-gray.png')}
-                  style={styles.nextIcon}
-                />
+                {!isPreview && (
+                  <Image
+                    source={require('../../../assets/requestJobs/next-gray.png')}
+                    style={styles.nextIcon}
+                  />
+                )}
               </View>
               <View>
                 <Text style={styles.workExperienceText}>{`${item.pos_name} ${item.department}`}</Text>
@@ -340,11 +359,12 @@ class EditOnlineResume extends Component<IProps, IState> {
   }
 
   renderProjectExperience() {
-    const { projectExperience } = this.state
+    const { projectExperience, isPreview } = this.state
     const { navigation } = this.props
     return (
       <View style={styles.cellView}>
         <NextTouchableOpacity
+          disabled={isPreview}
           onPress={() => {
             navigation.push('EditProjectExperience', {
               projectItemCallback: () => {
@@ -354,15 +374,18 @@ class EditOnlineResume extends Component<IProps, IState> {
           }}
           style={styles.titleView}>
           <Text style={styles.titleText}>项目经历</Text>
-          <Image
-            style={styles.addIcon}
-            source={require('../../../assets/requestJobs/add-gray.png')}
-          />
+          {!isPreview && (
+            <Image
+              style={styles.addIcon}
+              source={require('../../../assets/requestJobs/add-gray.png')}
+            />
+          )}
         </NextTouchableOpacity>
         {projectExperience.map((item: any, index: number) => {
           return (
             <NextTouchableOpacity
               key={index.toString()}
+              disabled={isPreview}
               onPress={() => {
                 navigation.push('EditProjectExperience', {
                   projectItem: { ...item, index },
@@ -379,10 +402,12 @@ class EditOnlineResume extends Component<IProps, IState> {
                   {
                     `${item.start_at}~${item.end_at}`
                   }</Text>
-                <Image
-                  source={require('../../../assets/requestJobs/next-gray.png')}
-                  style={styles.nextIcon}
-                />
+                {!isPreview && (
+                  <Image
+                    source={require('../../../assets/requestJobs/next-gray.png')}
+                    style={styles.nextIcon}
+                  />
+                )}
               </View>
               <View>
                 <Text style={styles.workExperienceText}>{item.role}</Text>
@@ -396,30 +421,33 @@ class EditOnlineResume extends Component<IProps, IState> {
   }
 
   renderEducationExperience() {
-    const { educationExperience } = this.state
+    const { educationExperience, isPreview } = this.state
     const { navigation } = this.props
     return (
       <View style={styles.cellView}>
         <NextTouchableOpacity
+          disabled={isPreview}
           onPress={() => {
             navigation.push('EditEducation', {
-              educationItemCallback: (educationItem: any) => {
-                educationExperience.push({ ...educationItem })
-                this.setState({ educationExperience })
+              educationItemCallback: () => {
+                this.loadEduExperience()
               }
             })
           }}
           style={styles.titleView}>
           <Text style={styles.titleText}>教育经历</Text>
-          <Image
-            style={styles.addIcon}
-            source={require('../../../assets/requestJobs/add-gray.png')}
-          />
+          {!isPreview && (
+            <Image
+              style={styles.addIcon}
+              source={require('../../../assets/requestJobs/add-gray.png')}
+            />
+          )}
         </NextTouchableOpacity>
         {educationExperience.map((item: any, index: number) => {
           return (
             <NextTouchableOpacity
               key={index.toString()}
+              disabled={isPreview}
               onPress={() => {
                 navigation.push('EditEducation', {
                   educationItem: { ...item, index },
@@ -433,10 +461,12 @@ class EditOnlineResume extends Component<IProps, IState> {
               <View style={styles.companyInfo}>
                 <Text style={styles.workExperienceCompany}>{item.school_name}</Text>
                 <Text style={styles.workExperienceTime}>{item.time}</Text>
-                <Image
-                  source={require('../../../assets/requestJobs/next-gray.png')}
-                  style={styles.nextIcon}
-                />
+                {!isPreview && (
+                  <Image
+                    source={require('../../../assets/requestJobs/next-gray.png')}
+                    style={styles.nextIcon}
+                  />
+                )}
               </View>
               <View>
                 <Text style={styles.workExperienceText}>{`${selectEducation(item.education)}·${item.major}`}</Text>
@@ -450,7 +480,7 @@ class EditOnlineResume extends Component<IProps, IState> {
   }
 
   renderPersonalGoods() {
-    const { personalGoods } = this.state
+    const { personalGoods, isPreview } = this.state
     const { navigation } = this.props
     return (
       <View style={[styles.cellView, {
@@ -459,6 +489,7 @@ class EditOnlineResume extends Component<IProps, IState> {
         paddingBottom: 12
       }]}>
         <NextTouchableOpacity
+          disabled={isPreview}
           onPress={() => {
             navigation.push('EditPersonalGoods', {
               personalGoods,
@@ -474,10 +505,12 @@ class EditOnlineResume extends Component<IProps, IState> {
             {(!personalGoods || personalGoods.length === 0) &&
               < Text style={styles.editPersonalText}>待完善</Text>
             }
-            <Image
-              style={styles.editIcon}
-              source={require('../../../assets/requestJobs/edit-gray.png')}
-            />
+            {!isPreview && (
+              <Image
+                style={styles.editIcon}
+                source={require('../../../assets/requestJobs/edit-gray.png')}
+              />
+            )}
           </View>
         </NextTouchableOpacity >
         <Text style={
@@ -488,7 +521,7 @@ class EditOnlineResume extends Component<IProps, IState> {
   }
 
   renderPersonalSkills() {
-    const { personalSkills } = this.state
+    const { personalSkills, isPreview } = this.state
     const { navigation } = this.props
     return (
       <View style={[styles.cellView, {
@@ -498,24 +531,26 @@ class EditOnlineResume extends Component<IProps, IState> {
         minHeight: 60,
       }]}>
         <NextTouchableOpacity
+          disabled={isPreview}
           onPress={() => {
             navigation.push('EditPersonalSkills', {
               personalSkills,
               personalSkillsCallback: () => {
                 // 加载技能标签
                 this.loadBasicInfo()
-                // this.setState({ personalGoods: editContents })
               }
             })
           }}
           style={styles.titleView}>
           <Text style={styles.titleText}>技能标签</Text>
-          <View style={styles.editPersonalView}>
-            <Image
-              style={styles.editIcon}
-              source={require('../../../assets/requestJobs/edit-gray.png')}
-            />
-          </View>
+          {!isPreview && (
+            <View style={styles.editPersonalView}>
+              <Image
+                style={styles.editIcon}
+                source={require('../../../assets/requestJobs/edit-gray.png')}
+              />
+            </View>
+          )}
         </NextTouchableOpacity>
         <View style={styles.jobInfoTagView}>
           {personalSkills && personalSkills.map((e: any, index: number) => {
