@@ -35,6 +35,7 @@
     "lodash.throttle": "^4.1.1",
     "react": "17.0.1",
     "react-native": "^0.64.2",
+    "react-native-common-date-picker": "^2.3.6",
     "react-native-date-picker": "^4.1.0",
     "react-native-extra-dimensions-android": "^1.2.5",
     "react-native-gesture-handler": "^1.10.3",

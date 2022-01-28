@@ -130,11 +130,11 @@ class CompanyDetail extends Component<IProps, IState> {
   }
 
   loadQaData() {
-    this.props.getCandidateGetEnterpriseDetail_QA(1, (error, result) => {
+    this.props.getCandidateGetEnterpriseDetail_QA(1, 1, 1, 1, (error, result) => {
       console.log('getCandidateGetEnterpriseDetail_QA ', error, result)
       if (!error && result) {
         this.setState({
-          qaList: result.CandidateGetEnterpriseDetail_QA,
+          qaList: result.UserGetEnterpriseQuestions,
           refreshing: false
         })
       } else {
@@ -855,7 +855,7 @@ class CompanyDetail extends Component<IProps, IState> {
         {this.renderNavBar()}
         <ScrollView
           style={styles.scrollView}
-          contentContainerStyle={{ paddingBottom: 20 }}
+          contentContainerStyle={{ paddingBottom: 50 }}
           refreshControl={(
             <RefreshControl
               refreshing={refreshing}
@@ -883,9 +883,7 @@ class CompanyDetail extends Component<IProps, IState> {
                 {this.renderCommentList()}
               </>
             )}
-            {qaList && (
-              this.renderCompanyQuestion()
-            )}
+            {this.renderCompanyQuestion()}
           </View>
           {/* {this.renderImageModal()} */}
           {/* ) : null} */}

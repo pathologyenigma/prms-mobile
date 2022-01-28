@@ -10,6 +10,9 @@ import { AnyMxRecord } from 'dns'
 import GradientButton from '../../components/GradientButton'
 import AlertContentModal from '../../components/AlertContentModal'
 import SystemHelper from '../../../utils/system'
+import RootLoading from '../../../utils/rootLoading'
+import { editEduExperience, removeCandidateEditEduExp } from '../../../action/mineAction'
+import { selectEducation } from '../../../utils/utils'
 
 type IProps = GenProps<'EditEducation'> & {
 
@@ -41,13 +44,13 @@ export default class EditEducation extends Component<IProps, IState> {
     BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
     this.state = {
       educationItem,
-      name: (educationItem && educationItem.name) || '',
+      name: (educationItem && educationItem.school_name) || '',
       education: (educationItem && educationItem.education) || '',
-      fullTime: (educationItem && educationItem.fullTime) || '',
-      professional: (educationItem && educationItem.professional) || '',
-      beginTime: (educationItem && educationItem.beginTime) || '',
-      endTime: (educationItem && educationItem.endTime) || '',
-      schoolExperience: (educationItem && educationItem.schoolExperience) || '',
+      fullTime: (educationItem && educationItem.is_all_time ? '全日制' : '非全日制') || '',
+      professional: (educationItem && educationItem.major) || '',
+      beginTime: (educationItem && educationItem.time && educationItem.time.split('-')[0]) || '',
+      endTime: (educationItem && educationItem.time.split('-') && educationItem.time.split('-').length > 1 && educationItem.time.split('-')[1]) || '',
+      schoolExperience: (educationItem && educationItem.exp_at_school) || '',
       beginTimeVisible: false,
       educationVisible: false,
       deleteVisible: false,
@@ -81,12 +84,12 @@ export default class EditEducation extends Component<IProps, IState> {
         { label: '2010', value: '2010' },
       ],
       educationLevel: [
-        { label: '高中', value: '高中' },
-        { label: '大专', value: '大专' },
-        { label: '本科', value: '本科' },
-        { label: '硕士', value: '硕士' },
-        { label: '博士', value: '博士' },
-        { label: '博士后', value: '博士后' },
+        { label: '初中', value: 'Junior' },
+        { label: '高中', value: 'High' },
+        { label: '大专', value: 'JuniorCollege' },
+        { label: '本科', value: 'RegularCollege' },
+        { label: '硕士', value: 'Postgraduate' },
+        { label: '博士', value: 'Doctor' }
       ],
       educationAllDay: [
         { label: '全日制', value: '全日制' },
@@ -143,14 +146,64 @@ export default class EditEducation extends Component<IProps, IState> {
           value: educationItem ? '' : ' 保存',
           disable: !editAllInfo,
           act: () => {
-            if (educationItemCallback) {
-              educationItemCallback({ name, professional, beginTime, endTime, schoolExperience, education, fullTime, index: educationItem && educationItem.index })
-            }
-            navigation.pop()
+            this.saveEduExperience()
           },
         }}
       />
     )
+  }
+
+  saveEduExperience() {
+    const { name, professional, beginTime, endTime, schoolExperience, education, fullTime } = this.state
+    const { navigation, route: { params: { educationItem, educationItemCallback } } } = this.props
+    RootLoading.loading()
+    const info: any = {
+      schoolName: name,
+      education,
+      major: professional,
+      time: `${beginTime}-${endTime}`,
+      exp_at_school: schoolExperience,
+      isFullTime: fullTime.indexOf('非') > -1 ? false : true,
+    }
+    if (educationItem && educationItem.id) {
+      info.id = educationItem.id
+    }
+    console.log('infoinfoinfo: ', info)
+    editEduExperience(info, (error) => {
+      if (!error) {
+        RootLoading.success('保存成功')
+        if (educationItemCallback) {
+          educationItemCallback()
+        }
+        setTimeout(() => {
+          navigation.goBack()
+        }, 1000)
+      } else {
+        RootLoading.fail(error.toString())
+      }
+    })
+  }
+
+  removeEduExperience() {
+    const { navigation, route: { params: { educationItem, educationItemCallback } } } = this.props
+    if (!educationItem || !educationItem.id) {
+      RootLoading.info('配置错误,请重试或联系客服')
+      return
+    }
+    RootLoading.loading()
+    removeCandidateEditEduExp(educationItem.id, (error) => {
+      if (!error) {
+        RootLoading.success('删除成功')
+        if (educationItemCallback) {
+          educationItemCallback()
+        }
+        setTimeout(() => {
+          navigation.goBack()
+        }, 1000)
+      } else {
+        RootLoading.fail(error.toString())
+      }
+    })
   }
 
   renderProject() {
@@ -163,7 +216,6 @@ export default class EditEducation extends Component<IProps, IState> {
           returnKeyType="done"
           autoCorrect={false}
           autoCapitalize="none"
-          multiline={true}
           style={styles.cellInput}
           placeholder="请填写"
           placeholderTextColor="#AAAAAA"
@@ -186,7 +238,6 @@ export default class EditEducation extends Component<IProps, IState> {
           returnKeyType="done"
           autoCorrect={false}
           autoCapitalize="none"
-          multiline={true}
           style={styles.cellInput}
           placeholder="请填写"
           placeholderTextColor="#AAAAAA"
@@ -237,7 +288,7 @@ export default class EditEducation extends Component<IProps, IState> {
           >
             <Text style={[styles.beginTime, education.length !== 0 && { color: '#333333' }]}>
               {(education && fullTime)
-                ? `${education}·${fullTime}`
+                ? `${selectEducation(education)}·${fullTime}`
                 : '请选择'
               }
             </Text>
@@ -298,10 +349,7 @@ export default class EditEducation extends Component<IProps, IState> {
           linearStyle={[styles.linearStyle, !educationItem && { width: SystemHelper.width - 42, marginLeft: 0 }]}
           text="完成"
           onPress={() => {
-            if (educationItemCallback) {
-              educationItemCallback({ name, professional, education, fullTime, beginTime, endTime, schoolExperience, index: educationItem && educationItem.index })
-            }
-            navigation.pop()
+            this.saveEduExperience()
           }}
         />
       </View>
@@ -337,17 +385,16 @@ export default class EditEducation extends Component<IProps, IState> {
         <JobStatusModal
           title="时间段"
           visible={beginTimeVisible}
-          statusArray={beginTimeArray}
-          timeArray={beginDateArray}
-          currentStatus={beginTime}
-          currentTime={beginTime}
+          currentDate={
+            beginTime ? `${new Date(beginTime).getFullYear()}-${new Date(beginTime).getMonth() + 1}`
+              : `${new Date().getFullYear()}-${new Date().getMonth() + 1}`
+          }
           leftPress={() => {
             this.setState({ beginTimeVisible: false })
           }}
-          rightPress={(selectBeginYear, selectEndYear) => {
+          rightPress={(selectedDate) => {
             this.setState({
-              beginTime: selectBeginYear,
-              endTime: selectEndYear,
+              beginTime: selectedDate,
               beginTimeVisible: false,
             })
           }}
@@ -362,9 +409,9 @@ export default class EditEducation extends Component<IProps, IState> {
           leftPress={() => {
             this.setState({ educationVisible: false })
           }}
-          rightPress={(selectEducation, selectFullTime) => {
+          rightPress={(selectedEducation, selectFullTime) => {
             this.setState({
-              education: selectEducation,
+              education: selectedEducation,
               fullTime: selectFullTime,
               educationVisible: false,
             })
@@ -388,14 +435,14 @@ export default class EditEducation extends Component<IProps, IState> {
               if (deleteVisible) {
                 // 删除操作
                 this.setState({ deleteVisible: false }, () => {
-                  if (educationItemCallback) {
-                    educationItemCallback({ index: educationItem && educationItem.index, deleteItem: true })
-                  }
-                  navigation.pop()
+                  // 缺少删除接口
+                  this.removeEduExperience()
                 })
               } else {
                 // 退出操作
-                navigation.pop()
+                this.setState({ giveUpSaveVisible: false }, () => {
+                  navigation.pop()
+                })
               }
             },
           }}

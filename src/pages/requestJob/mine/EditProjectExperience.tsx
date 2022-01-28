@@ -9,6 +9,8 @@ import JobStatusModal from '../jobs/JobStatusModal'
 import GradientButton from '../../components/GradientButton'
 import AlertContentModal from '../../components/AlertContentModal'
 import SystemHelper from '../../../utils/system'
+import { editCandidateEditProExp, removeCandidateEditProExp } from '../../../action/mineAction'
+import RootLoading from '../../../utils/rootLoading'
 
 type IProps = GenProps<'EditProjectExperience'> & {
 
@@ -24,10 +26,9 @@ interface IState {
   performance: string,
   beginTimeVisible: boolean,
   endTimeVisible: boolean,
-  beginTimeArray: any,
-  beginDateArray: any,
   deleteVisible: boolean,
-  giveUpSaveVisible: boolean
+  giveUpSaveVisible: boolean,
+  changeContent: boolean
 }
 
 export default class EditProjectExperience extends Component<IProps, IState> {
@@ -36,46 +37,18 @@ export default class EditProjectExperience extends Component<IProps, IState> {
     const { route: { params: { projectItem } } } = props
     BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
     this.state = {
-      project: (projectItem && projectItem.project) || '',
+      project: (projectItem && projectItem.project_name) || '',
       role: (projectItem && projectItem.role) || '',
-      beginTime: (projectItem && projectItem.beginTime) || '',
-      endTime: (projectItem && projectItem.endTime) || '',
-      content: (projectItem && projectItem.content) || '',
-      performance: (projectItem && projectItem.performance) || '',
+      beginTime: (projectItem && projectItem.start_at) || '',
+      endTime: (projectItem && projectItem.end_at) || '',
+      content: (projectItem && projectItem.project_description) || '',
+      performance: (projectItem && projectItem.project_performance) || '',
       selectImage: [],
       beginTimeVisible: false,
       endTimeVisible: false,
       deleteVisible: false,
       giveUpSaveVisible: false,
-      beginTimeArray: [
-        { label: '至今', value: '至今' },
-        { label: '2021', value: '2021' },
-        { label: '2020', value: '2020' },
-        { label: '2019', value: '2019' },
-        { label: '2018', value: '2018' },
-        { label: '2017', value: '2017' },
-        { label: '2016', value: '2016' },
-        { label: '2015', value: '2015' },
-        { label: '2014', value: '2014' },
-        { label: '2013', value: '2013' },
-        { label: '2012', value: '2012' },
-        { label: '2011', value: '2011' },
-        { label: '2010', value: '2010' },
-      ],
-      beginDateArray: [
-        { label: '1', value: '1' },
-        { label: '2', value: '2' },
-        { label: '3', value: '3' },
-        { label: '4', value: '4' },
-        { label: '5', value: '5' },
-        { label: '6', value: '6' },
-        { label: '7', value: '7' },
-        { label: '8', value: '8' },
-        { label: '9', value: '9' },
-        { label: '10', value: '10' },
-        { label: '11', value: '11' },
-        { label: '12', value: '12' },
-      ]
+      changeContent: false,
     }
   }
 
@@ -85,11 +58,9 @@ export default class EditProjectExperience extends Component<IProps, IState> {
 
   onBackAndroid = () => {
     // 安卓返回按钮弹出退出确认框
-    const { project, role, beginTime, endTime, content } = this.state
+    const { changeContent } = this.state
     const { navigation } = this.props
-    const editInfo = project || role || beginTime || endTime || content
-    // const editAllInfo = name && professional && beginTime && endTime && schoolExperience && education && fullTime
-    if (editInfo) {
+    if (changeContent) {
       this.setState({ giveUpSaveVisible: true })
     } else {
       navigation.pop()
@@ -98,8 +69,8 @@ export default class EditProjectExperience extends Component<IProps, IState> {
   }
 
   renderNavBar() {
-    const { project, role, beginTime, endTime, content } = this.state
-    const { navigation, route: { params: { projectItem, projectItemCallback } } } = this.props
+    const { project, role, beginTime, endTime, content, changeContent } = this.state
+    const { navigation, route: { params: { projectItem } } } = this.props
     const disableSave = project && role && beginTime && endTime && content
     return (
       <NavBar
@@ -112,24 +83,83 @@ export default class EditProjectExperience extends Component<IProps, IState> {
           type: EButtonType.IMAGE,
           value: require('../../../assets/black_back.png'),
           act: () => {
-            navigation.pop()
+            if (changeContent) {
+              this.setState({ giveUpSaveVisible: true })
+            } else {
+              navigation.pop()
+            }
           },
         }}
         title={projectItem ? '编辑项目经历' : '添加项目经历'}
         right={{
           type: EButtonType.TEXT,
           style: styles.saveBtn,
-          value: projectItem ? '' : "保存",
+          value: projectItem ? '' : '保存',
           disable: !disableSave,
           act: () => {
-            if (projectItemCallback) {
-              projectItemCallback({ project, role, beginTime, endTime, content, performance, index: projectItem && projectItem.index })
-            }
-            navigation.pop()
+            this.saveProjectExperience()
           },
         }}
       />
     )
+  }
+
+  saveProjectExperience() {
+    const { project, role, beginTime, endTime, content, performance } = this.state
+    const { navigation, route: { params: { projectItem, projectItemCallback } } } = this.props
+    if (new Date(endTime).getTime() < new Date(beginTime).getTime()) {
+      RootLoading.info('开始时间不能大于结束时间')
+      return
+    }
+    RootLoading.loading()
+    const info: any = {
+      projectName: project,
+      role,
+      startAt: new Date(beginTime),
+      endAt: new Date(endTime),
+      description: content,
+      performance,
+    }
+    if (projectItem && projectItem.id) {
+      info.id = projectItem.id
+    }
+    console.log('infoinfoinfo: ', info)
+    editCandidateEditProExp(info, (error) => {
+      if (!error) {
+        RootLoading.success('保存成功')
+        if (projectItemCallback) {
+          projectItemCallback()
+        }
+        setTimeout(() => {
+          navigation.goBack()
+        }, 1000)
+      } else {
+        RootLoading.fail(error.toString())
+      }
+    })
+  }
+
+  removeProjectExp() {
+    const { navigation, route: { params: { projectItem, projectItemCallback } } } = this.props
+    if (!projectItem || !projectItem.id) {
+      RootLoading.info('配置错误,请重试或联系客服')
+      return
+    }
+
+    RootLoading.loading()
+    removeCandidateEditProExp(projectItem.id, (error) => {
+      if (!error) {
+        RootLoading.success('删除成功')
+        if (projectItemCallback) {
+          projectItemCallback()
+        }
+        setTimeout(() => {
+          navigation.goBack()
+        }, 1000)
+      } else {
+        RootLoading.fail(error.toString())
+      }
+    })
   }
 
   renderProject() {
@@ -142,13 +172,15 @@ export default class EditProjectExperience extends Component<IProps, IState> {
           returnKeyType="done"
           autoCorrect={false}
           autoCapitalize="none"
-          multiline={true}
           style={styles.cellInput}
           placeholder="请填写"
           placeholderTextColor="#AAAAAA"
           value={project}
           onChangeText={(value) => {
-            this.setState({ project: value })
+            this.setState({
+              project: value,
+              changeContent: true,
+            })
           }}
         />
       </View>
@@ -165,13 +197,12 @@ export default class EditProjectExperience extends Component<IProps, IState> {
           returnKeyType="done"
           autoCorrect={false}
           autoCapitalize="none"
-          multiline={true}
           style={styles.cellInput}
           placeholder="请填写"
           placeholderTextColor="#AAAAAA"
           value={role}
           onChangeText={(value) => {
-            this.setState({ role: value })
+            this.setState({ role: value, changeContent: true })
           }}
         />
       </View>
@@ -180,6 +211,7 @@ export default class EditProjectExperience extends Component<IProps, IState> {
 
   renderDurationTime() {
     const { beginTime, endTime } = this.state
+    const { route: { params: { projectItem } } } = this.props
     return (
       <View style={styles.cell}>
         <Text style={styles.cellTitle}>项目时间</Text>
@@ -187,22 +219,22 @@ export default class EditProjectExperience extends Component<IProps, IState> {
           <NextTouchableOpacity
             style={{ flex: 1, }}
             onPress={() => {
-              this.setState({ beginTimeVisible: true })
+              this.setState({ beginTimeVisible: true, changeContent: true })
             }}
           >
             <Text style={[styles.beginTime, beginTime.length !== 0 && { color: '#333333' }]}>
-              {beginTime || '入职时间'}
+              {beginTime ? `${new Date(beginTime).getFullYear()}-${new Date(beginTime).getMonth() + 1}` : '开始时间'}
             </Text>
           </NextTouchableOpacity>
           <Text style={styles.timeTips}>至</Text>
           <NextTouchableOpacity
             style={{ flex: 1, }}
             onPress={() => {
-              this.setState({ endTimeVisible: true })
+              this.setState({ endTimeVisible: true, changeContent: true })
             }}
           >
             <Text style={[styles.beginTime, { textAlign: 'right' }, endTime.length !== 0 && { color: '#333333' }]}>
-              {endTime || '离职时间'}
+              {endTime ? `${new Date(endTime).getFullYear()}-${new Date(endTime).getMonth() + 1}` : '结束时间'}
             </Text>
           </NextTouchableOpacity>
         </View>
@@ -228,7 +260,7 @@ export default class EditProjectExperience extends Component<IProps, IState> {
             value={content}
             maxLength={500}
             onChangeText={(value) => {
-              this.setState({ content: value })
+              this.setState({ content: value, changeContent: true })
             }}
           />
           <Text style={styles.contentAmount}>
@@ -257,7 +289,7 @@ export default class EditProjectExperience extends Component<IProps, IState> {
             value={performance}
             maxLength={500}
             onChangeText={(value) => {
-              this.setState({ performance: value })
+              this.setState({ performance: value, changeContent: true })
             }}
           />
           <Text style={styles.contentAmount}>
@@ -269,8 +301,8 @@ export default class EditProjectExperience extends Component<IProps, IState> {
   }
 
   renderFooterBtn() {
-    const { project, role, endTime, content, beginTime, performance } = this.state
-    const { navigation, route: { params: { projectItem, projectItemCallback } } } = this.props
+    const { project, role, endTime, content, beginTime } = this.state
+    const { route: { params: { projectItem } } } = this.props
     const disableSave = project && role && endTime && content && beginTime
     return (
       <View style={styles.footerView}>
@@ -290,10 +322,7 @@ export default class EditProjectExperience extends Component<IProps, IState> {
           linearStyle={[styles.linearStyle, !projectItem && { width: SystemHelper.width - 42, marginLeft: 0 }]}
           text="完成"
           onPress={() => {
-            if (projectItemCallback) {
-              projectItemCallback({ project, role, beginTime, endTime, content, performance, index: projectItem && projectItem.index })
-            }
-            navigation.pop()
+            this.saveProjectExperience()
           }}
         />
       </View>
@@ -301,15 +330,13 @@ export default class EditProjectExperience extends Component<IProps, IState> {
   }
 
   render() {
-    const { beginTimeVisible, endTimeVisible, beginTimeArray, beginDateArray,
-      beginTime, deleteVisible, giveUpSaveVisible
+    const { beginTimeVisible, endTimeVisible, beginTime, deleteVisible, giveUpSaveVisible, endTime,
     } = this.state
-    const { navigation, route: { params: { projectItem, projectItemCallback } } } = this.props
+    const { navigation, route: { params: { projectItem } } } = this.props
     return (
       <View style={styles.container}>
         <StatusBar
           translucent
-          backgroundColor="transparent"
           animated
           barStyle={'dark-content'}
         />
@@ -328,16 +355,16 @@ export default class EditProjectExperience extends Component<IProps, IState> {
         <JobStatusModal
           title="时间段"
           visible={beginTimeVisible}
-          statusArray={beginTimeArray}
-          timeArray={beginDateArray}
-          currentStatus={beginTime}
-          currentTime={beginTime}
+          currentDate={
+            beginTime ? `${new Date(beginTime).getFullYear()}-${new Date(beginTime).getMonth() + 1}`
+              : `${new Date().getFullYear()}-${new Date().getMonth() + 1}`
+          }
           leftPress={() => {
             this.setState({ beginTimeVisible: false })
           }}
-          rightPress={(selectBeginYear, selectBeginMonth) => {
+          rightPress={(selectedDate) => {
             this.setState({
-              beginTime: `${selectBeginYear}.${selectBeginMonth}`,
+              beginTime: selectedDate,
               beginTimeVisible: false,
             })
           }}
@@ -345,16 +372,16 @@ export default class EditProjectExperience extends Component<IProps, IState> {
         <JobStatusModal
           title="时间段"
           visible={endTimeVisible}
-          statusArray={beginTimeArray}
-          timeArray={beginDateArray}
-          currentStatus={beginTime}
-          currentTime={beginTime}
+          currentDate={
+            endTime ? `${new Date(endTime).getFullYear()}-${new Date(endTime).getMonth() + 1}`
+              : `${new Date().getFullYear()}-${new Date().getMonth() + 1}`
+          }
           leftPress={() => {
             this.setState({ endTimeVisible: false })
           }}
-          rightPress={(selectBeginYear, selectBeginMonth) => {
+          rightPress={(selectedDate) => {
             this.setState({
-              endTime: `${selectBeginYear}.${selectBeginMonth}`,
+              endTime: selectedDate,
               endTimeVisible: false,
             })
           }}
@@ -377,14 +404,14 @@ export default class EditProjectExperience extends Component<IProps, IState> {
               if (deleteVisible) {
                 // 删除操作
                 this.setState({ deleteVisible: false }, () => {
-                  if (projectItemCallback) {
-                    projectItemCallback({ index: projectItem && projectItem.index, deleteItem: true })
-                  }
-                  navigation.pop()
+                  // 缺少删除接口
+                  this.removeProjectExp()
                 })
               } else {
                 // 退出操作
-                navigation.pop()
+                this.setState({ giveUpSaveVisible: false }, () => {
+                  navigation.pop()
+                })
               }
             },
           }}

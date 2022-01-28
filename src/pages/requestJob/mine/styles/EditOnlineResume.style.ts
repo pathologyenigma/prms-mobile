@@ -137,16 +137,6 @@ export default StyleSheet.create({
     color: '#333333',
     fontSize: 13
   },
-  bottomContainer: {
-    width: SystemHelper.width,
-    height: SystemHelper.safeBottom + 54,
-    marginHorizontal: 22,
-    paddingTop: 7
-  },
-  btnContainer: {
-    width: SystemHelper.width - 44,
-    height: 40,
-  },
   editIcon: {
     width: 17,
     height: 17,
@@ -196,5 +186,20 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     color: '#666666',
     marginTop: 10
+  },
+  jobInfoTagView: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: 11,
+  },
+  editPersonalSkills: {
+    backgroundColor: '#F0F0F0',
+    borderRadius: 3,
+    paddingHorizontal: 9,
+    lineHeight: 18,
+    color: '#888888',
+    fontSize: 11,
+    marginRight: 9,
+    marginTop: 8
   }
 })

@@ -261,8 +261,18 @@ const candidateGetEnterpriseDetail_InterviewRecommentGql = gql`
  * 公司详情页的公司问答
  */
 const candidateGetEnterpriseDetail_QAGql = gql`
-  query CandidateGetEnterpriseDetail_QA($entId: Int!) {
-    CandidateGetEnterpriseDetail_QA(entId: $entId) {
+  query UserGetEnterpriseQuestions(
+    $entId: Int!,
+    $needAnswerPreview: Int!
+    $page: Int!
+    $pageSize: Int!
+    ) {
+    UserGetEnterpriseQuestions(
+      entId: $entId,
+      needAnswerPreview: $needAnswerPreview,
+      page: $page,
+      pageSize: $pageSize
+      ) {
       questionCount
       answerCount
       question
@@ -426,6 +436,137 @@ const userGetRecruitmentListGql = gql`
   }
 `
 
+// 在线简历-新增工作经验(id 传入表示编辑,不传入表示新增)
+const candidateEditWorkExprienceGql = gql`
+  mutation CandidateEditWorkExprience($info: WorkExperience!){
+    CandidateEditWorkExprience(info: $info)
+  }
+`
+
+// 在线简历-获取工作经验列表
+const candidateGetWorkExpsGql = gql`
+  query CandidateGetWorkExps{
+    CandidateGetWorkExps{
+      data {
+        id
+        comp_name
+        pos_name
+        department
+        start_at
+        end_at
+        working_detail
+      }
+    }
+  }
+`
+
+// 在线简历-删除工作经历
+const candidateRemoveWorkExpGql = gql`
+  mutation CandidateRemoveWorkExp($id: Int!){
+    CandidateRemoveWorkExp(id: $id)
+  }
+`
+
+// 在线简历-编辑个人优势
+const personalAdvantageGql = gql`
+  mutation CandidateEditPersonalAdvantage($advantage: String!){
+    CandidateEditPersonalAdvantage(advantage: $advantage)
+  }
+`
+
+// 在线简历-获取技能和个人优势
+const candidateGetOnlineResumeBasicInfoGql = gql`
+  query CandidateGetOnlineResumeBasicInfo{
+    CandidateGetOnlineResumeBasicInfo{
+      skills
+      personal_advantage
+    }
+  }
+`
+
+// 在线简历-编辑技能
+const getSkillsGql = gql`
+  mutation CandidateEditSkills($skills: [String]!){
+    CandidateEditSkills(skills: $skills)
+  }
+`
+
+// 在线简历-获取项目经历
+const candidateGetProjectExpsGql = gql`
+  query CandidateGetProjectExps{
+    CandidateGetProjectExps{
+      data {
+        id
+        project_name
+        role
+        start_at
+        end_at
+        project_description
+        project_performance
+      }
+    }
+  }
+`
+
+// 在线简历-编辑项目经历
+const candidateEditProExpGql = gql`
+  mutation CandidateEditProExp($info: ProExp!){
+    CandidateEditProExp(info:$info)
+  }
+`
+
+// 在线简历-删除项目经历
+const candidateRemoveProExpGql = gql`
+  mutation CandidateRemoveProExp($id: Int!){
+    CandidateRemoveProExp(id: $id)
+  }
+`
+
+// 在线简历-编辑教育经历
+const candidateEditEduExpGql = gql`
+  mutation CandidateEditEduExp($info: EduExp!){
+    CandidateEditEduExp(info:$info)
+  }
+`
+
+//  在线简历-获取教育经历
+const candidateGetEduExpsGql = gql`
+  query CandidateGetEduExps{
+    CandidateGetEduExps{
+      data {
+        id
+        school_name
+        education
+        is_all_time
+        major
+        time
+        exp_at_school
+      }
+    }
+  }
+`
+
+// 在线简历-删除教育经历
+const candidateRemoveEduExpGql = gql`
+  mutation CandidateRemoveEduExp($id: Int!){
+    CandidateRemoveEduExp(id: $id)
+  }
+`
+
+// 在线简历-获取设置进度
+const candidateGetOnlineResumeGradeGql = gql`
+  query CandidateGetOnlineResumeGrade{
+    CandidateGetOnlineResumeGrade
+  }
+`
+
+// 在线简历-编辑设置进度
+const candidateEditOnlineResumeGradeGql = gql`
+  mutation CandidateEditOnlineResumeGrade($grade: Int!){
+    CandidateEditOnlineResumeGrade(grade: $grade)
+  }
+`
+
 export {
   apolloClientShare,
   sendSMSGql,
@@ -455,5 +596,22 @@ export {
   userGetContractListGql,
   getUserGetBasicInfoGql,
   userEditBasicInfoGql,
-  userGetRecruitmentListGql
+  userGetRecruitmentListGql,
+  // 在线简历 相关接口
+  candidateEditWorkExprienceGql,
+  candidateGetWorkExpsGql,
+  personalAdvantageGql,
+  candidateGetOnlineResumeBasicInfoGql,
+  getSkillsGql,
+  candidateEditProExpGql,
+  candidateGetProjectExpsGql,
+  candidateEditEduExpGql,
+  candidateGetEduExpsGql,
+  candidateRemoveProExpGql,
+  candidateRemoveWorkExpGql,
+  candidateRemoveEduExpGql,
+  candidateGetOnlineResumeGradeGql,
+  candidateEditOnlineResumeGradeGql,
+  //
+
 }

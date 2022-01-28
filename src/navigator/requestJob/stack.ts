@@ -29,6 +29,7 @@ import UserInfo from '../../pages/requestJob/mine/UserInfo'
 import UserInfoEdit from '../../pages/requestJob/mine/UserInfoEdit'
 import EditOnlineResume from '../../pages/requestJob/mine/EditOnlineResume'
 import EditPersonalGoods from '../../pages/requestJob/mine/EditPersonalGoods'
+import EditPersonalSkills from '../../pages/requestJob/mine/EditPersonalSkills'
 import EditWorkExperience from '../../pages/requestJob/mine/EditWorkExperience'
 import EditProjectExperience from '../../pages/requestJob/mine/EditProjectExperience'
 import EditEducation from '../../pages/requestJob/mine/EditEducation'
@@ -91,6 +92,8 @@ import VideoComponent from '../../pages/components/VideoComponent'
 import MessagePage from '../../pages/requestJob/news/MessagePage'
 import SearchJobAddress from '../../recruitment/Job/SearchJobAddress'
 import EditJobCity from '../../recruitment/Job/EditJobCity'
+import AvatarViewer from '../../recruitment/Hr/AvatarViewer'
+import AvatarCropper from '../../recruitment/Hr/AvatarCropper'
 
 type TRouterParams = {
   Find: any,
@@ -119,11 +122,12 @@ type TRouterParams = {
   CompanySubQuestion: any,
   UserInfo: any,
   UserInfoEdit: { title: string, inputCallback: (value: string) => void },
-  EditOnlineResume: any,
-  EditPersonalGoods: { personalGoods: string, personalGoodsCallback: (editContents: string) => void },
-  EditWorkExperience: { workItemCallback: (workItem: any) => void, workItem?: any, }
-  EditProjectExperience: { projectItemCallback: (projectItem: any) => void, projectItem?: any, }
-  EditEducation: { educationItemCallback: (educationItem: any) => void, educationItem?: any, },
+  EditOnlineResume: { isPreview: boolean },
+  EditPersonalGoods: { personalGoods: string, personalGoodsCallback: () => void },
+  EditPersonalSkills: { personalSkills: any, personalSkillsCallback: () => void },
+  EditWorkExperience: { workItemCallback: () => void, workItem?: any, }
+  EditProjectExperience: { projectItemCallback: () => void, projectItem?: any, }
+  EditEducation: { educationItemCallback: () => void, educationItem?: any, },
   InterviewEvaluation: any,
   Interview: any,
   InterviewAll: any,
@@ -182,7 +186,9 @@ type TRouterParams = {
   VideoComponent: { videoUri: string, closeCallback: () => void }
   MessagePage: { targetItem: any }
   SearchJobAddress: any,
-  EditJobCity: any
+  EditJobCity: any,
+  AvatarViewer: any,
+  AvatarCropper: any
 }
 
 export type GenProps<RouteName extends keyof TRouterParams> = {
@@ -289,5 +295,8 @@ export default class RouterStacks {
       MessagePage,
       SearchJobAddress,
       EditJobCity,
+      AvatarViewer,
+      AvatarCropper,
+      EditPersonalSkills
     }
 }

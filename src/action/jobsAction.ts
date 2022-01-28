@@ -378,7 +378,10 @@ const getCandidateGetEnterpriseDetail_InterviewRecomment = (
 // 获取公司详情问答数据
 const getCandidateGetEnterpriseDetail_QA = (
   entId: number,
-  callback: (error: any, result?: any) => void,
+  needAnswerPreview: number,
+  page: number,
+  pageSize: number,
+  callback: (error: any, result?: any) => void
 ) => {
   return (dispatch: Dispatch<AnyAction>) => {
     apolloClientShare
@@ -386,7 +389,7 @@ const getCandidateGetEnterpriseDetail_QA = (
         query: candidateGetEnterpriseDetail_QAGql,
         fetchPolicy: 'no-cache', // 设置缓存策略
         variables: {
-          entId,
+          entId, needAnswerPreview, page, pageSize
         },
       })
       .then(res => {

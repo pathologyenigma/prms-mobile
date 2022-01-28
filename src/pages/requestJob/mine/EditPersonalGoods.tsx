@@ -7,6 +7,8 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import { TextInput } from 'react-native-gesture-handler'
 // import ImagePicker from 'react-native-image-picker'
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
+import { editPersonalAdvantage } from '../../../action/mineAction'
+import RootLoading from '../../../utils/rootLoading'
 
 type IProps = GenProps<'EditPersonalGoods'> & {
 
@@ -77,7 +79,7 @@ export default class EditPersonalGoods extends Component<IProps, IState> {
   }
 
   renderNavBar() {
-    const { navigation, route: { params: { personalGoodsCallback } } } = this.props
+    const { navigation } = this.props
     const { detail } = this.state
     return (
       <NavBar
@@ -96,17 +98,33 @@ export default class EditPersonalGoods extends Component<IProps, IState> {
         right={{
           type: EButtonType.TEXT,
           style: styles.confirmBtn,
-          value: "确定",
+          value: '确定',
           disable: detail.length === 0,
           act: () => {
-            if (personalGoodsCallback) {
-              personalGoodsCallback(detail)
-            }
-            navigation.pop()
+            this.savePersonalAdvantage()
           },
         }}
       />
     )
+  }
+
+  savePersonalAdvantage() {
+    const { detail } = this.state
+    const { navigation, route: { params: { personalGoodsCallback } } } = this.props
+    RootLoading.loading()
+    editPersonalAdvantage(detail, (error) => {
+      if (!error) {
+        RootLoading.success('保存成功')
+        if (personalGoodsCallback) {
+          personalGoodsCallback()
+        }
+        setTimeout(() => {
+          navigation.goBack()
+        }, 1000)
+      } else {
+        RootLoading.fail(error.toString())
+      }
+    })
   }
 
   renderTitle() {

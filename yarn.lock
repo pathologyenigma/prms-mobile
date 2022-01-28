@@ -4640,6 +4640,11 @@ react-native-collapsible@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/react-native-collapsible/-/react-native-collapsible-1.6.0.tgz#ca261ffff16914f872059bb0972e3a78c4b37f9c"
 
+react-native-common-date-picker@^2.3.6:
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/react-native-common-date-picker/-/react-native-common-date-picker-2.3.6.tgz#a0924dd884a506c95982d99fafae77064510b536"
+  integrity sha512-jgwoXHa2AeO64svme1UN318rdY4vm48x04WtwJYMoAbYFHePxRtGoujkGVbgZrQkE2/9PXf2nHhL2aM7i3WO9Q==
+
 react-native-date-picker@^4.1.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-4.1.1.tgz#7f41b86e5b625c0c695686eea538677fe84fc4a6"
