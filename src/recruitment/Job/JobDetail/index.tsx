@@ -3,7 +3,6 @@ import { StyleSheet, View, ScrollView } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import IconButton from '../../components/IconButton'
 import JobMeta from './JobMeta'
-import Collaborator from './Collaborator'
 import JobIntro from './JobIntro'
 import CompanyInfo from './CompanyInfo'
 import Audit from './Audit'
@@ -15,6 +14,10 @@ import NavBar from '../../components/NavBar'
 import { JobParamList } from '../typings'
 import useJobDetail from './useJobDetail'
 import LoadingAndError from '../../components/LoadingAndError'
+import useHideJob from './useHideJob'
+import RootLoading from '../../../utils/rootLoading'
+import JobOffline from './JobOffline'
+import { useOpenJob } from './useOpenJob'
 
 export default function JobDetail({
   navigation,
@@ -23,9 +26,9 @@ export default function JobDetail({
   const [stopHireModalVisible, setStopHireModalvisible] = useState(false)
   const { jobId } = route.params
 
-  const { detail, loading } = useJobDetail(jobId)
-
-  console.log(detail)
+  const { detail, loading, error, refetch } = useJobDetail(jobId)
+  const hideJob = useHideJob(jobId)
+  const openJob = useOpenJob()
 
   return (
     <View style={styles.container}>
@@ -39,12 +42,20 @@ export default function JobDetail({
           />
         )}
       />
-      <LoadingAndError loading={loading}>
+      <LoadingAndError
+        style={{ backgroundColor: '#F8F8F8' }}
+        loading={loading}
+        error={error}
+        refetch={refetch}>
         {detail && (
           <>
             <ScrollView
               style={styles.container}
               contentContainerStyle={styles.content}>
+              {detail.job.status === 'NotPublishedYet' && (
+                <Audit status="审核中" />
+              )}
+              {detail.job.status === 'OffLine' && <JobOffline />}
               <JobMeta job={detail.job} />
               <JobIntro job={detail.job} />
               <CompanyInfo company={detail.company} />
@@ -59,11 +70,28 @@ export default function JobDetail({
                   })
                 }
               />
-              <GradientButton
-                style={styles.gradient}
-                title="停止招聘"
-                onPress={() => setStopHireModalvisible(true)}
-              />
+              {detail.job.status === 'OffLine' ? (
+                <GradientButton
+                  style={styles.gradient}
+                  title="开放职位"
+                  onPress={async () => {
+                    try {
+                      //RootLoading.loading('请稍后...')
+                      await openJob(detail.jobInput)
+                      //refetch()
+                      // RootLoading.info('操作成功！')
+                    } catch (e) {
+                      RootLoading.info(e.message)
+                    }
+                  }}
+                />
+              ) : (
+                <GradientButton
+                  style={styles.gradient}
+                  title="停止招聘"
+                  onPress={() => setStopHireModalvisible(true)}
+                />
+              )}
             </View>
           </>
         )}
@@ -74,7 +102,17 @@ export default function JobDetail({
         title="温馨提示"
         msg="停止招聘后，职位信息将不会在求职端展示"
         onNegativePress={() => setStopHireModalvisible(false)}
-        onPositivePress={() => setStopHireModalvisible(false)}
+        onPositivePress={async () => {
+          setStopHireModalvisible(false)
+          try {
+            RootLoading.loading('请稍后...')
+            await hideJob()
+            refetch()
+            RootLoading.info('操作成功！')
+          } catch (e) {
+            RootLoading.info(e.message)
+          }
+        }}
       />
     </View>
   )

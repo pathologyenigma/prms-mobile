@@ -20,6 +20,7 @@ import MaskedView from '@react-native-community/masked-view'
 import LinearGradient from 'react-native-linear-gradient'
 import Pending from './Pending'
 import { useNavigation } from '@react-navigation/native'
+import useCompanyDetail from './useCompanyDetail'
 
 interface Time {
   icon: ImageSourcePropType
@@ -104,6 +105,8 @@ const recruiters: Recruiter[] = [
 export default function CompanyDetail() {
   const isPending = false
   const navigation = useNavigation<StackNavigationProp<any>>()
+
+  useCompanyDetail()
 
   return (
     <View style={styles.container}>

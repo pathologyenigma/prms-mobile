@@ -2,16 +2,18 @@ import HrProfile from './HrProfile'
 import EditHrTitle from './EditHrTitle'
 import EditHrPhoneNumber from './EditHrPhoneNumber'
 import EditHrNameDisplay from './EditHrNameDisplay'
-import EditCompanyEmail from './EditCompanyEmail'
+import EditHrEmail from './EditHrEmail'
 import AvatarViewer from './AvatarViewer'
 import AvatarCropper from './AvatarCropper'
+import EditHrName from './EditHrName'
 
 const screens = {
   HrProfile,
   EditHrTitle,
+  EditHrName,
   EditHrPhoneNumber,
   EditHrNameDisplay,
-  EditCompanyEmail,
+  EditHrEmail,
   AvatarViewer,
   AvatarCropper,
 }

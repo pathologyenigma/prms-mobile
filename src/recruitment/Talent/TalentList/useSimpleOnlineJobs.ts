@@ -15,7 +15,7 @@ export interface JobItem {
 }
 
 export function useSimpleOnlineJobs() {
-  const [fetch, { data, loading }] = useLazyQuery<{
+  const [fetch, { data, loading, error }] = useLazyQuery<{
     UserGetJobListByEntId: { count: number; data: JobData[] }
   }>(UserGetJobListByEntId, {
     variables: {
@@ -25,11 +25,7 @@ export function useSimpleOnlineJobs() {
     fetchPolicy: 'cache-and-network',
   })
 
-  useFocusEffect(
-    useCallback(() => {
-      fetch()
-    }, [fetch]),
-  )
+  useFocusEffect(fetch)
 
   const jobs = data?.UserGetJobListByEntId.data.map(({ job_id, title }) => {
     return {
@@ -38,7 +34,7 @@ export function useSimpleOnlineJobs() {
     } as JobItem
   })
 
-  return { jobs, loading }
+  return { jobs, loading, error }
 }
 
 const UserGetJobListByEntId = gql`

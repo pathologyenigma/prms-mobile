@@ -1,24 +1,41 @@
 import React from 'react'
 import { StyleSheet, View, Image, Dimensions } from 'react-native'
-import {
-  StackNavigationOptions,
-  StackNavigationProp,
-} from '@react-navigation/stack'
+import { StackScreenProps } from '@react-navigation/stack'
 import SecondaryButton from '../../components/SecondaryButton'
 import { isIphoneX } from 'react-native-iphone-x-helper'
-import AvatarPickerModal from '../AvatarPickerMomal'
+import AvatarPickerModal from './AvatarPickerMomal'
 import { useState } from 'react'
-import { useNavigation } from '@react-navigation/native'
 import FocusAwareStatusBar from '../../components/FocusAwareStatusBar'
+import { statusBarHeight } from '../../theme'
+import { HrParamList } from '../typings'
+import {
+  alertMsgFromErrorMessage,
+  alertTitleFromErrorMessage,
+  PermissionError,
+  pickImage,
+  takePhoto,
+} from '../../utils/ImageHelper'
+import AlertModal from '../../components/AlertModal'
+import { openSettings } from 'react-native-permissions'
 
-export const AvatarViewerOptions: StackNavigationOptions = {
-  title: '页面模版',
-  headerShown: false,
-}
-
-export default function AvatarViewer() {
+export default function AvatarViewer({
+  navigation,
+  route,
+}: StackScreenProps<HrParamList, 'AvatarViewer'>) {
   const [modalVisible, setModalVisible] = useState(false)
-  const navigation = useNavigation<StackNavigationProp<any>>()
+  const { avatar, targetRouteName } = route.params || {}
+
+  const [error, setError] = useState<Error | null>(null)
+
+  const hanleResult = (uri: string | null) => {
+    if (uri !== null) {
+      navigation.navigate('AvatarCropper', { uri, targetRouteName })
+    }
+  }
+
+  const hanldeError = (e: Error) => {
+    setError(e)
+  }
 
   return (
     <View style={styles.container}>
@@ -26,7 +43,7 @@ export default function AvatarViewer() {
       <Image
         style={styles.viewer}
         source={{
-          uri: 'https://img95.699pic.com/photo/50034/7165.jpg_wh300.jpg',
+          uri: avatar,
         }}
       />
       <SecondaryButton
@@ -42,14 +59,40 @@ export default function AvatarViewer() {
         actions={[
           {
             title: '拍照',
-            onPress: () => navigation.navigate('AvatarCropper'),
+            onPress: async () => {
+              try {
+                const uri = await takePhoto()
+                hanleResult(uri)
+              } catch (e) {
+                hanldeError(e)
+              }
+            },
           },
           {
             title: '从相册上传',
-            onPress: () => navigation.navigate('AvatarCropper'),
+            onPress: async () => {
+              try {
+                const uri = await pickImage()
+                hanleResult(uri)
+              } catch (e) {
+                hanldeError(e)
+              }
+            },
           },
         ]}
         onDismiss={() => setModalVisible(false)}
+      />
+      <AlertModal
+        visible={!!error}
+        title={alertTitleFromErrorMessage(error)}
+        msg={alertMsgFromErrorMessage(error)}
+        onNegativePress={() => setError(null)}
+        onPositivePress={() => {
+          setError(null)
+          if (error instanceof PermissionError) {
+            openSettings()
+          }
+        }}
       />
     </View>
   )
@@ -66,6 +109,11 @@ const styles = StyleSheet.create({
   viewer: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').width,
+  },
+  close: {
+    position: 'absolute',
+    left: 0,
+    top: statusBarHeight(),
   },
   button: {
     width: 130,

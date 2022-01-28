@@ -1,31 +1,37 @@
 import React from 'react'
 import { StyleSheet, View, FlatList } from 'react-native'
-import Item from './Item'
+import ListItem from './ContractListItem'
 import { ListRenderItem } from 'react-native'
 import NavBar from '../../components/NavBar'
-
-const items = ['male', 'female']
+import useContractList, { ContractItem } from './useContractList'
+import LoadingAndError from '../../components/LoadingAndError'
+import Empty from '../../components/Empty'
 
 function ItemSeparator() {
   return <View style={styles.separator} />
 }
 
 export default function TalentListwithTalks() {
-  const renderItem: ListRenderItem<string> = ({ item }) => {
-    return <Item gender={item as any} />
+  const { items, loading, error, refetch } = useContractList()
+
+  const renderItem: ListRenderItem<ContractItem> = ({ item }) => {
+    return <ListItem item={item} />
   }
 
   return (
     <View style={styles.container}>
       <NavBar title="沟通过的人才" />
-      <FlatList
-        data={items}
-        keyExtractor={item => item}
-        renderItem={renderItem}
-        ItemSeparatorComponent={ItemSeparator}
-        style={styles.container}
-        contentContainerStyle={styles.content}
-      />
+      <LoadingAndError loading={loading} error={error} refetch={refetch}>
+        <FlatList
+          data={items}
+          keyExtractor={item => String(item.id)}
+          renderItem={renderItem}
+          ItemSeparatorComponent={ItemSeparator}
+          style={styles.container}
+          contentContainerStyle={styles.content}
+          ListEmptyComponent={Empty}
+        />
+      </LoadingAndError>
     </View>
   )
 }

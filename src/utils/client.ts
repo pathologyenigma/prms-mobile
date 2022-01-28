@@ -6,7 +6,6 @@ import {
   ApolloLink,
   from,
   fromPromise,
-  HttpLink,
   InMemoryCache,
   split,
 } from '@apollo/client'
@@ -15,6 +14,7 @@ import { setContext } from '@apollo/client/link/context'
 import * as Auth from './auth'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { refreshToken } from './refreshToken'
+import { createUploadLink } from 'apollo-upload-client'
 
 const wsClient = new SubscriptionClient(wssUri, {
   reconnect: true,
@@ -29,10 +29,6 @@ const wsClient = new SubscriptionClient(wssUri, {
 })
 
 const wsLink = new WebSocketLink(wsClient)
-
-const httpLink = new HttpLink({
-  uri: hostUri,
-})
 
 const errorLink = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
@@ -115,6 +111,8 @@ const loggingLink = new ApolloLink((operation, forward) => {
   })
 })
 
+const httpLink = createUploadLink({ uri: hostUri })
+
 const newLink = split(
   ({ query }) => {
     const def = getMainDefinition(query)
@@ -123,7 +121,7 @@ const newLink = split(
     )
   },
   from([errorLink, wsLink]),
-  from([errorLink, authLink, loggingLink, httpLink]),
+  from([errorLink, authLink, loggingLink, httpLink as any]),
 )
 
 const client = new ApolloClient({

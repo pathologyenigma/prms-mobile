@@ -1,5 +1,6 @@
 import {
   Education,
+  EnterpriseFinancing,
   EnterpriseNature,
   EnterpriseSize,
   FullTime,
@@ -168,4 +169,8 @@ export function stringForEnterpriseNature(nature: EnterpriseNature) {
 
 export function stringForEnterpriseSize(size: EnterpriseSize) {
   return '少于 15 人'
+}
+
+export function stringForEnterpriseFinancing(financing: EnterpriseFinancing) {
+  return '不需要融资'
 }
