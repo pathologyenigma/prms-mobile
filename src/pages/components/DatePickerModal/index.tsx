@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { Text, View } from 'react-native'
 import styles from './styles'
 import NextTouchableOpacity from '../NextTouchableOpacity'
-import DatePicker from 'react-native-date-picker'
+// import DatePicker from 'react-native-date-picker'
 import BottomContentModal from '../BottomContentModal'
+import { DatePicker } from 'react-native-common-date-picker'
 
 interface IProps {
   title?: string,
@@ -53,6 +54,11 @@ export default class DatePickerModal extends Component<IProps> {
           </NextTouchableOpacity>
         </View>
         <DatePicker
+          confirm={date => {
+            console.warn(date)
+          }}
+        />
+        {/* <DatePicker
           style={styles.datePicker}
           mode="date"
           maximumDate={new Date()}
@@ -61,7 +67,7 @@ export default class DatePickerModal extends Component<IProps> {
           locale="zh_HK"
           androidVariant="iosClone"
           onDateChange={(Date) => { selectDate = Date }}
-        />
+        /> */}
       </BottomContentModal >
     )
   }

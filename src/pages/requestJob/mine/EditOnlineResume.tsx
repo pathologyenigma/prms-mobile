@@ -8,7 +8,7 @@ import GradientButton from '../../components/GradientButton'
 import RootLoading from '../../../utils/rootLoading'
 import { greenColor } from '../../../utils/constant'
 import { reformDistanceYears, reformEducation, reformSalary, selectEducation } from '../../../utils/utils'
-import { getCandidateGetOnlineResumeBasicInfo, getCandidateGetOnlineResumeBasicInfoExperience, getEduExperience, getProjectExperience, getWorkExperience } from '../../../action/mineAction'
+import { editCandidateGetOnlineResumeGrade, getCandidateGetOnlineResumeBasicInfo, getCandidateGetOnlineResumeBasicInfoExperience, getEduExperience, getProjectExperience, getWorkExperience } from '../../../action/mineAction'
 import { format } from 'date-fns'
 import { AnyAction, bindActionCreators, Dispatch } from 'redux'
 import { connect } from 'react-redux'
@@ -154,6 +154,33 @@ class EditOnlineResume extends Component<IProps, IState> {
     })
   }
 
+  saveGrade() {
+    const { expectJobs, workExperience, educationExperience, personalSkills, projectExperience, personalGoods } = this.state
+    let i = 0
+    if (expectJobs.length > 0) {
+      i += 1
+    }
+    if (workExperience.length > 0) {
+      i += 1
+    }
+    if (educationExperience.length > 0) {
+      i += 1
+    }
+    if (personalSkills.length > 0) {
+      i += 1
+    }
+    if (projectExperience.length > 0) {
+      i += 1
+    }
+    if (personalGoods) {
+      i += 1
+    }
+    const grade = i / 6 * 100
+    editCandidateGetOnlineResumeGrade(grade, (error, result) => {
+      console.log('editCandidateGetOnlineResumeGrade, result: ', error, result)
+    })
+  }
+
   renderNavBar() {
     const { navigation } = this.props
     return (
@@ -177,7 +204,8 @@ class EditOnlineResume extends Component<IProps, IState> {
           style: { color: greenColor, fontSize: 15 },
           act: () => {
             // RootLoading.info('预览简历')
-            navigation.push('EditOnlineResume', { isPreview: true })
+            this.saveGrade()
+            // navigation.push('EditOnlineResume', { isPreview: true })
           }
         }}
       />
@@ -400,7 +428,7 @@ class EditOnlineResume extends Component<IProps, IState> {
                 <Text style={styles.workExperienceCompany}>{item.project_name}</Text>
                 <Text style={styles.workExperienceTime}>
                   {
-                    `${item.start_at}~${item.end_at}`
+                    `${format(new Date(item.start_at), 'yyyy-MM')}~${format(new Date(item.end_at), 'yyyy-MM')}`
                   }</Text>
                 {!isPreview && (
                   <Image

@@ -626,7 +626,7 @@ SPEC CHECKSUMS:
   Flipper-RSocket: 127954abe8b162fcaf68d2134d34dc2bd7076154
   FlipperKit: 651f50a42eb95c01b3e89a60996dd6aded529eeb
   GeoLocation: a8806d6df128b82888716129ea99e79a174466e1
-  glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
+  glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
   Permission-Camera: 53efcbb755b0e8bdf253dbb27cc7559ccfce8480
@@ -680,4 +680,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 7519251c5720c2ea993a66a71958d628d3fadc04
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.10.1

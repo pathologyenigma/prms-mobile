@@ -4,10 +4,12 @@ import { ApolloError, gql } from '@apollo/client'
 import {
   apolloClientShare,
   candidateEditEduExpGql,
+  candidateEditOnlineResumeGradeGql,
   candidateEditProExpGql,
   candidateEditWorkExprienceGql,
   candidateGetEduExpsGql,
   candidateGetOnlineResumeBasicInfoGql,
+  candidateGetOnlineResumeGradeGql,
   candidateGetProjectExpsGql,
   candidateGetWorkExpsGql,
   candidateRemoveEduExpGql,
@@ -393,6 +395,61 @@ const editSkills = (skills: any, callback?: (error: any, result?: any) => void) 
     })
 }
 
+// 编辑简历-获取经历进度
+const getCandidateGetOnlineResumeGrade = (callback?: (error: any, result?: any) => void) => {
+  apolloClientShare
+    .query({
+      query: candidateGetOnlineResumeGradeGql,
+    })
+    .then(res => {
+      console.log('CandidateGetOnlineResumeGrade-result: ', res)
+      if (res && res.data && res.data.CandidateGetOnlineResumeGrade) {
+        if (callback) {
+          callback(undefined, res.data.CandidateGetOnlineResumeGrade)
+        }
+      } else {
+        if (callback) {
+          callback(res)
+        }
+      }
+    })
+    .catch(error => {
+      console.log('error: ', error)
+      if (callback) {
+        callback(error)
+      }
+    })
+}
+
+// 编辑简历-编辑经历进度
+const editCandidateGetOnlineResumeGrade = (grade: any, callback?: (error: any, result?: any) => void) => {
+  apolloClientShare
+    .mutate({
+      mutation: candidateEditOnlineResumeGradeGql,
+      variables: {
+        grade
+      }
+    })
+    .then(res => {
+      console.log('CandidateGetOnlineResumeGrade-result: ', res)
+      if (res && res.data && res.data.CandidateEditOnlineResumeGrade) {
+        if (callback) {
+          callback(undefined, res.data.CandidateEditOnlineResumeGrade.data)
+        }
+      } else {
+        if (callback) {
+          callback(res)
+        }
+      }
+    })
+    .catch(error => {
+      console.log('error: ', error)
+      if (callback) {
+        callback(error)
+      }
+    })
+}
+
 export {
   reset_reducer,
   update_kv,
@@ -409,5 +466,7 @@ export {
   removeCandidateEditProExp,            //  项目经历-删除
   editEduExperience,                //  编辑/新增教育经历
   getEduExperience,                      //  获取教育经历
-  removeCandidateEditEduExp              // 删除教育经历
+  removeCandidateEditEduExp,              // 删除教育经历
+  getCandidateGetOnlineResumeGrade,
+  editCandidateGetOnlineResumeGrade,
 }

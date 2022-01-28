@@ -19,17 +19,22 @@ import { IStoreState } from '../../../reducer'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import { connect } from 'react-redux'
 import { reformDistanceYears, reformEducation } from '../../../utils/utils'
+import { getCandidateGetOnlineResumeGrade } from '../../../action/mineAction'
 
 type IProps = GenProps<'Mine'> & ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>
 
-type IState = {}
+type IState = {
+  resumeProgress: any
+}
 
 class Mine extends Component<IProps, IState> {
   constructor(props: any) {
     super(props)
     console.log('props: ', props)
-    this.state = {}
+    this.state = {
+      resumeProgress: '--',
+    }
   }
 
   componentDidMount() {
@@ -43,12 +48,24 @@ class Mine extends Component<IProps, IState> {
     this.props.navigation.removeListener('focus', () => { })
   }
 
-  loadData() { }
+  loadData() {
+    this.getOnlineResumeGrade()
+  }
+
+  getOnlineResumeGrade() {
+    getCandidateGetOnlineResumeGrade((error, result) => {
+      console.log('1111111!: ', error, result)
+      if (!error && result) {
+        this.setState({ resumeProgress: result })
+      }
+    })
+  }
 
   renderIconView() {
     const start = { x: 0, y: 0.5 }
     const end = { x: 1, y: 0.5 }
     const { userInfo } = this.props
+    const { resumeProgress } = this.state
     return (
       <View style={styles.iconView}>
         <NextTouchableOpacity
@@ -90,7 +107,7 @@ class Mine extends Component<IProps, IState> {
                 source={require('../../../assets/requestJobs/chakan.png')}
               />
             </View>
-            <Text style={styles.onlineText}>完善度90%</Text>
+            <Text style={styles.onlineText}>{`完善度${resumeProgress}%`}</Text>
           </NextTouchableOpacity>
         </LinearGradient>
       </View>

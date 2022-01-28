@@ -385,17 +385,16 @@ export default class EditEducation extends Component<IProps, IState> {
         <JobStatusModal
           title="时间段"
           visible={beginTimeVisible}
-          statusArray={beginTimeArray}
-          timeArray={beginDateArray}
-          currentStatus={beginTime}
-          currentTime={beginTime}
+          currentDate={
+            beginTime ? `${new Date(beginTime).getFullYear()}-${new Date(beginTime).getMonth() + 1}`
+              : `${new Date().getFullYear()}-${new Date().getMonth() + 1}`
+          }
           leftPress={() => {
             this.setState({ beginTimeVisible: false })
           }}
-          rightPress={(selectBeginYear, selectEndYear) => {
+          rightPress={(selectedDate) => {
             this.setState({
-              beginTime: selectBeginYear,
-              endTime: selectEndYear,
+              beginTime: selectedDate,
               beginTimeVisible: false,
             })
           }}

@@ -553,6 +553,20 @@ const candidateRemoveEduExpGql = gql`
   }
 `
 
+// 在线简历-获取设置进度
+const candidateGetOnlineResumeGradeGql = gql`
+  query CandidateGetOnlineResumeGrade{
+    CandidateGetOnlineResumeGrade
+  }
+`
+
+// 在线简历-编辑设置进度
+const candidateEditOnlineResumeGradeGql = gql`
+  mutation CandidateEditOnlineResumeGrade($grade: Int!){
+    CandidateEditOnlineResumeGrade(grade: $grade)
+  }
+`
+
 export {
   apolloClientShare,
   sendSMSGql,
@@ -595,7 +609,9 @@ export {
   candidateGetEduExpsGql,
   candidateRemoveProExpGql,
   candidateRemoveWorkExpGql,
-  candidateRemoveEduExpGql
+  candidateRemoveEduExpGql,
+  candidateGetOnlineResumeGradeGql,
+  candidateEditOnlineResumeGradeGql,
   //
 
 }
