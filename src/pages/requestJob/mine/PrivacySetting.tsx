@@ -119,7 +119,7 @@ export default class PrivacySetting extends Component<IProps, IState> {
           contentContainerStyle={styles.contentContainerStyle}
         >
           {this.renderName()}
-          {this.renderHomeLocation()}
+          {/* {this.renderHomeLocation()} */}
           {this.renderBanCompany()}
         </ScrollView>
       </View>

@@ -10,6 +10,8 @@ export default StyleSheet.create({
   listView: {
     flex: 1,
     backgroundColor: '#F0F0F0',
+    marginTop: 10,
+    // v1版本适配
   },
   contentStyle: {
   },

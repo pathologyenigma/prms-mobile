@@ -401,6 +401,8 @@ class NewsChat extends Component<TProps, IState> {
 
   renderHeaderView(tabProps: any) {
     const { selectType } = this.state
+    // v1版本适配
+    return null
     return (
       <View style={styles.tabs}>
         <NextTouchableOpacity

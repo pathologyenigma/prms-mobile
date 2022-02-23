@@ -147,14 +147,15 @@ export default class JobfairDetail extends Component<TProps, IState> {
             navigation.pop()
           },
         }}
-        right={{
-          style: { width: 16, height: 16, },
-          type: EButtonType.IMAGE,
-          value: require('../../../assets/requestJobs/job-fenxiang.png'),
-          act: () => {
-            this.setState({ shareVisible: true })
-          },
-        }}
+      // right={{
+      // v1版本适配
+      //   style: { width: 16, height: 16, },
+      //   type: EButtonType.IMAGE,
+      //   value: require('../../../assets/requestJobs/job-fenxiang.png'),
+      //   act: () => {
+      //     this.setState({ shareVisible: true })
+      //   },
+      // }}
       />
     )
   }
@@ -164,9 +165,12 @@ export default class JobfairDetail extends Component<TProps, IState> {
       title: '招聘会详情',
     }, {
       title: '参与企业',
-    }, {
-      title: '招聘会问答',
-    }]
+    },
+      // {
+      // v1版本适配
+      //   title: '招聘会问答',
+      // }
+    ]
     const start = { x: 0, y: 0.5 }
     const end = { x: 1, y: 0.5 }
     const { selectTabs } = this.state
@@ -421,10 +425,10 @@ export default class JobfairDetail extends Component<TProps, IState> {
           {this.renderTabBar()}
           {selectTabs === 0 && this.renderDetail()}
           {selectTabs === 1 && this.renderCompany()}
-          {selectTabs === 2 && this.renderAsk()}
+          {/* {selectTabs === 2 && this.renderAsk()} */}
         </ScrollView>
-        {this.renderFooterBtn()}
-        {selectTabs === 2 && this.renderQuestion()}
+        {/* {this.renderFooterBtn()} */}
+        {/* {selectTabs === 2 && this.renderQuestion()} */}
         <AlertContentModal
           visible={resumeTipsVisible}
           title="友情提示"

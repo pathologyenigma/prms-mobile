@@ -83,7 +83,8 @@ export default class Find extends Component<TProps, IState> {
             })
           }
         </View>
-        <NextTouchableOpacity
+        {/* <NextTouchableOpacity
+        // v1版本适配
           style={styles.searchBtn}
           onPress={() => {
             const { navigation } = this.props
@@ -97,7 +98,7 @@ export default class Find extends Component<TProps, IState> {
             resizeMode="center"
             source={require('../../../assets/requestJobs/find-search.png')}
           />
-        </NextTouchableOpacity>
+        </NextTouchableOpacity> */}
       </View>
     )
   }

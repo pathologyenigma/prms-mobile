@@ -142,7 +142,8 @@ class Mine extends Component<IProps, IState> {
           <Text style={styles.detailInfoValue}>1333</Text>
           <Text style={styles.detailInfoTag}>浏览</Text>
         </NextTouchableOpacity>
-        <NextTouchableOpacity
+        {/* <NextTouchableOpacity
+        // v1版本适配
           onPress={() => {
             navigation.push('MyCollection')
           }}
@@ -157,7 +158,7 @@ class Mine extends Component<IProps, IState> {
           style={styles.detailInfoItem}>
           <Text style={styles.detailInfoValue}>1</Text>
           <Text style={styles.detailInfoTag}>关注</Text>
-        </NextTouchableOpacity>
+        </NextTouchableOpacity> */}
       </View>
     )
   }
@@ -332,12 +333,13 @@ class Mine extends Component<IProps, IState> {
       require('../../../assets/requestJobs/setting.png'),
     ]
     const titleArray = [
-      '附件简历',
+      // v1版本适配
+      // '附件简历',
       '隐私设置',
-      '我的钱包',
+      // '我的钱包',
       '我的关注',
       '切换身份',
-      '反馈与帮助',
+      // '反馈与帮助',
       '关于',
       '设置',
     ]
@@ -392,9 +394,10 @@ class Mine extends Component<IProps, IState> {
         <StatusBar translucent={true} barStyle={'light-content'} animated />
         <ScrollView>
           {this.renderNavBar()}
-          {this.renderJianliView()}
+          {/* // v1版本适配 */}
+          {/* {this.renderJianliView()}
           {this.renderAdImage()}
-          {this.renderMyStudy()}
+          {this.renderMyStudy()} */}
           {this.renderOther()}
         </ScrollView>
       </View>
