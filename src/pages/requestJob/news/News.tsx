@@ -68,9 +68,12 @@ export default class News extends Component<TProps, IState> {
   renderTabBar(tabProps: any) {
     const tabs = [{
       title: '聊天',
-    }, {
-      title: '圈子',
-    }]
+    },
+      // {
+      // v1版本适配
+      // title: '圈子',
+      // }
+    ]
     return (
       <View style={styles.tabsView}>
         <View style={styles.tabLeft}>

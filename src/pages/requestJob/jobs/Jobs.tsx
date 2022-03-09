@@ -476,11 +476,12 @@ class Jobs extends Component<IProps, IState> {
   }
 
   renderHeader = () => {
+    // v1版本适配
     return (
       <View style={styles.listHeaderView}>
         {this.renderCondition()}
         {this.renderAd()}
-        {this.renderVideo()}
+        {/* {this.renderVideo()} */}
       </View>
     )
   }

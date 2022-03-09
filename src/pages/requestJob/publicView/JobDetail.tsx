@@ -240,14 +240,15 @@ class JobDetail extends Component<IProps, IState> {
           >
             <Image resizeMode="center" style={styles.jubao} source={require('../../../assets/requestJobs/jubao.png')} />
           </NextTouchableOpacity>
-          <NextTouchableOpacity
+          {/* <NextTouchableOpacity
+          // v1版本适配
             style={styles.rightItem}
             onPress={() => {
               this.setState({ shareVisible: true })
             }}
           >
             <Image resizeMode="center" style={styles.fenxiang} source={require('../../../assets/requestJobs/job-fenxiang.png')} />
-          </NextTouchableOpacity>
+          </NextTouchableOpacity> */}
         </View>
       </View>
     )

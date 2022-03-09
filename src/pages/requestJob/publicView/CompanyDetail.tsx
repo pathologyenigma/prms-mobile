@@ -82,8 +82,9 @@ class CompanyDetail extends Component<IProps, IState> {
 
   loadData() {
     this.getHrListData()
-    this.loadtRecommentListData()
-    this.loadQaData()
+    // v1版本适配
+    // this.loadtRecommentListData()
+    // this.loadQaData()
     console.log('11111111111')
     this.props.getCandidateGetEnterpriseDetail_EntInfo(1, (error, result) => {
       console.log('getCandidateGetEnterpriseDetail_EntInfo: ', error, result)
@@ -877,13 +878,14 @@ class CompanyDetail extends Component<IProps, IState> {
             {hrList && (
               this.renderHotReviewer()
             )}
-            {recommentList && (
+            {/* {recommentList && (
+            // v1版本适配
               <>
                 {this.renderReviewerEvaluation()}
                 {this.renderCommentList()}
               </>
             )}
-            {this.renderCompanyQuestion()}
+            {this.renderCompanyQuestion()} */}
           </View>
           {/* {this.renderImageModal()} */}
           {/* ) : null} */}

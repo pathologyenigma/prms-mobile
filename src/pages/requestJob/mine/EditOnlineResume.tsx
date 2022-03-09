@@ -203,9 +203,9 @@ class EditOnlineResume extends Component<IProps, IState> {
           value: this.state.isPreview ? '' : '预览',
           style: { color: greenColor, fontSize: 15 },
           act: () => {
-            // RootLoading.info('预览简历')
+            // TODO 此处需要修改保存时机
             this.saveGrade()
-            // navigation.push('EditOnlineResume', { isPreview: true })
+            navigation.push('EditOnlineResume', { isPreview: true })
           }
         }}
       />

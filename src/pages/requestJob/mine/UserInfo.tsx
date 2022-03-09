@@ -13,7 +13,7 @@ import { EducationType, reformEducation, selectEducation } from '../../../utils/
 import ActionSheet from '../../../recruitment/components/ActionSheet'
 import DatePickerModal from '../../components/DatePickerModal'
 import RootLoading from '../../../utils/rootLoading'
-import AvatarPickerModal from '../../../recruitment/Hr/AvatarPickerMomal'
+import AvatarPickerModal from '../../../recruitment/Hr/AvatarViewer/AvatarPickerMomal'
 
 type IProps = GenProps<'UserInfo'> &
   ReturnType<typeof mapStateToProps> &

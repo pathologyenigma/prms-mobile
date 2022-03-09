@@ -139,11 +139,11 @@ class HrPersonalInfo extends Component<IProps, IState> {
               source={require('../../../assets/requestJobs/hr-renzheng.png')}
               style={styles.hrRenzheng}
             />
-            <NextTouchableOpacity
+            {/* <NextTouchableOpacity
               style={styles.hrFocusBtn}
             >
               <Text style={styles.hrFocusText}>+关注</Text>
-            </NextTouchableOpacity>
+            </NextTouchableOpacity> */}
           </View>
           <Text style={styles.detailInfo}>
             {`${pos}${last_log_out_time ? `·${last_log_out_time}` : ''}`}
@@ -171,7 +171,8 @@ class HrPersonalInfo extends Component<IProps, IState> {
             source={require('../../../assets/requestJobs/white-back.png')}
           />
         </NextTouchableOpacity>
-        <View
+        {/* <View
+        // v1版本适配
           style={styles.rightView}
         >
           <NextTouchableOpacity
@@ -190,7 +191,7 @@ class HrPersonalInfo extends Component<IProps, IState> {
           >
             <Image resizeMode="center" style={styles.fenxiang} source={require('../../../assets/requestJobs/fenxiang-white.png')} />
           </NextTouchableOpacity>
-        </View>
+        </View> */}
       </View>
     )
   }

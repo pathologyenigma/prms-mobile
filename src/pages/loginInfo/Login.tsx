@@ -268,8 +268,9 @@ class LoginScreen extends Component<IProps, IState> {
     const { loginType } = this.state
     const { navigation } = this.props
     return (
+      // v1版本适配
       <View>
-        {loginType === 2 ? (
+        {/* {loginType === 2 ? (
           <View style={styles.thirdLoginView}>
             <Text style={styles.thirdLoginTitle}>第三方登录</Text>
             <View style={styles.thirdLoginBtn}>
@@ -293,7 +294,7 @@ class LoginScreen extends Component<IProps, IState> {
               </NextTouchableOpacity>
             </View>
           </View>
-        ) : null}
+        ) : null} */}
         <View style={styles.privacyView}>
           <Text style={styles.privacyText}>
             {loginType === 2 ? '阅读' : '进入即代表您已同意'}
