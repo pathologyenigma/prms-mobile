@@ -50,10 +50,14 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file('release.keystore')
-            storePassword 'czzapp123456'
-            keyAlias 'czzapp'
-            keyPassword 'czzapp123456'
+        	storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            // storeFile file('release.keystore')
+            // storePassword 'czzapp123456'
+            // keyAlias 'czzapp'
+            // keyPassword 'czzapp123456'
         }
     }
     buildTypes {
