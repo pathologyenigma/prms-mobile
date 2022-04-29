@@ -3,11 +3,12 @@ import { View, Text, FlatList, Image, Pressable } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import HTUpdateManager from '~/common/update/HTUpdateManager'
 import HTServerManager from '~/common/debug/HTServerManager'
+import HTNavigationBar from '~/common/navigation/HTNavigationBar'
 
 export default class HTMineSettingPage extends Component {
 
 	static navigationOptions = {
-		title: 'DEBUG'
+		headerShown: false
 	}
 
 	constructor(props) {
@@ -34,7 +35,7 @@ export default class HTMineSettingPage extends Component {
 				<Pressable style={styleList.itemContent} onPress={item.onPress}>
 					<Text style={styleList.itemTitle}>{item.title}</Text>
 					<Text style={styleList.itemDetail}>{item.detail}</Text>
-					<Image source={require('~/resource/image/mine_more.png')} />
+					<Image source={require('~/assets/requestJobs/item_more.png')} />
 				</Pressable>
 				<View style={styleList.itemSeparator}></View>
 			</View>
@@ -44,6 +45,11 @@ export default class HTMineSettingPage extends Component {
 	render() {
 		return (
 			<View style={styleList.container}>
+				<HTNavigationBar title={'DEBUG'} leftItemList={[
+					<Pressable style={{ height: '100%', justifyContent: 'center', paddingRight: 20 }} onPress={this.props.navigation.goBack}>
+						<Image source={require('~/assets/black_back.png')} />
+					</Pressable>
+				]} />
 				<FlatList
 					data={this.state.itemList}
 					renderItem={this._renderItem}
@@ -57,6 +63,7 @@ export default class HTMineSettingPage extends Component {
 const styleList = StyleSheet.create({
 	container: {
 		flex: 1,
+		backgroundColor: 'white',
 		paddingBottom: 23,
 	},
 	itemContainer: {

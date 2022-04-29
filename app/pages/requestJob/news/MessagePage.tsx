@@ -17,6 +17,7 @@ import JobCell from '../../components/JobCell'
 import AlertContentModal from '../../components/AlertContentModal'
 import WhiteContentModal from '../../components/WhiteContentModal'
 import HTAuthManager from '~/common/auth/common/model/HTAuthManager'
+import HTThrowPromise from '~/common/request/HTThrowPromise'
 
 type IProps = GenProps<'MessagePage'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 interface IState {
@@ -39,7 +40,6 @@ interface IState {
   rejectReason: string
   rejectModalVisible: boolean
   isLoadMoreData: boolean
-  userId: any
 }
 
 const inappropriateArray = [
@@ -67,8 +67,8 @@ class MessagePage extends Component<IProps, IState> {
       return
     }
     this.state = {
-      userId: HTAuthManager.keyValueList.userId,
       targetItem,
+      userInfo: null,
       page: 0,
       pageSize: 10,
       content: '',
@@ -98,16 +98,26 @@ class MessagePage extends Component<IProps, IState> {
       }]
     }
     this.reformNewMessage = this.reformNewMessage.bind(this)
-    this.newMessaheListner = DeviceEventEmitter.addListener(HTAuthManager.kHTSocketMessageDidReceiveNotice, this.reformNewMessage)
+    this.newMessageListner = DeviceEventEmitter.addListener(HTAuthManager.kHTSocketMessageDidReceiveNotice, this.reformNewMessage)
   }
 
   componentDidMount() {
-  	this.loadData()
+  	HTThrowPromise.all([
+  		HTAPI.UserGetUsernameAndLogoWithId({
+  			user_id: this?.state?.targetItem?.id
+  		}),
+  		HTAPI.UserGetBasicInfo()
+  	]).then(([targetItemInfo, userInfo]) => {
+  		this.setState({
+  			targetItem: { ...this.state.targetItem, ...targetItemInfo },
+  			userInfo
+  		}, this.loadData)
+  	})
   }
 
   componentWillUnmount() {
-    if (this.newMessaheListner) {
-      this.newMessaheListner.remove()
+    if (this.newMessageListner) {
+      this.newMessageListner.remove()
     }
   }
 
@@ -141,13 +151,8 @@ class MessagePage extends Component<IProps, IState> {
   }
 
   loadData() {
-    const { targetItem, pageSize, page, listDataSource, userId } = this.state
+    const { targetItem, pageSize, page, listDataSource } = this.state
     const { navigation } = this.props
-    if (!userId) {
-      Toast.show('登录失效,请重新登录')
-      navigation.goBack()
-      return
-    }
     HTAPI.UserGetMessages({
     	targetId: targetItem.id, 
 		page: page, 
@@ -368,15 +373,18 @@ class MessagePage extends Component<IProps, IState> {
   }
 
   renderTextMessage(item: any) {
-    if (this.state.userId == item.from.toString()) {
+  	let isSendFromSelf = this?.state?.targetItem?.id == item.to.toString()
+  	let avatarUrl = isSendFromSelf ? this?.state?.userInfo?.image_url : this?.state?.targetItem?.logo
+  	avatarUrl = avatarUrl ? { uri: avatarUrl } : require('~/assets/requestJobs/mine_avatar.png')
+    if (isSendFromSelf) {
       // 发送方
       return (
         <View key={item.uuid.toString()} style={styles.cellSendMessage}>
           <Text style={styles.cellSendContent} selectable={true}>
             {item.messageContent}
           </Text>
-          <Image
-            source={{ uri: item.logo ?? 'https://alifei03.cfp.cn/creative/vcg/veer/800/new/VCG41N113145561.jpg' }}
+          <CacheImage
+            source={avatarUrl}
             style={styles.icon}
           />
         </View >
@@ -385,8 +393,8 @@ class MessagePage extends Component<IProps, IState> {
     // 接收方
     return (
       <View key={item.uuid.toString()} style={styles.cellReceiveMessage}>
-        <Image
-          source={{ uri: item.logo ?? 'https://alifei03.cfp.cn/creative/vcg/veer/800/new/VCG41N113145561.jpg' }}
+        <CacheImage
+          source={avatarUrl}
           style={styles.icon}
         />
         <Text style={styles.cellReceiveContent} selectable={true}>

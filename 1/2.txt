@@ -1,0 +1,50 @@
+// Cannot return null for non-nullable
+CommonGetResume resumeId
+
+Query QNPhoneNumberCheck
+Query QNCheckIdCardNumber
+Mutation QNInsertPersonalData
+
+// 暂时不做
+Query CommonGetIterviewSchedule
+Query CommonGetIterviewDetail
+Query HRGetInterviewcomments
+Mutation HRInviteInterview
+Mutation CommoncancelInterview
+Mutation HREndInterview
+Mutation CandidateAcceptOrRejectInterview
+
+Mutation ENTEditEnterpriseWorkTimeAndWelfare
+Mutation UserEnterpriseIdentify
+Mutation ENTEditEnterpriseExtraData
+Mutation CandidateRecruitmentApply
+Mutation HRRecruitmentApply
+Mutation ENTInviteWorkMate
+Mutation ENTInsertEnterpriseBasicInfo
+Mutation HRRemoveJob
+Mutation ENTRecruitmentApply
+Mutation ENTRemoveWorker
+Mutation ENTSetDisabled
+Mutation ENTSetEnabled
+Mutation UserSendPrologue
+Mutation ENTEnterpriseWorkerRegister
+Mutation CandidateRemoveJobExpectation
+
+
+
+// 一直返回 null, 这个 filter 传 token 也不知道是做什么的
+Query HRGetApplicants
+
+// Cannot return null for non-nullable
+Query CandidateCheckResumeCompletion
+
+// 接口能通，但是都返回了 None
+Query ENTCheckEnterpriseIdentification
+
+// HR role does not have the right for edit enterprise info
+Query ENTPrecheckForInviteWorkMate
+
+Expected Iterable, but did not find one for field
+Query CandidateGetAllJobCategoriesByEntId
+
+Subscription newContract

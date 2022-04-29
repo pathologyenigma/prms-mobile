@@ -70,6 +70,15 @@ export default class JobSearch extends Component<IProps, IState> {
       <View style={styles.navBar}>
         <NextTouchableOpacity
           style={styles.locationBtn}
+          onPress={() => {
+          	navigation.push('JobSelectCity', {
+              mode: 1,
+              selectJobCityCallback: (e: any) => {
+                console.log('eeeee: ', e)
+                this.setState({ selectCity: e[2].name })
+              }
+            })
+          }}
         >
           <Image
             style={styles.locationIcon}

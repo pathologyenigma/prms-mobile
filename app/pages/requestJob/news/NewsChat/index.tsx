@@ -14,6 +14,7 @@ import { Tabs } from '@ant-design/react-native'
 import ListEmptyComponent from '../../../components/ListEmptyComponent'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import { connect } from 'react-redux'
+import HTAuthManager from '~/common/auth/common/model/HTAuthManager'
 
 type TProps = GenProps<'News'> & ReturnType<typeof mapDispatchToProps>
 
@@ -124,6 +125,13 @@ class NewsChat extends Component<TProps, IState> {
 
   componentDidMount() {
     this.handleRefresh()
+    this.newMessageListner = DeviceEventEmitter.addListener(HTAuthManager.kHTSocketMessageDidReceiveNotice, () => {
+    	this.loadData()
+    })
+  }
+
+  componentWillUnmount() {
+    this.newMessageListner && this.newMessageListner.remove()
   }
 
   handleRefresh() {
@@ -264,7 +272,7 @@ class NewsChat extends Component<TProps, IState> {
         data={seeMeDataSource}
         renderItem={({ item }: any) => this.renderSeeMeItem(item)}
         onFooterRefresh={() => this.handleSeeMeEndReached}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item) => item.id.toString()}
         ListEmptyComponent={
           seeMeRefreshState !== RefreshState.HeaderRefreshing ? (
             <ListEmptyComponent
@@ -331,7 +339,7 @@ class NewsChat extends Component<TProps, IState> {
   renderItem(item: any, rowMap: any, dataSource: any) {
     return (
       <SwipeRow
-        key={item.item.id.toString()}
+        key={`${item.item.id.toString}_${item?.item?.job?.id}`}
         rightOpenValue={-150}
         recalculateHiddenLayout
         closeOnRowPress
@@ -372,7 +380,6 @@ class NewsChat extends Component<TProps, IState> {
         <MessageCell
           cellItem={item.item}
           onPress={() => {
-            console.log('item: ', item)
             const { navigation } = this.props
             navigation.push('MessagePage', { targetItem: item.item })
           }}
@@ -524,7 +531,7 @@ class NewsChat extends Component<TProps, IState> {
       <SwipeListView
         contentContainerStyle={styles.contentStyle}
         useFlatList
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => `${item.id}_${item?.job?.id}`}
         refreshing={newsRefresh}
         onRefresh={() => this.handleRefresh()}
         initialNumToRender={10}

@@ -11,6 +11,7 @@ import WhiteContentModal from '../components/WhiteContentModal'
 import GradientButton from '../components/GradientButton'
 import SystemHelper from '../../utils/system'
 import NavBar, { EButtonType } from '../components/NavBar'
+import HTAuthManager from '~/common/auth/common/model/HTAuthManager'
 
 type IProps = GenProps<'SetPassword'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
@@ -29,6 +30,7 @@ class SetPassword extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
+      operation: this?.props?.route?.params?.operation ?? '',
       phone: this?.props?.route?.params?.phone ?? '',
       password: '',
       confirmPassword: '',
@@ -116,7 +118,8 @@ class SetPassword extends Component<IProps, IState> {
   }
 
   renderFinish() {
-    const { confirmPassword, password } = this.state
+  	const { navigation } = this.props
+    const { operation, phone, confirmPassword, password } = this.state
     return (
       <NextTouchableOpacity
         style={[styles.finishBtn, (!confirmPassword || !password) && { opacity: 0.6 }]}
@@ -125,16 +128,38 @@ class SetPassword extends Component<IProps, IState> {
           if (confirmPassword !== password) {
             Toast.show('密码不一致,请重新输入')
           } else {
-          	HTAPI.UserResetPassword({
-          		phoneNumber: this.state.phone,
-	            password,
-	            confirmPassword,
-          	}).then(response => {
-          		ActionToast.show()
-          		// 密码重置/设置操作,将用户信息存储下来即可选择角色
-                // TODO:此处需要将用户角色信息存储下来
-          		navigation.push('ChooseRole')
-          	})
+          	if (operation == 'UserRegister') {
+          		HTAPI.UserRegister({
+			      info: {
+					username: phone,
+					email: null,
+					password,
+					confirmPassword,
+					phoneNumber: phone,
+		          }
+			    }).then(response => {
+			    	ActionToast.show('注册成功!')
+			    	HTAuthManager.updateKeyValueList({
+	            		userToken: response,
+	            		lastLoginAccount: phone,
+	            		lastLoginPassword: password,
+	            	})
+	            	navigation.push('ChooseRole')
+			    })
+          	} else {
+          		HTAPI.UserResetPassword({
+	          		info: {
+	          			phoneNumber: phone,
+			            password,
+			            confirmPassword,
+	          		}
+	          	}).then(response => {
+	          		ActionToast.show()
+	          		// 密码重置/设置操作,将用户信息存储下来即可选择角色
+	                // TODO:此处需要将用户角色信息存储下来
+	          		navigation.navigate('LoginScreen')
+	          	})
+          	}
           }
         }}
       >

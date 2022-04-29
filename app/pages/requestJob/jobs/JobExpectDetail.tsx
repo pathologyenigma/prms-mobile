@@ -66,13 +66,13 @@ class JobExpectDetail extends Component<IProps, IState> {
   _saveJobExpectation = () => {
   	HTAPI.CandidateEditJobExpectations({
   		info: {
+  			id: this.state.id,
   			job_category: this.state.job_category,
   			industry_involved: this.state.industry_involved,
   			aimed_city: this.state.aimed_city,
   			full_time_job: this.state.full_time_job,
-  			min_salary_expectation: this.state.min_salary_expectation,
-  			max_salary_expectation: this.state.max_salary_expectation
-  			// salary: [this.state.min_salary_expectation, this.state.max_salary_expectation]
+  			min_salary_expectation: parseInt(this.state.min_salary_expectation),
+  			max_salary_expectation: parseInt(this.state.max_salary_expectation)
   		}
   	}).then(response => {
   		Toast.show('保存成功')

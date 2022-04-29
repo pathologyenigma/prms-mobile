@@ -36,7 +36,7 @@ const hook = (component, defaultProps, reloadPropsFunction) => {
 }
 
 import React from 'react'
-import { Text, Image, TextInput, ScrollView, FlatList, Platform } from 'react-native'
+import { Text, Image, TextInput, ScrollView, FlatList, SectionList, Platform } from 'react-native'
 
 hook(Image, { fadeDuration: 0 })
 
@@ -91,4 +91,5 @@ hook(ScrollView, {
 }, SCROLL_RENDER_PROPS_FUNCTION)
 
 hook(FlatList, { refreshing: false })
+hook(SectionList, { refreshing: false })
 

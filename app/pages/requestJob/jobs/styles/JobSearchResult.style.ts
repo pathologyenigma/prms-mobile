@@ -8,7 +8,8 @@ export default StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   listView: {
-    flex: 1
+    // flex: 1,
+    marginBottom: HOME_BAR_HEIGHT
   },
   contentView: {
     flex: 1,

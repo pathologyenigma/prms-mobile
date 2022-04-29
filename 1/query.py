@@ -9,12 +9,26 @@ data = requests.post('http://be.chenzaozhao.com:4000/graphql', headers={'content
 data = data.text
 data = json.loads(data)
 data = data['data']['__schema']['types']
-data = filter(lambda x: x['kind'] == 'OBJECT' and x['name'] in ['Query', 'Mutation', 'Subscription'], data)
+data = filter(lambda x: x['kind'] in ['OBJECT', 'INPUT_OBJECT'], data)
 
-apiList = open('../src/utils/postQuery.ts').read()
+apiList = open('../app/common/request/HTAPI.js').read()
 
 for section in data:
-	for item in section['fields']:
-		name = item['name']
-		if name not in apiList and 'Admin' not in name:
-			print('%s %s' % (section['name'], item['name']))
+	if section['name'] in ['Query', 'Mutation', 'Subscription']:
+		pass
+		# for item in section['fields']:
+		# 	name = item['name']
+		# 	if name in apiList or 'Admin' in name:
+		# 		continue
+		# 	if name in ['StaticGetProvinces', 'StaticGetCities', 'StaticGetCounties', 'StaticGetHotJobs', 'TestShowDatas']:
+		# 		continue
+		# 	if name in ['CommonGetResume']:
+		# 		continue
+		# 	print('%s %s' % (section['name'], item['name']))
+	else:
+		if section['name'] == 'TalentListFilter':
+			for item in section['inputFields']:
+				name = item['type']['name']
+				if name == None:
+					name = '[' + item['type']['ofType']['name'] + ']'
+				print('%s %s' % (item['name'], name))

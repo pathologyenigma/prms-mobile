@@ -48,46 +48,46 @@ export default class FilterView extends Component<IProps, IState> {
   loadData() {
     const { route: { params: { filterMode } } } = this.props
     const salaryDataSource = [
-      { id: 0, label: '不限' },
-      { id: 1, label: '5k以下' },
-      { id: 2, label: '5-8k' },
-      { id: 3, label: '8-10k' },
-      { id: 4, label: '10-15k' },
-      { id: 5, label: '15-20k' },
-      { id: 6, label: '20-25k' },
-      { id: 7, label: '25-30k' },
-      { id: 8, label: '30k以上' }
+      { id: 0, label: '不限', value: null },
+      { id: 1, label: '5k以下', value: [0, 5000] },
+      { id: 2, label: '5-8k', value: [5000, 8000] },
+      { id: 3, label: '8-10k', value: [8000, 10000] },
+      { id: 4, label: '10-15k', value: [10000, 15000] },
+      { id: 5, label: '15-20k', value: [15000, 20000] },
+      { id: 6, label: '20-25k', value: [20000, 25000] },
+      { id: 7, label: '25-30k', value: [25000, 30000] },
+      { id: 8, label: '30k以上', value: [30000] }
     ]
     const experienceDataSource = [
-      { id: 0, label: '在校/应届' },
-      { id: 1, label: '3年及以下' },
-      { id: 2, label: '3-5年' },
-      { id: 3, label: '5-10年' },
-      { id: 4, label: '10年以上' },
-      { id: 5, label: '经验不限' },
+      { id: 0, label: '在校/应届', value: 0 },
+      { id: 1, label: '3年及以下', value: 1 },
+      { id: 2, label: '3-5年', value: 3 },
+      { id: 3, label: '5-10年', value: 5 },
+      { id: 4, label: '10年以上', value: 10 },
+      { id: 5, label: '经验不限', value: null },
     ]
     const educationDataSource = [
-      { id: 0, label: '大专' },
-      { id: 1, label: '本科' },
-      { id: 2, label: '硕士' },
-      { id: 3, label: '博士' },
-      { id: 4, label: '不要求' },
+      { id: 0, label: '大专', value: 'JuniorCollege' },
+      { id: 1, label: '本科', value: 'RegularCollege' },
+      { id: 2, label: '硕士', value: 'Postgraduate' },
+      { id: 3, label: '博士', value: 'Doctor' },
+      { id: 4, label: '不要求', value: null },
     ]
     const companySizeDataSource = [
-      { id: 0, label: '少于15人' },
-      { id: 1, label: '15-50人' },
-      { id: 2, label: '50-150人' },
-      { id: 3, label: '150-500人' },
-      { id: 4, label: '500-2000人' },
-      { id: 5, label: '2000人以上' },
+      { id: 0, label: '少于15人', value: 'LessThanFifteen' },
+      { id: 1, label: '15-50人', value: 'FifteenToFifty' },
+      { id: 2, label: '50-100人', value: 'FiftyToOneHundredFifty' },
+      { id: 3, label: '100-500人', value: 'OneHundredFiftyToFiveHundreds' },
+      { id: 4, label: '500-2000人', value: 'FiveHundredsToTwoThousands' },
+      { id: 5, label: '2000人以上', value: 'MoreThanTwoThousands' },
     ]
     const companyFinancingDataSource = [
-      { id: 0, label: '未融资' },
-      { id: 1, label: '天使轮' },
-      { id: 2, label: 'A轮' },
-      { id: 3, label: 'B轮' },
-      { id: 4, label: 'C轮' },
-      { id: 5, label: 'D轮以上' },
+      { id: 0, label: '未融资', value: 'NotYet' },
+      { id: 1, label: '天使轮', value: 'AngelFinancing' },
+      { id: 2, label: 'A轮', value: 'A' },
+      { id: 3, label: 'B轮', value: 'B' },
+      { id: 4, label: 'C轮', value: 'C' },
+      { id: 5, label: 'D轮以上', value: 'D' },
     ]
     const companyIndustryDataSource = [
       { id: 0, label: '不限' },
@@ -112,16 +112,16 @@ export default class FilterView extends Component<IProps, IState> {
     switch (filterMode) {
       case 0:
         localDataSource = [
-          { key: 'salary', title: '期望薪资', data: salaryDataSource },
+          { key: 'salaryExpected', title: '期望薪资', data: salaryDataSource },
           { key: 'experience', title: '工作经验', data: experienceDataSource },
           { key: 'education', title: '学历要求', data: educationDataSource },
-          { key: 'companySize', title: '公司规模', data: companySizeDataSource },
-          { key: 'companyFinancing', title: '融资阶段', data: companyFinancingDataSource },
+          { key: 'enterpriseSize', title: '公司规模', data: companySizeDataSource },
+          { key: 'enterpriseFinancing', title: '融资阶段', data: companyFinancingDataSource },
         ]
         break;
       case 1:
         localDataSource = [
-          { key: 'salary', title: '期望薪资', data: salaryDataSource },
+          { key: 'salaryExpected', title: '期望薪资', data: salaryDataSource },
           { key: 'experience', title: '工作经验', data: experienceDataSource },
           { key: 'education', title: '学历要求', data: educationDataSource },
         ]
@@ -184,7 +184,7 @@ export default class FilterView extends Component<IProps, IState> {
   renderItem(item: any, section: any) {
     const { selectFilter } = this.state
     const sectionKey = section.key
-    const selectItem = selectFilter && selectFilter[sectionKey] === item.id
+    const selectItem = selectFilter && selectFilter[sectionKey] == item
     return (
       <NextTouchableOpacity
         style={[styles.jobSalaryBtn,
@@ -192,7 +192,7 @@ export default class FilterView extends Component<IProps, IState> {
         ]}
         onPress={() => {
           const nextSelectFilter = selectFilter
-          nextSelectFilter[sectionKey] = item.id
+          nextSelectFilter[sectionKey] = item
           this.setState({ selectFilter: nextSelectFilter })
         }}
       >
@@ -248,7 +248,12 @@ export default class FilterView extends Component<IProps, IState> {
           text="确定"
           onPress={() => {
             if (filterResultCallback) {
-              filterResultCallback(selectFilter)
+              let filterConfig = {}
+              Object.keys(selectFilter).map(key => {
+              	let value = selectFilter[key]?.value
+              	filterConfig[key] = value
+              })
+              filterResultCallback(filterConfig)
               navigation.goBack()
             }
           }}

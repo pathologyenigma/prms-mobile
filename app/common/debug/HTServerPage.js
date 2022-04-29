@@ -2,12 +2,13 @@ import React, { Component } from 'react'
 import { View, Text, Image, ScrollView, Pressable } from 'react-native'
 import HTServerManager from './HTServerManager'
 import HTAuthManager from '~/common/auth/common/model/HTAuthManager'
+import HTNavigationBar from '~/common/navigation/HTNavigationBar'
 
 
 export default class HTServerPage extends Component {
 
 	static navigationOptions = {
-		title: '服务器管理'
+		headerShown: false
 	}
 
 	constructor(props) {
@@ -47,12 +48,12 @@ export default class HTServerPage extends Component {
 	}
 
 	_footerDidTouch = () => {
-		return this.props.navigation.createRouteData('push', 'HTServerAppendPage')
+		this.props.navigation.push('HTServerAppendPage')
 	}
 
 	_renderItem = (item, index) => {
 		let title = `${item.base}\n\n${item.detail}\n\n${item.wap}`
-		let image = item.selected ? require('~/resource/image/vip_selected.png') : null
+		let image = item.selected ? require('~/assets/requestJobs/green-check.png') : null
 		return (
 			<Pressable key={index} style={styleList.itemContaienr} onPress={() => this._itemDidTouch(item, index)}>
 				<View style={styleList.itemContent}>
@@ -66,15 +67,20 @@ export default class HTServerPage extends Component {
 
 	_renderFooter = () => {
 		return (
-			<HTRouteView style={styleList.footerContainer} routeData={this._footerDidTouch()}>
+			<Pressable style={styleList.footerContainer} onPress={this._footerDidTouch}>
 				<Text style={styleList.footerTitle}>添加服务器</Text>
-			</HTRouteView>
+			</Pressable>
 		)
 	}
 
 	render() {
 		return (
 			<View style={CONTAINER}>
+				<HTNavigationBar title={'服务器管理'} leftItemList={[
+					<Pressable style={{ height: '100%', justifyContent: 'center', paddingRight: 20 }} onPress={this.props.navigation.goBack}>
+						<Image source={require('~/assets/black_back.png')} />
+					</Pressable>
+				]} />
 				<ScrollView style={styleList.itemListContainer}>
 					{
 						this.state.itemList.map((item, index) => {
@@ -94,6 +100,7 @@ export default class HTServerPage extends Component {
 const styleList = StyleSheet.create({
 	itemListContainer: {
 		flex: 1,
+		backgroundColor: 'white'
 	},
 	versionContainer: {
 		flexDirection: 'row',

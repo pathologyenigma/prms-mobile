@@ -11,6 +11,7 @@ import {
   requestNotifications,
   checkNotifications
 } from 'react-native-permissions'
+import HTAuthManager from '~/common/auth/common/model/HTAuthManager'
 
 type TProps = GenProps<'News'>
 

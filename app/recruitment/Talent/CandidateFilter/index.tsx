@@ -46,6 +46,9 @@ export default function CandidateFilter({
   navigation,
   route,
 }: StackScreenProps<TalentParamList, 'CandidateFilter'>) {
+
+  const [paramList, setParamList] = useState({})
+
   const {
     jobCategories,
     education,
@@ -56,10 +59,10 @@ export default function CandidateFilter({
     cities,
     gender,
     resumeJobStatus,
-  } = route.params || {}
+  } = paramList || {}
 
   const handleValueChange = useCallback((low: number, high: number) => {
-    navigation.setParams({ age: [low, high] })
+    // setParamList({ ...paramList, age: [low, high] })
   }, [])
 
   const [salaryModalVisible, setSalaryModalVisible] = useState(false)
@@ -77,7 +80,7 @@ export default function CandidateFilter({
             onPress={() => {
             	navigation.push('JobSelectZhiwei', {
 	              selectJobTypeCallback: (e: any) => {
-	              	navigation.setParams({ jobCategories: (jobCategories ?? []).concat([{ final: e[e.length - 1] }]) })
+	              	setParamList({ ...paramList, jobCategories: (jobCategories ?? []).concat([{ final: e[e.length - 1] }]) })
 	              }
 	            })
             }}
@@ -85,7 +88,8 @@ export default function CandidateFilter({
           <CancelableTagGroup
             values={jobCategories?.map(c => c.final)}
             onValuesChange={values =>
-              navigation.setParams({
+              setParamList({ 
+              	...paramList,
                 jobCategories: jobCategories?.filter(c =>
                   values.includes(c.final),
                 ),
@@ -97,7 +101,7 @@ export default function CandidateFilter({
           <SectionHeader title="学历" />
           <RadioGroup
             value={education}
-            onValueChecked={e => navigation.setParams({ education: e })}>
+            onValueChecked={e => setParamList({ ...paramList, education: e })}>
             <GridView style={styles.sectionBody} spacing={9}>
               {educationLabels.map((e, index) => (
                 <RadioLabel
@@ -115,7 +119,7 @@ export default function CandidateFilter({
           <SectionHeader title="工作经验" />
           <RadioGroup
             value={experience}
-            onValueChecked={e => navigation.setParams({ experience: e })}>
+            onValueChecked={e => setParamList({ ...paramList, experience: e })}>
             <GridView style={styles.sectionBody} spacing={9}>
               {experienceLabels.map((e, index) => (
                 <RadioLabel
@@ -163,7 +167,7 @@ export default function CandidateFilter({
             onPress={() => {
             	navigation.push('JobSelectIndustry', {
 	              selectJobIndustryCallback: (e: any) => {
-	                navigation.setParams({ industryCategories: (industryCategories ?? []).concat(e.map(item => ({ secondary: item[item.length - 1] }))) })
+	                setParamList({ ...paramList, industryCategories: (industryCategories ?? []).concat(e.map(item => ({ secondary: item[item.length - 1] }))) })
 	              }
 	            })
             }}
@@ -171,7 +175,7 @@ export default function CandidateFilter({
           <CancelableTagGroup
             values={industryCategories?.map(c => c.secondary)}
             onValuesChange={values =>
-              navigation.setParams({
+              setParamList({ ...paramList,
                 industryCategories: industryCategories?.filter(c =>
                   values.includes(c.secondary),
                 ),
@@ -187,7 +191,7 @@ export default function CandidateFilter({
             	navigation.push('JobSelectCity', {
 	              mode: 1,
 	              selectJobCityCallback: (e: any) => {
-	              	navigation.setParams({ cities: (cities ?? []).concat([e[2].name]) })
+	              	setParamList({ ...paramList, cities: (cities ?? []).concat([e[2].name]) })
 	              }
 	            })
             }}
@@ -195,7 +199,7 @@ export default function CandidateFilter({
           <CancelableTagGroup
             values={cities}
             onValuesChange={values =>
-              navigation.setParams({
+              setParamList({ ...paramList,
                 cities: cities?.filter(c => values.includes(c)),
               })
             }
@@ -206,7 +210,7 @@ export default function CandidateFilter({
           <CheckGroup
             values={resumeJobStatus}
             onValuesChanged={values => {
-              navigation.setParams({ resumeJobStatus: values })
+              setParamList({ ...paramList, resumeJobStatus: values })
             }}>
             <GridView style={styles.sectionBody} spacing={53} numOfRow={2}>
               {jobStatusLabels.map((e, index) => (
@@ -219,7 +223,7 @@ export default function CandidateFilter({
           <SectionHeader title="性别" />
           <RadioGroup
             value={gender}
-            onValueChecked={e => navigation.setParams({ gender: e })}>
+            onValueChecked={e => setParamList({ ...paramList, gender: e })}>
             <GridView style={styles.sectionBody} spacing={9}>
               {genderLabels.map((e, index) => (
                 <RadioLabel
@@ -239,7 +243,7 @@ export default function CandidateFilter({
           style={styles.secondary}
           title="重置"
           onPress={() =>
-            navigation.setParams({
+            setParamList({ ...paramList,
               jobCategories: undefined,
               education: undefined,
               experience: undefined,
@@ -252,13 +256,22 @@ export default function CandidateFilter({
             })
           }
         />
-        <GradientButton style={styles.primary} title="确定" />
+        <GradientButton style={styles.primary} title="确定" onPress={() => {
+        	let callback = route?.params?.callback
+        	if (callback) {
+        		paramList.category = paramList?.jobCategories
+        		paramList.industryCategories = paramList?.industry_involved
+        		
+        		callback(paramList)
+        	}
+        	navigation.goBack()
+        }} />
       </View>
       <JobSalaryModal
         visible={salaryModalVisible}
         onDismiss={() => setSalaryModalVisible(false)}
         salary={salary}
-        onPickSalary={salary => navigation.setParams({ salary })}
+        onPickSalary={salary => setParamList({ ...paramList, salary })}
       />
     </View>
   )

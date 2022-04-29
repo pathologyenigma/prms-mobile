@@ -8,7 +8,13 @@ export default class HTAuthManager {
 
 	static kHTUserTokenDidChangeNotice = 'kHTUserTokenDidChangeNotice'
 
+
+
 	static kHTSocketMessageDidReceiveNotice = 'kHTSocketMessageDidReceiveNotice'
+
+	static kHTSocketContractDidReceiveNotice = 'kHTSocketContractDidReceiveNotice'
+
+
 
 	static kHTAuthKeyValueStorageKey = 'kHTAuthKeyValueStorageKey'
 
@@ -39,7 +45,7 @@ export default class HTAuthManager {
 	}
 
 	static clearLoginInfo = () => {
-		this.updateKeyValueList({ userToken: '', userRole: '', userId: '' })
+		this.updateKeyValueList({ userToken: '', userRole: '' })
 	}
 
 }

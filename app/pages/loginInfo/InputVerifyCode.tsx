@@ -12,6 +12,7 @@ import GradientButton from '../components/GradientButton'
 import SystemHelper from '../../utils/system'
 import NavBar, { EButtonType } from '../components/NavBar'
 import { TOperationType } from '../../utils/types/PropsType'
+import HTAuthManager from '~/common/auth/common/model/HTAuthManager'
 
 type IProps = GenProps<'InputVerifyCode'> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
@@ -288,41 +289,28 @@ class InputVerifyCode extends Component<IProps, IState> {
         verifyCode: verifyCode,
         operation: operation,
     }
-    if (__DEV__) {
-    	paramList = {
-    		...paramList,
-	    	phoneNumber: '13951848647',
-	        verifyCode: 'tested',
-	    }
-    }
-    HTAPI.UserVerifyCodeConsume().then(response => {
+    HTAPI.UserVerifyCodeConsume({ info: paramList }).then(response => {
 	  // 校验通过
-	  ActionToast.show('校验通过')
 	  if (operation === 'UserLogIn') {
 	    // 登录操作,将用户信息存储下来即可选择角色
 	    // TODO:此处需要将用户角色信息存储下来
-	    navigation.push('ChooseRole')
-	  } else if (operation == 'UserRegister') {
-	  	const username = 'hello123123'
-	    const email = ''
-	    const password = 'admin123'
-	    const confirmPassword = 'admin123'
-	    const phoneNumber = phone
-	    HTAPI.UserRegister({
-	      info: {
-			username,
-			email,
-			password,
-			confirmPassword,
-			phoneNumber,
-          }
-	    }).then(response => {
-	    	navigation.push('ChooseRole')
-	    })
+	    HTAPI.UserLogIn({
+        	info: {
+        		account: phone, 
+        	}
+        }).then(response => {
+        	HTAuthManager.updateKeyValueList({
+        		userToken: response.token,
+        		lastLoginAccount: phone,
+        	})
+        	Toast.show('登录成功')
+            navigation.push('ChooseRole')
+        })
+	    // navigation.push('ChooseRole')
 	  } else {
 	    // 注册操作、忘记密码操作,进入到密码设置页面
 	    // this.props.checkUserVerifyCodeConsume()
-	    navigation.push('SetPassword', { phone: phoneNumber, operation: 'UserResetPassword' })
+	    navigation.push('SetPassword', { phone, operation })
 	  }
     })
   }

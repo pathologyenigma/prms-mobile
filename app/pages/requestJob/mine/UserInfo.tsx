@@ -87,7 +87,7 @@ class UserInfo extends Component<IProps, IState> {
 	      selectGender: gender,
 	      genderActionVisible: false,
 	      datePickVisible: false,
-	      localDateOfBirth: birth_date || new Date(),
+	      localDateOfBirth: birth_date || '',
 	      userName: username || '',
 	      phoneNumber: phone_number || '',
 	      education: education || '',

@@ -32,8 +32,8 @@ export default class Socket {
 
 	onmessage = (message) => {
 		let data = message?.data
-		data = JSON.parse(data)
 		console.log(`${Platform.OS} socket 收到消息`, data)
+		data = JSON.parse(data)
 		this.listenerList.map((listener) => {
 			listener(data)
 		})
@@ -60,17 +60,15 @@ export default class Socket {
 		this.close()
 		this.timer = setInterval(() => {
 			if (!this.isConnected()) {
-				console.log('1', this.isConnected())
 				this.connect(complete)
 			}
-		}, 5 * 1000)
+		}, 10 * 1000)
 		this._handlerAppStateChange = (state) => {
 			if (state == this.lastAppStateValue) {
 				return
 			}
 			this.lastAppStateValue = state
 			if (state == 'active') {
-				console.log('2', this.isConnected())
 				this.connect(complete)
 			}
 		}
@@ -81,7 +79,6 @@ export default class Socket {
 			}
 			this.lastNetworkConnected = state?.isConnected
 			if (this.lastNetworkConnected) {
-				console.log('3', this.isConnected())
 				this.connect(complete)
 			}
 		})
@@ -100,7 +97,17 @@ export default class Socket {
 		}
 		this.webSocket.onclose = (error) => {
 			console.log(`${Platform.OS} socket 被动 close`, error)
-			this.connect(complete)
+			let message = (error?.message ?? error?.reason) ?? ''
+			if (
+				[
+					'Expected HTTP 101 response but was',
+					'未能完成该操作。连接被拒绝',
+					'未能完成该操作。网络已关闭',
+					'Stream end encountered'
+				].find(item => message.indexOf(item) != -1) == null
+			) {
+				this.connect(complete)
+			}
 		}
 		this.webSocket.onmessage = (message) => {
 			this.onmessage(message)

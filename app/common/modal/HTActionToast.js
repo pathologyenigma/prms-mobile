@@ -16,7 +16,7 @@ export default class HTActionToast extends Component {
 		
 	}
 
-	show = (text, duration = 2000) => {
+	show = (text = '操作成功', duration = 2000) => {
 		this._timer && clearTimeout(this._timer)
 		this.state.text = text
 		this.setState(this.state, () => {

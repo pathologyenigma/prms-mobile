@@ -88,18 +88,18 @@ export default class EditOnlineResume extends Component<IProps, IState> {
       HTThrowPromise.all([
       	HTAPI.UserGetBasicInfo(),
       	HTAPI.CandidateGetWorkExps(),
-      	HTAPI.CandidateGetOnlineResumeBasicInfo(),
+      	HTAPI.CandidateGetOnlineResumeBasicInfo(null, { showError: false }),
       	HTAPI.CandidateGetProjectExps(),
       	HTAPI.CandidateGetEduExps()
       ]).then(([
       	userInfo, 
       	{ data: workExperience }, 
-      	{ personal_advantage: personalGoods, skills },
+      	baseInfo = {},
       	{ data: projectExperience },
       	{ data: educationExperience }
       ]) => {
       	this.setState({ 
-      		userInfo, workExperience, personalGoods, skills, projectExperience, educationExperience,
+      		userInfo, workExperience, personalGoods: baseInfo?.personal_advantage, skills: baseInfo?.skills, projectExperience, educationExperience,
       		workExperienceRefresh: false,
       		basicInfoRefresh: false,
       		projectExperienceRefresh: false,
@@ -486,7 +486,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
           style={styles.titleView}>
           <Text style={styles.titleText}>个人优势</Text>
           <View style={styles.editPersonalView}>
-            {(!personalGoods || personalGoods.length === 0) &&
+            {(!personalGoods || personalGoods?.length === 0) &&
               < Text style={styles.editPersonalText}>待完善</Text>
             }
             {!isPreview && (
@@ -498,7 +498,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
           </View>
         </NextTouchableOpacity >
         <Text style={
-          [styles.editPersonalDetail, personalGoods.length === 0 && { color: '#999' }]}
+          [styles.editPersonalDetail, personalGoods?.length === 0 && { color: '#999' }]}
         >{personalGoods || '如: 自信、爱心、责任感、强迫症'}</Text>
       </View >
     )

@@ -16,7 +16,7 @@ export default class Toast extends Component {
 		
 	}
 
-	show = (text, duration = 2000) => {
+	show = (text = '', duration = 2000) => {
 		this._timer && clearTimeout(this._timer)
 		this.state.text = text
 		this.setState(this.state, () => {

@@ -40,9 +40,9 @@ export default class Mine extends Component<IProps, IState> {
       HTAPI.UserGetBasicInfo().then(response => {
       	this.setState({ userInfo: response })
       })
-      HTAPI.CandidateGetOnlineResumeGrade().then(response => {
+      HTAPI.CandidateGetOnlineResumeGrade(null, { showError: false }).then(response => {
       	this.setState({ resumeProgress: response })
-      }, { showError: false })
+      })
       StatusBar.setBarStyle('light-content', true)
     })
   }

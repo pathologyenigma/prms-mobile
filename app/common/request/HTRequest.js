@@ -53,22 +53,33 @@ export default class HTRequest {
 				reject(error)
 			}
 			let reloadResolve = (response) => {
-				this.handlerResponse(response, fetchRequest, paramList, resolve, reloadReject)
+				this.handlerResponse(response, fetchRequest, () => {
+					try {
+						let value = response?.data && paramList?.operationName
+						value = value ? response?.data[paramList?.operationName] : null
+						value = value ?? response
+						resolve(value)
+					} catch(error) {
+						reject(error)
+					}
+				}, reloadReject)
+			}
+
+			let reloadFinally = () => {
+				showLoading && global?.Hud && global.Hud.hidden()
 			}
 
 			let fetchRequest = () => {
 				this._fetch(reloadUrl, method, {
-					'Content-Type': 'application/json',
-					Authorization: HTAuthManager?.keyValueList?.userToken ?? ''
-				}, body, reloadResolve, reloadReject, () => {
-					showLoading && global?.Hud && global.Hud.hidden()
-				})
+					'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
+					Authorization: HTAuthManager?.keyValueList?.userToken ?? '',
+				}, body, reloadResolve, reloadReject, reloadFinally)
 			}
 			fetchRequest()
 		})
 	}
 
-	static handlerResponse = (response, fetchRequest, paramList, resolve, reloadReject) => {
+	static handlerResponse = (response, repeat, resolve, reject) => {
 		let error = response['errors']
 		if (Array.isArray(error) && (error?.length ?? 0) > 0) {
 			error = error[0]?.extensions?.exception?.stacktrace
@@ -81,36 +92,32 @@ export default class HTRequest {
 				HTAPI.UserRefreshToken().then(response => {
 					Toast.show('刷新 token 成功1')
 					HTAuthManager.updateKeyValueList({ userToken: response })
-					fetchRequest()
+					repeat()
 					Toast.show('刷新 token 成功2')
 				}).catch(() => {
 					Toast.show('刷新 token 失败1')
 					HTAuthManager.clearLoginInfo()
+					// 如果 UserRefreshToken 请求成功，repeat 会处理页面传进来的 then 和 catch
+					// 如果 UserRefreshToken 请求出错了，就没人处理页面传进来的 then 和 catch
+					reject()
 					Toast.show('刷新 token 失败2')
 				})
 				return
 			} else if (error == 'AuthenticationError: missing authorization') {
 				HTAuthManager.clearLoginInfo()
 			}
-			reloadReject(error)
+			reject(error)
 			return
 		}
-		try {
-			let value = response?.data && paramList?.operationName
-			value = value ? response?.data[paramList?.operationName] : null
-			value = value ?? response
-			resolve(value)
-		} catch(error) {
-			reloadReject(error)
-		}
+		resolve(response)
 	}
 
-	static gqlRequest = (item, operationName, matchList, paramList = {}, optionList = {}) => {
+	static gqlRequest = (item, operationName, paramList = {}, optionList = {}) => {
 		return this.request('/graphql', 'POST', {
 			'operationName': operationName,
 			'variables': paramList,
 			'query': item
-		}, { showLoading: matchList[0] != 'query', ...optionList})
+		}, optionList)
 	}
 
 	static gqlUpload = (config) => {
@@ -153,33 +160,40 @@ export default class HTRequest {
 		let protocolList = ['graphql-ws', 'graphql-transport-ws']
 		this.socket = new HTSocket(url, protocolList)
 		this.socket.addListener((data) => {
-			if (data?.type == 'connection_ack') {
-				this.socket.send({
-					'id': '1', 
-					'type': 'start', 
-					'payload': {
-						 'query': `
-						 	subscription newMessage {
-								newMessage {
-									from
-									messageType
-									messageContent
-									to
-									uuid
-									createdAt
-								}
-							}
-						`}
-					}
-				)
-			} else if (data?.type == 'data') {
-				DeviceEventEmitter.emit(HTAuthManager.kHTSocketMessageDidReceiveNotice, data?.payload?.data?.newMessage)
-			} else {
-				this.initSocket()
+			if (data?.type != 'data') {
+				return
 			}
+			this.handlerResponse(data?.payload, this.initSocket, (value) => {
+				let content = value?.data
+				if (content?.newMessage) {
+					DeviceEventEmitter.emit(HTAuthManager.kHTSocketMessageDidReceiveNotice, content?.newMessage)
+				} else if (content?.newContract) {
+					DeviceEventEmitter.emit(HTAuthManager.kHTSocketContractDidReceiveNotice, content?.newContract)
+				}
+			}, (error) => {
+				this.initSocket()
+			})
 		})
 		this.socket.connect(() => {
 			this.socket.send({ 'type': 'connection_init', 'payload': {'Authorization': token } })
+			this.socket.send({ id: '1', 'type': 'start', 'payload': {
+				'query': `
+					subscription newMessage {
+						newMessage {
+							from messageType messageContent to uuid createdAt
+						}
+					}
+				 `
+			} })
+			// this.socket.send({ id: '2', 'type': 'start', 'payload': {
+			// 	'query': `
+			// 		subscription newContract {
+			// 			newContract {
+			// 				id logo name pos ent last_msg last_msg_time job
+			// 			}
+			// 		}
+			// 	 `
+			// } })
 		})
 	}
 

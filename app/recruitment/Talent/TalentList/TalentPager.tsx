@@ -39,6 +39,8 @@ export default function TalentPager({ navigation, jobName, jobCategory, keyword 
   const ref = useRef<PagerView>(null)
   const { selectedIndex, onPageSelected, onPageScroll } = usePagerView()
 
+  const [filterConfig, setFilterConfig] = useState({})
+
   useEffect(() => {
     ref.current?.setPageWithoutAnimation(sortByUpdatedTime ? 1 : 0)
   }, [sortByUpdatedTime])
@@ -64,7 +66,9 @@ export default function TalentPager({ navigation, jobName, jobCategory, keyword 
         <FilterButton
           text={'筛选'}
           style={styles.filterButton}
-          onPress={() => navigation.navigate('CandidateFilter', {})}
+          onPress={() => navigation.push('CandidateFilter', { callback: (result) => {
+          	setFilterConfig(result)
+          }})}
         />
       </View>
       <AnimatedPagerView
@@ -80,6 +84,7 @@ export default function TalentPager({ navigation, jobName, jobCategory, keyword 
             jobName={jobName}
             jobCategory={jobCategory}
             keyword={keyword}
+            filterConfig={filterConfig}
             sortByUpdatedTime={status.value}
             navigation={navigation}
           />

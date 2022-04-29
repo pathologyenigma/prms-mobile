@@ -16,6 +16,7 @@ import SystemHelper from '../../../utils/system'
 import InterviewerFooter from '../../components/InterviewerFooter'
 import ShareModal from '../../components/ShareModal'
 import { reformFullTime, reformCompanySize, reformSalary } from '../../../utils/utils'
+import HTAuthManager from '~/common/auth/common/model/HTAuthManager'
 
 type IProps = GenProps<'JobDetail'> & ReturnType<typeof mapDispatchToProps>
 
@@ -194,6 +195,32 @@ class JobDetail extends Component<IProps, IState> {
           dataSource: response
         })
     })
+  }
+
+  _chatDidTouch = () => {
+  	HTAPI.CandidateGetHRIdByWorkerId({
+  		id: this?.state?.dataSource?.hr?.id
+  	}).then(response => {
+  		let messageItem = {
+			messageType: 'Normal',
+			messageContent: '你好啊，请问这份工作还在招人吗',
+			to: response,
+			jobId: this?.state?.jobid
+		}
+		HTAPI.UserSendMessage({
+			info: messageItem
+		}, { showLoading: false }).then(response => {
+			this.props.navigation.push('MessagePage', {
+				targetItem: {
+					...messageItem,
+					...this.state.dataSource.hr,
+					id: messageItem.to,
+					ent: this.state.dataSource.company.name,
+					job: { id: this.state.jobid, title: this.state.dataSource.job.title }
+				}
+			})
+		})
+  	})
   }
 
   renderNavBar() {
@@ -592,29 +619,7 @@ class JobDetail extends Component<IProps, IState> {
         job={pos}
         clickChat={() => {
           // Toast.show('聊一聊')
-            let messageItem = {
-				messageType: 'Normal',
-				messageContent: '你好啊，请问这份工作还在招人吗',
-				to: this.state.dataSource.hr.id,
-				// to: null,
-				jobId: this.state.jobid
-			}
-			HTAPI.UserSendMessage({
-				info: messageItem
-			}, { showLoading: false }).then(response => {
-				Hud.show()
-				setTimeout(() => {
-					this.props.navigation.push('MessagePage', {
-						targetItem: {
-							...messageItem,
-							...this.state.dataSource.hr,
-							ent: this.state.dataSource.company.name,
-							job: { id: this.state.jobid, title: this.state.dataSource.job.title }
-						}
-					})
-					Hud.hidden()
-				}, 2000)
-			})
+          this._chatDidTouch()
         }}
         clickDelivery={() => {
         	// HTAPI.CandidateSendResume({

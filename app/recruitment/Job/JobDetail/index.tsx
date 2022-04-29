@@ -95,7 +95,7 @@ export default function JobDetail({
 	      	isFullTime: job.full_time_job,
 	      	tags: job.tags || [],
 	      	coordinates: job.address_coordinate,
-	      	publishNow: false,
+	      	publishNow: true,
 	      	category: job.category,
 	      }
 	    })

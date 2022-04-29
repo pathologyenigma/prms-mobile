@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { View, Text, Image, ScrollView, Pressable, TextInput } from 'react-native'
 import HTServerManager from './HTServerManager'
+import HTNavigationBar from '~/common/navigation/HTNavigationBar'
 
 export default class HTServerAppendPage extends Component {
 
 	static navigationOptions = {
-		title: '新增服务器'
+		headerShown: false
 	}
 
 	constructor(props) {
@@ -58,6 +59,11 @@ export default class HTServerAppendPage extends Component {
 	render() {
 		return (
 			<View style={CONTAINER}>
+				<HTNavigationBar title={'新增服务器'} leftItemList={[
+					<Pressable style={{ height: '100%', justifyContent: 'center', paddingRight: 20 }} onPress={this.props.navigation.goBack}>
+						<Image source={require('~/assets/black_back.png')} />
+					</Pressable>
+				]} />
 				<ScrollView style={styleList.itemListContainer}>
 					{
 						this.state.itemList.map((item, index) => {
@@ -77,6 +83,7 @@ export default class HTServerAppendPage extends Component {
 const styleList = StyleSheet.create({
 	itemListContainer: {
 		flex: 1,
+		backgroundColor: 'white'
 	},
 	itemContainer: {
 		

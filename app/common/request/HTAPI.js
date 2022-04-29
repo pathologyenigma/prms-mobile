@@ -155,6 +155,7 @@ mutation ENTEditEnterpriseBasicInfo($info: EditEnterpriseBasicInfo!) {
 ` 
 query CandidateGetAllJobExpectations {
 	CandidateGetAllJobExpectations {
+		id
 		job_category
 		aimed_city
 		min_salary_expectation
@@ -165,14 +166,7 @@ query CandidateGetAllJobExpectations {
 }
 `,
 
-// 已经废弃，调用 CandidateEditJobExpectations
-` 
-mutation UserAddJobExpectation($info: UserExpectation!) {
-	UserAddJobExpectation(info: $info)
-}
-`,
-
-// 求职者增加或者编辑求职期望
+// 求职者 新增/修改 求职期望
 ` 
 mutation CandidateEditJobExpectations($info: EditJobExpectation!) {
 	CandidateEditJobExpectations(info: $info)
@@ -466,6 +460,15 @@ query UserGetContractList {
 }
 `,
 
+
+` 
+query UserGetUsernameAndLogoWithId($user_id: Int!) {
+	UserGetUsernameAndLogoWithId(user_id: $user_id) {
+		username logo
+	}
+}
+`,
+
 // 获取基本信息
 ` 
 query UserGetBasicInfo {
@@ -504,6 +507,7 @@ query UserSearchEnterprise(
 	) {
 		count
 		data {
+			id
 			enterprise_name 
 			business_nature 
 			industry_involved 
@@ -782,13 +786,26 @@ mutation UserEditEmail($email: String!, $code: String!) {
 }
 `,
 
+` 
+query CandidateGetHRIdByWorkerId($id: Int!) {
+	CandidateGetHRIdByWorkerId(id: $id)
+}
+`,
+
 ]
 
 let RELOAD_ITEM_LIST = {}
 ITEM_LIST.map(item => {
 	let matchList = item.match(/(\S)* (\S)*(?=(\(|( \{)))/)[0].split(' ')
 	let operationName = matchList[1]
-	RELOAD_ITEM_LIST[operationName] = (paramList = {}, optionList = {}) => HTRequest.gqlRequest(item, operationName, matchList, paramList, optionList)
+	RELOAD_ITEM_LIST[operationName] = (paramList = {}, optionList = {}) => {
+		return HTRequest.gqlRequest(
+			item, 
+			operationName, 
+			paramList, 
+			{ showLoading: matchList[0] != 'query', ...optionList}
+		)
+	}
 })
 
 // 上传文件

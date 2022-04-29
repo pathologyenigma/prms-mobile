@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import styles from './styles/Setting.style'
 import { GenProps } from '../../../navigator/requestJob/stack'
-import { Text, View, Image, StatusBar, DeviceEventEmitter } from 'react-native'
+import { Text, View, Image, StatusBar, DeviceEventEmitter, Pressable } from 'react-native'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import { ActivityIndicator } from '@ant-design/react-native'
 import AlertContentModal from '../../components/AlertContentModal'
@@ -79,6 +79,14 @@ export default class Setting extends Component<IProps, IState> {
             navigation.pop()
           },
         }}
+        rightContent={(
+        	<Pressable
+        		style={{ height: '100%', width: 100 }}
+        		onLongPress={() => {
+        			this.props.navigation.push('HTDebugPage')
+        		}}
+        	/>
+        )}
       />
     )
   }

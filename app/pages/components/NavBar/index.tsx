@@ -77,7 +77,10 @@ export default class NavBar extends Component<INavBarProps> {
   }
 
   private renderRight(): JSX.Element | null {
-    const { right } = this.props
+    const { right, rightContent } = this.props
+    if (rightContent) {
+    	return rightContent
+    }
     if (!right) {
       return <View style={Styles.right} />
     }

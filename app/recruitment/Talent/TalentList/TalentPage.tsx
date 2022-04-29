@@ -9,7 +9,8 @@ interface TalentPageProps {
   jobName?: string
   jobCategory?: [string]
   sortByUpdatedTime: boolean,
-  navigation?: any
+  navigation?: any,
+  filterConfig?: any
 }
 
 function educationDesc(education: Education | null) {
@@ -31,13 +32,32 @@ function educationDesc(education: Education | null) {
   }
 }
 
+// export default class TalentPage extends Component {
+
+// 	constructor(props) {
+// 		super(props)
+// 		this.state = {
+// 			itemList: 
+// 			page: 0
+// 		}
+// 	}
+
+// 	render() {
+
+// 	}
+
+// }
+
 export default function TalentPage({
   jobName,
   jobCategory,
   keyword,
   sortByUpdatedTime,
-  navigation
+  navigation,
+  filterConfig
 }: TalentPageProps) {
+
+  const [ page, setPage ] = useState(0)
 
   const [itemList, setItemList] = useState()
 
@@ -46,11 +66,12 @@ export default function TalentPage({
 		filter: {
 			keyword: keyword,
 			category: jobCategory,
+			...filterConfig
 		},
 		pageSize: 10,
-		page: 0
+		page: page
 	}).then(response => {
-		let itemList = response.data.map(item => {
+		let reloadItemList = response.data.map(item => {
 		const {
 			id,
 			name,
@@ -79,9 +100,10 @@ export default function TalentPage({
 			avatar: '',
 		}
 		})
-		setItemList(itemList)
+		reloadItemList = page == 0 ? reloadItemList : itemList.concat(reloadItemList)
+		setItemList(reloadItemList)
 	})
-  }, [sortByUpdatedTime, jobName, jobCategory, keyword])
+  }, [sortByUpdatedTime, jobName, jobCategory, keyword, page, filterConfig])
 
   const renderItem: ListRenderItem<CandidateItem> = ({ item }) => {
     return (
@@ -106,6 +128,11 @@ export default function TalentPage({
         renderItem={renderItem}
         ListHeaderComponent={UpgradeFeature}
         ListFooterComponent={NoMoreFooter}
+        onRefresh={(endRefresh) => {
+        	setPage(0)
+        	endRefresh()
+        }}
+        onEndReached={() => setPage(page + 1)}
       />
     </LoadingAndError>
   )

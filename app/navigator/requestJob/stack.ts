@@ -101,6 +101,9 @@ import HTInvestPersonPage from '~/pages/requestJob/company/invest/person/common/
 import HTInvestPersonDetailPage from '~/pages/requestJob/company/invest/person/detail/page/HTInvestPersonDetailPage'
 import HTCompanyProjectPage from '~/pages/requestJob/company/project/common/page/HTCompanyProjectPage'
 import HTCompanyProjectDetailPage from '~/pages/requestJob/company/project/detail/page/HTCompanyProjectDetailPage'
+import HTDebugPage from '~/common/debug/HTDebugPage'
+import HTServerPage from '~/common/debug/HTServerPage'
+import HTServerAppendPage from '~/common/debug/HTServerAppendPage'
 
 type TRouterParams = {
   Find: any,
@@ -318,6 +321,9 @@ export default class RouterStacks {
 	  HTInvestPersonPage,
 	  HTInvestPersonDetailPage,
 	  HTCompanyProjectPage,
-	  HTCompanyProjectDetailPage
+	  HTCompanyProjectDetailPage,
+	  HTDebugPage,
+	  HTServerPage,
+	  HTServerAppendPage
     }
 }

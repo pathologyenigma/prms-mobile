@@ -188,7 +188,6 @@ class LoginScreen extends Component<IProps, IState> {
             	}
             }).then(response => {
             	HTAuthManager.updateKeyValueList({
-            		userId: response.id,
             		userToken: response.token,
             		lastLoginAccount: account,
             		lastLoginPassword: password,

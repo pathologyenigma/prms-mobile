@@ -67,11 +67,15 @@ class ChooseRole extends Component<IProps, IState> {
     HTAPI.UserChooseOrSwitchIdentity({
     	targetIdentity,
     	role
-    }).then(response => {
+    }, { showError: false }).then(response => {
     	HTAuthManager.updateKeyValueList({ 
     		userToken: response,
     		userRole: targetIdentity
     	})
+    }).catch(error => {
+    	if (error == 'UserInputError: bad input') {
+    		Toast.show('你还没有该身份哦')
+    	}
     })
   }
 

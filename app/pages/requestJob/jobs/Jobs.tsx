@@ -6,6 +6,7 @@ import {
   ScrollView,
   StatusBar,
   DeviceEventEmitter,
+  Pressable
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import GradientButton from '../../components/GradientButton'
@@ -34,6 +35,7 @@ import {
 
 import HTBannerView from '~/common/view/HTBannerView'
 import HTPageControl from '~/common/view/HTPageControl'
+import HTRefreshManager from '~/common/refresh/HTRefreshManager'
 
 type IProps = GenProps<'Jobs'> &
   ReturnType<typeof mapStateToProps> &
@@ -60,6 +62,7 @@ class Jobs extends Component<IProps, IState> {
       selectJobsArray: [],
       selectJobIndex: 0,
       page: 0,
+      filterConfig: {},
     }
   }
 
@@ -67,12 +70,10 @@ class Jobs extends Component<IProps, IState> {
     this.getNotificationPermission()
     // Hud.show()
     // 注意:当前服务端不支持 subscription 和 其他接口同时调用,暂时修改为延迟获取
-    setTimeout(() => {
-      this.subscribeMessage()
-    }, 5000)
-    this.loadJobExpections()
+    
     StatusBar.setBarStyle('light-content', true)
     this.props.navigation.addListener('focus', () => {
+      this.loadJobExpections()
       StatusBar.setBarStyle('light-content', true)
     })
   }
@@ -104,19 +105,23 @@ class Jobs extends Component<IProps, IState> {
 
   loadJobExpections() {
     // 加载个人职位类型
-    HTAPI.CandidateGetAllJobExpectations().then(response => {
+    HTAPI.CandidateGetAllJobExpectations(null, { showError: false }).then(response => {
     	this.setState({
           selectJobsArray: response
         }, () => {
           this.loadJobList()
         })
+    }).catch(error => {
+    	if (error == 'need job expectation for this operation') {
+    		Toast.show('请先添加你的求职期望吧')
+    	}
     })
   }
 
   loadJobList() {
     // 根据个人类型加载列表
     const { selectJobsArray, selectJobIndex, listDataSource, page } = this.state
-    if (!selectJobsArray) {
+    if ((selectJobsArray?.length ?? 0) <= 0) {
       // 没有筛选条件，直接展示空列表
       this.setState({
         listDataSource: [],
@@ -127,36 +132,17 @@ class Jobs extends Component<IProps, IState> {
     const filter = {
       'category': selectJobsArray[selectJobIndex].job_category,
       page,
+      ...this.state.filterConfig,
       pageSize: 10,
+      // 'salaryExpected': 
     }
     HTAPI.CandidateGetJobList({ filter }).then(response => {
     	const originData = page === 0 ? [] : listDataSource
     	this.setState({
-			listDataSource: originData.concat(
-				response.data,
-			),
+			listDataSource: originData.concat(response.data),
 			refreshState: response.data.length === 10 ? 0 : 3,
         })
     })
-  }
-
-  subscribeMessage() {
-    // 订阅相关
-    // this.props.subscriptionMessage((error, result) => {
-    //   if (
-    //     !error &&
-    //     result &&
-    //     result.data &&
-    //     result.data.newMessage
-    //     // && result.data.newMessage.to.toString() === this.props.userInfo.userInfo.id.toString()
-    //   ) {
-    //     Toast.show(`收到新消息 :${result.data.newMessage.messageContent}`)
-    //     DeviceEventEmitter.emit(Receive_Message, result.data)
-    //   } else {
-    //     console.log('subscription断开了')
-    //     Toast.show('subscription断开了')
-    //   }
-    // })
   }
 
   renderNavBar() {
@@ -392,7 +378,7 @@ class Jobs extends Component<IProps, IState> {
           <NextTouchableOpacity style={styles.conditionRightBtn} onPress={() => {
           	const { navigation } = this.props
             navigation.push('JobSelectCity', {
-              // mode: 1,
+              mode: 1,
               selectJobCityCallback: (e: any) => {
                 console.log('eeeee: ', e)
                 // this.setState({ selectJobCity: e })
@@ -412,7 +398,7 @@ class Jobs extends Component<IProps, IState> {
               navigation.push('FilterView', {
                 filterMode: 0,
                 filterResultCallback: result => {
-                  console.log('111111111: ', result)
+                  this.setState({ filterConfig: result }, this.loadJobList)
                 },
               })
             }}>
@@ -473,7 +459,6 @@ class Jobs extends Component<IProps, IState> {
         {this.renderCondition()}
         {this.renderAd()}
         {this.renderVideo()}
-        {/* {this.renderVideo()} */}
       </View>
     )
   }

@@ -37,8 +37,9 @@ export default function AvatarCropper({
             onPress={async () => {
             	console.log(uri)
             	const cropped = await crop(1)
-            	const filepath = cropped.uri
+            	let filepath = cropped.uri
             	const config = generateRNFile(filepath, `file-${Date.now()}.${mime.extension(mime.lookup(filepath))}`)
+            	console.log(config, cropped)
                 HTAPI.CommonSingleUpload(config).then(response => {
                 	let remoteUrl = response.data.CommonSingleUpload
                 	HTAPI.UserEditBasicInfo({
