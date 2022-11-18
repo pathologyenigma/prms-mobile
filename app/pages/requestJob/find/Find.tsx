@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, StatusBar } from 'react-native'
 import { Tabs } from '@ant-design/react-native'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar from '../../components/NavBar'
 import styles from './styles/Find.style'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import LinearGradient from 'react-native-linear-gradient'
 import FindCompany from './findCompany'
 import Jobfair from './jobfair'
@@ -24,14 +24,12 @@ export default class Find extends Component<TProps, IState> {
     }
   }
 
-  componentDidMount() {
-    this.props.navigation.addListener('focus', () => {
-      StatusBar.setBarStyle('dark-content', true)
-    })
+  componentDidAppear() {
+  	StatusBar.setBarStyle('dark-content', true)
   }
 
-  componentWillUnmount() {
-    this.props.navigation.removeListener('focus', () => { })
+  componentDidMount() {
+    
   }
 
   renderNavBar() {
@@ -58,7 +56,7 @@ export default class Find extends Component<TProps, IState> {
           {
             tabs.map((e, i) => {
               return (
-                <NextTouchableOpacity
+                <NextPressable
                   style={styles.tabsBtn}
                   key={i.toString()}
                   onPress={() => {
@@ -78,12 +76,12 @@ export default class Find extends Component<TProps, IState> {
                       />
                     )}
                   </>
-                </NextTouchableOpacity>
+                </NextPressable>
               )
             })
           }
         </View>
-        {/* <NextTouchableOpacity
+        {/* <NextPressable
         // v1版本适配
           style={styles.searchBtn}
           onPress={() => {
@@ -98,7 +96,7 @@ export default class Find extends Component<TProps, IState> {
             resizeMode="center"
             source={require('../../../assets/requestJobs/find-search.png')}
           />
-        </NextTouchableOpacity> */}
+        </NextPressable> */}
       </View>
     )
   }
@@ -107,7 +105,7 @@ export default class Find extends Component<TProps, IState> {
     const { selectTabs } = this.state
     const { navigation, route } = this.props
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, paddingBottom: global.TAB_BAR_HEIGHT }}>
         {this.renderNavBar()}
         <View style={{ flex: 1 }} >
           <Tabs

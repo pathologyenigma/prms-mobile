@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter } from 'react-native'
 import styles from './styles/InputVerifyCode.style'
-import { GenProps } from '../../navigator/router/stack'
+import { GenProps } from '../../utils/StackProps'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import LoginInputComponent from './LoginInputComponent'
-import NextTouchableOpacity from '../components/NextTouchableOpacity'
+import NextPressable from '../components/NextPressable'
 import AlertContentModal from '../components/AlertContentModal'
 import WhiteContentModal from '../components/WhiteContentModal'
 import GradientButton from '../components/GradientButton'
@@ -67,7 +67,7 @@ class InputVerifyCode extends Component<IProps, IState> {
     Hud.show('正在发送验证码')
     HTAPI.StaticSendSms({
     	phoneNumber: this.state.phone
-    }).then(response => {
+    }, { showLoading: true }).then(response => {
     	ActionToast.show('发送成功')
         this.countTimeFunc(60)
     })
@@ -253,7 +253,7 @@ class InputVerifyCode extends Component<IProps, IState> {
           />
         </View>
         {countTime === 60 ? (
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.countTimeBtn}
             onPress={() => {
               this.sendSms()
@@ -262,7 +262,7 @@ class InputVerifyCode extends Component<IProps, IState> {
             <Text style={styles.sendBtnText}>
               重新发送
             </Text>
-          </NextTouchableOpacity>
+          </NextPressable>
           // <GradientButton
           //   text="获取验证码"
           //   containerStyle={styles.countTimeBtn}
@@ -326,7 +326,7 @@ class InputVerifyCode extends Component<IProps, IState> {
     } = this.state
     const verifyCode = `${firstCode}${secondCode}${thirdCode}${fourCode}${fiveCode}${sixCode}`
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={[styles.finishBtn, verifyCode.length !== 6 && { opacity: 0.6 }]}
         disabled={verifyCode.length !== 6}
         onPress={() => {
@@ -338,7 +338,7 @@ class InputVerifyCode extends Component<IProps, IState> {
         >
           确定
         </Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

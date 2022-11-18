@@ -6,14 +6,13 @@ import IconButton from '../../components/IconButton'
 import TabBar from '../../components/TabBar'
 import usePagerView from '../../hooks/usePagerView'
 import NavBar from '../../components/NavBar'
-import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
 const tabs = ['全部', '已报名']
 
-export default function JobFairList() {
+export default function JobFairList({ navigation }) {
   const pagerRef = useRef<PagerView>(null)
   const {
     selectedIndex,
@@ -22,8 +21,6 @@ export default function JobFairList() {
     onPageScroll,
     onPageSelected,
   } = usePagerView()
-
-  const navigation = useNavigation<StackNavigationProp<any>>()
 
   return (
     <View style={styles.container}>

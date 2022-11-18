@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, Animated, ScrollView, TouchableOpacity, Platform, PixelRatio } from 'react-native'
+import { View, Text, Animated, ScrollView, Pressable, Platform, PixelRatio } from 'react-native'
 
 class HTBannerContentView extends Component {
 
@@ -73,13 +73,13 @@ export default class HTBannerView extends Component {
 			key = `${this.props.keyExtractor(item, originIndex)}_${reloadIndex}`
 		}
 		return (
-			<TouchableOpacity key={key} activeOpacity={1} style={{ width: this._getWidth(), height: '100%' }} onPress={() => {
+			<Pressable key={key} activeOpacity={1} style={{ width: this._getWidth(), height: '100%' }} onPress={() => {
 				this._indexDidTouch(index)
 			}}>
 			{
 				this.props.renderItem({ index: reloadIndex, item: this.reloadData[reloadIndex] })
 			}
-			</TouchableOpacity>
+			</Pressable>
 		)
 	}
 
@@ -130,6 +130,7 @@ export default class HTBannerView extends Component {
 			ref: ref => this.scrollView = ref,
 			horizontal: true,
 			pagingEnabled: true,
+			bounces: false,
 			onScrollEndDrag: this._onScrollEndDrag,
 			onMomentumScrollEnd: this._onMomentumScrollEnd,
 			removeClippedSubviews: false,

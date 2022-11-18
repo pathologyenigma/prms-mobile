@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList } from 'react-native'
 import styles from './styles/CompanyResponse.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import GradientButton from '../../components/GradientButton'
 import CompanyQuestionCell from './CompanyQuestionCell'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 
 type IProps = GenProps<'CompanyResponse'> & {
 
@@ -151,7 +151,7 @@ export default class CompanyResponse extends Component<IProps, IState> {
         <View style={styles.tipsView}>
           <View style={styles.tipsTextView}>
             <Text style={styles.tipsText}>你的回答需遵守</Text>
-            <NextTouchableOpacity
+            <NextPressable
               onPress={() => {
                 Toast.show('趁早找社区管理规范')
               }}
@@ -159,9 +159,9 @@ export default class CompanyResponse extends Component<IProps, IState> {
               <Text style={styles.tipsGuifan}>
                 《趁早找社区管理规范》
               </Text>
-            </NextTouchableOpacity>
+            </NextPressable>
           </View>
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.checkBtn}
             onPress={() => {
               this.setState({ anonymous: !anonymous })
@@ -177,7 +177,7 @@ export default class CompanyResponse extends Component<IProps, IState> {
               )}
             </View>
             <Text style={styles.anonymousText}>匿名</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
       </View>
     )

@@ -20,102 +20,94 @@ const offset = isIphoneX() ? getBottomSpace() : 10
 type Props = StackScreenProps<JobParamList, 'EditJobDescription'>
 
 export default function EditJobDescription({ navigation, route }: Props) {
-  const { initialDescription } = route.params
+	const { initialDescription, callback } = route.params
 
-  const [description, setDescription] = useState(initialDescription || '')
+	const [description, setDescription] = useState(initialDescription || '')
 
-  const [bottomHeight, setBottomHeight] = useState(offset)
-  const { keyboardShown, keyboardHeight } = useKeyboard()
-  useEffect(() => {
-    if (Platform.OS === 'ios') {
-      setBottomHeight(keyboardShown ? keyboardHeight + 10 : offset)
-    }
-  }, [keyboardShown, keyboardHeight])
+	return (
+		<View style={styles.container}>
+			<NavBar
+				title="职位描述"
+				headerRight={() => (
+					<TextButton
+						title="保存"
+						onPress={() => {
+							callback && callback(navigation, { jobDescription: description })
+							navigation.pop()
+						}}
+					/>
+				)}
+			/>
+			<View style={styles.box}>
+				<Text style={styles.note}>
+					请勿输入公司邮箱、联系电话、薪资面议及外链，请不要包含性 歧视语，
+					<Text
+						style={styles.rule}
+						suppressHighlighting={true}
+						onPress={() => navigation.push('JobPostRule')}>
+						职位发布规范
+					</Text>
+				</Text>
+			</View>
 
-  return (
-    <View style={styles.container}>
-      <NavBar
-        title="职位描述"
-        headerRight={() => (
-          <TextButton
-            title="保存"
-            onPress={() =>
-              navigation.navigate('PostJob', { jobDescription: description })
-            }
-          />
-        )}
-      />
-      <View style={styles.box}>
-        <Text style={styles.note}>
-          请勿输入公司邮箱、联系电话、薪资面议及外链，请不要包含性 歧视语，
-          <Text
-            style={styles.rule}
-            suppressHighlighting={true}
-            onPress={() => navigation.navigate('JobPostRule')}>
-            职位发布规范
-          </Text>
-        </Text>
-      </View>
+			<TextInput
+				style={styles.input}
+				multiline={true}
+				maxLength={1000}
+				placeholder={placeholder}
+				value={description}
+				onChangeText={setDescription}
+				placeholderTextColor="#CCCCCC"
+				textAlignVertical="top"
+				autoFocus={false}
+				scrollEnabled={true}
+			/>
 
-      <TextInput
-        style={styles.input}
-        multiline={true}
-        maxLength={1000}
-        placeholder={placeholder}
-        value={description}
-        onChangeText={setDescription}
-        placeholderTextColor="#CCCCCC"
-        textAlignVertical="top"
-        autoFocus={true}
-        scrollEnabled={true}
-      />
-
-      <View style={[styles.row, { bottom: bottomHeight }]}>
-        <Text style={styles.count}>0</Text>
-        <Text style={styles.limit}>/1000</Text>
-      </View>
-    </View>
-  )
+			<View style={styles.row}>
+				<Text style={styles.count}>{description.length}</Text>
+				<Text style={styles.limit}>/1000</Text>
+			</View>
+		</View>
+	)
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  box: {
-    padding: 9,
-    backgroundColor: '#F7F7F7',
-    borderRadius: 4,
-    marginHorizontal: 11,
-  },
-  note: {
-    color: '#888888',
-    fontSize: 12,
-    lineHeight: 17,
-  },
-  rule: {
-    color: '#54D693',
-  },
-  input: {
-    margin: 14,
-    padding: 0,
-    flex: 1,
-  },
-  row: {
-    flexDirection: 'row',
-    position: 'absolute',
-    bottom: 10,
-    right: 16,
-  },
-  count: {
-    color: '#333333',
-    fontSize: 15,
-    lineHeight: 19,
-  },
-  limit: {
-    color: '#CCCCCC',
-    fontSize: 15,
-    lineHeight: 19,
-  },
+	container: {
+		flex: 1,
+		backgroundColor: '#FFFFFF',
+	},
+	box: {
+		padding: 9,
+		backgroundColor: '#F7F7F7',
+		borderRadius: 4,
+		marginHorizontal: 11,
+	},
+	note: {
+		color: '#888888',
+		fontSize: 12,
+		lineHeight: 17,
+	},
+	rule: {
+		color: '#54D693',
+	},
+	input: {
+		margin: 14,
+		padding: 15,
+		flex: 0.5,
+	},
+	row: {
+		marginRight: 15,
+		justifyContent: 'flex-end',
+		flexDirection: 'row',
+	},
+	count: {
+		color: '#333333',
+		fontSize: 15,
+		lineHeight: 19,
+	},
+	limit: {
+		color: '#CCCCCC',
+		fontSize: 15,
+		lineHeight: 19,
+	},
 })

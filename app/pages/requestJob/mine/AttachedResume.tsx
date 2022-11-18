@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList } from 'react-native'
 import styles from './styles/AttachedResume.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import ListEmptyComponent from '../../components/ListEmptyComponent'
 import { format } from 'date-fns'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import SystemHelper from '../../../utils/system'
 import { calculateSize } from '../../../utils/utils'
 import LinearGradient from 'react-native-linear-gradient'
@@ -113,7 +113,7 @@ export default class AttachedResume extends Component<IProps, IState> {
     const end = { x: 0, y: 0 }
     return (
       <View style={styles.footerView}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.uploadBtn}
           onPress={() => {
             const { navigation } = this.props
@@ -126,7 +126,7 @@ export default class AttachedResume extends Component<IProps, IState> {
             source={require('../../../assets/requestJobs/jianli-tianjia.png')}
           />
           <Text style={styles.uploadText}>上传简历/作品集</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
         <Text style={styles.useVipText}>使用专业级简历模板升级简历</Text>
         <LinearGradient
           start={start}
@@ -159,7 +159,7 @@ export default class AttachedResume extends Component<IProps, IState> {
       fileType = require('../../../assets/requestJobs/jianli-pdf.png')
     }
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.cellStyle}
         onPress={() => {
 
@@ -174,7 +174,7 @@ export default class AttachedResume extends Component<IProps, IState> {
           <Text style={styles.cellName}>{item.name}</Text>
           <Text style={styles.fileInfo}>{`${fileSize} ${format(new Date(item.time), 'yyyy.MM.dd hh:mm')}上传`}</Text>
         </View>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.editBtn}
           onPress={() => {
             this.setState({ editVisible: true })
@@ -184,8 +184,8 @@ export default class AttachedResume extends Component<IProps, IState> {
             style={styles.chakanIcon}
             source={require('../../../assets/requestJobs/jianli-chakan.png')}
           />
-        </NextTouchableOpacity>
-      </NextTouchableOpacity >
+        </NextPressable>
+      </NextPressable >
     )
   }
 
@@ -221,7 +221,7 @@ export default class AttachedResume extends Component<IProps, IState> {
     const { navigation } = this.props
     return (
       <View style={styles.bottomView}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.editNameBtn}
           onPress={() => {
             this.setState({
@@ -232,8 +232,8 @@ export default class AttachedResume extends Component<IProps, IState> {
           }}
         >
           <Text style={styles.editNameText}>重命名</Text>
-        </NextTouchableOpacity>
-        <NextTouchableOpacity
+        </NextPressable>
+        <NextPressable
           style={styles.deleteBtn}
           onPress={() => {
             this.setState({
@@ -244,8 +244,8 @@ export default class AttachedResume extends Component<IProps, IState> {
           }}
         >
           <Text style={styles.deleteText}>删除</Text>
-        </NextTouchableOpacity>
-        <NextTouchableOpacity
+        </NextPressable>
+        <NextPressable
           style={styles.cancelBtn}
           onPress={() => {
             this.setState({
@@ -254,7 +254,7 @@ export default class AttachedResume extends Component<IProps, IState> {
           }}
         >
           <Text style={styles.editNameText}>取消</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }

@@ -9,13 +9,13 @@ import {
   TextInput,
   DeviceEventEmitter,
   StatusBar,
+  Keyboard,
 } from 'react-native'
 import styles from './styles/Login.style'
-import { GenProps } from '../../navigator/router/stack'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import LoginInputComponent from './LoginInputComponent'
-import NextTouchableOpacity from '../components/NextTouchableOpacity'
+import NextPressable from '../components/NextPressable'
 import AlertContentModal from '../components/AlertContentModal'
 import WhiteContentModal from '../components/WhiteContentModal'
 import GradientButton from '../components/GradientButton'
@@ -24,8 +24,7 @@ import { CommonActions } from '@react-navigation/native'
 import { numberRegex } from '../../utils/regex'
 import HTAuthManager from '~/common/auth/common/model/HTAuthManager'
 
-type IProps = GenProps<'LoginScreen'> &
-  ReturnType<typeof mapStateToProps> &
+type IProps = ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>
 
 interface IState {
@@ -50,29 +49,13 @@ class LoginScreen extends Component<IProps, IState> {
     }
   }
 
-  componentDidMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
-  }
-
-  onBackAndroid = () => {
-    // 安卓返回按钮弹出退出确认框
-    const { navigation } = this.props
-    if (navigation.getState().index === 0) {
-      return true
-    }
-    return false
-  }
-
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid)
-  }
-
   requestLogin() {
     if (!this.state.account) {
       Toast.show('请先输入账户名')
       return
     }
     // TODO 哪些场景会弹出 用户协议和隐私政策 的提示 modal
+    Keyboard.dismiss()
     this.setState({ showPrivacyTips: true })
   }
 
@@ -95,21 +78,21 @@ class LoginScreen extends Component<IProps, IState> {
             },
           }}
         />
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.loginBtn}
           onPress={() => {
             Toast.show('一键登录')
           }}>
           <Text style={styles.loginText}>一键登录</Text>
-        </NextTouchableOpacity>
-        <NextTouchableOpacity
+        </NextPressable>
+        <NextPressable
           style={styles.passwordLogin}
           onPress={() => {
             this.setState({ loginType: 1 })
             Toast.show('账号密码登录')
           }}>
           <Text style={styles.passwordLoginText}>账号密码登录</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }
@@ -131,7 +114,7 @@ class LoginScreen extends Component<IProps, IState> {
             autoCorrect={false}
             autoCapitalize="none"
             style={styles.accountLoginInput}
-            placeholder="请输入手机号或邮箱"
+            placeholder="请输入手机号"
             value={account}
             onChangeText={value => {
               this.setState({ account: value })
@@ -153,7 +136,7 @@ class LoginScreen extends Component<IProps, IState> {
               this.setState({ password: value })
             }}
           />
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.passwordHideBtn}
             onPress={() => {
               this.setState({ passwordShow: !passwordShow })
@@ -167,9 +150,9 @@ class LoginScreen extends Component<IProps, IState> {
                   : require('../../assets/loginPages/eye-close.png')
               }
             />
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
-        <NextTouchableOpacity
+        <NextPressable
           style={[
             styles.loginBtn,
             { marginTop: 108 },
@@ -197,9 +180,9 @@ class LoginScreen extends Component<IProps, IState> {
             })
           }}>
           <Text style={styles.loginText}>登录</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
         <View style={styles.forgetView}>
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.passwordLogin}
             onPress={() => {
               this.setState({
@@ -207,21 +190,27 @@ class LoginScreen extends Component<IProps, IState> {
               })
             }}>
             <Text style={styles.passwordLoginText}>验证码登录/注册</Text>
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
+          </NextPressable>
+          <NextPressable
             style={styles.passwordLogin}
             onPress={() => {
               if (numberRegex.test(account)) {
-                navigation.push('InputVerifyCode', {
-                  phone: account,
-                  operation: 'UserResetPassword',
-                })
+              	HTAPI.UserNumberCheck({ num: account }).then(response => {
+              		if (response) {
+                      Toast.show('未注册的手机号码')
+                      return
+                    }
+                    navigation.push('InputVerifyCode', {
+                    	phone: account,
+                    	operation: 'UserResetPassword',
+                    })
+              	})
               } else {
                 Toast.show('请输入正确的手机号以接收验证码!')
               }
             }}>
             <Text style={styles.passwordLoginText}>忘记密码</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
       </View>
     )
@@ -244,7 +233,7 @@ class LoginScreen extends Component<IProps, IState> {
               },
             }}
           />
-          <NextTouchableOpacity
+          <NextPressable
             style={[styles.loginBtn, { marginTop: 44 }]}
             onPress={() => {
               if (numberRegex.test(account)) {
@@ -254,15 +243,15 @@ class LoginScreen extends Component<IProps, IState> {
               }
             }}>
             <Text style={styles.loginText}>下一步</Text>
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
+          </NextPressable>
+          <NextPressable
             style={styles.passwordLogin}
             onPress={() => {
               this.setState({ loginType: 1 })
               // Toast.show('账号密码登录')
             }}>
             <Text style={styles.passwordLoginText}>账号密码登录</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
       </View>
     )
@@ -278,24 +267,24 @@ class LoginScreen extends Component<IProps, IState> {
           <View style={styles.thirdLoginView}>
             <Text style={styles.thirdLoginTitle}>第三方登录</Text>
             <View style={styles.thirdLoginBtn}>
-              <NextTouchableOpacity
+              <NextPressable
                 onPress={() => {
-                  Toast.show('微信登录,敬请期待')
+                  global.TODO_TOAST()
                 }}>
                 <Image
                   style={{ width: 50, height: 50 }}
                   source={require('../../assets/wx_logo.png')}
                 />
-              </NextTouchableOpacity>
-              <NextTouchableOpacity
+              </NextPressable>
+              <NextPressable
                 onPress={() => {
-                  Toast.show('苹果登录,敬请期待')
+                  global.TODO_TOAST()
                 }}>
                 <Image
                   style={{ width: 50, height: 50 }}
                   source={require('../../assets/apple_logo.png')}
                 />
-              </NextTouchableOpacity>
+              </NextPressable>
             </View>
           </View>
         ) : null} */}
@@ -303,19 +292,19 @@ class LoginScreen extends Component<IProps, IState> {
           <Text style={styles.privacyText}>
             {loginType === 2 ? '阅读' : '进入即代表您已同意'}
           </Text>
-          <NextTouchableOpacity
+          <NextPressable
             onPress={() => {
               navigation.push('AgreementPrivacy', { pageType: 1 })
             }}>
             <Text style={styles.privacyDetail}>《用户协议》</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
           <Text style={styles.privacyText}>及</Text>
-          <NextTouchableOpacity
+          <NextPressable
             onPress={() => {
               navigation.push('AgreementPrivacy', { pageType: 2 })
             }}>
             <Text style={styles.privacyDetail}>《隐私政策》</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
       </View>
     )
@@ -329,13 +318,13 @@ class LoginScreen extends Component<IProps, IState> {
           {`新手机号注册提醒手机号[${account}]未注册，点击注册，将为您注册账号并进入趁早找。`}
         </Text>
         <View style={styles.registerTipBtnView}>
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.registerTipLeftBtn}
             onPress={() => {
               this.setState({ showRegisterTips: false })
             }}>
             <Text style={styles.accountTitle}>换账号登录</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
           <GradientButton
             containerStyle={styles.registerTipRightBtn}
             text="注册"
@@ -361,7 +350,7 @@ class LoginScreen extends Component<IProps, IState> {
       <View style={styles.privacyModal}>
         <Text style={styles.privacyModalTitle}>请阅读并同意以下内容</Text>
         <View style={styles.privacyModalTitleView}>
-          <NextTouchableOpacity
+          <NextPressable
             onPress={() => {
               this.setState({ showPrivacyTips: false }, () => {
                 navigation.push('AgreementPrivacy', { pageType: 1 })
@@ -370,8 +359,8 @@ class LoginScreen extends Component<IProps, IState> {
             <Text style={[styles.privacyDetail, { fontWeight: 'bold' }]}>
               《用户协议》
             </Text>
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
+          </NextPressable>
+          <NextPressable
             onPress={() => {
               this.setState({ showPrivacyTips: false }, () => {
                 navigation.push('AgreementPrivacy', { pageType: 2 })
@@ -380,7 +369,7 @@ class LoginScreen extends Component<IProps, IState> {
             <Text style={[styles.privacyDetail, { fontWeight: 'bold' }]}>
               《隐私政策》
             </Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
         <View
           style={[
@@ -389,13 +378,13 @@ class LoginScreen extends Component<IProps, IState> {
               marginTop: 26,
             },
           ]}>
-          <NextTouchableOpacity
+          <NextPressable
             style={[styles.registerTipLeftBtn, { width: 110 }]}
             onPress={() => {
               this.setState({ showPrivacyTips: false })
             }}>
             <Text style={styles.accountTitle}>返回</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
           <GradientButton
             containerStyle={styles.agreeBtn}
             text="同意并继续"
@@ -446,9 +435,9 @@ class LoginScreen extends Component<IProps, IState> {
         <WhiteContentModal
           visible={showPrivacyTips}
           modalStyle={{
-            height: 185,
+            height: 185 + global.HOME_BAR_HEIGHT,
             width: SystemHelper.width,
-            bottom: SystemHelper.safeBottom,
+            bottom: 0
           }}
           contextStyle={{
             borderBottomLeftRadius: 0,

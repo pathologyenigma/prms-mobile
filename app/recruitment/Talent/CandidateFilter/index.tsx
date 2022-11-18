@@ -17,7 +17,7 @@ import {
   educationLabels,
   educationValues,
   experienceLabels,
-  experienceValues,
+  experienceValueList,
   stirngForSalary,
   jobStatusLabels,
   jobStatusValues,
@@ -47,7 +47,17 @@ export default function CandidateFilter({
   route,
 }: StackScreenProps<TalentParamList, 'CandidateFilter'>) {
 
-  const [paramList, setParamList] = useState({})
+  const [paramList, setParamList] = useState({
+  	jobCategories: undefined,
+  	education: undefined,
+  	experience: undefined,
+  	age: undefined,
+  	salary: undefined,
+  	industryCategories: undefined,
+  	cities: undefined,
+  	gender: undefined,
+  	resumeJobStatus: undefined,
+  })
 
   const {
     jobCategories,
@@ -61,10 +71,6 @@ export default function CandidateFilter({
     resumeJobStatus,
   } = paramList || {}
 
-  const handleValueChange = useCallback((low: number, high: number) => {
-    // setParamList({ ...paramList, age: [low, high] })
-  }, [])
-
   const [salaryModalVisible, setSalaryModalVisible] = useState(false)
 
   return (
@@ -73,7 +79,7 @@ export default function CandidateFilter({
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.content}>
-        <View style={styles.section}>
+        {/*<View style={styles.section}>
           <LabelAndDetail
             label="职位类别"
             detail={jobCategories && jobCategories.length > 0 ? '' : '不限'}
@@ -96,7 +102,7 @@ export default function CandidateFilter({
               })
             }
           />
-        </View>
+        </View>*/}
         <View style={styles.section}>
           <SectionHeader title="学历" />
           <RadioGroup
@@ -125,7 +131,7 @@ export default function CandidateFilter({
                 <RadioLabel
                   key={e}
                   label={e}
-                  value={experienceValues[index]}
+                  value={experienceValueList[index]}
                   style={styles.label}
                   checkedStyle={styles.checked}
                 />
@@ -143,7 +149,12 @@ export default function CandidateFilter({
               style={styles.range}
               min={16}
               max={40}
-              onValueChanged={handleValueChange}
+              onValueChanged={(low, high) => {
+              	console.log(low, high, age)
+              	if (low != age?.[0] || high != age?.[1]) {
+              		setParamList({ ...paramList, age: [low, high] })
+              	}
+              }}
             />
             <View style={styles.limitRow}>
               <Text style={styles.limit}>16岁</Text>
@@ -167,7 +178,7 @@ export default function CandidateFilter({
             onPress={() => {
             	navigation.push('JobSelectIndustry', {
 	              selectJobIndustryCallback: (e: any) => {
-	                setParamList({ ...paramList, industryCategories: (industryCategories ?? []).concat(e.map(item => ({ secondary: item[item.length - 1] }))) })
+	                setParamList({ ...paramList, industryCategories: (industryCategories ?? []).concat(e.map(item => ({ secondary: item[item.length - 1], item }))) })
 	              }
 	            })
             }}
@@ -191,7 +202,7 @@ export default function CandidateFilter({
             	navigation.push('JobSelectCity', {
 	              mode: 1,
 	              selectJobCityCallback: (e: any) => {
-	              	setParamList({ ...paramList, cities: (cities ?? []).concat([e[2].name]) })
+	              	setParamList({ ...paramList, cities: (cities ?? []).concat([e[1].name]) })
 	              }
 	            })
             }}
@@ -259,8 +270,23 @@ export default function CandidateFilter({
         <GradientButton style={styles.primary} title="确定" onPress={() => {
         	let callback = route?.params?.callback
         	if (callback) {
-        		paramList.category = paramList?.jobCategories
-        		paramList.industryCategories = paramList?.industry_involved
+        		// paramList.category = paramList?.jobCategories
+        		paramList.job_status = paramList?.resumeJobStatus ? paramList.resumeJobStatus[0] : undefined
+        		paramList.resumeJobStatus = undefined
+
+        		paramList.industry_involved = paramList.industryCategories ?? []
+        		paramList.industry_involved = paramList.industry_involved.map(section => {
+        			return section.item
+        		})?.[0]
+        		paramList.industryCategories = undefined
+
+        		paramList.city = paramList.cities
+        		paramList.cities = undefined
+
+        		if (paramList.age?.[0] == 16 && paramList.age?.[1] == 40) {
+        			paramList.age = undefined
+        		}
+        		console.log(paramList)
         		
         		callback(paramList)
         	}

@@ -8,13 +8,13 @@ import {
   View,
   Text,
   ImageSourcePropType,
-  TouchableOpacity,
+  Pressable,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import styles from './styles/JinbiRecharge.style'
 import { CommonActions } from '@react-navigation/native'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { TextInput } from 'react-native-gesture-handler'
 import GradientButton from '../../components/GradientButton'
 
@@ -95,7 +95,7 @@ export default class JinbiRecharge extends Component<IProps, IState> {
         resizeMode="cover"
         source={require('../../../assets/requestJobs/jinbi-bg.png')}>
         <View style={styles.bar}>
-          <TouchableOpacity
+          <Pressable
             style={styles.backBtn}
             activeOpacity={0.9}
             onPress={() => {
@@ -106,11 +106,11 @@ export default class JinbiRecharge extends Component<IProps, IState> {
               resizeMode="contain"
               source={require('../../../assets/requestJobs/jinbi-back.png')}
             />
-          </TouchableOpacity>
+          </Pressable>
           <Text style={styles.barTitle}>金币充值</Text>
           <View style={styles.backBtn} />
         </View>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.qiandaoBtn}
           onPress={() => {
             navigation.push('JinbiSignin')
@@ -120,7 +120,7 @@ export default class JinbiRecharge extends Component<IProps, IState> {
             resizeMode="contain"
             source={require('../../../assets/requestJobs/jinbi-qiandao.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
         <Text style={styles.jinbiValue}>10</Text>
         <Text style={styles.jinbiTitle}>当前金币</Text>
       </ImageBackground>
@@ -137,7 +137,7 @@ export default class JinbiRecharge extends Component<IProps, IState> {
         <View style={styles.tagView}>
           {jinbiList.map((item: any, index: number) => {
             return (
-              <NextTouchableOpacity
+              <NextPressable
                 style={[
                   styles.tagBtn,
                   item.select && { backgroundColor: '#fff' },
@@ -171,10 +171,10 @@ export default class JinbiRecharge extends Component<IProps, IState> {
                 ) : null}
                 <Text style={styles.tagAmount}>{`${item.amount}金币`}</Text>
                 <Text style={styles.tagMoney}>{`¥${item.money}`}</Text>
-              </NextTouchableOpacity>
+              </NextPressable>
             )
           })}
-          <NextTouchableOpacity
+          <NextPressable
             style={[
               styles.tagBtn,
               isCustomAmount && { backgroundColor: '#fff' },
@@ -202,7 +202,7 @@ export default class JinbiRecharge extends Component<IProps, IState> {
               />
             ) : null}
             <Text style={styles.tagCustomText}>自定义充值</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
         {this.renderInputAmount()}
       </View>
@@ -230,11 +230,11 @@ export default class JinbiRecharge extends Component<IProps, IState> {
             this.setState({ customAmount: value })
           }}
         />
-        <NextTouchableOpacity onPress={() => {}}>
+        <NextPressable onPress={() => {}}>
           <Text style={styles.customAllText}>{`获得${
             customAmount || 0
           }金币`}</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }
@@ -246,7 +246,7 @@ export default class JinbiRecharge extends Component<IProps, IState> {
   ) {
     const { payType } = this.state
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.cellItem}
         key={title.toString()}
         onPress={() => {
@@ -271,7 +271,7 @@ export default class JinbiRecharge extends Component<IProps, IState> {
               : require('../../../assets/requestJobs/jinbi-paytype-gray.png')
           }
         />
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import styles from './styles'
 // @ts-ignore
 import Video from 'react-native-video'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
 
 type IProps = GenProps<'VideoComponent'> & {

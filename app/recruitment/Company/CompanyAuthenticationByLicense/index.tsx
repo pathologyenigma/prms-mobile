@@ -12,7 +12,6 @@ import IconButton from '../../components/IconButton'
 import Hotline from '../Hotline'
 import { getBottomSpace } from 'react-native-iphone-x-helper'
 import TitleAndDetail from '../TitleAndDetail'
-import { useNavigation } from '@react-navigation/native'
 import PrimaryButton from '../../components/PrimaryButton'
 import Hint from '../CompanyAuthentication/Hint'
 import ImagePicker from '../../components/ImagePicker'
@@ -20,8 +19,7 @@ import ActionSheet from '../../components/ActionSheet'
 import AlertModal from '../../components/AlertModal'
 import NavBar from '../../components/NavBar'
 
-export default function CompanyAuthenticationByLicense() {
-  const navigation = useNavigation<StackNavigationProp<any>>()
+export default function CompanyAuthenticationByLicense({ navigation }) {
   const [actionSheetVisible, setActionSheetVisible] = useState(false)
   const [logoutModalVisible, setLogoutModalVisible] = useState(false)
 

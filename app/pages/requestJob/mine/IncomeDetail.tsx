@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, StatusBar, SectionList, RefreshControl } from 'react-native'
 import styles from './styles/IncomeDetail.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { Tabs } from '@ant-design/react-native'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import SearchTextinput from '../../components/SearchTextinput'
@@ -130,7 +130,7 @@ export default class IncomeDetail extends Component<IProps, IState> {
     const { navigation } = this.props
     return (
       <View style={styles.bar}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.left}
           activeOpacity={0.9}
           onPress={() => {
@@ -142,7 +142,7 @@ export default class IncomeDetail extends Component<IProps, IState> {
             resizeMode="contain"
             source={require('../../../assets/requestJobs/navbar-back.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }
@@ -206,7 +206,7 @@ export default class IncomeDetail extends Component<IProps, IState> {
     const { navigation } = this.props
     return (
       <View style={styles.bar}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.left}
           activeOpacity={0.9}
           onPress={() => {
@@ -218,12 +218,12 @@ export default class IncomeDetail extends Component<IProps, IState> {
             resizeMode="contain"
             source={require('../../../assets/requestJobs/navbar-back.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
         <View style={styles.tabLeft}>
           {
             tabs.map((e, i) => {
               return (
-                <NextTouchableOpacity
+                <NextPressable
                   style={styles.tabsBtn}
                   key={i.toString()}
                   onPress={() => {
@@ -243,12 +243,12 @@ export default class IncomeDetail extends Component<IProps, IState> {
                       />
                     )}
                   </>
-                </NextTouchableOpacity>
+                </NextPressable>
               )
             })
           }
         </View>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.riliBtn}
           onPress={() => {
             this.setState({ datePickVisible: true })
@@ -258,7 +258,7 @@ export default class IncomeDetail extends Component<IProps, IState> {
             style={styles.riliBtnIcon}
             source={require('../../../assets/requestJobs/calendar.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }
@@ -317,17 +317,6 @@ export default class IncomeDetail extends Component<IProps, IState> {
     )
   }
 
-  renderIncomeRefresh() {
-    const { incomeRefreshState } = this.state
-    return (
-      <RefreshControl
-        refreshing={incomeRefreshState}
-        onRefresh={() => this.loadData()
-        }
-      />
-    )
-  }
-
   renderIncomeList() {
     const {
       incomeRefreshState,
@@ -345,7 +334,7 @@ export default class IncomeDetail extends Component<IProps, IState> {
             />
           ) : null
         }
-        refreshControl={this.renderIncomeRefresh()}
+        onRefresh={() => this.loadData()}
         renderSectionHeader={({ section }) => this.renderIncomeMonth(section)}
         renderItem={({ item }: any) => this.renderIncomeCell(item)}
         keyExtractor={item => item.id.toString()}
@@ -464,10 +453,7 @@ export default class IncomeDetail extends Component<IProps, IState> {
         </View>
         <DatePickerModal
           visible={datePickVisible}
-          currentDate={localDateOfBirth
-            ? new Date(Date.parse(localDateOfBirth))
-            : new Date()
-          }
+          currentDate={localDateOfBirth}
           leftPress={() => {
             this.setState({ datePickVisible: false })
           }}

@@ -39,6 +39,7 @@ export default StyleSheet.create({
   },
   accountLoginInput: {
     padding: 0,
+    paddingVertical: 10,
     fontSize: 15,
     color: '#333333',
   },

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {
   Image, ImageRequireSource, StatusBar, Text,
-  TouchableOpacity, View, StyleProp, TextStyle, ImageStyle,
+  Pressable, View, StyleProp, TextStyle, ImageStyle,
 } from 'react-native'
 import SystemHelper from '../../../utils/system'
 import Styles from './styles'
@@ -52,9 +52,10 @@ export default class NavBar extends Component<INavBarProps> {
       )
     }
     return (
-      <TouchableOpacity
+      <Pressable
         style={Styles.left}
-        activeOpacity={0.9}
+        activeOpacity={1}
+        hotSlop={{ left: 10, top: 10, bottom: 10, right: 10 }}
         disabled={!left.act}
         onPress={() => {
           if (left.act) {
@@ -63,7 +64,7 @@ export default class NavBar extends Component<INavBarProps> {
         }}
       >
         {content}
-      </TouchableOpacity >
+      </Pressable >
     )
   }
 
@@ -101,7 +102,7 @@ export default class NavBar extends Component<INavBarProps> {
       )
     }
     return (
-      <TouchableOpacity
+      <Pressable
         style={[Styles.right, right.disable && { opacity: 0.5 }, right.viewStyle]}
         activeOpacity={0.8}
         onPress={() => {
@@ -112,7 +113,7 @@ export default class NavBar extends Component<INavBarProps> {
         disabled={right.disable}
       >
         {content}
-      </TouchableOpacity>
+      </Pressable>
     )
   }
 

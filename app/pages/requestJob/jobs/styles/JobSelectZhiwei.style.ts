@@ -41,7 +41,8 @@ export default StyleSheet.create({
     left: 0,
     top: SystemHelper.safeTop + 100,
     width: SystemHelper.width,
-    height: SystemHelper.height - SystemHelper.safeTop - 100,
+    // height: SystemHelper.height - SystemHelper.safeTop - 100,
+    bottom: 0,
     backgroundColor: 'rgba(0,0,0,0.6)',
     flexDirection: 'row'
   },

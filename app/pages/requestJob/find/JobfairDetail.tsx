@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView } from 'react-native'
 import { Tabs } from '@ant-design/react-native'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import styles from './styles/JobfairDetail.style'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import LinearGradient from 'react-native-linear-gradient'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
@@ -179,7 +179,7 @@ export default class JobfairDetail extends Component<TProps, IState> {
           {
             tabs.map((e, i) => {
               return (
-                <NextTouchableOpacity
+                <NextPressable
                   style={styles.tabsBtn}
                   key={i.toString()}
                   onPress={() => {
@@ -199,7 +199,7 @@ export default class JobfairDetail extends Component<TProps, IState> {
                       />
                     )}
                   </>
-                </NextTouchableOpacity>
+                </NextPressable>
               )
             })
           }
@@ -326,9 +326,9 @@ export default class JobfairDetail extends Component<TProps, IState> {
           return (
             <View style={styles.askView}>
               <View style={styles.cellTitleView}>
-                <Image
+                <CacheImage
                   style={styles.iconImage}
-                  source={require('../../../assets/requestJobs/icon-example.png')}
+                  source={global.AVATAR_IMAGE()}
                 />
                 <View style={styles.commentInfo}>
                   <Text style={styles.cellTitle}>
@@ -342,9 +342,9 @@ export default class JobfairDetail extends Component<TProps, IState> {
               {item.answer && (
                 <View style={styles.answerView}>
                   <View style={styles.answerViewPerson}>
-                    <Image
+                    <CacheImage
                       style={styles.answerViewPersonIcon}
-                      source={require('../../../assets/requestJobs/icon-example.png')}
+                      source={global.AVATAR_IMAGE()}
                     />
                     <Text style={styles.answerViewTitle}>
                       {`${item.answer.name}·${item.answer.job}`}
@@ -372,7 +372,7 @@ export default class JobfairDetail extends Component<TProps, IState> {
           colors={['#57DE9E', '#81E3AE']}
           style={styles.footerBtnContainer}
         >
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.footerBtn}
             onPress={() => {
               this.setState({ resumeTipsVisible: true })
@@ -380,7 +380,7 @@ export default class JobfairDetail extends Component<TProps, IState> {
           >
             <Text style={styles.footerBtnTitle}>立即报名</Text>
             <Text style={styles.footerBtnDetail}>{`报名截止时间：${dataSource.endLineTime}`}</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </LinearGradient>
       </View>
     )
@@ -388,7 +388,7 @@ export default class JobfairDetail extends Component<TProps, IState> {
 
   renderQuestion() {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.questionView}
         onPress={() => {
           const { navigation } = this.props
@@ -399,7 +399,7 @@ export default class JobfairDetail extends Component<TProps, IState> {
           source={require('../../../assets/requestJobs/jobFail-Ask.png')}
           style={styles.askBtnIcon}
         />
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

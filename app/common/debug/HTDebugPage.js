@@ -15,7 +15,7 @@ export default class HTMineSettingPage extends Component {
 		super(props)
 		this.state = {
 			itemList: [
-				{ title: '版本号', detail: `${DeviceInfo.getVersion()}_${DeviceInfo.getBuildNumber()}_${global.APPLICATION_VERSION}`, onPress: this._versionDidTouch },
+				{ title: '版本号', detail: `${DeviceInfo.getVersion()}_${DeviceInfo.getBuildNumber()}_${HTUpdateManager.APPLICATION_VERSION}`, onPress: this._versionDidTouch },
 				{ title: '服务器管理', detail: `${HTServerManager.currentServer.base}`, onPress: this._serverDidTouch },
 			]
 		}

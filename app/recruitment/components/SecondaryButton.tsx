@@ -7,7 +7,7 @@ import {
   Text,
   View,
   Image,
-  TouchableOpacity,
+  Pressable,
 } from 'react-native'
 
 interface SecondaryButtonProps {
@@ -24,12 +24,12 @@ export default function SecondaryButton({
   onPress,
 }: SecondaryButtonProps) {
   return (
-    <TouchableOpacity
+    <Pressable
       activeOpacity={0.5}
       onPress={onPress}
       style={[styles.container, style]}>
       <Text style={[styles.title, titleStyle]}>{title}</Text>
-    </TouchableOpacity>
+    </Pressable>
   )
 }
 

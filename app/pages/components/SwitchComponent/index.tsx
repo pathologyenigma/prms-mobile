@@ -1,16 +1,17 @@
 import React, { PureComponent } from 'react'
 import { Switch, StyleProp, TextStyle, StyleSheet } from 'react-native'
-import NextTouchableOpacity from '../NextTouchableOpacity'
+import NextPressable from '../NextPressable'
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#57DE9E',
-    width: 43,
-    height: 22,
-    borderRadius: 11,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: 4,
+    // backgroundColor: '#57DE9E',
+    // width: 43,
+    // height: 22,
+    // borderRadius: 11,
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    // paddingLeft: 4,
+    // paddingRight: 15,
   },
 })
 
@@ -27,7 +28,7 @@ export default class SwitchComponent extends PureComponent<TProps> {
       value, containerStyle, closeStyle, switchPress,
     } = this.props
     return (
-      <NextTouchableOpacity
+      <NextPressable
         onPress={() => {
           if (switchPress) {
             switchPress()
@@ -36,27 +37,33 @@ export default class SwitchComponent extends PureComponent<TProps> {
         style={[
           styles.container,
           containerStyle,
-          !value && { backgroundColor: '#E9E9EB', },
+          // !value && { backgroundColor: '#E9E9EB', },
           closeStyle,
 
         ]}
       >
         <Switch
           style={{
-            width: 43,
-            height: 22,
+            // width: 100,
+            // height: 22,
+            transform: [
+            	{ scale: Platform.select({
+            		ios: 1,
+            		android: 1.3,
+            	}) }
+            ]
           }}
           thumbColor="#ffffff"
           trackColor={
             {
-              'false': 'transparent',
-              'true': 'transparent'
+              'false': '#E9E9EB',
+              'true': '#57DE9E'
             }
           }
           value={value}
           disabled={true}
         />
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 }

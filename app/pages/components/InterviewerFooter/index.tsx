@@ -3,15 +3,19 @@ import { View, Image, Text, StyleProp, ViewStyle, TextStyle, StyleSheet } from '
 import { greenColor } from '../../../utils/constant'
 import SystemHelper from '../../../utils/system'
 import LinearGradient from 'react-native-linear-gradient'
-import NextTouchableOpacity from '../NextTouchableOpacity'
+import NextPressable from '../NextPressable'
 
 const styles = StyleSheet.create({
   container: {
-    height: SystemHelper.safeBottom + 50,
     paddingTop: 8,
-    flexDirection: 'row',
+    paddingBottom: global.HOME_BAR_HEIGHT,
     backgroundColor: '#fff',
     paddingHorizontal: 11,
+  },
+  content: {
+  	height: 65,
+  	flexDirection: 'row',
+    alignItems: 'center',
   },
   title: {
     color: '#333333',
@@ -65,17 +69,18 @@ type TProps = {
 export default class InterviewerFooter extends PureComponent<TProps> {
   render() {
     const {
-      icon, name, job, viewStyle, clickChat, clickDelivery
+      icon, name, job, logo, viewStyle, clickChat, clickDelivery
     } = this.props
     const start = { x: 0, y: 0.5 }
     const end = { x: 1, y: 0.5 }
     return (
       <View style={[styles.container, viewStyle]}>
+      	<View style={styles.content}>
         {/* <Image
           style={styles.renshiIcon}
           source={icon}
         /> */}
-        <View style={styles.renshiIcon} />
+        <CacheImage style={styles.renshiIcon} source={global.AVATAR_IMAGE(logo)} />
         <View style={styles.titleView}>
           <Text style={styles.title}>
             {name}
@@ -85,7 +90,7 @@ export default class InterviewerFooter extends PureComponent<TProps> {
           </Text>
         </View>
         <View style={styles.linearView}>
-          <NextTouchableOpacity
+          <NextPressable
             onPress={() => {
               if (clickChat) {
                 clickChat()
@@ -102,8 +107,8 @@ export default class InterviewerFooter extends PureComponent<TProps> {
                 聊一聊
               </Text>
             </LinearGradient>
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
+          </NextPressable>
+          <NextPressable
             onPress={() => {
               if (clickDelivery) {
                 clickDelivery()
@@ -120,7 +125,8 @@ export default class InterviewerFooter extends PureComponent<TProps> {
                 投简历
               </Text>
             </LinearGradient>
-          </NextTouchableOpacity>
+          </NextPressable>
+        </View>
         </View>
       </View >
     )

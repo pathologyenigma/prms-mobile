@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ImageSourcePropType, DeviceEventEmitter } from 'react-native'
 import styles from './styles'
-import { GenProps } from '../../../../navigator/requestJob/stack'
+import { GenProps } from '../../../../utils/StackProps'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { Carousel } from '@ant-design/react-native'
-import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
+import NextPressable from '../../../components/NextPressable'
 import CompanyCell from '../CompanyCell'
 
 type TProps = GenProps<'Find'>
@@ -110,21 +110,21 @@ export default class FindCompany extends Component<TProps, IState> {
         style={styles.carousel}
         styles={{ pagination: styles.pageController }}
       >
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.adBtn}
         >
           <Text style={styles.adText}>这是广告 1</Text>
-        </NextTouchableOpacity>
-        <NextTouchableOpacity
+        </NextPressable>
+        <NextPressable
           style={styles.adBtn}
         >
           <Text style={styles.adText}>这是广告 2</Text>
-        </NextTouchableOpacity>
-        <NextTouchableOpacity
+        </NextPressable>
+        <NextPressable
           style={styles.adBtn}
         >
           <Text style={styles.adText}>这是广告 3</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </Carousel>
     )
   }

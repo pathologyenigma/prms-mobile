@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { View, Image, StatusBar } from 'react-native'
 import styles from './styles/MapNavigation.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import SystemHelper from '../../../utils/system'
 import { greenColor } from '../../../utils/constant'
 import GradientButton from '../../components/GradientButton'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
+import MapView, { LatLng, MoveEvent } from '~/common/location/MapView'
 
 type IProps = GenProps<'MapNavigation'> & {
 
@@ -26,7 +27,7 @@ export default class MapNavigation extends Component<IProps, IState> {
   renderNavBar() {
     const { navigation } = this.props
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.leftBtn}
         onPress={() => {
           navigation.pop()
@@ -36,18 +37,27 @@ export default class MapNavigation extends Component<IProps, IState> {
           source={require('../../../assets/black_back.png')}
           style={styles.leftIcon}
         />
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
   renderMap() {
+  	let location = this.props.navigation.getParam('location')
+  	let centerLatLng = location ? { latitude: location[1], longitude: location[0] } : null 
     return (
-      <View style={{
-        width: SystemHelper.width,
-        height: SystemHelper.height - 54 - SystemHelper.safeBottom - SystemHelper.safeTop,
-        backgroundColor: greenColor,
-        marginTop: -SystemHelper.safeTop
-      }} />
+      <View style={styles.mapWrapper}>
+	      <MapView
+	        style={styles.map}
+	        zoomLevel={15}
+	        centerLatLng={centerLatLng}
+	      />
+	      <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
+	        <View style={styles.mapMarkerBox}>
+	          <Image source={require('~/recruitment/Job/SearchJobAddress/images/marker.png')} />
+	        </View>
+	        <View style={styles.mapMarkerBox}></View>
+	      </View>
+	    </View>
     )
   }
 
@@ -58,7 +68,7 @@ export default class MapNavigation extends Component<IProps, IState> {
       >
         <GradientButton
           containerStyle={styles.btnContainer}
-
+          onPress={global.TODO_TOAST}
           text="使用其他地图导航"
         />
       </View>

@@ -19,6 +19,7 @@ static NSString * const ErrorCode = @"GeoLocationModuleOnceLocationManager";
         _reject = reject;
         _locationManager = [[AMapLocationManager alloc] init];
         _locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
+        _locationManager.locationTimeout = 2;
         _locationManager.delegate = self;
         // 返回地址信息
         _locationManager.locatingWithReGeocode = YES;

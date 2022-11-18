@@ -24,7 +24,7 @@ export default function AvatarCropper({
 }: StackScreenProps<HrParamList, 'AvatarCropper'>) {
   const { width: SCREEN_WIDTH } = Dimensions.get('window')
   let crop = null
-  const { uri, targetRouteName } = route.params || {}
+  const { uri, callback } = route.params || {}
 
   return (
     <View style={styles.container}>
@@ -45,9 +45,8 @@ export default function AvatarCropper({
                 	HTAPI.UserEditBasicInfo({
                 		info: { logo: remoteUrl }
                 	}).then(response => {
-	            		navigation.navigate(targetRouteName || 'HrProfile', {
-	            			avatar: remoteUrl,
-	            		})
+                		ActionToast.show('修改成功!')
+                		callback && callback(navigation, remoteUrl)
 	            	})
                 })
             }}

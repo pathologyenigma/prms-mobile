@@ -74,8 +74,9 @@ export default StyleSheet.create({
     marginRight: 9,
     borderRadius: 3,
     backgroundColor: '#F0F0F0',
-    height: 15,
-    lineHeight: 15,
+    // height: 15,
+    // lineHeight: 15,
+    paddingVertical: 1,
     fontSize: 10,
     color: '#888',
     paddingHorizontal: 6

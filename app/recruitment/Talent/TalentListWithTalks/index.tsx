@@ -25,7 +25,7 @@ function formatTime(time: string) {
   return format(date, 'yyyy年M月d日 HH:mm')
 }
 
-export default function TalentListwithTalks() {
+export default function TalentListwithTalks(props) {
   const [ items, setItemList ] = useState()
   useEffect(() => {
   	HTAPI.UserGetContractList().then(response => {
@@ -46,8 +46,9 @@ export default function TalentListwithTalks() {
 		      } = data
 
 		      return {
+		      	item: data,
 		        id,
-		        job: job.title,
+		        job: job?.title,
 		        time: formatTime(last_msg_time),
 		        name: name,
 		        age: `${age} 岁`,
@@ -65,11 +66,13 @@ export default function TalentListwithTalks() {
 		      }
   		})
   		setItemList(itemList)
-  	})
+  	}).catch(e => console.log(e))
   }, [])
 
   const renderItem: ListRenderItem = ({ item }) => {
-    return <ListItem item={item} />
+    return <ListItem item={item} onPress={() => {
+    	props.navigation.push('MessagePage', { targetItem: item.item })
+    }} />
   }
 
   return (

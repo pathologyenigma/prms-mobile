@@ -4,15 +4,17 @@ import Avatar from '../components/Avatar'
 
 interface ProfileProps {}
 
-export default function Profile() {
+export default function Profile({ data }) {
+  let work = data ? data?.Resumes[0]?.ResumeWorkExps[0] : {}
   return (
     <View style={styles.container}>
-      <Text style={styles.name}>李小冉</Text>
-      <Text style={styles.title}>UI设计师·广东智慧网络</Text>
+      <Text style={styles.name}>{data?.real_name ?? data?.username}</Text>
+      <Text style={styles.title}>{`${work?.pos_name}·${work?.comp_name}`}</Text>
       <Avatar
+      	uri={data?.image_url}
         style={styles.avatar}
         genderStyle={styles.genderStyle}
-        gender="female"
+        gender={ data?.gender ? 'male' : "female"}
       />
       <View style={styles.divider} />
     </View>

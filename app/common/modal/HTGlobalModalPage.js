@@ -7,6 +7,7 @@ import HTRiseToast from './HTRiseToast'
 import HTBottomAnimationView from '~/common/mask/HTBottomAnimationView'
 import HTAlert from './HTAlert'
 import HTImageListView from './HTImageListView'
+import HTTimePicker from './HTTimePicker'
 
 export default class HTGlobalModalPage extends Component {
 
@@ -23,6 +24,7 @@ export default class HTGlobalModalPage extends Component {
 		return (
 			<View pointerEvents={'box-none'} style={[CONTAINER]}>
 				<HTImageListView ref={ref => global.ImageListView = ref} />
+				<HTBottomAnimationView ref={ref => global.TimePicker = ref} ContentClass={HTTimePicker} />
 				<HTAlert ref={ref => global.Alert = ref} />
 				<HTHud ref={ref => global.Hud = ref} />
 				<HTToast ref={ref => global.Toast = ref} />

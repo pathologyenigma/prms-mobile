@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 'react-native'
-import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
+import NextPressable from '../../../components/NextPressable'
 import styles from './styles'
 
 interface ICell {
@@ -18,7 +18,7 @@ export default class CompanyQuestionCell extends PureComponent<ICell> {
       return null
     }
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={[styles.cellView, cellStyle]}
         onPress={() => {
           if (onPress) {
@@ -45,7 +45,7 @@ export default class CompanyQuestionCell extends PureComponent<ICell> {
           </Text>
         </View>
         <Text style={[styles.info, isWhiteMode && { color: '#333333' }]}>{`${cellItem.answerCount}回答  ${cellItem.questionCount}关注`}</Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 }

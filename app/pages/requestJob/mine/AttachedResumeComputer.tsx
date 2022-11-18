@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, } from 'react-native'
 import styles from './styles/AttachedResumeComputer.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 
 type IProps = GenProps<'AttachedResumeComputer'> & {
 
@@ -75,11 +75,11 @@ export default class AttachedResumeComputer extends Component<IProps, IState> {
           style={styles.qrcode}
           source={require('../../../assets/requestJobs/qrcode-green.png')}
         />
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.scanBtn}
         >
           <Text style={styles.scanText}>点击扫码</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, } from 'react-native'
 import styles from './styles/PrivacyName.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 
 type IProps = GenProps<'PrivacyName'> & {
 
@@ -81,7 +81,7 @@ export default class PrivacyName extends Component<IProps, IState> {
 
   renderItem(nameList: any, item: any) {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.cell}
         onPress={() => {
           // 此处应该做网络请求
@@ -102,9 +102,9 @@ export default class PrivacyName extends Component<IProps, IState> {
           this.setState({ nameList: nextNameList })
         }}
       >
-        <Image
+        <CacheImage
           style={styles.roleIcon}
-          source={require('../../../assets/requestJobs/icon-example.png')}
+          source={global.AVATAR_IMAGE()}
         />
         <Text style={styles.name}>{`${item.name}（${item.status}）`}</Text>
         {item.selected ? (
@@ -114,7 +114,7 @@ export default class PrivacyName extends Component<IProps, IState> {
         ) : (
           <View style={styles.unselectedView} />
         )}
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

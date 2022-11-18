@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList, Alert, Linking, ViewPagerAndroidComponent } from 'react-native'
 import styles from './styles/InterviewDetail.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
 import GradientButton from '../../components/GradientButton'
 import { format } from 'date-fns'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { greenColor } from '../../../utils/constant'
 import WhiteContentModal from '../../components/WhiteContentModal'
 
@@ -101,6 +101,11 @@ export default class InterviewDetail extends Component<IProps, IState> {
         content: '成功接受您的简历',
       }]
     }
+    HTAPI.CommonGetIterviewDetail({
+    	interviewId: this.props.navigation.getParam('id')
+    }).then(response => {
+    	console.log(response, this.props.navigation.getParam('id'))
+    })
     setTimeout(() => {
       this.setState({
         dataSource: localDataSource,
@@ -145,23 +150,23 @@ export default class InterviewDetail extends Component<IProps, IState> {
     return (
       <View style={styles.titleViewStyle}>
         <View style={styles.interviewInfoView}>
-          <Image
+          <CacheImage
             style={styles.companyIcon}
-            source={require('../../../assets/requestJobs/icon-example.png')}
+            source={global.AVATAR_IMAGE()}
           />
           <View style={styles.companyInfo}>
             <Text style={styles.cellCompany}>{dataSource.company}</Text>
             <View style={styles.interviewerInfo}>
-              <Image
+              <CacheImage
                 style={styles.interviewerIcon}
-                source={require('../../../assets/requestJobs/icon-example.png')}
+                source={global.AVATAR_IMAGE()}
               />
               <Text style={styles.interviewer}>{dataSource.interviewer}</Text>
-              <NextTouchableOpacity>
+              <NextPressable>
                 <Image
                   style={styles.messageIcon}
                   source={require('../../../assets/requestJobs/message-blue.png')} />
-              </NextTouchableOpacity>
+              </NextPressable>
             </View>
           </View>
         </View>
@@ -173,7 +178,7 @@ export default class InterviewDetail extends Component<IProps, IState> {
           <Text style={styles.titleCellText}>职位</Text>
           <Text style={styles.titleCellDetail}>{`${dataSource.job}  |  ${dataSource.salary}`}</Text>
         </View>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.titleCell}
           onPress={() => {
             const tel = `tel:${dataSource.contactPhone}`
@@ -200,7 +205,7 @@ export default class InterviewDetail extends Component<IProps, IState> {
               style={styles.phoneIcon}
               source={require('../../../assets/requestJobs/phone-green.png')} />
           </View>
-        </NextTouchableOpacity>
+        </NextPressable>
         <View style={styles.titleCell}>
           <Text style={styles.titleCellText}>面试形式</Text>
           <Text style={styles.titleCellDetail}>{dataSource.type}</Text>
@@ -209,7 +214,7 @@ export default class InterviewDetail extends Component<IProps, IState> {
           <Text style={styles.titleCellText}>地址</Text>
           <Text style={styles.titleCellDetail}>{dataSource.location}</Text>
         </View>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.locationMap}
         />
         <View style={styles.titleCell}>
@@ -260,7 +265,7 @@ export default class InterviewDetail extends Component<IProps, IState> {
           {['', '', '', '', ''].map((item, index: number) => {
             if (index < jobDescribeScore) {
               return (
-                <NextTouchableOpacity
+                <NextPressable
                   onPress={() => {
                     this.setState({ jobDescribeScore: index + 1 })
                   }}
@@ -269,11 +274,11 @@ export default class InterviewDetail extends Component<IProps, IState> {
                     style={styles.scoreStar}
                     source={require('../../../assets/requestJobs/star.png')}
                   />
-                </NextTouchableOpacity>
+                </NextPressable>
               )
             }
             return (
-              <NextTouchableOpacity
+              <NextPressable
                 onPress={() => {
                   this.setState({ jobDescribeScore: index + 1 })
                 }}
@@ -282,7 +287,7 @@ export default class InterviewDetail extends Component<IProps, IState> {
                   style={styles.scoreStar}
                   source={require('../../../assets/requestJobs/star-gray.png')}
                 />
-              </NextTouchableOpacity>
+              </NextPressable>
             )
           })}
         </View>
@@ -291,7 +296,7 @@ export default class InterviewDetail extends Component<IProps, IState> {
           {['', '', '', '', ''].map((item, index: number) => {
             if (index < companyStatusScore) {
               return (
-                <NextTouchableOpacity
+                <NextPressable
                   onPress={() => {
                     this.setState({ companyStatusScore: index + 1 })
                   }}
@@ -300,11 +305,11 @@ export default class InterviewDetail extends Component<IProps, IState> {
                     style={styles.scoreStar}
                     source={require('../../../assets/requestJobs/star.png')}
                   />
-                </NextTouchableOpacity>
+                </NextPressable>
               )
             }
             return (
-              <NextTouchableOpacity
+              <NextPressable
                 onPress={() => {
                   this.setState({ companyStatusScore: index + 1 })
                 }}
@@ -313,7 +318,7 @@ export default class InterviewDetail extends Component<IProps, IState> {
                   style={styles.scoreStar}
                   source={require('../../../assets/requestJobs/star-gray.png')}
                 />
-              </NextTouchableOpacity>
+              </NextPressable>
             )
           })}
         </View>
@@ -322,7 +327,7 @@ export default class InterviewDetail extends Component<IProps, IState> {
           {['', '', '', '', ''].map((item, index: number) => {
             if (index < interviewerScore) {
               return (
-                <NextTouchableOpacity
+                <NextPressable
                   onPress={() => {
                     this.setState({ interviewerScore: index + 1 })
                   }}
@@ -331,11 +336,11 @@ export default class InterviewDetail extends Component<IProps, IState> {
                     style={styles.scoreStar}
                     source={require('../../../assets/requestJobs/star.png')}
                   />
-                </NextTouchableOpacity>
+                </NextPressable>
               )
             }
             return (
-              <NextTouchableOpacity
+              <NextPressable
                 onPress={() => {
                   this.setState({ interviewerScore: index + 1 })
                 }}
@@ -344,7 +349,7 @@ export default class InterviewDetail extends Component<IProps, IState> {
                   style={styles.scoreStar}
                   source={require('../../../assets/requestJobs/star-gray.png')}
                 />
-              </NextTouchableOpacity>
+              </NextPressable>
             )
           })}
         </View>
@@ -361,7 +366,7 @@ export default class InterviewDetail extends Component<IProps, IState> {
         <View style={styles.tagView}>
           {interviewerTag.map((item: any, index: number) => {
             return (
-              <NextTouchableOpacity
+              <NextPressable
                 style={[styles.tagBtn, item.select && { borderColor: greenColor }]}
                 onPress={() => {
                   const nextInterviewerTag = []
@@ -379,17 +384,17 @@ export default class InterviewDetail extends Component<IProps, IState> {
                 }}
               >
                 <Text style={[styles.tagText, item.select && { color: greenColor }]}>{item.title}</Text>
-              </NextTouchableOpacity>
+              </NextPressable>
             )
           })}
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.tagBtn}
             onPress={() => {
               this.setState({ editModalVisible: true })
             }}
           >
             <Text style={styles.tagText}>添加标签+</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
         <View style={styles.inputView}>
           <TextInput
@@ -452,7 +457,7 @@ export default class InterviewDetail extends Component<IProps, IState> {
           value={editTag}
           onChangeText={(value) => this.setState({ editTag: value })}
         />
-        <NextTouchableOpacity
+        <NextPressable
           disabled={!editTag}
           style={[styles.modalBtn, !editTag && { backgroundColor: '#eee', }]}
           onPress={() => {
@@ -472,7 +477,7 @@ export default class InterviewDetail extends Component<IProps, IState> {
           }}
         >
           <Text style={styles.modalBtnText}>确定</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }

@@ -16,7 +16,7 @@ export default function EditHrPhoneNumber({
   navigation,
   route,
 }: StackScreenProps<HrParamList, 'EditHrPhoneNumber'>) {
-  const { phoneNumber } = route.params
+  const { phoneNumber, callback } = route.params
   const [phoneNumberInput, setPhoneNumberInput] = useState(phoneNumber || '')
   const phoneNumberValid = isValidPhoneNumber(phoneNumberInput)
 
@@ -73,7 +73,7 @@ export default function EditHrPhoneNumber({
             ]}
             disabled={codeButtonDisabled}
             onPress={() => {
-              HTAPI.StaticSendSms({ phoneNumber: phoneNumberInput }).then(response => {
+              HTAPI.StaticSendSms({ phoneNumber: phoneNumberInput }, { showLoading: true }).then(response => {
               	startCountdown()
               	Toast.show('发送成功!')
               })
@@ -94,10 +94,9 @@ export default function EditHrPhoneNumber({
           		}
           	}).then(response => {
           		HTAPI.UserChangePhoneNumber({ newNum: phoneNumberInput }).then(response => {
-          			Toast.show('手机号码修改成功!')
-          			navigation.navigate('HrProfile', {
-          				phoneNumber: phoneNumberInput,
-          			})
+          			ActionToast.show('手机号码修改成功!')
+          			callback(navigation, phoneNumberInput)
+          			navigation.pop()
           		})
           	})
           }}

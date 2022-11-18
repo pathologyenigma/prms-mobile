@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter } from 'react-native'
 import styles from './styles/JobExpectations.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import AlertContentModal from '../../components/AlertContentModal'
 import WhiteContentModal from '../../components/WhiteContentModal'
 import GradientButton from '../../components/GradientButton'
@@ -43,25 +43,44 @@ class JobExpectations extends Component<IProps, IState> {
       currentTime: '',
       itemList: [],
       statusArray: [
-        { label: '离职找工作', value: 'resignFind' },
-        { label: '在职找工作', value: 'onlineFind' },
-        { label: '在职看机会', value: 'onlineChance' }
+      	{ label: '不想找工作', value: 'NoJobButNoJob' },
+      	{ label: '已离职', value: 'NoJobButWantJob' },
+      	{ label: '在职中考虑其他机会', value: 'OnTheJob' },
+      	{ label: '准备跳槽', value: 'OnTheJobButLookingForAJob' },
+      	{ label: '刚刚毕业', value: 'GraduatingStudent' },
+
+        // { label: '离职找工作', value: 'resignFind' },
+        // { label: '在职找工作', value: 'onlineFind' },
+        // { label: '在职看机会', value: 'onlineChance' }
       ],
       timeArray: [
-        { label: '随时入职', value: ' anytime' },
-        { label: '一周内入职', value: 'one_weekend' },
-        { label: '两周内入职', value: 'couple_weekend' }
+        // { label: '随时入职', value: ' anytime' },
+        // { label: '一周内入职', value: 'one_weekend' },
+        // { label: '两周内入职', value: 'couple_weekend' }
       ]
     }
   }
 
   componentDidMount() {
-  	HTAPI.CandidateGetAllJobExpectations().then(response => {
+  	this._reloadItemList()
+  }
+
+  componentDidAppear({ isSecondAppear }) {
+  	if (isSecondAppear) {
+  		this._reloadItemList()
+  	}
+  }
+
+  _reloadItemList = () => {
+  	HTAPI.UserGetBasicInfo().then(response => {
+  		this.setState({
+  			currentStatus: response?.job_status
+  		})
+  	})
+  	HTAPI.CandidateGetAllJobExpectations({}, { showError: false }).then((response = []) => {
   		this.setState({
 			itemList: response
 		})
-  	}).catch(e => {
-  		console.log(e)
   	})
   }
 
@@ -92,7 +111,7 @@ class JobExpectations extends Component<IProps, IState> {
           <Text style={styles.titleText}>
             求职期望
           </Text>
-          <Text style={styles.titleProgress}>(1/3)</Text>
+          <Text style={styles.titleProgress}>{`(${this.state.itemList.length}/${Math.max(3, this.state.itemList.length)})`}</Text>
         </View>
         <Text style={styles.titleViewDetail}>依据求职期望为您推荐岗位</Text>
       </View>
@@ -115,7 +134,7 @@ class JobExpectations extends Component<IProps, IState> {
           	})
           }
         </View>
-        <NextTouchableOpacity style={styles.editBtn}
+        <NextPressable style={styles.editBtn}
           onPress={() => {
             // Toast.show('进入编辑页面')
             const { navigation } = this.props
@@ -126,7 +145,7 @@ class JobExpectations extends Component<IProps, IState> {
             style={styles.editImage}
             source={require('../../../assets/requestJobs/edit.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
       </HTShadowView>
     )
   }
@@ -142,7 +161,7 @@ class JobExpectations extends Component<IProps, IState> {
     const showTime = timeArray.filter((e: any) => e.value === currentTime)[0]
     return (
       <HTShadowView style={styles.jobStatusShadowView}>
-      <NextTouchableOpacity
+      <NextPressable
         onPress={() => {
           this.setState({ jobStatusModal: true })
         }}
@@ -160,14 +179,14 @@ class JobExpectations extends Component<IProps, IState> {
             source={require('../../../assets/requestJobs/next-gray.png')}
           />
         </View>
-      </NextTouchableOpacity>
+      </NextPressable>
       </HTShadowView>
     )
   }
 
   renderFinish() {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.finishBtn}
         onPress={() => this.props.navigation.push('JobExpectDetail')}
       >
@@ -176,7 +195,7 @@ class JobExpectations extends Component<IProps, IState> {
         >
           添加求职意向
         </Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -207,11 +226,18 @@ class JobExpectations extends Component<IProps, IState> {
             this.setState({ jobStatusModal: false })
           }}
           rightPress={(selectStatus, selectTime) => {
-            this.setState({
-              currentStatus: selectStatus,
-              currentTime: selectTime,
-              jobStatusModal: false,
-            })
+          	const reloadStatus = ((selectStatus?.length ?? 0) > 0) ? selectStatus : statusArray?.[0].value
+          	HTAPI.UserEditBasicInfo({
+          		info: {
+          			job_status: reloadStatus
+          		}
+          	}).then(() => {
+          		this.setState({
+	              currentStatus: reloadStatus,
+	              currentTime: selectTime,
+	              jobStatusModal: false,
+	            })
+          	})
           }}
         />
       </View>

@@ -1,10 +1,9 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect, Component } from 'react'
 import { StyleSheet, View, FlatList, ListRenderItem } from 'react-native'
 import { JobItem, useJobList } from './useJobList'
 import { JobParamList } from '../typings'
 import Empty from '../../components/Empty'
 import JobAdminItem from './JobAdminItem'
-import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import LoadingAndError from '../../components/LoadingAndError'
 import { JobStatus } from '../../typings'
@@ -13,24 +12,40 @@ import {
   stringForExperience,
   stringForFullTime,
 } from '../../utils/JobHelper'
+import HTRefreshManager from '~/common/refresh/HTRefreshManager'
 
 interface PageProps {
   status: JobStatus
   isActive: boolean
 }
 
-export default function JobPage({ status, isActive }: PageProps) {
-  
-  const [itemList, setItemList] = useState()
+export default class JobPage extends Component {
 
-  const navigation = useNavigation<StackNavigationProp<JobParamList>>()
+	constructor(props) {
+		super(props)
+		this.refreshManager = new HTRefreshManager()
+		this.refreshManager.pageCount = 20
+		this.state = {
+			itemList: []
+		}
+	}
 
-  useFocusEffect(
-    useCallback(() => {
-      if (isActive) {
-      	HTAPI.UserGetJobListByEntId({ status, pageSize: 20 }).then(response => {
-      		let itemList = response.data.map((job) => {
-      			const title = job.title
+	componentDidMount() {
+		
+	}
+
+	_onRefresh = (isHeaderRefresh = true, showLoading = false) => {
+		console.log(isHeaderRefresh, showLoading)
+		if (this.refreshManager.cantHandlerRefresh(isHeaderRefresh)) {
+			return
+		}
+		HTAPI.UserGetJobListByEntId({ 
+			status: this.props.status, 
+			pageSize: this.refreshManager.pageCount,
+			page: this.refreshManager.reloadPageIndex(isHeaderRefresh)
+		}).then(response => {
+	  		let itemList = response.data.map((job) => {
+	  			const title = job.title
 			      const tags: Tag[] = []
 			      const { emergency, full_time_job } = job
 			      if (emergency) {
@@ -40,19 +55,22 @@ export default function JobPage({ status, isActive }: PageProps) {
 			        })
 			      }
 
-			      tags.push({
-			        text: stringForFullTime(full_time_job),
-			        color: '#6CD6B3',
-			      })
+			      // tags.push({
+			      //   text: stringForFullTime(full_time_job),
+			      //   color: '#6CD6B3',
+			      // })
 
 			      const labels: string[] = []
-			      const { min_experience, min_education, address_description } = job
+			      const { min_experience, min_education, address: address_description } = job
 			      labels.push(stringForExperience(min_experience))
 			      labels.push(stringForEducation(min_education))
 			      labels.push(`${address_description[4]}·${address_description[5]}`)
 
-			      const { min_salary, max_salary } = job
-			      const salary = min_salary / 1000 + 'K-' + max_salary / 1000 + 'K'
+			      const { min_salary, max_salary, salary: _salary } = job
+			      let salary = _salary?.[0] / 1000 + 'K-' + _salary?.[1] / 1000 + 'K'
+			      if (_salary?.[0] == _salary?.[1] && _salary?.[0] == 0) {
+			      	salary = '面议'
+			      }
 			      const status = job.status
 			      const jobId = job.job_id
 
@@ -65,41 +83,38 @@ export default function JobPage({ status, isActive }: PageProps) {
 			        status,
 			        jobId,
 			      }
-      		})
-      		setItemList(itemList)
-      	})
-      }
-    }, [status, isActive]),
-  )
+	  		})
+	  		this.state.itemList = this.refreshManager.reloadItemList(itemList, this.state.itemList, isHeaderRefresh)
+	  	}).catch(e => {
+	  		console.log(e)
+	  	}).finally(() => this.setState(this.state))
+	}
 
-  console.log('---------JobPage----------')
+	_renderItem = ({ item, index }) => {
+	    return (
+	      <JobAdminItem
+	        {...item}
+	        onPress={() => this.props.navigation.push('EmployerJobDetail', { jobId: item?.job_id ?? item.id, status: this.props.status })}
+	      />
+	    )
+	}
 
-  const renderItem: ListRenderItem<JobItem> = ({ item, index }) => {
-    return (
-      <JobAdminItem
-        {...item}
-        onPress={() => navigation.navigate('JobDetail', { jobId: item.id, status: status })}
-      />
-    )
-  }
+	render() {
+		return (
+			<FlatList
+	          style={styles.container}
+	          contentContainerStyle={styles.content}
+	          keyExtractor={(job: JobItem, index: number) => String(job.job_id)}
+	          data={this.state.itemList}
+	          onRefresh={() => this._onRefresh(true)}
+	          onEndReached={() => this._onRefresh(false)}
+	          refreshManager={this.refreshManager}
+	          renderItem={this._renderItem}
+	          ListEmptyComponent={Empty}
+	        />
+		)
+	}
 
-  return (
-    <LoadingAndError
-      loading={false}
-      style={StyleSheet.absoluteFillObject}
-      collapsable={false}>
-      {itemList && (
-        <FlatList
-          style={styles.container}
-          contentContainerStyle={styles.content}
-          keyExtractor={(job: JobItem, index: number) => String(job.job_id)}
-          data={itemList}
-          renderItem={renderItem}
-          ListEmptyComponent={Empty}
-        />
-      )}
-    </LoadingAndError>
-  )
 }
 
 const styles = StyleSheet.create({

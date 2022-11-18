@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import styles from './styles/AuthoritySetting.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { Text, View, Image, StatusBar } from 'react-native'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { ActivityIndicator } from '@ant-design/react-native'
 import { CommonActions } from '@react-navigation/native'
 import {
@@ -156,7 +156,7 @@ export default class AuthoritySetting extends Component<IProps, IState> {
 
   renderCell(title: string, detail: string, onpress: () => void) {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.cellView}
         onPress={() => {
           if (onpress) {
@@ -177,7 +177,7 @@ export default class AuthoritySetting extends Component<IProps, IState> {
           style={styles.nextIcon}
           source={require('../../../assets/requestJobs/next-gray.png')}
         />
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

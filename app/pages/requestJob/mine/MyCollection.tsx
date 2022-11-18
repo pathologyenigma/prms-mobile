@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, StatusBar, SectionList } from 'react-native'
 import styles from './styles/MyCollection.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { Tabs } from '@ant-design/react-native'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
@@ -211,7 +211,7 @@ export default class MyCollection extends Component<IProps, IState> {
 
   renderSectionFooter(section: any) {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.moreJobsBtn}
       >
         <Text style={styles.moreJobsText}>
@@ -221,7 +221,7 @@ export default class MyCollection extends Component<IProps, IState> {
           style={styles.moreJobsImage}
           source={require('../../../assets/requestJobs/next-green.png')}
         />
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -240,7 +240,7 @@ export default class MyCollection extends Component<IProps, IState> {
           {
             tabs.map((e, i) => {
               return (
-                <NextTouchableOpacity
+                <NextPressable
                   style={styles.tabsBtn}
                   key={i.toString()}
                   onPress={() => {
@@ -260,7 +260,7 @@ export default class MyCollection extends Component<IProps, IState> {
                       />
                     )}
                   </>
-                </NextTouchableOpacity>
+                </NextPressable>
               )
             })
           }
@@ -338,7 +338,7 @@ export default class MyCollection extends Component<IProps, IState> {
         }}
         cellItem={item}
         onPress={() => {
-          Toast.show('敬请期待')
+          global.TODO_TOAST()
         }}
       />
     )

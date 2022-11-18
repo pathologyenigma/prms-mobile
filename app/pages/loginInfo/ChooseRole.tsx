@@ -9,11 +9,11 @@ import {
   TextInput,
 } from 'react-native'
 import styles from './styles/ChooseRole.style'
-import { GenProps } from '../../navigator/router/stack'
+import { GenProps } from '../../utils/StackProps'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import LoginInputComponent from './LoginInputComponent'
-import NextTouchableOpacity from '../components/NextTouchableOpacity'
+import NextPressable from '../components/NextPressable'
 import AlertContentModal from '../components/AlertContentModal'
 import WhiteContentModal from '../components/WhiteContentModal'
 import GradientButton from '../components/GradientButton'
@@ -63,15 +63,34 @@ class ChooseRole extends Component<IProps, IState> {
   }
 
   chooseOrSwitchIdentity(targetIdentity: string, role: string) {
-    const { chooseRole } = this.props
+    if (HTAuthManager?.keyValueList?.userRole == role) {
+    	return
+    }
     HTAPI.UserChooseOrSwitchIdentity({
     	targetIdentity,
     	role
-    }, { showError: false }).then(response => {
-    	HTAuthManager.updateKeyValueList({ 
-    		userToken: response,
-    		userRole: targetIdentity
-    	})
+    }, { showError: false }).then(token => {
+    	if (targetIdentity == 'PersonalUser') {
+    		HTAPI.CandidateGetAllJobExpectations({}, {}, {
+    			Authorization: token
+    		}).then((response) => {
+					if ((response?.length ?? 0) <= 0) {
+						this.props.navigation.push('JobExpectDetail', { complete: () => {
+							this.chooseOrSwitchIdentity(targetIdentity, role)
+						} })
+					} else {
+						HTAuthManager.updateKeyValueList({ 
+							userToken: token,
+			    		userRole: targetIdentity
+			    	})
+					}
+				})
+    	} else {
+    		HTAuthManager.updateKeyValueList({ 
+    			userToken: token,
+	    		userRole: targetIdentity
+	    	})
+    	}
     }).catch(error => {
     	if (error == 'UserInputError: bad input') {
     		Toast.show('你还没有该身份哦')
@@ -122,7 +141,7 @@ class ChooseRole extends Component<IProps, IState> {
           : require('../../assets/loginPages/role-guwen-gray.png')
     }
     return (
-      <NextTouchableOpacity
+      <NextPressable
         key={title.toString()}
         style={[styles.grayCellView, viewStyle]}
         onPress={() => {
@@ -133,12 +152,12 @@ class ChooseRole extends Component<IProps, IState> {
             console.log('titletitletitletitle2: ')
             this.chooseOrSwitchIdentity('EnterpriseUser', 'HR')
           } else {
-            Toast.show(`我要${title},敬请期待`)
+            global.TODO_TOAST()
           }
         }}>
         <Image style={styles.hrLogo} source={icon} resizeMode="center" />
         <Text style={[styles.requestPersonTitle, textStyle]}>{title}</Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

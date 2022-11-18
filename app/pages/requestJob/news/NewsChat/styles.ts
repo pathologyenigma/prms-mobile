@@ -14,6 +14,7 @@ export default StyleSheet.create({
     // v1版本适配
   },
   contentStyle: {
+  	paddingBottom: TAB_BAR_HEIGHT
   },
   noMoreText: {
     alignSelf: 'center',

@@ -1,8 +1,19 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native'
+import { View, Text, Pressable, StyleSheet, FlatList, Image } from 'react-native'
 import HTInvestPersonCell from '../../../person/common/view/HTInvestPersonCell'
 
 export default class HTInvestEnterprisePage extends Component {
+
+	constructor(props) {
+		super(props)
+		this.state = {
+			itemList: []
+		}
+	}
+
+	_onRefresh = () => {
+		this.setState({ itemList: new Array(20).fill(0)})
+	}
 
 	_renderItem = ({ item, index }) => {
 		return (
@@ -13,9 +24,11 @@ export default class HTInvestEnterprisePage extends Component {
 	render() {
 		return (
 			<FlatList
-				data={new Array(20).fill(0)}
+				data={this.state.itemList}
 				renderItem={this._renderItem}
 				contentContainerStyle={styleList.container}
+				onRefresh={() => this._onRefresh()}
+				{...this.props}
 			/>
 		)
 	}

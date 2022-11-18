@@ -29,7 +29,7 @@ export default function CoordinationItem({
     <View style={styles.container}>
       <Image
         style={styles.avatar}
-        source={require('../../assets/avatar_default.png')}
+        source={global.AVATAR_IMAGE()}
       />
       <View style={styles.meta}>
         <Text style={styles.name}>{name}</Text>

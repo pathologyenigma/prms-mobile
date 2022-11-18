@@ -7,7 +7,7 @@ import {
   Text,
   View,
   Image,
-  TouchableOpacity,
+  Pressable,
 } from 'react-native'
 
 interface PrimaryButtonProps {
@@ -26,14 +26,14 @@ export default function PrimaryButton({
   disabled,
 }: PrimaryButtonProps) {
   return (
-    <TouchableOpacity
+    <Pressable
       activeOpacity={0.75}
       onPress={onPress}
       disabled={disabled}>
       <View style={[styles.container, { opacity: disabled ? 0.6 : 1 }, style]}>
         <Text style={[styles.title, titleStyle]}>{title}</Text>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   )
 }
 

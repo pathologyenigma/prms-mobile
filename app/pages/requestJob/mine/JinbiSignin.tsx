@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { GenProps } from '../../../navigator/requestJob/stack'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
-import { SafeAreaView, StatusBar, ImageBackground, Image, ScrollView, View, Text, ImageSourcePropType, TouchableOpacity } from 'react-native'
+import { GenProps } from '../../../utils/StackProps'
+import NextPressable from '../../components/NextPressable'
+import { SafeAreaView, StatusBar, ImageBackground, Image, ScrollView, View, Text, ImageSourcePropType, Pressable } from 'react-native'
 import styles from './styles/JinbiSignin.style'
 import LinearGradient from 'react-native-linear-gradient'
 
@@ -45,7 +45,7 @@ export default class JinbiSignin extends Component<IProps, IState> {
         source={require('../../../assets/requestJobs/qiandao-beijing.png')}
       >
         <View style={styles.bar}>
-          <TouchableOpacity
+          <Pressable
             style={styles.backBtn}
             activeOpacity={0.9}
             onPress={() => {
@@ -57,7 +57,7 @@ export default class JinbiSignin extends Component<IProps, IState> {
               resizeMode="contain"
               source={require('../../../assets/requestJobs/jinbi-back.png')}
             />
-          </TouchableOpacity>
+          </Pressable>
           <Text style={styles.barTitle}>签到</Text>
           <View style={styles.backBtn} />
         </View>
@@ -126,7 +126,7 @@ export default class JinbiSignin extends Component<IProps, IState> {
           colors={['#78A8F8', '#7396F7']}
           style={styles.signLinear}
         >
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.signinBtn}
             onPress={() => {
               if (!isSignin) {
@@ -141,9 +141,9 @@ export default class JinbiSignin extends Component<IProps, IState> {
             <Text style={[styles.signinText, isSignin && { opacity: 0.5 }]}>
               {isSignin ? '已签到' : '签到'}
             </Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </LinearGradient>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.signinRulesBtn}
           onPress={() => {
             const { navigation } = this.props
@@ -151,7 +151,7 @@ export default class JinbiSignin extends Component<IProps, IState> {
           }}
         >
           <Text style={styles.signinRulesText}>签到规则说明</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }

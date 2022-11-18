@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { reformComFinancing, reformCompanySize, reformEducation, reformSalary } from '../../../utils/utils'
-import NextTouchableOpacity from '../NextTouchableOpacity'
+import NextPressable from '../NextPressable'
 import styles from './styles'
 
 interface ICell {
@@ -14,14 +14,14 @@ interface ICell {
   launchText?: string
 }
 
-let imageList = [
-	require('~/assets/debug/avatar_1.png'),
-	require('~/assets/debug/avatar_2.png'),
-	require('~/assets/debug/avatar_3.png'),
-	require('~/assets/debug/avatar_4.png'),
-	require('~/assets/debug/avatar_5.png'),
-	require('~/assets/debug/avatar_6.png'),
-].sort(() => Math.random() - 0.5)
+// let imageList = [
+// 	require('~/assets/debug/avatar_1.png'),
+// 	require('~/assets/debug/avatar_2.png'),
+// 	require('~/assets/debug/avatar_3.png'),
+// 	require('~/assets/debug/avatar_4.png'),
+// 	require('~/assets/debug/avatar_5.png'),
+// 	require('~/assets/debug/avatar_6.png'),
+// ].sort(() => Math.random() - 0.5)
 
 export default class JobCellData extends PureComponent<ICell> {
 
@@ -104,7 +104,7 @@ export default class JobCellData extends PureComponent<ICell> {
       return null
     }
     return (
-      <NextTouchableOpacity
+      <NextPressable
         key={cellItem.id.toString()}
         style={[styles.cellView, cellItem.isStop && { opacity: 0.5 }, cellStyle]}
         onPress={() => {
@@ -153,12 +153,12 @@ export default class JobCellData extends PureComponent<ICell> {
               </Text>
             )
           }
-          <Text style={styles.cellExperience}>
-            {cellItem && cellItem.adress_coordinate && cellItem.adress_coordinate.substring(0, cellItem.adress_coordinate.length / 6)}
-          </Text>
+          {<Text style={styles.cellExperience}>
+            {cellItem && cellItem?.address_description?.length > 4 && cellItem.address_description[4]}
+          </Text>}
         </View>
         <View style={styles.interviewerView}>
-          <Image style={styles.interviewerIcon} source={imageList[index % imageList.length]} />
+          <CacheImage style={styles.interviewerIcon} source={global.AVATAR_IMAGE(cellItem?.logo)} />
           <Text style={styles.cellInterviewer}>
             {`${cellItem.hr_name}·${cellItem.hr_pos}`}
           </Text>
@@ -171,7 +171,7 @@ export default class JobCellData extends PureComponent<ICell> {
         {showCellTime && (
           <Text style={styles.timeViewText}>{`${cellItem.time}  ${launchText}`}</Text>
         )}
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 }

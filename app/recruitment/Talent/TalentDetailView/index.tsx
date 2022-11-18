@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import GradientButton from '../../components/GradientButton'
 import { getBottomSpace, isIphoneX } from 'react-native-iphone-x-helper'
@@ -7,76 +7,128 @@ import Profile from './Profile'
 import LabelWithIcon from './LabelWithIcon'
 import IntelligentGreetingModal from './IntelligentGreetingModal'
 import SetGreetingModal from './SetGreetingModal'
+import { stringForJobStatus, stringForEducation } from '~/recruitment/utils/JobHelper'
+import { reformSalary } from '~/utils/utils'
+import { parse, format } from 'date-fns'
 
 interface TalentDetailViewPros {
+  id?: Any,
+  jobItem?: Any,
+  navigation: Any,
   renderBottomBar?: () => JSX.Element
 }
 
 export default function TalentDetailView({
+  id,
+  jobItem,
   renderBottomBar,
+  navigation
 }: TalentDetailViewPros) {
+
+  const [data, setData] = useState()
+
   const _renderBottomBar = () => {
     if (renderBottomBar) {
       return renderBottomBar()
     }
-    return <GradientButton style={styles.button} title="立即沟通" />
+    return <GradientButton style={styles.button} title="立即沟通" onPress={() => {
+		HTAPI.UserSendMessage({
+			info: {
+				messageType: 'Normal',
+				messageContent: '你好',
+				to: id,
+			}
+		}).then(response => {
+			navigation.push('MessagePage', {
+				targetItem: {
+					id: id,
+					name: data?.real_name ?? data?.username,
+				}
+			})
+		})
+    }} />
   }
+  
+  useEffect(() => {
+	HTAPI.HRGetCandidateResume({ candidate_id: id }).then(response => {
+		setData(response)
+	})
+  }, [])
 
   return (
     <View style={styles.container}>
       <ScrollView>
-        <Profile />
+        <Profile data={data} />
         <Section
           style={{ marginTop: 6 }}
-          title="离职-随时到岗"
+          title={stringForJobStatus(data?.job_status)}
           renderSubtitle={() => (
             <View style={styles.info}>
               <LabelWithIcon
                 icon={require('./images/working.png')}
-                title="5年经验"
+                title={data ? `${new Date().getFullYear() - parse(data?.first_time_working, 'yyyy-MM-dd', new Date()).getFullYear()}年经验` : ''}
               />
-              <LabelWithIcon icon={require('./images/edu.png')} title="本科" />
-              <LabelWithIcon icon={require('./images/age.png')} title="25岁" />
+              <LabelWithIcon icon={require('./images/edu.png')} title={stringForEducation(data?.education)} />
+              <LabelWithIcon icon={require('./images/age.png')} title={data ? `${new Date().getFullYear() - parse(data?.birth_date, 'yyyy-MM-dd', new Date()).getFullYear()}岁` : ''} />
             </View>
           )}
-          detail={`1、具备XXXXX能力，拥有XXXXXXX方面的经验，曾经在某某项目中担任XXXXX角色，配合XXXXX完成XXXX项目的落地。
-2、熟悉掌握XXXXX工具，能独立完成XXXXXXX
-3、具备XXXXX能力，拥有XXXXXXX方面的经验，曾经在某某项目中担任XXXXX角色，配合XXXXX完成XXXX项目的落地
-4、熟悉掌握XXXXX工具，能独立完成XXXXXXX`}
+          detail={data?.Resumes[0]?.personal_advantage}
         />
         <Text style={styles.title}>求职期望</Text>
-        <Section
-          title="APP设计师，深圳"
-          subtitle="行业不限"
-          renderPeriod={() => <Text style={styles.desired}>15K-20K</Text>}
-        />
+        {
+        	data?.JobExpectations?.map((item, index) => {
+        		return (
+        			<Section
+        			  key={index}
+			          title={`${item.job_category[item.job_category.length - 1]}，${item.aimed_city}`}
+			          subtitle={item.industry_involved[item.industry_involved.length - 1]}
+			          renderPeriod={() => <Text style={styles.desired}>{reformSalary([item.min_salary_expectation, item.max_salary_expectation])}</Text>}
+			        />
+        		)
+        	})
+        }
         <Text style={styles.title}>工作经验</Text>
-        <Section
-          title="广东智慧网络有限公司"
-          subtitle="UI设计师  技术部"
-          period="2017.03～至今"
-          detail={`内容：1、负责线上APP的改版功能，更新迭代；2、根据产品及产品需求，独立完成项目设计(此处文案需要全部展开）`}
-        />
-        <Section
-          title="广东智慧网络有限公司"
-          subtitle="UI设计师  技术部"
-          period="2017.03～至今"
-          detail={`内容：1、负责线上APP的改版功能，更新迭代；2、根据产品及产品需求，独立完成项目设计，建立产品的界面设计规`}
-        />
+        {
+        	data?.Resumes[0].ResumeWorkExps?.map((item, index) => {
+        		return (
+        			<Section
+        			  key={index}
+			          title={item?.comp_name}
+			          subtitle={`${item?.pos_name} ${item?.department}`}
+			          period={`${format(parse(item?.start_at, 'yyyy-MM-dd', new Date()), 'yyyy.MM')}～${format(parse(item?.end_at, 'yyyy-MM-dd', new Date()), 'yyyy.MM')}`}
+			          detail={`${item?.working_detail}`}
+			        />
+        		)
+        	})
+        }
         <Text style={styles.title}>项目经验</Text>
-        <Section
-          title="广东智慧网络公司官网"
-          subtitle="网页设计师"
-          period="2017.03～2018.01"
-          detail={`内容：1、负责线上APP的改版功能，更新迭代；2、根据产品及产品需求，独立完成项目设计，建立产品的界面设计规`}
-        />
+        {
+        	data?.Resumes[0].ResumeProjectExps?.map((item, index) => {
+        		return (
+        			<Section
+        			  key={index}
+			          title={item?.project_name}
+			          subtitle={item?.role}
+			          period={`${format(parse(item?.start_at, 'yyyy-MM-dd', new Date()), 'yyyy.MM')}～${format(parse(item?.end_at, 'yyyy-MM-dd', new Date()), 'yyyy.MM')}`}
+			          detail={`${item?.project_description}`}
+			        />
+        		)
+        	})
+        }
         <Text style={styles.title}>教育经历</Text>
-        <Section
-          title="广东白云学院"
-          subtitle="本科·视觉传达"
-          period="2013.03～2017.01"
-          detail={`内容：1、在校担任宣传部社长；获得XXXX荣誉称号`}
-        />
+        {
+        	data?.Resumes[0].ResumeEduExps?.map((item, index) => {
+        		return (
+        			<Section
+        			  key={index}
+			          title={item?.school_name}
+			          subtitle={`${stringForEducation(item.education)}·${item?.major}`}
+			          period={item.time}
+			          detail={item.exp_at_school}
+			        />
+        		)
+        	})
+        }
       </ScrollView>
       {_renderBottomBar()}
       <IntelligentGreetingModal visible={false} />

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Text, View, Image, StatusBar } from 'react-native'
 import { Tabs } from '@ant-design/react-native'
-import { GenProps } from '../../../navigator/requestJob/stack'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import { GenProps } from '../../../utils/StackProps'
+import NextPressable from '../../components/NextPressable'
 import styles from './styles/News.style'
 import NavBar from '../../components/NavBar'
 import NewsChat from './NewsChat'
@@ -30,10 +30,11 @@ export default class News extends Component<TProps, IState> {
     }
   }
 
+  componentDidAppear() {
+  	StatusBar.setBarStyle('dark-content', true)
+  }
+
   componentDidMount() {
-    this.props.navigation.addListener('focus', () => {
-      StatusBar.setBarStyle('dark-content', true)
-    })
     this.getNotificationPermission()
   }
 
@@ -60,10 +61,6 @@ export default class News extends Component<TProps, IState> {
       })
   }
 
-  componentWillUnmount() {
-    this.props.navigation.removeListener('focus', () => { })
-  }
-
   renderTabBar(tabProps: any) {
     const tabs = [{
       title: '聊天',
@@ -79,12 +76,12 @@ export default class News extends Component<TProps, IState> {
           {
             tabs.map((e, i) => {
               return (
-                <NextTouchableOpacity
+                <NextPressable
                   style={styles.tabsBtn}
                   key={i.toString()}
                   onPress={() => {
                     if (i === 1) {
-                      Toast.show('暂未开放')
+                      global.TODO_TOAST()
                     } else {
                       this.setState({ selectTabs: i })
                     }
@@ -93,16 +90,17 @@ export default class News extends Component<TProps, IState> {
                   <Text style={[styles.tabsTitle, tabProps.activeTab === i && styles.selectedTitle]}>
                     {e.title}
                   </Text>
-                </NextTouchableOpacity>
+                </NextPressable>
               )
             })
           }
         </View>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.searchBtn}
           onPress={() => {
-            const { navigation } = this.props
-            navigation.push('AllMessages')
+          	global.TODO_TOAST()
+            // const { navigation } = this.props
+            // navigation.push('AllMessages')
           }}
         >
           <Image
@@ -115,7 +113,7 @@ export default class News extends Component<TProps, IState> {
             resizeMode="center"
             source={require('../../../assets/requestJobs/tongzhi-dot.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }

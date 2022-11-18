@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 'react-native'
-import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
+import NextPressable from '../../../components/NextPressable'
 import styles from './styles'
 
 interface ICell {
@@ -32,7 +32,7 @@ export default class ChatCircleCell extends PureComponent<ICell> {
   render() {
     const { onPress, cellItem } = this.props
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.cell}
         onPress={() => {
           if (onPress) {
@@ -81,7 +81,7 @@ export default class ChatCircleCell extends PureComponent<ICell> {
             <Text style={styles.shareText}>{cellItem.dianzan}</Text>
           </View>
         </View>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 }

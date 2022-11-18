@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import styles from './styles/VerifySetting.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { Text, View, Image, StatusBar, TextInput } from 'react-native'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import GradientButton from '../../components/GradientButton'
 import LinearGradient from 'react-native-linear-gradient'
 import { gradienRightGreenColor, greenColor } from '../../../utils/constant'
@@ -68,7 +68,7 @@ export default class VerifySetting extends Component<IProps, IState> {
 
   renderCell(title: string, onpress: () => void) {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.cellView}
         onPress={() => {
           if (onpress) {
@@ -81,7 +81,7 @@ export default class VerifySetting extends Component<IProps, IState> {
           style={styles.nextIcon}
           source={require('../../../assets/requestJobs/next-gray.png')}
         />
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -110,7 +110,7 @@ export default class VerifySetting extends Component<IProps, IState> {
           <Text style={styles.cellName}>身份证号</Text>
           <Text style={styles.cellValue}>{idNumber}</Text>
         </View>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.appealBtn}
           onPress={() => {
             navigation.push('SubmitVerifyResult')
@@ -120,7 +120,7 @@ export default class VerifySetting extends Component<IProps, IState> {
             以上不是我的实名？
             <Text style={{ color: '#57DE9E' }}>去申诉</Text>
           </Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }
@@ -128,7 +128,7 @@ export default class VerifySetting extends Component<IProps, IState> {
   renderBtn() {
     const { navigation } = this.props
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.verifyExplainBtn}
         onPress={() => {
 
@@ -137,7 +137,7 @@ export default class VerifySetting extends Component<IProps, IState> {
         <Text style={styles.verifyExplainText}>
           《实名认证规则说明》
         </Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -145,7 +145,7 @@ export default class VerifySetting extends Component<IProps, IState> {
     const { editName, editIdNumber } = this.state
     const disabled = !editName || !editIdNumber
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={[styles.finishBtn, disabled && { opacity: 0.6 }]}
         disabled={disabled}
         onPress={() => {
@@ -155,7 +155,7 @@ export default class VerifySetting extends Component<IProps, IState> {
         <Text style={styles.finishText}>
           完成
         </Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

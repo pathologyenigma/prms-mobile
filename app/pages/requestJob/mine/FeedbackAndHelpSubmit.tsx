@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, ScrollView, } from 'react-native'
 import styles from './styles/FeedbackAndHelpSubmit.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import GradientButton from '../../components/GradientButton'
 import { TextInput } from 'react-native-gesture-handler'
 
@@ -102,7 +102,7 @@ export default class FeedbackAndHelpSubmit extends Component<IProps, IState> {
                 />)
             }
             return (
-              <NextTouchableOpacity
+              <NextPressable
                 style={styles.normalBtn}
                 key={index.toString()}
                 onPress={() => {
@@ -127,7 +127,7 @@ export default class FeedbackAndHelpSubmit extends Component<IProps, IState> {
                 <Text style={styles.normalText}>
                   {item.title}
                 </Text>
-              </NextTouchableOpacity>
+              </NextPressable>
             )
           })}
         </View>
@@ -184,7 +184,7 @@ export default class FeedbackAndHelpSubmit extends Component<IProps, IState> {
     const { content } = this.state
     const { navigation } = this.props
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.submitBtn}
         onPress={() => {
           if (!content) {
@@ -198,7 +198,7 @@ export default class FeedbackAndHelpSubmit extends Component<IProps, IState> {
         <Text style={styles.selectText}>
           提交反馈
         </Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

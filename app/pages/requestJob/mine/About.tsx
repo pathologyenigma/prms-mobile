@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import styles from './styles/About.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { Text, View, Image, StatusBar } from 'react-native'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
+import DeviceInfo from 'react-native-device-info'
+import HTUpdateManager from '~/common/update/HTUpdateManager'
 
 type IProps = GenProps<'About'> & {
 
@@ -22,17 +24,13 @@ export default class About extends Component<IProps, IState> {
   }
 
   componentDidMount() {
-    Hud.show('正在检查更新...')
     this.loadData()
   }
 
   loadData() {
-    setTimeout(() => {
-      Hud.hidden()
-      this.setState({
-        latestVersion: global.APPLICATION_VERSION
-      })
-    }, 500);
+    this.setState({
+    	latestVersion: `${DeviceInfo.getVersion()}_${DeviceInfo.getBuildNumber()}_${HTUpdateManager.APPLICATION_VERSION}`
+  	})
   }
 
   renderNavBar() {
@@ -60,7 +58,7 @@ export default class About extends Component<IProps, IState> {
 
   renderCell(title: string, onpress: () => void) {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.cellView}
         onPress={() => {
           if (onpress) {
@@ -73,7 +71,7 @@ export default class About extends Component<IProps, IState> {
           style={styles.nextIcon}
           source={require('../../../assets/requestJobs/next-gray.png')}
         />
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -94,17 +92,17 @@ export default class About extends Component<IProps, IState> {
     const { navigation } = this.props
     return (
       <View style={styles.content}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.cellView}
           onPress={() => {
-            Toast.show('即将跳往应用商店')
+            global.TODO_TOAST()
           }}
         >
           <Text style={styles.cellName}>版本更新</Text>
           <Text style={styles.cellValue}>{'无新版'}</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
         {this.renderCell('给我们评分', () => {
-          Toast.show('前往应用商店')
+          global.TODO_TOAST()
         })}
         {this.renderCell('趁早找用户协议', () => {
           navigation.push('AgreementPrivacy', { pageType: 1 })

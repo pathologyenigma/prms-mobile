@@ -24,7 +24,8 @@ export default StyleSheet.create({
   },
   iconStyle: {
     width: 65,
-    height: 65
+    height: 65,
+    borderRadius: 65 / 2.0
   },
   cell: {
     minHeight: 80,

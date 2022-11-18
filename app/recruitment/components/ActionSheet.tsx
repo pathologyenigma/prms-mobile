@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Pressable } from 'react-native'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import BottomModal from './BottomModal'
 
@@ -32,7 +32,7 @@ export default function ActionSheet({
 
     const shouldRenderDivider = index < actions.length - 1
     return (
-      <TouchableOpacity
+      <Pressable
         key={title}
         style={[
           styles.button,
@@ -46,7 +46,7 @@ export default function ActionSheet({
         <View style={styles.action}>
           <Text style={styles.title}>{title}</Text>
         </View>
-      </TouchableOpacity>
+      </Pressable>
     )
   }
 

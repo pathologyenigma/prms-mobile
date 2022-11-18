@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import styles from './styles/EmailBinding.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { Text, View, Image, StatusBar, TextInput } from 'react-native'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { ScrollView } from 'react-native-gesture-handler'
 import AlertContentModal from '../../components/AlertContentModal'
 
@@ -83,7 +83,7 @@ export default class EmailBinding extends Component<IProps, IState> {
     const { bindedEmail, email } = this.state
     const { navigation } = this.props
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={[styles.submitBtn, !bindedEmail && !email && { opacity: 0.6, }]}
         disabled={!bindedEmail && !email}
         onPress={() => {
@@ -97,7 +97,7 @@ export default class EmailBinding extends Component<IProps, IState> {
         <Text style={styles.selectText}>
           {bindedEmail ? '解除绑定' : '绑定'}
         </Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

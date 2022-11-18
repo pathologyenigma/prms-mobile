@@ -9,7 +9,7 @@ import {
   TextInput,
 } from 'react-native'
 import NavBar, { EButtonType } from '../../components/NavBar'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 
 type IProps = GenProps<'UserInfoEdit'>
 

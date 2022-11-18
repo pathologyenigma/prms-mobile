@@ -5,6 +5,7 @@ import SystemHelper from '../../../../utils/system'
 export default StyleSheet.create({
   container: {
     flex: 1,
+    paddingBottom: global.TAB_BAR_HEIGHT,
     backgroundColor: '#F9F9F9',
   },
   scrollview: {
@@ -19,16 +20,15 @@ export default StyleSheet.create({
     zIndex: 100
   },
   naviBar: {
-    height: SystemHelper.safeTop + 40,
+    height: SystemHelper.safeTop + 44,
     width: '100%',
     display: 'flex',
     justifyContent: 'flex-end'
   },
   naviBarContainer: {
     flexDirection: 'row',
-    height: 20,
+    alignItems: 'center',
     overflow: 'hidden',
-    marginBottom: 10,
     marginHorizontal: 11,
   },
   naviBarScrollview: {
@@ -79,8 +79,8 @@ export default StyleSheet.create({
   },
   conditionRightBtn: {
     flexDirection: 'row',
-    width: 44,
-    height: 17,
+    // width: 44,
+    // height: 17,
     alignItems: 'center',
     backgroundColor: '#F4F4F4',
     borderRadius: 2,
@@ -89,13 +89,13 @@ export default StyleSheet.create({
     fontSize: 13,
     color: '#666',
     lineHeight: 17,
-    marginLeft: 7,
+    marginHorizontal: 7
   },
   rightBottomImg: {
     width: 3,
     height: 3,
     position: 'absolute',
-    right: 3,
+    right: 0,
     bottom: 3
   },
 
@@ -147,7 +147,7 @@ export default StyleSheet.create({
 		height: 110,
 	},
 	bannerItemContainer: {
-		backgroundColor: '#54D693',
+		// backgroundColor: '#54D693',
 		height: '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -163,7 +163,7 @@ export default StyleSheet.create({
   },
   videoHeaderView: {
     flexDirection: 'row',
-    height: 16,
+    // height: 16,
     alignItems: 'center',
     width: SystemHelper.width - 22,
     justifyContent: 'center',
@@ -193,7 +193,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
   },
   videoBtn: {
-    backgroundColor: greenColor,
+    // backgroundColor: greenColor,
     borderRadius: 8,
     overflow: 'hidden',
     width: (SystemHelper.width - 46) / 3,
@@ -208,7 +208,7 @@ export default StyleSheet.create({
     width: '100%',
   },
   videoText: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#fff',
   },
   videoTagContainer: {

@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { Text, View, Image, } from 'react-native'
 import styles from './styles/GreetSetting.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
-import SwitchComponent from '../../components/SwitchComponent'
+import NextPressable from '../../components/NextPressable'
+import Switch from 'react-native-switch-pro'
 
 type IProps = GenProps<'GreetSetting'> & {
 
@@ -85,7 +85,7 @@ export default class GreetSetting extends Component<IProps, IState> {
         dataSource: localDataSource,
         refreshState: 3
       })
-    }, 300);
+    }, 0);
   }
 
   renderNavBar() {
@@ -115,7 +115,7 @@ export default class GreetSetting extends Component<IProps, IState> {
   renderHeader() {
     const { autoGreat } = this.state
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.headerView}
         onPress={() => {
           const { navigation } = this.props
@@ -125,13 +125,12 @@ export default class GreetSetting extends Component<IProps, IState> {
         <Text style={styles.headerTitle}>
           自动打招呼
         </Text>
-        <SwitchComponent
-          value={autoGreat}
-          switchPress={() => {
-            this.setState({ autoGreat: !autoGreat })
-          }}
-        />
-      </NextTouchableOpacity>
+        <Switch
+	        value={autoGreat}
+	        width={46}
+	        height={24}
+	      />
+      </NextPressable>
     )
   }
 
@@ -146,7 +145,7 @@ export default class GreetSetting extends Component<IProps, IState> {
   renderItem(item: any) {
     const { navigation } = this.props
     return (
-      <NextTouchableOpacity
+      <NextPressable
         key={item.id.toString()}
         style={styles.cellStyle}
         onPress={() => {
@@ -159,7 +158,7 @@ export default class GreetSetting extends Component<IProps, IState> {
         <Text style={styles.cellTitle}>{item.title}</Text>
         <View style={styles.line} />
         <View style={{ flexDirection: 'row' }}>
-          <NextTouchableOpacity style={{
+          <NextPressable style={{
             flexDirection: 'row',
             flex: 1
           }}
@@ -178,8 +177,8 @@ export default class GreetSetting extends Component<IProps, IState> {
               }
             />
             <Text style={[styles.setDefaultText, item.isDefault && { color: '#57DE9E' }]}>设为默认</Text>
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
+          </NextPressable>
+          <NextPressable
             style={{
               width: 60,
               alignItems: 'flex-end',
@@ -191,9 +190,9 @@ export default class GreetSetting extends Component<IProps, IState> {
             }}
           >
             <Text style={styles.editText}>编辑</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

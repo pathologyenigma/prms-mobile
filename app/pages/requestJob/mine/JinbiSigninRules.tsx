@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, } from 'react-native'
 import styles from './styles/JinbiSigninRules.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import { ScrollView } from 'react-native-gesture-handler'
 

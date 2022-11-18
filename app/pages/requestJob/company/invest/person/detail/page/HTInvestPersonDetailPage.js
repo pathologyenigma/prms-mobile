@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native'
+import { View, Text, Pressable, StyleSheet, Image, ScrollView } from 'react-native'
 import HTNavigationBar from '~/common/navigation/HTNavigationBar'
 import HTShadowView from '~/common/view/HTShadowView'
 
@@ -25,14 +25,14 @@ export default class HTInvestPersonDetailPage extends Component {
 				}}
 				backgroundColor={'#54D693'}
 				leftItemList={[
-					<TouchableOpacity style={{ height: '100%', justifyContent: 'center', paddingRight: 20 }} onPress={this.props.navigation.goBack}>
+					<Pressable style={{ height: '100%', justifyContent: 'center', paddingRight: 20 }} onPress={this.props.navigation.goBack}>
 						<Image source={require('~/assets/requestJobs/white-back.png')} />
-					</TouchableOpacity>
+					</Pressable>
 				]}
 				rightItemList={[
-					<TouchableOpacity>
+					<Pressable onPress={global.TODO_TOAST}>
 						<Text style={styleList.navigationItemTitle}>更多</Text>
-					</TouchableOpacity>
+					</Pressable>
 				]}
 			/>
 		)
@@ -99,9 +99,9 @@ export default class HTInvestPersonDetailPage extends Component {
 			{
 				itemList.map((item, index) => {
 					return (
-						<View style={[styleList.toolItemContainer, { flex: item.flex,  backgroundColor: item.backgroundColor }]}>
+						<Pressable key={index} style={[styleList.toolItemContainer, { flex: item.flex,  backgroundColor: item.backgroundColor }]} onPress={global.TODO_TOAST}>
 							<Text style={[styleList.toolItemTitle, { color: item.color }]}>{item.title}</Text>
-						</View>
+						</Pressable>
 					)
 				})
 			}

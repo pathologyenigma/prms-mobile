@@ -1,10 +1,10 @@
 import React, { Component, useEffect, useState } from 'react'
 import { Text, View, TextInput, Image } from 'react-native'
 import styles from './styles/HomeLocation.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import SystemHelper from '../../../utils/system'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { useGeoLocation } from '../../../recruitment/hooks/useGeoLocation'
 
 type IProps = GenProps<'HomeLocation'> & {
@@ -86,7 +86,7 @@ export default function HomeLocation(props: IProps) {
   const renderBtn = () => {
     return (
       <View style={styles.locationView}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.locationItem}
           onPress={() => {
             navigation.push('SearchJobAddress')
@@ -97,9 +97,9 @@ export default function HomeLocation(props: IProps) {
             source={require('../../../assets/requestJobs/location-current.png')}
           />
           <Text style={styles.locationText}>当前定位</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
         <View style={styles.line} />
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.locationItem}
           onPress={() => {
             navigation.push('MapLocate')
@@ -110,7 +110,7 @@ export default function HomeLocation(props: IProps) {
             source={require('../../../assets/requestJobs/location-map.png')}
           />
           <Text style={styles.locationText}>地图选址</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }

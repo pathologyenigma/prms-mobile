@@ -35,7 +35,7 @@ function computeDisplayAddress(workingAddress?: string[]) {
 
 type Props = StackScreenProps<JobParamList, 'PostJob'>
 
-function PostJob({ navigation, route }: Props) {
+export default function PostJob({ navigation, route }: Props) {
   const {
     jobId,
     jobName,
@@ -43,13 +43,14 @@ function PostJob({ navigation, route }: Props) {
     jobNature = 'Full',
     jobCategory = [],
     experience,
-    education = 'RegularCollege',
+    education = 'Null',
     salary,
     tags,
     headcount = 1,
     workingAddress,
     coordinates,
   } = route.params || {}
+  console.log(route.params)
   
   const editing = jobId !== undefined
 
@@ -74,8 +75,11 @@ function PostJob({ navigation, route }: Props) {
             />
           )}
           onPress={() =>
-            navigation.navigate('EditJobName', {
+            navigation.push('EditJobName', {
               initialName: jobName,
+              callback: (_navigation, jobName) => {
+              	navigation.setParams({ jobName })
+              }
             })
           }
         />
@@ -153,8 +157,11 @@ function PostJob({ navigation, route }: Props) {
           placeholder="请详细描述岗位职责及任职要求"
           content={jobDescription}
           onPress={() =>
-            navigation.navigate('EditJobDescription', {
+            navigation.push('EditJobDescription', {
               initialDescription: jobDescription,
+              callback: (_navigation, valueList) => {
+              	navigation.setParams(valueList)
+              }
             })
           }
         />
@@ -163,9 +170,12 @@ function PostJob({ navigation, route }: Props) {
           placeholder="请填写"
           content={computeDisplayAddress(workingAddress)}
           onPress={() =>
-            navigation.navigate('EditJobAddress', {
+            navigation.push('EditJobAddress', {
               coordinates,
               workingAddress,
+              callback: (_navigation, valueList) => {
+              	navigation.setParams(valueList)
+              }
             })
           }
         />
@@ -174,7 +184,9 @@ function PostJob({ navigation, route }: Props) {
           placeholder="如：年底双薪"
           content={tags && tags.length > 0 ? tags.join('+') : undefined}
           onPress={() =>
-            navigation.navigate('EditJobWelfare', { initialTags: tags })
+            navigation.push('EditJobWelfare', { initialTags: tags, callback: (_navigation, valueList) => {
+            	navigation.setParams(valueList)
+            } })
           }
         />
         <HeadcountItem
@@ -185,6 +197,9 @@ function PostJob({ navigation, route }: Props) {
           title={editing ? '保存' : '立即发布'}
           style={styles.postButton}
           onPress={async () => {
+          	if (!jobName || !jobCategory || !workingAddress || !experience || !salary || !education || !jobDescription) {
+          		return
+          	}
             if (editing) {
 	        	Hud.show('请稍后...')
 	            HTAPI.HREditJob({
@@ -271,5 +286,3 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
   },
 })
-
-export default PostJob

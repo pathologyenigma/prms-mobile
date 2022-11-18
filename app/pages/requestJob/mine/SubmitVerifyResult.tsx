@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, ScrollView, } from 'react-native'
 import styles from './styles/SubmitVerifyResult.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { TextInput } from 'react-native-gesture-handler'
 
 type IProps = GenProps<'SubmitVerifyResult'> & {
@@ -99,7 +99,7 @@ export default class SubmitVerifyResult extends Component<IProps, IState> {
     const { content } = this.state
     const { navigation } = this.props
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={[styles.submitBtn, !content && { opacity: 0.6 }]}
         onPress={() => {
           if (!content) {
@@ -113,7 +113,7 @@ export default class SubmitVerifyResult extends Component<IProps, IState> {
         <Text style={styles.selectText}>
           提交申诉
         </Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

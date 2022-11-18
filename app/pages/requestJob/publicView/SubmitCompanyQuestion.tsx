@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList } from 'react-native'
 import styles from './styles/SubmitCompanyQuestion.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import GradientButton from '../../components/GradientButton'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import ListEmptyComponent from '../../components/ListEmptyComponent'
 
 type IProps = GenProps<'SubmitCompanyQuestion'> & {
@@ -136,15 +136,15 @@ export default class SubmitCompanyQuestion extends Component<IProps, IState> {
     const { navigation } = this.props
     return (
       <View key={item.id.toString()} style={styles.cellStyle}>
-        <Image
+        <CacheImage
           style={styles.userIcon}
           resizeMode="contain"
-          source={require('../../../assets/requestJobs/icon-example.png')}
+          source={global.AVATAR_IMAGE()}
         />
         <View style={styles.cellInfo}>
           <Text style={styles.cellName}>{item.name}</Text>
           <Text style={styles.cellAnswer}>{item.answer}</Text>
-          <NextTouchableOpacity style={styles.cellDianzan}
+          <NextPressable style={styles.cellDianzan}
             onPress={() => {
               Toast.show('点赞了~')
             }}
@@ -155,7 +155,7 @@ export default class SubmitCompanyQuestion extends Component<IProps, IState> {
               source={require('../../../assets/requestJobs/dianzan.png')}
             />
             <Text style={styles.cellDianzanText}>{item.dianzan}</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
       </View >
     )

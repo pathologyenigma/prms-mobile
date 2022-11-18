@@ -1,89 +1,142 @@
-import React, { useState, useCallback } from 'react'
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import React, { useState, useCallback, Component } from 'react'
+import { StyleSheet, Text, View, ScrollView, Pressable } from 'react-native'
 import SearchTextinput from '~/pages/components/SearchTextinput'
 import IconLabelButton from '../../components/IconLabelButton'
 import TextButton from '../../components/TextButton'
 import IconButton from '../../components/IconButton'
 import OnlineJobItem from './OnlineJobItem'
 import NavBar from '../../components/NavBar'
-import TalentPager from '../TalentList/TalentPager'
+import TalentPage from '../TalentList/TalentPage'
 import { StackScreenProps } from '@react-navigation/stack'
 import { TalentParamList } from '../typings'
 
+import HTHistoryManager from '~/pages/requestJob/jobs/model/HTHistoryManager'
+
 const histories = ['产品经理', '德科科技有限公司']
 
-export default function CandidateSearch({
-  navigation,
-}: StackScreenProps<TalentParamList, 'CandidateSearch'>) {
-  const [searchValue, setSearchValue] = useState('')
-  const showSearchResult = !!searchValue
+export default class CandidateSearch extends Component {
 
-  return (
-    <View style={styles.container}>
-      <NavBar>
-        <IconLabelButton
-          style={styles.city}
-          icon={require('./location.png')}
-          label="深圳"
-          onPress={() => navigation.navigate('CandidateSearchCity')}
-        />
-        <SearchTextinput
-        	cellStyle={{ flex: 1 }}
-        	inputProps={{
-        		placeholder: "搜索职位/公司/学校",
-          		onChangeText: setSearchValue
-        	}}
-        />
-        <TextButton
-          style={styles.cancel}
-          title="取消"
-          onPress={() => navigation.goBack()}
-        />
-      </NavBar>
-      {!showSearchResult && (
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.content}>
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>历史搜索</Text>
-              <IconButton
-                style={styles.clearHistoryButton}
-                icon={require('./clear.png')}
-              />
-            </View>
-            <View style={styles.sectionBody}>
-              {histories.map(text => (
-                <TextButton
-                  style={styles.historyItem}
-                  key={text}
-                  title={text}
-                />
-              ))}
-            </View>
-          </View>
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>在线职位</Text>
-            </View>
-            <View style={styles.sectionBody}>
-              <OnlineJobItem />
-            </View>
-          </View>
-          {/* <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>热搜榜</Text>
-          </View>
-        </View> */}
-        </ScrollView>
-      )}
-      {showSearchResult && (
-        <View style={styles.container}>
-          <TalentPager keyword={searchValue} navigation={navigation} />
-        </View>
-      )}
-    </View>
-  )
+	constructor(props) {
+		super(props)
+		this.state = {
+			searchHistory: [],
+			onlineJobList: [],
+			selectCity: '深圳'
+		}
+	}
+
+	componentDidMount() {
+		this.loadData()
+	}
+
+	componentDidAppear({ isSecondAppear }) {
+		if (isSecondAppear) {
+			this.loadData()
+		}
+	}
+
+	loadData = async () => {
+		let valueList = await HTHistoryManager.readValueList()
+		this.setState({ searchHistory: valueList })
+		HTAPI.UserGetJobListByEntId({ status: 'InRecruitment', pageSize: 30 }).then(response => {
+	  		this.setState({ 
+	  			onlineJobList: response.data, 
+	  		})
+	  	})
+	}
+
+	render() {
+		const { navigation } = this.props
+		return (
+	    <View style={styles.container}>
+	      <NavBar>
+	        <IconLabelButton
+	          style={styles.city}
+	          icon={require('./location.png')}
+	          label={this.state.selectCity}
+	          onPress={() => {
+	          	navigation.push('JobSelectCity', {
+	              mode: 1,
+	              selectJobCityCallback: (e: any) => {
+	                console.log('eeeee: ', e)
+	                this.setState({ selectCity: e[1].name })
+	              }
+	            })
+	          }}
+	        />
+	        <Pressable style={CONTAINER} onPress={() => {
+	        	navigation.push('HTTalentSearchResultPage')
+	        }}>
+		        <SearchTextinput
+		        	inputProps={{
+		        		pointerEvents: 'none',
+		        		editable: false,
+		        		placeholder: "搜索人才名称"
+		        	}}
+		        />
+	        </Pressable>
+	        <TextButton
+	          style={styles.cancel}
+	          title="取消"
+	          onPress={() => navigation.goBack()}
+	        />
+	      </NavBar>
+	      <ScrollView
+	      style={styles.container}
+	      contentContainerStyle={styles.content}>
+	      <View style={styles.section}>
+	        <View style={styles.sectionHeader}>
+	          <Text style={styles.sectionTitle}>历史搜索</Text>
+	          <IconButton
+	            style={styles.clearHistoryButton}
+	            icon={require('./clear.png')}
+	            onPress={async () => {
+	            	await HTHistoryManager.clearValueList()
+            		this.loadData()
+	            }}
+	          />
+	        </View>
+	        <View style={styles.sectionBody}>
+	          {this.state.searchHistory.map((text, index) => (
+	            <TextButton
+	              style={styles.historyItem}
+	              key={index}
+	              title={text}
+	              onPress={() => {
+	              	navigation.push('HTTalentSearchResultPage', { keyword: text })
+	              }}
+	            />
+	          ))}
+	        </View>
+	      </View>
+	      <View style={styles.section}>
+	        <View style={styles.sectionHeader}>
+	          <Text style={styles.sectionTitle}>在线职位</Text>
+	        </View>
+	        <View style={styles.sectionBody}>
+	        {
+	        	this.state.onlineJobList.map((item, index) => {
+	        		return (
+	        			<Pressable key={index} onPress={() => {
+	        				navigation.push('HTTalentSearchResultPage', { keyword: item.category[item.category.length - 1] })
+	        			}}>
+	        				<OnlineJobItem item={item} />
+	        			</Pressable>
+	        		)
+	        	})
+	        }
+	        </View>
+	      </View>
+	      {/* <View style={styles.section}>
+	      <View style={styles.sectionHeader}>
+	        <Text style={styles.sectionTitle}>热搜榜</Text>
+	      </View>
+	    </View> */}
+	    </ScrollView>
+	    </View>
+	  )
+	}
+
 }
 
 const styles = StyleSheet.create({

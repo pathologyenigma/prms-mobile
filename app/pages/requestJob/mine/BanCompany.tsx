@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Text, View, Image, } from 'react-native'
 import styles from './styles/BanCompany.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import LinearGradient from 'react-native-linear-gradient'
 
 type IProps = GenProps<'BanCompany'> & {
@@ -77,7 +77,7 @@ export default class BanCompany extends Component<IProps, IState> {
         <Text style={styles.headerTips}>
           添加屏蔽公司后，你和这些公司的招聘者都不会被相互推荐，你的查看行为也不会告知对方
         </Text>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.headerSearchView}
           onPress={() => {
             const { navigation } = this.props
@@ -91,7 +91,7 @@ export default class BanCompany extends Component<IProps, IState> {
           <Text style={styles.headerSearchText}>
             搜索关键词、企业名称
           </Text>
-        </NextTouchableOpacity>
+        </NextPressable>
         <Text style={styles.headerBanTips}>
           已屏蔽1家公司
         </Text>
@@ -113,11 +113,11 @@ export default class BanCompany extends Component<IProps, IState> {
         style={styles.cellStyle}
       >
         <Text style={styles.cellCompany}>{item.company}</Text>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.cancelBanBtn}
         >
           <Text style={styles.cancelBanText}>解除</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View >
     )
   }
@@ -139,7 +139,7 @@ export default class BanCompany extends Component<IProps, IState> {
           colors={['#57DE9E', '#81E3AE']}
           style={styles.linear}
         >
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.addBtn}
             onPress={() => {
               const { navigation } = this.props
@@ -149,7 +149,7 @@ export default class BanCompany extends Component<IProps, IState> {
             <Text style={styles.text}>
               添加
             </Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </LinearGradient>
       </View>
     )

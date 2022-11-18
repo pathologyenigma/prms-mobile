@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, StatusBar, ImageSourcePropType, Modal, ActivityIndicator, RefreshControl } from 'react-native'
 import styles from './styles/CompanyDetail.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import { GenProps } from '../../../utils/StackProps'
+import NextPressable from '../../components/NextPressable'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import LinearGradient from 'react-native-linear-gradient'
@@ -132,7 +132,7 @@ class CompanyDetail extends Component<IProps, IState> {
     const { navigation } = this.props
     return (
       <View style={styles.navBar}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.backBtn}
           onPress={() => {
             navigation.goBack()
@@ -143,34 +143,36 @@ class CompanyDetail extends Component<IProps, IState> {
             resizeMode="center"
             source={require('../../../assets/requestJobs/white-back.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
         <View
           style={styles.rightView}
         >
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.rightItem}
             onPress={() => {
-              Toast.show('收藏')
+              global.TODO_TOAST()
             }}
           >
             <Image resizeMode="center" style={styles.shoucang} source={require('../../../assets/requestJobs/shoucang-white.png')} />
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
+          </NextPressable>
+          <NextPressable
             style={styles.rightItem}
             onPress={() => {
-              navigation.push('ReportComplaints')
+            	global.TODO_TOAST()
+              // navigation.push('ReportComplaints')
             }}
           >
             <Image resizeMode="center" style={styles.jubao} source={require('../../../assets/requestJobs/jubao-white.png')} />
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
+          </NextPressable>
+          <NextPressable
             style={styles.rightItem}
             onPress={() => {
-              this.setState({ shieldVisible: true })
+            	global.TODO_TOAST()
+              // this.setState({ shieldVisible: true })
             }}
           >
             <Image resizeMode="center" style={styles.fenxiang} source={require('../../../assets/requestJobs/blacklist.png')} />
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
       </View>
     )
@@ -187,10 +189,10 @@ class CompanyDetail extends Component<IProps, IState> {
           || basicData.overtime_work_degree
         ) && (
             <View style={styles.rulesContainer}>
-              <NextTouchableOpacity
+              <NextPressable
                 style={styles.rulesInfoContainer}
                 onPress={() => {
-                  this.setState({ welfareVisible: true })
+                  // this.setState({ welfareVisible: true })
                 }}
               >
                 {basicData.work_time && (
@@ -201,7 +203,9 @@ class CompanyDetail extends Component<IProps, IState> {
                       source={require('../../../assets/requestJobs/shijian.png')}
                     />
                     <Text style={styles.rulesDetail}>
-                      {basicData.work_time}
+                      {
+                      	basicData.work_time
+                      }
                     </Text>
                   </View>
                 )}
@@ -214,7 +218,13 @@ class CompanyDetail extends Component<IProps, IState> {
                       source={require('../../../assets/requestJobs/shuangxiu.png')}
                     />
                     <Text style={styles.rulesDetail}>
-                      {basicData.jobRest}
+                      {	
+                      	[
+	                      	{ value: 'Paid', label: '有偿加班' },
+	                      	{ value: 'None', label: '不加班' },
+	                      	{ value: 'SomeTime', label: '偶尔加班' }
+                      	].find(item => item.value == basicData.overtime_work_degree)?.label
+                      }
                     </Text>
                   </View>
                 )}
@@ -226,11 +236,17 @@ class CompanyDetail extends Component<IProps, IState> {
                       source={require('../../../assets/requestJobs/shuangxiu.png')}
                     />
                     <Text style={styles.rulesDetail}>
-                      {basicData.rest_rule}
+                    	{
+                    		[
+	                      	{ value: 'TwoDayOffPerWeekend', label: '周末双休' },
+	                      	{ value: 'OneDayOffPerWeekend', label: '单休' },
+	                      	{ value: 'ShiftWork', label: '排班轮休' }
+                      	].find(item => item.value == basicData.rest_rule)?.label
+                    	}
                     </Text>
                   </View>
                 )}
-                <View style={styles.rulesView}>
+                {/*<View style={styles.rulesView}>
                   <Image
                     style={styles.rulesIcon}
                     resizeMode="center"
@@ -239,12 +255,12 @@ class CompanyDetail extends Component<IProps, IState> {
                   <Text style={styles.rulesDetail}>
                     {basicData.isFlexibleWork}
                   </Text>
-                </View>
-              </NextTouchableOpacity>
-              <NextTouchableOpacity
+                </View>*/}
+              </NextPressable>
+              <NextPressable
                 style={styles.nextBtn}
                 onPress={() => {
-                  Toast.show('公司制度')
+                  // Toast.show('公司制度')
                 }}
               >
                 <Image
@@ -252,7 +268,7 @@ class CompanyDetail extends Component<IProps, IState> {
                   resizeMode="center"
                   source={require('../../../assets/requestJobs/white-next.png')}
                 />
-              </NextTouchableOpacity>
+              </NextPressable>
             </View>
           )}
         {basicData.enterprise_welfare && (
@@ -261,54 +277,20 @@ class CompanyDetail extends Component<IProps, IState> {
             showsHorizontalScrollIndicator={false}
             style={styles.jobFuliScrollview}
           >
-            {basicData.isWuxianyijin && (
-              <View style={styles.fuliView}>
-                <Image
-                  style={styles.fuliIcon}
-                  resizeMode="center"
-                  source={require('../../../assets/requestJobs/wuxianyijin.png')}
-                />
-                <Text style={styles.fuliDetail}>
-                  五险一金
-                </Text>
-              </View>
-            )}
-            {basicData.isNianzhongjiang && (
-              <View style={styles.fuliView}>
-                <Image
-                  style={styles.fuliIcon}
-                  resizeMode="center"
-                  source={require('../../../assets/requestJobs/nianzhongjiang.png')}
-                />
-                <Text style={styles.fuliDetail}>
-                  年终奖
-                </Text>
-              </View>
-            )}
-            {basicData.isCanbu && (
-              <View style={styles.fuliView}>
-                <Image
-                  style={styles.fuliIcon}
-                  resizeMode="center"
-                  source={require('../../../assets/requestJobs/canbu.png')}
-                />
-                <Text style={styles.fuliDetail}>
-                  餐补
-                </Text>
-              </View>
-            )}
-            {basicData.isJiaotongbuzhu && (
-              <View style={styles.fuliView}>
-                <Image
-                  style={styles.fuliIcon}
-                  resizeMode="center"
-                  source={require('../../../assets/requestJobs/jiaotong.png')}
-                />
-                <Text style={styles.fuliDetail}>
-                  交通补助
-                </Text>
-              </View>
-            )}
+          	{
+          		basicData.enterprise_welfare.map((item, index) => (
+          			<View style={styles.fuliView} key={index}>
+	                <Image
+	                  style={styles.fuliIcon}
+	                  resizeMode="center"
+	                  source={require('../../../assets/requestJobs/wuxianyijin.png')}
+	                />
+	                <Text style={styles.fuliDetail}>
+	                  {item}
+	                </Text>
+	              </View>
+          		))
+          	}
           </ScrollView>
         )}
       </View >
@@ -317,20 +299,20 @@ class CompanyDetail extends Component<IProps, IState> {
 
   renderCompany() {
     const { showMoreDetail, basicData } = this.state
-    const detail = basicData.extra_attribute || '深圳'
+    const detail = basicData?.enterprise_profile ?? ''
     return (
       <View style={styles.companyXinxi}>
         <Text style={styles.companyXinxiTitle}>公司介绍</Text>
         <Text style={styles.companyXinxiDetail}>
           {showMoreDetail ? detail : detail.substring(0, 90)}
           {detail.length > 100 && !showMoreDetail && (
-            <NextTouchableOpacity
+            <NextPressable
               onPress={() => {
                 this.setState({ showMoreDetail: true })
               }}
             >
               <Text style={styles.showMoreText}> ...查看展开</Text>
-            </NextTouchableOpacity>
+            </NextPressable>
           )}
         </Text>
         {/* <Text
@@ -340,10 +322,10 @@ class CompanyDetail extends Component<IProps, IState> {
           {basicData.extra_attribute || '深圳智慧网络有限公司是一家新兴崛起的高科技企业，专为通信、互联网、电子商务、移动平台等领域的客户提供计算机软件技术的开发、测试、维护和咨询服务。总部位于环境优美、交通便捷的深圳科技园区内，在上海设有分公司,而且卡商贷就奥斯卡阿萨德静安寺按实际的按商家等客户阿机审打回按实际的看按时接电话按理说肯德基回案例时间肯定爱空间'}
         </Text>
         <Text style={styles.showMore}>查看展开</Text> */}
-        <NextTouchableOpacity
+        <NextPressable
           onPress={() => {
             const { navigation } = this.props
-            navigation.push('MapNavigation')
+            navigation.push('MapNavigation', { location: basicData?.enterprise_coordinates })
           }}
           style={styles.companyXinxiView}>
           <Text style={styles.companyXinxiTitle}>
@@ -355,14 +337,14 @@ class CompanyDetail extends Component<IProps, IState> {
                 style={styles.locationIcon}
                 source={require('../../../assets/requestJobs/company-location.png')}
               />
-              <Text style={styles.companyXinxiCompany}>{basicData.enterprise_loc_detail && basicData.enterprise_loc_detail[0] || '- -'}</Text>
+              <Text style={styles.companyXinxiCompany}>{basicData.enterprise_loc_detail && basicData.enterprise_loc_detail.slice(3).join('-') || '- -'}</Text>
             </View>
             <Image
               style={styles.nextIcon}
               source={require('../../../assets/requestJobs/white-next.png')}
             />
           </View>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View >
     )
   }
@@ -383,7 +365,7 @@ class CompanyDetail extends Component<IProps, IState> {
             <Text style={styles.companySummary}>{
               `${reformComFinancing(basicData.enterprise_financing)}·${reformCompanySize(basicData.enterprise_size)}·${showFinancing}`}</Text>
           </View>
-          <View style={styles.companyIcon} />
+          <CacheImage style={styles.companyIcon} source={global.AVATAR_IMAGE(basicData?.enterprise_logo, require('~/recruitment/Job/JobDetail/CompanyInfo/company_default.png'))} />
         </View>
       </View>
     )
@@ -404,7 +386,7 @@ class CompanyDetail extends Component<IProps, IState> {
         colors={['#57DE9E', '#81E3AE']}
         style={styles.onlineView}
       >
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.onlineViewBtn}
           onPress={() => {
             const { navigation } = this.props
@@ -412,17 +394,18 @@ class CompanyDetail extends Component<IProps, IState> {
           }}
         >
           <Text style={styles.onlineText}>{title}</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </LinearGradient>
     )
   }
 
   renderCompanyPhoto() {
     const { navigation } = this.props
-    const { videoPlaying, basicData: { enterprise_logo } } = this.state
-    if (!enterprise_logo) {
+    const { videoPlaying, basicData: { extra_attribute } } = this.state
+    if (!extra_attribute) {
       return null
     }
+    const itemList = JSON.parse(extra_attribute)
     return (
       <View style={styles.companyPhotoView}>
         <Text style={styles.companyPhotoText}>公司相册</Text>
@@ -431,65 +414,71 @@ class CompanyDetail extends Component<IProps, IState> {
           showsHorizontalScrollIndicator={false}
           style={styles.companyPhotoScrollview}
         >
-          <NextTouchableOpacity
-            onPress={() => {
-              navigation.push('VideoComponent',
-                {
-                  videoUri: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4',
-                  closeCallback: () => {
-                    this.setState({ videoPlaying: true })
-                  }
-                },
-              )
-            }}
-            style={styles.companyPhotoItem}
-          >
-            <Image
-              style={styles.videroPlayIcon}
-              source={require('../../../assets/requestJobs/video-play-btn.png')}
-            />
-            <Video
-              style={{
-                width: '100%',
-                height: '100%',
-              }}
-              source={{ uri: encodeURI('http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4') }}   // 可以是一个 URL 或者 本地文件 // 对空格进行转义,否则无法播放
-              resizeMode="cover"
-              controls={false}
-              autoPlay={false}
-              paused={!videoPlaying}
-              onProgress={(currentTime: number) => {
+          {
+          	(itemList?.videos ?? []).map((item, index) => (
+          		<NextPressable
+          			key={index}
+		            onPress={() => {
+		              navigation.push('VideoComponent',
+		                {
+		                  videoUri: item,
+		                  closeCallback: () => {
+		                    // this.setState({ videoPlaying: true })
+		                  }
+		                },
+		              )
+		            }}
+		            style={styles.companyPhotoItem}
+		          >
+		            <Image
+		              style={styles.videroPlayIcon}
+		              source={require('../../../assets/requestJobs/video-play-btn.png')}
+		            />
+		            <Video
+		              style={{
+		                width: '100%',
+		                height: '100%',
+		              }}
+		              source={{ uri: encodeURI(item) }}   // 可以是一个 URL 或者 本地文件 // 对空格进行转义,否则无法播放
+		              resizeMode="cover"
+		              controls={false}
+		              autoPlay={false}
+		              paused={!videoPlaying}
+		              onProgress={(currentTime: number) => {
 
-              }}
-              onLoad={() => {
-                setTimeout(() => {
-                  this.setState({
-                    videoPlaying: false,
-                    isFirstLoadVideo: false
-                  })
-                }, 1000);
-              }}
-            />
-          </NextTouchableOpacity>
-          {enterprise_logo.map((e: any, index: number) => {
-            return (
-              <NextTouchableOpacity
-                onPress={() => {
-                  this.setState({
-                    imageModalVisible: true,
-                    imageSelectIndex: index
-                  })
-                }}
-                style={styles.companyPhotoItem}
-              >
-                <Image
-                  source={{ uri: e.url }}
-                  style={{ width: '100%', height: '100%' }}
-                  resizeMode="cover"
-                />
-              </NextTouchableOpacity>
-            )
-          })}
+		              }}
+		              onLoad={() => {
+		                setTimeout(() => {
+		                  this.setState({
+		                    videoPlaying: false,
+		                    isFirstLoadVideo: false
+		                  })
+		                }, 1000);
+		              }}
+		            />
+		          </NextPressable>
+          	))
+          }
+          {
+          	itemList.pictures.map((item, index) => (
+          		<NextPressable
+          			key={index}
+		            onPress={() => {
+		              global.ImageListView.open({
+										itemList: itemList.pictures.map(item => ({ source: { uri: item } })),
+										initIndex: index
+									})
+		            }}
+		            style={styles.companyPhotoItem}
+		          >
+		            <Image
+		              source={{ uri: item }}
+		              style={{ width: '100%', height: '100%' }}
+		              resizeMode="cover"
+		            />
+		          </NextPressable>
+          	))
+          }
         </ScrollView>
       </View>
     )
@@ -507,15 +496,18 @@ class CompanyDetail extends Component<IProps, IState> {
         >
           {hrList.map((item: any, index: number) => {
             return (
-              <NextTouchableOpacity
+              <NextPressable
                 key={index.toString()}
                 style={styles.reviewerItem}
+                onPress={() => {
+                	this.props.navigation.push('HrPersonalInfo', { hrId: item.id })
+                }}
               >
-                <View style={styles.reviewerIcon} />
+                <CacheImage style={styles.reviewerIcon} source={global.AVATAR_IMAGE(item.logo)} />
                 <Text style={styles.reviewerName}>{item.name}</Text>
                 <Text style={styles.reviewerJob} numberOfLines={1}>{item.pos}</Text>
 
-              </NextTouchableOpacity>
+              </NextPressable>
             )
           })}
         </ScrollView>
@@ -616,7 +608,7 @@ class CompanyDetail extends Component<IProps, IState> {
       return <Text style={styles.noMoreText}>没有更多了</Text>
     }
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.showMoreBtn}
         onPress={() => {
           // this.setState({
@@ -629,7 +621,7 @@ class CompanyDetail extends Component<IProps, IState> {
         <Text style={styles.showMoreCommentText}>
           {`全部${allComment}条面试评价`}
         </Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -664,14 +656,14 @@ class CompanyDetail extends Component<IProps, IState> {
     const { navigation } = this.props
     return (
       <View style={styles.interviewView}>
-        <NextTouchableOpacity
+        <NextPressable
           onPress={() => {
             const { navigation } = this.props
             navigation.push('CompanyAsk')
           }}
         >
           <Text style={styles.companyPhotoText}>公司问答</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
         <CompanyQuestionCell
           // key={index.toString()}
           cellItem={qaList}
@@ -690,14 +682,14 @@ class CompanyDetail extends Component<IProps, IState> {
             />
           )
         })} */}
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.askQuestionBtn}
           onPress={() => {
             navigation.push('CompanySubQuestion')
           }}
         >
           <Text style={styles.askQuestionText}>我来提问</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }
@@ -719,7 +711,7 @@ class CompanyDetail extends Component<IProps, IState> {
     ]
     return (
       <View style={styles.bottomView}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.closeBtn}
           onPress={() => {
             this.setState({ welfareVisible: false })
@@ -729,7 +721,7 @@ class CompanyDetail extends Component<IProps, IState> {
             style={styles.closeIcon}
             source={require('../../../assets/requestJobs/close_circle.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
         <Text style={styles.bottomViewWorkTime}>
           工作时间
         </Text>
@@ -798,7 +790,7 @@ class CompanyDetail extends Component<IProps, IState> {
           }}
           renderHeader={() => {
             return (
-              <NextTouchableOpacity
+              <NextPressable
                 style={styles.imageCloseBtn}
                 onPress={() => {
                   this.setState({ imageModalVisible: false })
@@ -809,7 +801,7 @@ class CompanyDetail extends Component<IProps, IState> {
                   resizeMode="center"
                   source={require('../../../assets/requestJobs/close-white.png')}
                 />
-              </NextTouchableOpacity>
+              </NextPressable>
             )
           }}
           loadingRender={() => {
@@ -840,13 +832,7 @@ class CompanyDetail extends Component<IProps, IState> {
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={{ paddingBottom: 50 }}
-          refreshControl={(
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={() => this.loadData()
-              }
-            />
-          )}
+          onRefresh={() => this.loadData()}
         >
           {/* {(dataSource && basicData) ? ( */}
           <View style={{ flex: 1, }}>

@@ -1,11 +1,11 @@
 import React, { Component, useCallback, useEffect, useMemo, useState } from 'react'
 import { View, Image, StatusBar, Keyboard, StyleSheet, Text, ImageBackground } from 'react-native'
 import styles from './styles/MapLocate.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import SystemHelper from '../../../utils/system'
 import { greenColor } from '../../../utils/constant'
 import GradientButton from '../../components/GradientButton'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useGeoLocation } from '../../../recruitment/hooks/useGeoLocation'
 import { usePoiItems } from '../../../recruitment/hooks/usePoiItems'
@@ -91,7 +91,7 @@ export default function MapLocate(props: IProps) {
 
   const renderNavBar = () => {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.leftBtn}
         onPress={() => {
           navigation.goBack()
@@ -101,7 +101,7 @@ export default function MapLocate(props: IProps) {
           source={require('../../../assets/black_back.png')}
           style={styles.leftIcon}
         />
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

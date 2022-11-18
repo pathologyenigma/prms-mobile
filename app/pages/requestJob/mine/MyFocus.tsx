@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList } from 'react-native'
 import styles from './styles/MyFocus.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
@@ -9,7 +9,7 @@ import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import GradientButton from '../../components/GradientButton'
 import ListEmptyComponent from '../../components/ListEmptyComponent'
 import { differenceInHours, format, formatDistance } from 'date-fns'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import SystemHelper from '../../../utils/system'
 import { calculateTime } from '../../../utils/utils'
 
@@ -116,14 +116,14 @@ export default class MyFocus extends Component<IProps, IState> {
     const { dataSource } = this.state
     const status = calculateTime(item.activeTime)
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.cellStyle}
         onPress={() => {
 
         }}
       >
-        <Image
-          source={require('../../../assets/requestJobs/icon-example.png')}
+        <CacheImage
+          source={global.AVATAR_IMAGE()}
           style={styles.cellIcon}
         />
         <View style={styles.cellInfo}>
@@ -138,7 +138,7 @@ export default class MyFocus extends Component<IProps, IState> {
           style={styles.nextIcon}
           source={require('../../../assets/requestJobs/next-gray.png')}
         />
-      </NextTouchableOpacity >
+      </NextPressable >
     )
   }
 

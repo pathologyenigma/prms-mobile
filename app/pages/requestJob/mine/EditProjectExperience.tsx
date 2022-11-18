@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
 import { Text, View, BackHandler, ScrollView, StatusBar } from 'react-native'
 import styles from './styles/EditProjectExperience.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { TextInput } from 'react-native-gesture-handler'
 import JobStatusModal from '../jobs/JobStatusModal'
 import GradientButton from '../../components/GradientButton'
 import AlertContentModal from '../../components/AlertContentModal'
 import SystemHelper from '../../../utils/system'
+import DatePickerModal from '../../components/DatePickerModal'
+import { format, parse } from 'date-fns'
 
 type IProps = GenProps<'EditProjectExperience'> & {
 
@@ -122,7 +124,7 @@ export default class EditProjectExperience extends Component<IProps, IState> {
       info.id = projectItem.id
     }
     console.log('infoinfoinfo: ', info)
-    HTAPI.CandidateEditEduExp({ info }).then(response => {
+    HTAPI.CandidateEditProExp({ info }).then(response => {
     	ActionToast.show('保存成功')
         if (projectItemCallback) {
           projectItemCallback()
@@ -206,7 +208,7 @@ export default class EditProjectExperience extends Component<IProps, IState> {
       <View style={styles.cell}>
         <Text style={styles.cellTitle}>项目时间</Text>
         <View style={styles.durationView}>
-          <NextTouchableOpacity
+          <NextPressable
             style={{ flex: 1, }}
             onPress={() => {
               this.setState({ beginTimeVisible: true, changeContent: true })
@@ -215,9 +217,9 @@ export default class EditProjectExperience extends Component<IProps, IState> {
             <Text style={[styles.beginTime, beginTime.length !== 0 && { color: '#333333' }]}>
               {beginTime ? `${new Date(beginTime).getFullYear()}-${new Date(beginTime).getMonth() + 1}` : '开始时间'}
             </Text>
-          </NextTouchableOpacity>
+          </NextPressable>
           <Text style={styles.timeTips}>至</Text>
-          <NextTouchableOpacity
+          <NextPressable
             style={{ flex: 1, }}
             onPress={() => {
               this.setState({ endTimeVisible: true, changeContent: true })
@@ -226,7 +228,7 @@ export default class EditProjectExperience extends Component<IProps, IState> {
             <Text style={[styles.beginTime, { textAlign: 'right' }, endTime.length !== 0 && { color: '#333333' }]}>
               {endTime ? `${new Date(endTime).getFullYear()}-${new Date(endTime).getMonth() + 1}` : '结束时间'}
             </Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
       </View>
     )
@@ -297,14 +299,14 @@ export default class EditProjectExperience extends Component<IProps, IState> {
     return (
       <View style={styles.footerView}>
         {projectItem && (
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.resetBtn}
             onPress={() => {
               this.setState({ deleteVisible: true })
             }}
           >
             <Text style={styles.resetText}>删除</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         )}
         <GradientButton
           disabled={!disableSave}
@@ -320,7 +322,7 @@ export default class EditProjectExperience extends Component<IProps, IState> {
   }
 
   render() {
-    const { beginTimeVisible, endTimeVisible, beginTime, deleteVisible, giveUpSaveVisible, endTime,
+    const { beginTimeVisible, endTimeVisible, beginTime, endTime, deleteVisible, giveUpSaveVisible,
     } = this.state
     const { navigation, route: { params: { projectItem } } } = this.props
     return (
@@ -342,37 +344,29 @@ export default class EditProjectExperience extends Component<IProps, IState> {
           {this.renderWorkPerformance()}
         </ScrollView>
         {projectItem && this.renderFooterBtn()}
-        <JobStatusModal
-          title="时间段"
+        <DatePickerModal
           visible={beginTimeVisible}
-          currentDate={
-            beginTime ? `${new Date(beginTime).getFullYear()}-${new Date(beginTime).getMonth() + 1}`
-              : `${new Date().getFullYear()}-${new Date().getMonth() + 1}`
-          }
+          currentDate={format(beginTime.length > 0 ? new Date(beginTime) : new Date(), 'yyyy-MM-dd')}
           leftPress={() => {
             this.setState({ beginTimeVisible: false })
           }}
-          rightPress={(selectedDate) => {
+          rightPress={(newDate) => {
             this.setState({
-              beginTime: selectedDate,
-              beginTimeVisible: false,
+              beginTime: newDate.toISOString(),
+              beginTimeVisible: false
             })
           }}
         />
-        <JobStatusModal
-          title="时间段"
+        <DatePickerModal
           visible={endTimeVisible}
-          currentDate={
-            endTime ? `${new Date(endTime).getFullYear()}-${new Date(endTime).getMonth() + 1}`
-              : `${new Date().getFullYear()}-${new Date().getMonth() + 1}`
-          }
+          currentDate={format(endTime.length > 0 ? new Date(endTime) : new Date(), 'yyyy-MM-dd')}
           leftPress={() => {
             this.setState({ endTimeVisible: false })
           }}
-          rightPress={(selectedDate) => {
+          rightPress={(newDate) => {
             this.setState({
-              endTime: selectedDate,
-              endTimeVisible: false,
+              endTime: newDate.toISOString(),
+              endTimeVisible: false
             })
           }}
         />

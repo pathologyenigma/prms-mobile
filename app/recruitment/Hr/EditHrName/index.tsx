@@ -9,7 +9,7 @@ export default function EditHrName({
   navigation,
   route,
 }: StackScreenProps<HrParamList, 'EditHrName'>) {
-  const { username } = route.params
+  const { username, callback } = route.params
 
   return (
     <View style={styles.container}>
@@ -28,7 +28,8 @@ export default function EditHrName({
               	info: { username }
               }).then(response => {
               	Toast.show('姓名修改成功')
-                navigation.navigate('HrProfile', { username })
+              	navigation.pop()
+              	callback(navigation, username)
               })             
             }}
           />

@@ -18,7 +18,7 @@ export default function LinearGradientMaskedView({
         <LinearGradient
           style={{ flex: 1, height: '100%' }}
           colors={['rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 0)']}
-          locations={[0.5, 1.0]}
+          locations={[0.8, 1.0]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
         />

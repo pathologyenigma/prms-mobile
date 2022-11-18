@@ -233,6 +233,9 @@ const reformSalary = (salary: any) => {
     if (salary[1]) {
       showSalary = `${showSalary}-${Number(salary[1]) > 999 ? `${Number(salary[1]) / 1000}K` : salary[1]}`
     }
+    if (salary[0] == 0 && salary[1] == 0) {
+  		showSalary = '面议'
+  	}
   }
   return showSalary
 }

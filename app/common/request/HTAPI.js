@@ -72,6 +72,7 @@ subscription newMessage {
 		messageContent
 		to
 		uuid
+		createdAt
 	}
 }
 `,
@@ -90,6 +91,7 @@ query UserGetMessages(
 			messageContent
 			to
 			uuid
+			createdAt
 		}
 		count
 		page
@@ -184,7 +186,7 @@ query CandidateGetJobList($filter: JobFilter!) {
 			tags
 			hr_pos
 			comp_size
-			id
+			id: job_id
 			logo
 			title
 			ontop
@@ -198,7 +200,8 @@ query CandidateGetJobList($filter: JobFilter!) {
 			min_salary
 			comp_size
 			comp_name
-			address_coordinate
+			#address_coordinate
+			address_description
 			hr_name
 			category
 			emergency
@@ -218,7 +221,7 @@ query CandidateGetJobList($filter: JobFilter!) {
 				tags
 				hr_pos
 				comp_size
-				id
+				id: job_id
 				logo
 				title
 				ontop
@@ -232,7 +235,8 @@ query CandidateGetJobList($filter: JobFilter!) {
 				min_salary
 				comp_size
 				comp_name
-				address_coordinate
+				#address_coordinate
+				address_description
 				hr_name
 				category
 				emergency
@@ -343,13 +347,15 @@ query UserGetJob($jobid: Int!) {
 				required_num
 				full_time_job
 				tags
+				updated_at
+				#status
 			}
 			hr {
 				id
 				name
 				pos
 				last_log_out_time
-				# logo
+				logo
 			}
 			company {
 				id
@@ -359,7 +365,7 @@ query UserGetJob($jobid: Int!) {
 				industry_involved
 				enterprise_size
 				business_nature
-				#       enterprise_logo
+				enterprise_logo
 			}
 		}
 	}
@@ -386,7 +392,7 @@ query CandidateGetHRDetail_RecommendationsList($hrId: Int!) {
 		data {
 			id
 			title
-			loc
+			#loc
 			experience
 			education
 			salary
@@ -413,7 +419,7 @@ query CandidateGetHRDetail_JobListPageView(
 			... on JobDataForHRDetailPageOrEntJobList {
 				id
 				title
-				loc
+				#loc
 				experience
 				education
 				salary
@@ -427,8 +433,113 @@ query CandidateGetHRDetail_JobListPageView(
 
 // 发送简历
 ` 
-mutation CandidateSendResume($resumeId: Int!, $targetUser: Int!) {
-	CandidateSendResume
+mutation CandidateSendResume($resumeId: Int, $jobId: Int!, $hrId: Int!, $compId: Int!) {
+	CandidateSendResume(resumeId: $resumeId, jobId: $jobId, hrId: $hrId, compId: $compId) 
+}
+`,
+
+
+/* 
+
+HRGetResumeDeliveryRecord
+
+*/ 
+`
+query HRGetResumeDeliveryRecord {
+	HRGetResumeDeliveryRecord 
+}
+`,
+
+/* 
+
+will create a interview data and set it to waiting, may return the interview id for dev version
+
+{
+	userId: Int!, 
+	jobId: Int!, 
+	time: [String]!
+}
+
+*/ 
+`
+mutation HRInviteInterview($userId: Int!, $jobId: Int!, $time: [String]!) {
+	HRInviteInterview(userId: $userId, jobId: $jobId, time: $time) 
+}
+`,
+
+/* 
+
+detail page for interview
+
+{
+	interviewId: Int!
+}
+
+*/ 
+`
+query CommonGetIterviewDetail($interviewId: Int!) {
+	CommonGetIterviewDetail(interviewId: $interviewId) {
+		enterpriseName 
+		hrName 
+		hrPosition 
+		time 
+		jobName 
+		jobSalary 
+		jobContractor 
+		jobContractedNumer 
+		isOutline 
+		address 
+		attachments 
+		process 
+	}
+}
+`,
+
+/* 
+
+accept or reject an interview by id
+
+{
+	interviewId: Int!, 
+	accept: Boolean!
+}
+
+*/ 
+`
+mutation CandidateAcceptOrRejectInterview($interviewId: Int!, $accept: Boolean!) {
+	CandidateAcceptOrRejectInterview(interviewId: $interviewId, accept: $accept) 
+}
+`,
+
+/* 
+
+cancel a interview, both side will have this authority, may failed when time is close to the appointed time
+
+{
+	interviewId: Int!
+}
+
+*/ 
+`
+mutation CommoncancelInterview($interviewId: Int!) {
+	CommoncancelInterview(interviewId: $interviewId) 
+}
+`,
+
+/* 
+
+end a iterview with the description, need to tell the interview is passed or not, most of time the description is about some special situation
+
+{
+	interviewId: Int!, 
+	ispassed: Boolean!, 
+	description: String
+}
+
+*/ 
+`
+mutation HREndInterview($interviewId: Int!, $ispassed: Boolean!, $description: String) {
+	HREndInterview(interviewId: $interviewId, ispassed: $ispassed, description: $description) 
 }
 `,
 
@@ -461,6 +572,7 @@ query UserGetContractList {
 `,
 
 
+// 根据 user_id 获取头像和昵称等用户信息
 ` 
 query UserGetUsernameAndLogoWithId($user_id: Int!) {
 	UserGetUsernameAndLogoWithId(user_id: $user_id) {
@@ -482,6 +594,7 @@ query UserGetBasicInfo {
 		education
 		phone_number
 		email
+		job_status
     }
 }
 `,
@@ -529,6 +642,10 @@ query UserSearchEnterprise(
 			createdAt
 			job_counter
 			abbreviation
+			jobs {
+				#id:job_id 
+				title min_salary max_salary min_experience min_education min_education address_description createdAt
+			}
 		}
 	}
 }
@@ -689,8 +806,25 @@ query UserGetJobListByEntId($status: JobStatus, $pageSize: Int) {
 	UserGetJobListByEntId(status: $status, pageSize: $pageSize) {
 		count
 		data {
+			... on JobDataForHRDetailPageOrEntJobList {
+				id 
+				job_id: id
+				title
+				category 
+				address
+				loc 
+				experience 
+				education 
+				salary 
+				createdAt 
+				status 
+				views 
+				resumeCount 
+				logo
+				hr_name
+			}
 			... on JobDataBriefly {
-				id
+				id: job_id
 				job_id
 				title
 				category
@@ -729,6 +863,13 @@ query ENTSearchCandidates($filter: TalentListFilter, $pageSize: Int, $page: Int)
 			resume_data
 		}
 	}
+}
+`,
+
+// 招聘方获取人才详情
+`
+query HRGetCandidateResume($candidate_id: Int!) {
+	HRGetCandidateResume(candidate_id: $candidate_id)
 }
 `,
 
@@ -786,6 +927,8 @@ mutation UserEditEmail($email: String!, $code: String!) {
 }
 `,
 
+// 根据招聘者 id 获取 招聘者的 user_id
+
 ` 
 query CandidateGetHRIdByWorkerId($id: Int!) {
 	CandidateGetHRIdByWorkerId(id: $id)
@@ -798,12 +941,13 @@ let RELOAD_ITEM_LIST = {}
 ITEM_LIST.map(item => {
 	let matchList = item.match(/(\S)* (\S)*(?=(\(|( \{)))/)[0].split(' ')
 	let operationName = matchList[1]
-	RELOAD_ITEM_LIST[operationName] = (paramList = {}, optionList = {}) => {
+	RELOAD_ITEM_LIST[operationName] = (paramList = {}, optionList = {}, headerList = {}) => {
 		return HTRequest.gqlRequest(
 			item, 
 			operationName, 
 			paramList, 
-			{ showLoading: matchList[0] != 'query', ...optionList}
+			{ showLoading: matchList[0] != 'query', ...optionList },
+			headerList
 		)
 	}
 })

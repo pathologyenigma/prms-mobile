@@ -18,7 +18,7 @@ export default function SearchJobAddress({
 }: StackScreenProps<JobParamList, 'SearchJobAddress'>) {
   // 当前城市
   const geoLocation = useGeoLocation()
-  const { city, coordinates } = route.params || {}
+  const { city, coordinates, callback } = route.params || {}
 
   useEffect(() => {
     if (!city && geoLocation?.city) {
@@ -89,7 +89,7 @@ export default function SearchJobAddress({
           	navigation.push('JobSelectCity', {
               mode: 1,
               selectJobCityCallback: (e: any) => {
-                navigation.setParams({ city: e[2].name })
+                navigation.setParams({ city: e[1].name })
               }
             })
           }}
@@ -134,11 +134,10 @@ export default function SearchJobAddress({
             <AddressItem
               {...item}
               index={index}
-              onPress={() =>
-                navigation.navigate('EditJobAddress', {
-                  poiItem: { ...item },
-                })
-              }
+              onPress={() => {
+              	callback && callback(navigation, { poiItem: { ...item } })
+                navigation.pop()
+              }}
             />
           )}
         />
@@ -154,11 +153,10 @@ export default function SearchJobAddress({
               <AddressItem
                 {...item}
                 index={-1}
-                onPress={() =>
-                  navigation.navigate('EditJobAddress', {
-                    poiItem: { ...item },
-                  })
-                }
+                onPress={() => {
+                  callback && callback(navigation, { poiItem: { ...item } })
+                  navigation.pop()
+                }}
               />
             )}
           />

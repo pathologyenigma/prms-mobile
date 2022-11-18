@@ -13,7 +13,7 @@ import jobFairScreens from './JobFair'
 import talentScreens from './Talent'
 import settingScreens from './Settings'
 import MessagePage from '~/pages/requestJob/news/MessagePage'
-import RouterStacks from '~/navigator/requestJob/stack'
+import RouterStacks from '~/utils/StackProps'
 
 const screens: Record<string, ComponentType<any>> = {
   ...RouterStacks.stacks,

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, StatusBar } from 'react-native'
 import styles from './styles/UserInfo.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import GradientButton from '../../components/GradientButton'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import { connect } from 'react-redux'
@@ -74,6 +74,12 @@ class UserInfo extends Component<IProps, IState> {
     this.state = { userInfo: null }
   }
 
+  componentDidAppear({ isSecondAppear }) {
+  	if (isSecondAppear) {
+  		// this._reloadItemList()
+  	}
+  }
+
   componentDidMount() {
   	this._reloadItemList()
   }
@@ -127,22 +133,25 @@ class UserInfo extends Component<IProps, IState> {
     return (
       <View style={styles.iconView}>
         <Text style={styles.iconText}>头像</Text>
-        <NextTouchableOpacity
+        <NextPressable
           onPress={() => {
-            navigation.push('AvatarViewer', { avatar: logo, targetRouteName: 'UserInfo' })
+            navigation.push('AvatarViewer', { uri: logo, callback: (navigation, logo) => {
+            	navigation.navigate('UserInfo')
+            	this.setState({ logo })
+            } })
           }}>
           <CacheImage
-            source={logo ? { uri: logo } : require('../../../assets/requestJobs/icon-example.png')}
+            source={global.AVATAR_IMAGE(logo)}
             style={styles.iconStyle}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }
 
   renderCell(title: string, detail: string, arrow: boolean, onPress?: () => void) {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.cell}
         onPress={() => {
           if (onPress) {
@@ -160,7 +169,7 @@ class UserInfo extends Component<IProps, IState> {
             />
           )}
         </View>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -170,7 +179,7 @@ class UserInfo extends Component<IProps, IState> {
       <View style={styles.genderView}>
         <Text style={styles.genderText}>性别</Text>
         <View style={styles.genderDetail}>
-          <NextTouchableOpacity
+          <NextPressable
             onPress={() => {
               this.setState({ selectGender: true })
             }}
@@ -188,8 +197,8 @@ class UserInfo extends Component<IProps, IState> {
               color: '#7AD398'
             }
             ]}>男</Text>
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
+          </NextPressable>
+          <NextPressable
             onPress={() => {
               this.setState({ selectGender: false })
             }}
@@ -207,7 +216,7 @@ class UserInfo extends Component<IProps, IState> {
               color: '#7AD398'
             }
             ]}>女</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
       </View>
     )
@@ -297,7 +306,7 @@ class UserInfo extends Component<IProps, IState> {
               mode: 1,
               selectJobCityCallback: (value) => {
                 console.log('value: ', value)
-                const showValue = value[2].name
+                const showValue = value[1].name
                 this.setState({
                   // 设置城市
                   current_city: showValue
@@ -307,13 +316,9 @@ class UserInfo extends Component<IProps, IState> {
             })
           })}
           {this.renderCell('手机号码', phoneNumber, true, () => {
-            navigation.push('UserInfoEdit', {
-              title: '手机号码', 
-              value: phoneNumber,
-              inputCallback: (value) => {
-                this.setState({ phoneNumber: value })
-              }
-            })
+          	navigation.push('EditHrPhoneNumber', { phoneNumber, callback: (_navigation, phoneNumber) => {
+          		this.setState({ phoneNumber })
+          	} })
           })}
           {this.renderCell('您的学历', selectEducation(education), true, () => {
             this.setState({ genderActionVisible: true })
@@ -339,11 +344,12 @@ class UserInfo extends Component<IProps, IState> {
         />
         <DatePickerModal
           visible={datePickVisible}
-          currentDate={new Date(Date.parse(localDateOfBirth))}
+          currentDate={localDateOfBirth}
           leftPress={() => {
             this.setState({ datePickVisible: false })
           }}
           rightPress={(newDate) => {
+          	console.log(newDate, newDate.toISOString().split('T')[0])
             this.setState({
               // localDateOfBirth: `${newDate.getFullYear()}-${newDate.getMonth()}-${newDate.getDay()}`,
               localDateOfBirth: newDate.toISOString().split('T')[0],
@@ -353,7 +359,7 @@ class UserInfo extends Component<IProps, IState> {
         />
         <DatePickerModal
           visible={first_time_working_pick}
-          currentDate={new Date(Date.parse(first_time_working))}
+          currentDate={first_time_working}
           leftPress={() => {
             this.setState({ first_time_working_pick: false })
           }}

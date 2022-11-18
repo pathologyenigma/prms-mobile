@@ -25,14 +25,14 @@ export default function Avatar({
 
   return (
     <View style={style}>
-      <Image
+      <CacheImage
         style={{
           width: width,
           height: width,
           borderRadius: Number(width) / 2,
           overflow: 'hidden',
         }}
-        source={uri ? { uri } : require('../../../assets/avatar_default.png')}
+        source={global.AVATAR_IMAGE(uri)}
         resizeMode="cover"
       />
       <Image

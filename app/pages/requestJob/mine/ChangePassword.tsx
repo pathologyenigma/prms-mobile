@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import styles from './styles/ChangePassword.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { Text, View, StatusBar, TextInput } from 'react-native'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { ScrollView } from 'react-native-gesture-handler'
 
 type IProps = GenProps<'ChangePassword'> & {
@@ -126,7 +126,7 @@ export default class ChangePassword extends Component<IProps, IState> {
     const { navigation } = this.props
     const btnAbled = oldPassword && newPassword && confirmPassword
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={[styles.submitBtn, !btnAbled && { opacity: 0.6, }]}
         disabled={!btnAbled}
         onPress={() => {
@@ -136,7 +136,7 @@ export default class ChangePassword extends Component<IProps, IState> {
         <Text style={styles.selectText}>
           完成
         </Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

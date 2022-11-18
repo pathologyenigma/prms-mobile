@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { View, Text, Image, TouchableOpacity, FlatList, DeviceEventEmitter, Animated, ScrollView } from 'react-native'
+import { View, Text, Image, Pressable, FlatList, DeviceEventEmitter, ScrollView } from 'react-native'
 import HTMaskView from '~/common/mask/HTMaskView'
+import Animated, { Easing } from 'react-native-reanimated'
 
 export default class HTCompanyProjectFilterModal extends Component {
 
@@ -105,15 +106,17 @@ class HTCompanyProjectFilterContent extends Component {
 						<View key={index} style={styleList.sectionContainer}>
 							<View style={styleList.sectionHeaderContainer}>
 								<Text style={styleList.sectionHeaderTitle}>{section.title}</Text>
-								<Text style={styleList.sectionHeaderDetail}>全部</Text>
+								<Pressable onPress={global.TODO_TOAST}>
+									<Text style={styleList.sectionHeaderDetail}>全部</Text>
+								</Pressable>
 							</View>
 							<View style={styleList.itemListContaineer}>
 							{
 								new Array(9).fill(0).map((item, index) => {
 									return (
-										<View key={index} style={styleList.itemContainer}>
+										<Pressable key={index} style={styleList.itemContainer} onPress={global.TODO_TOAST}>
 											<Text style={styleList.itemTitle}>全部</Text>
-										</View>
+										</Pressable>
 									)
 								})
 							}
@@ -140,12 +143,13 @@ const styleList = StyleSheet.create({
 	content: {
 		width: '100%',
 		height: '100%',
+		paddingTop: STATUS_BAR_HEIGHT + 20,
 		backgroundColor: 'white',
 		borderTopLeftRadius: 10,
 		borderBottomLeftRadius: 10,
 	},
 	sectionContainer: {
-		paddingTop: STATUS_BAR_HEIGHT,
+		paddingTop: 20,
 		paddingBottom: HOME_BAR_HEIGHT,
 		paddingHorizontal: 15,
 	},
@@ -156,12 +160,12 @@ const styleList = StyleSheet.create({
 	},
 	sectionHeaderTitle: {
 		flex: 1,
-		fontSize: 13,
+		fontSize: 14,
 		color: '#333',
 		fontWeight: 'bold'
 	},
 	sectionHeaderDetail: {
-		fontSize: 13,
+		fontSize: 14,
 		color: '#333'
 	},
 	itemListContaineer: {
@@ -172,12 +176,12 @@ const styleList = StyleSheet.create({
 		marginRight: 10,
 		marginBottom: 10,
 		paddingHorizontal: 20,
-		paddingVertical: 2,
+		paddingVertical: 8,
 		borderRadius: 3,
 		backgroundColor: '#54D693'
 	},
 	itemTitle: {
-		fontSize: 13,
-		color: 'white'
+		fontSize: 14,
+		color: 'white',
 	},
 })

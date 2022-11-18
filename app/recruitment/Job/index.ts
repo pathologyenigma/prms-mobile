@@ -24,7 +24,7 @@ const screens = {
   RechargeExplain,
   RechargeFeekback,
   JobAdmin,
-  JobDetail,
+  EmployerJobDetail: JobDetail,
   RecruitCoordination,
 }
 

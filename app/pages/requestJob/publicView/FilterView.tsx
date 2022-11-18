@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList } from 'react-native'
 import styles from './styles/FilterView.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
@@ -56,7 +56,7 @@ export default class FilterView extends Component<IProps, IState> {
       { id: 5, label: '15-20k', value: [15000, 20000] },
       { id: 6, label: '20-25k', value: [20000, 25000] },
       { id: 7, label: '25-30k', value: [25000, 30000] },
-      { id: 8, label: '30k以上', value: [30000] }
+      { id: 8, label: '30k以上', value: [30000, 0] }
     ]
     const experienceDataSource = [
       { id: 0, label: '在校/应届', value: 0 },
@@ -82,12 +82,13 @@ export default class FilterView extends Component<IProps, IState> {
       { id: 5, label: '2000人以上', value: 'MoreThanTwoThousands' },
     ]
     const companyFinancingDataSource = [
-      { id: 0, label: '未融资', value: 'NotYet' },
-      { id: 1, label: '天使轮', value: 'AngelFinancing' },
-      { id: 2, label: 'A轮', value: 'A' },
-      { id: 3, label: 'B轮', value: 'B' },
-      { id: 4, label: 'C轮', value: 'C' },
-      { id: 5, label: 'D轮以上', value: 'D' },
+      { id: 0, label: '未融资', value: null },
+      { id: 1, label: '不需要融资', value: 'NoNeed' },
+      { id: 2, label: '天使轮', value: 'AngelFinancing' },
+      { id: 3, label: 'A轮', value: 'A' },
+      { id: 4, label: 'B轮', value: 'B' },
+      { id: 5, label: 'C轮', value: 'C' },
+      { id: 6, label: 'D轮以上', value: 'D' },
     ]
     const companyIndustryDataSource = [
       { id: 0, label: '不限' },
@@ -152,11 +153,14 @@ export default class FilterView extends Component<IProps, IState> {
         ]
         break;
     }
-    setTimeout(() => {
-      this.setState({
-        dataSource: localDataSource,
-      })
-    }, 300);
+    let selectFilter = {}
+    localDataSource.map(section => {
+    	selectFilter[section.key] = undefined
+    })
+    this.setState({
+    	dataSource: localDataSource,
+    	selectFilter
+  	})
   }
 
   renderNavBar() {
@@ -186,7 +190,7 @@ export default class FilterView extends Component<IProps, IState> {
     const sectionKey = section.key
     const selectItem = selectFilter && selectFilter[sectionKey] == item
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={[styles.jobSalaryBtn,
         selectItem && { backgroundColor: '#E2FFF0', }
         ]}
@@ -200,7 +204,7 @@ export default class FilterView extends Component<IProps, IState> {
         selectItem && { backgroundColor: '#E2FFF0', } && { color: greenColor, fontWeight: 'bold' }]}>
           {item.label}
         </Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -223,6 +227,7 @@ export default class FilterView extends Component<IProps, IState> {
         sections={dataSource}
         renderSectionHeader={({ section }) => this.renderSectionHeader(section)}
         renderItem={({ item, section }: any) => this.renderItem(item, section)}
+        stickySectionHeadersEnabled={false}
         keyExtractor={item => item.id.toString()}
       />
     )
@@ -233,14 +238,14 @@ export default class FilterView extends Component<IProps, IState> {
     const { navigation, route: { params: { filterResultCallback } } } = this.props
     return (
       <View style={styles.footerView}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.resetBtn}
           onPress={() => {
             this.setState({ selectFilter: {} })
           }}
         >
           <Text style={styles.resetText}>重置</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
         <GradientButton
           disabled={Object.values(selectFilter).length === 0}
           containerStyle={styles.confirmBtn}

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, } from 'react-native'
 import styles from './styles/PrivacySetting.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 
 type IProps = GenProps<'PrivacySetting'> & {
 
@@ -54,7 +54,7 @@ export default class PrivacySetting extends Component<IProps, IState> {
   renderName() {
     const { showName } = this.state
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.name}
         onPress={() => {
           const { navigation } = this.props
@@ -67,13 +67,13 @@ export default class PrivacySetting extends Component<IProps, IState> {
           style={styles.nextIcon}
           source={require('../../../assets/requestJobs/next-gray.png')}
         />
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
   renderHomeLocation() {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.name}
         onPress={() => {
           const { navigation } = this.props
@@ -85,13 +85,13 @@ export default class PrivacySetting extends Component<IProps, IState> {
           style={styles.nextIcon}
           source={require('../../../assets/requestJobs/next-gray.png')}
         />
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
   renderBanCompany() {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.companyConatinerView}
         onPress={() => {
           const { navigation } = this.props
@@ -106,7 +106,7 @@ export default class PrivacySetting extends Component<IProps, IState> {
           />
         </View>
         <Text style={styles.companyDetail}>屏蔽生效后，被屏蔽企业将无法查看你的简历</Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

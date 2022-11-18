@@ -34,8 +34,13 @@ export default class HTAuthManager {
 			DeviceEventEmitter.emit(this.kHTUserTokenDidChangeNotice)
 		}
 		if (lastValueList.userRole != reloadValueList.userRole) {
-			DeviceEventEmitter.emit(this.kHTUserRoleDidChangeNotice)
+			this.sendUserRoleDidChangeNotice()
+			global.reloadRootViewController()
 		}
+	}
+
+	static sendUserRoleDidChangeNotice = () => {
+		DeviceEventEmitter.emit(this.kHTUserRoleDidChangeNotice)
 	}
 
 	static syncReadKeyValueList = () => {

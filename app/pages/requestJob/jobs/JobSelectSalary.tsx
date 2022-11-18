@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter } from 'react-native'
 import styles from './styles/JobSelectSalary.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import SearchTextinput from '../../components/SearchTextinput'
 // @ts-ignore
@@ -81,7 +81,7 @@ export default class JobSelectSalary extends Component<IProps, IState> {
   renderItem(item: any) {
     const { selectItem, dataSource } = this.state
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={[styles.jobSalaryBtn,
         selectItem && selectItem.id === item.id && { backgroundColor: '#E2FFF0', }
         ]}
@@ -93,7 +93,7 @@ export default class JobSelectSalary extends Component<IProps, IState> {
         selectItem && selectItem.id === item.id && { backgroundColor: '#E2FFF0', } && { color: greenColor, fontWeight: 'bold' }]}>
           {item.label}
         </Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -121,14 +121,14 @@ export default class JobSelectSalary extends Component<IProps, IState> {
     const { navigation, route: { params: { selectJobSalaryCallback } } } = this.props
     return (
       <View style={styles.footerView}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.resetBtn}
           onPress={() => {
             this.setState({ selectItem: undefined })
           }}
         >
           <Text style={styles.resetText}>重置</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
         <GradientButton
           disabled={!selectItem}
           containerStyle={styles.confirmBtn}

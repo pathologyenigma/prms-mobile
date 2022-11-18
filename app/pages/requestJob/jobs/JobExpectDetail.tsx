@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter } from 'react-native'
 import styles from './styles/JobExpectDetail.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import AlertContentModal from '../../components/AlertContentModal'
 import WhiteContentModal from '../../components/WhiteContentModal'
 import GradientButton from '../../components/GradientButton'
@@ -14,6 +14,7 @@ import { greenColor } from '../../../utils/constant'
 import { reformComFinancing, reformCompanySize, reformEducation, reformSalary, reformFullTime } from '~/utils/utils'
 import { stringForFullTime } from '~/recruitment/utils/JobHelper.ts'
 import Picker from '~/recruitment/components/Picker/index.tsx'
+import HTAuthManager from '~/common/auth/common/model/HTAuthManager'
 
 type IProps = GenProps<'JobExpectDetail'>
 
@@ -64,6 +65,9 @@ class JobExpectDetail extends Component<IProps, IState> {
   }
 
   _saveJobExpectation = () => {
+  	if (!this.state.job_category || !this.state.industry_involved || !this.state.aimed_city || !this.state.full_time_job || !this.state.min_salary_expectation || !this.state.max_salary_expectation) {
+  		return
+  	}
   	HTAPI.CandidateEditJobExpectations({
   		info: {
   			id: this.state.id,
@@ -76,6 +80,8 @@ class JobExpectDetail extends Component<IProps, IState> {
   		}
   	}).then(response => {
   		Toast.show('保存成功')
+  		const complete = this.props.navigation.getParam('complete')
+  		complete && complete()
   		this.props.navigation.goBack()
   	})
   }
@@ -84,7 +90,7 @@ class JobExpectDetail extends Component<IProps, IState> {
     const { job_category } = this.state
     return (
       <View style={styles.cellView}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.cellTextView}
           onPress={() => {
             const { navigation } = this.props
@@ -102,7 +108,7 @@ class JobExpectDetail extends Component<IProps, IState> {
             style={styles.nextImage}
             source={require('../../../assets/requestJobs/next-gray.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
         <Text style={styles.cellViewDetail}>{job_category ? job_category[job_category.length - 1] : ' 如: 销售经理'}</Text>
       </View>
     )
@@ -113,7 +119,7 @@ class JobExpectDetail extends Component<IProps, IState> {
     let selectJobIndustryText = industry_involved.join('、')
     return (
       <View style={styles.cellView}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.cellTextView}
           onPress={() => {
             const { navigation } = this.props
@@ -132,7 +138,7 @@ class JobExpectDetail extends Component<IProps, IState> {
             style={styles.nextImage}
             source={require('../../../assets/requestJobs/next-gray.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
         <Text style={styles.cellViewDetail}>{selectJobIndustryText || '如: 互联网'}</Text>
       </View>
     )
@@ -142,7 +148,7 @@ class JobExpectDetail extends Component<IProps, IState> {
     const { aimed_city } = this.state
     return (
       <View style={styles.cellView}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.cellTextView}
           onPress={() => {
             const { navigation } = this.props
@@ -150,7 +156,7 @@ class JobExpectDetail extends Component<IProps, IState> {
               mode: 1,
               selectJobCityCallback: (e: any) => {
                 console.log('eeeee: ', e)
-                this.setState({ aimed_city: e[2].name })
+                this.setState({ aimed_city: e[1].name })
               }
             })
           }}
@@ -162,7 +168,7 @@ class JobExpectDetail extends Component<IProps, IState> {
             style={styles.nextImage}
             source={require('../../../assets/requestJobs/next-gray.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
         <Text style={styles.cellViewDetail}>{aimed_city || '如: 北京'}</Text>
       </View>
     )
@@ -173,7 +179,7 @@ class JobExpectDetail extends Component<IProps, IState> {
     const { min_salary_expectation, max_salary_expectation } = this.state
     return (
       <View style={styles.cellView}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.cellTextView}
           onPress={() => {
           	this.setState({ selectJobSalaryVisible: true })
@@ -193,7 +199,7 @@ class JobExpectDetail extends Component<IProps, IState> {
             style={styles.nextImage}
             source={require('../../../assets/requestJobs/next-gray.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
         <Text style={styles.cellViewDetail}>{min_salary_expectation && max_salary_expectation ? `${reformSalary(parseInt(min_salary_expectation))}-${reformSalary(parseInt(max_salary_expectation))}` : '如:  15K-20K'}</Text>
       </View>
     )
@@ -203,7 +209,7 @@ class JobExpectDetail extends Component<IProps, IState> {
     const { full_time_job } = this.state
     return (
       <View style={styles.cellView}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.cellTextView}
           onPress={() => {
             this.setState({ selectJobNatureVisible: true })
@@ -216,7 +222,7 @@ class JobExpectDetail extends Component<IProps, IState> {
             style={styles.nextImage}
             source={require('../../../assets/requestJobs/next-gray.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
         <Text style={styles.cellViewDetail}>{full_time_job ? stringForFullTime(full_time_job) : '全职、兼职、实习'}</Text>
       </View>
     )
@@ -226,9 +232,11 @@ class JobExpectDetail extends Component<IProps, IState> {
   	let salaryList = new Array(100000 / 1000).fill(0).map((_, index) => `${(index + 1) * 1000}`)
   	let minSalaryList = salaryList.filter(item => parseInt(item) <= parseInt(this.state.max_salary_expectation))
   	let maxSalaryList = salaryList.filter(item => parseInt(item) >= parseInt(this.state.min_salary_expectation))
+  	minSalaryList = salaryList
+  	maxSalaryList = salaryList
   	return (
       <View style={styles.modalContentView}>
-      	<NextTouchableOpacity
+      	<NextPressable
           style={styles.leftBtn}
           onPress={() => {
             this.setState({ selectJobSalaryVisible: false })
@@ -237,9 +245,9 @@ class JobExpectDetail extends Component<IProps, IState> {
           <Text style={[styles.rightText]}>
             取消
           </Text>
-        </NextTouchableOpacity>
+        </NextPressable>
         <Text style={styles.jobNatureTitle}>期望薪资</Text>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.rightBtn}
           onPress={() => {
             this.setState({ selectJobSalaryVisible: false })
@@ -248,7 +256,7 @@ class JobExpectDetail extends Component<IProps, IState> {
           <Text style={[styles.rightText]}>
             确定
           </Text>
-        </NextTouchableOpacity>
+        </NextPressable>
         <View style={styles.jobSalaryView}>
           <Picker
               roundRectType="left"
@@ -288,7 +296,7 @@ class JobExpectDetail extends Component<IProps, IState> {
     return (
       <View style={styles.modalContentView}>
         <Text style={styles.jobNatureTitle}>工作性质</Text>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.rightBtn}
           disabled={!full_time_job}
           onPress={() => {
@@ -298,13 +306,14 @@ class JobExpectDetail extends Component<IProps, IState> {
           <Text style={[styles.rightText, !full_time_job && { color: '#666' }]}>
             确定
           </Text>
-        </NextTouchableOpacity>
+        </NextPressable>
         <View style={styles.jobNatureView}>
           {
-          	itemList.map(item => {
+          	itemList.map((item, index) => {
           		let selected = item.value == full_time_job
           		return (
-          			<NextTouchableOpacity
+          			<NextPressable
+          				key={index}
 			            style={[styles.jobNatureBtn,
 			            selected && { backgroundColor: '#E2FFF0', }
 			            ]}
@@ -316,7 +325,7 @@ class JobExpectDetail extends Component<IProps, IState> {
 			            selected && { color: greenColor, fontWeight: 'bold' }]}>
 			              { item.title }
 			            </Text>
-			          </NextTouchableOpacity>
+			          </NextPressable>
           		)
           	})
           }

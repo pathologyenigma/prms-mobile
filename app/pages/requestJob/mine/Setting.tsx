@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import styles from './styles/Setting.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { Text, View, Image, StatusBar, DeviceEventEmitter, Pressable } from 'react-native'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { ActivityIndicator } from '@ant-design/react-native'
 import AlertContentModal from '../../components/AlertContentModal'
 import { CommonActions } from '@react-navigation/native'
@@ -93,7 +93,7 @@ export default class Setting extends Component<IProps, IState> {
 
   renderCell(title: string, onpress: () => void) {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.cellView}
         onPress={() => {
           if (onpress) {
@@ -105,7 +105,7 @@ export default class Setting extends Component<IProps, IState> {
           style={styles.nextIcon}
           source={require('../../../assets/requestJobs/next-gray.png')}
         />
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -118,15 +118,17 @@ export default class Setting extends Component<IProps, IState> {
           navigation.push('AccountSetting')
         })}
         {this.renderCell('消息通知', () => {
-          navigation.push('NotificationSetting')
+          global.TODO_TOAST()
+          {/*navigation.push('NotificationSetting')*/}
         })}
-        {/* {this.renderCell('招呼语设置', () => {
-          navigation.push('GreetSetting')
-        })} */}
+        {this.renderCell('招呼语设置', () => {
+        	global.TODO_TOAST()
+          {/*navigation.push('GreetSetting')*/}
+        })}
         {this.renderCell('权限设置', () => {
           navigation.push('AuthoritySetting')
         })}
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.cellView}
           onPress={() => {
             if (!cacheSize) {
@@ -145,7 +147,7 @@ export default class Setting extends Component<IProps, IState> {
             style={styles.nextIcon}
             source={require('../../../assets/requestJobs/next-gray.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }
@@ -156,13 +158,13 @@ export default class Setting extends Component<IProps, IState> {
 
   renderBtn() {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.logoOutBtn}
         onPress={() => {
           this.setState({ logoutVisible: true })
         }}>
         <Text style={styles.logoOutText}>退出登录</Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

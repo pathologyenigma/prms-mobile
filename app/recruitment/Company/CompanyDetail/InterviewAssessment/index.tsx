@@ -21,7 +21,7 @@ export default function InterviewAssessment({}: InterviewAssessmentProps) {
       <View style={styles.header}>
         <Image
           style={styles.avatar}
-          source={require('../../../assets/avatar_default.png')}
+          source={global.AVATAR_IMAGE()}
         />
         <View style={{ justifyContent: 'space-between', flex: 1 }}>
           <View style={styles.nameRow}>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList } from 'react-native'
 import styles from './styles/Delivery.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
@@ -9,7 +9,7 @@ import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import GradientButton from '../../components/GradientButton'
 import ListEmptyComponent from '../../components/ListEmptyComponent'
 import { format } from 'date-fns'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import JobCell from '../../components/JobCell'
 
 type IProps = GenProps<'Delivery'> & {

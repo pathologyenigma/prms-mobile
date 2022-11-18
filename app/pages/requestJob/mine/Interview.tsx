@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList } from 'react-native'
 import styles from './styles/Interview.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
@@ -9,7 +9,7 @@ import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import GradientButton from '../../components/GradientButton'
 import ListEmptyComponent from '../../components/ListEmptyComponent'
 import { format } from 'date-fns'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { BoxShadow } from 'react-native-shadow'
 import SystemHelper from '../../../utils/system'
 import { reformSalary } from '../../../utils/utils'
@@ -213,7 +213,7 @@ export default class Interview extends Component<IProps, IState> {
       y: 5,
     }
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.cellStyle}
         onPress={() => {
           navigation.push('InterviewDetail')
@@ -240,16 +240,16 @@ export default class Interview extends Component<IProps, IState> {
               </View>
               <View style={styles.interviewerInfo}>
                 <Text style={styles.interviewer}>{item.interviewer}</Text>
-                <NextTouchableOpacity>
+                <NextPressable>
                   <Image
                     style={styles.messageIcon}
                     source={require('../../../assets/requestJobs/message-blue.png')} />
-                </NextTouchableOpacity>
+                </NextPressable>
               </View>
             </View>
           </BoxShadow>
         </View>
-      </NextTouchableOpacity >
+      </NextPressable >
     )
   }
 

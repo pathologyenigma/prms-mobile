@@ -4,14 +4,14 @@ import StorageManager from '~/common/storage/StorageManager'
 
 const SERVER_LIST = [
 	{ base: 'http://be.chenzaozhao.com:4000', detail: 'ws://be.chenzaozhao.com:4000/ws', wap: '', selected: true },
-	{ base: 'https://be.chenzaozhao.com', detail: 'wss://be.chenzaozhao.com/ws', wap: '' },
+	{ base: 'https://be.chenzaozhao.com', detail: 'wss://be.chenzaozhao.com/ws', wap: '', },
 ]
 
-const kHTServerStorageKey = 'kHTServerStorageKey'
+const kHTServerStorageKey = 'kHTServerStorageKey1'
 
 export default class HTServerManager {
 
-	static kHTServerDidChangeKey = 'kHTServerDidChangeKey'
+	static kHTServerDidChangeKey = 'kHTServerDidChangeKey2'
 
 	static currentServer = null
 

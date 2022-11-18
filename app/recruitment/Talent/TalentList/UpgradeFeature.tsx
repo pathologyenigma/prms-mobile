@@ -16,6 +16,7 @@ export default function UpgradeFeature() {
         linearGradientStyle={styles.buttonLinearGradient}
         colors={['#FFEFC0', '#FFD56F']}
         title="升级"
+        onPress={global.TODO_TOAST}
       />
     </View>
   )

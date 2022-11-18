@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 import React, { PureComponent } from 'react'
 import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 'react-native'
 import { reformEducation, reformSalary } from '../../../../utils/utils'
-import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
+import NextPressable from '../../../components/NextPressable'
 import styles from './styles'
 
 interface ICell {
@@ -20,7 +20,7 @@ export default class CompanyJobCell extends PureComponent<ICell> {
       return null
     }
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={[styles.cellView, cellStyle]}
         onPress={() => {
           if (onPress) {
@@ -37,9 +37,13 @@ export default class CompanyJobCell extends PureComponent<ICell> {
           </Text>
         </View>
         <View style={styles.cellJobView}>
-          <Text style={styles.cellExperience}>
-            {cellItem.loc || cellItem.location}
-          </Text>
+        	{
+        		cellItem.loc || cellItem.location && (
+        			<Text style={styles.cellExperience}>
+		            {cellItem.loc || cellItem.location}
+		          </Text>
+        		)
+        	}
           <Text style={styles.cellExperience}>
             {`${cellItem.experience}年及以上`}
           </Text>
@@ -53,14 +57,14 @@ export default class CompanyJobCell extends PureComponent<ICell> {
           ) : cellItem.publishTime}`}
         </Text>
         {onDeliveryPress && (
-          <NextTouchableOpacity
+          <NextPressable
             style={[styles.onDelivery, onDeliveryStyle]}
             onPress={() => {
               onDeliveryPress()
             }}
           >
-            <Text style={styles.onDeliveryText}>投递</Text>
-          </NextTouchableOpacity>
+            <Text style={styles.onDeliveryText}>详情</Text>
+          </NextPressable>
         )
         }
         {/* <View style={styles.interviewerView}>
@@ -69,7 +73,7 @@ export default class CompanyJobCell extends PureComponent<ICell> {
             {cellItem.interviewer}
           </Text>
         </View> */}
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 }

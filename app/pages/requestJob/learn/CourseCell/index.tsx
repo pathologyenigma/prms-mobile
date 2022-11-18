@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 'react-native'
 import { greenColor } from '../../../../utils/constant'
 import GradientButton from '../../../components/GradientButton'
-import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
+import NextPressable from '../../../components/NextPressable'
 import styles from './styles'
 
 interface ICell {
@@ -125,7 +125,7 @@ export default class CourseCell extends PureComponent<ICell> {
   render() {
     const { onPress, cellItem, index } = this.props
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.cell}
         onPress={() => {
           if (onPress) {
@@ -136,7 +136,7 @@ export default class CourseCell extends PureComponent<ICell> {
         {this.renderIcon(cellItem, index)}
         {this.renderDetail()}
         {this.renderRightView(index)}
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 }

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, Image, ScrollView, Pressable, StyleSheet } from 'react-native'
 import HTNavigationBar from '~/common/navigation/HTNavigationBar'
 import HTBannerView from '~/common/view/HTBannerView'
 import HTPageControl from '~/common/view/HTPageControl'
@@ -16,7 +16,9 @@ export default class HTCompanyPage extends Component {
 			{ title: 'B轮' },
 			{ title: 'C轮' },
 			{ title: 'D轮' },
-		])
+		], (pageIndex) => {
+			this.pageManager.data[pageIndex]?.ref?._onRefresh()
+		})
 	}
 
 	_renderBannerList = () => {
@@ -70,10 +72,10 @@ export default class HTCompanyPage extends Component {
 			{
 				circleList.map((item, index) => {
 					return (
-						<TouchableOpacity key={index} style={styleList.circleItemContainer} onPress={item.onPress}>
+						<Pressable key={index} style={styleList.circleItemContainer} onPress={item.onPress}>
 							<Image style={styleList.circleItemImage} source={item.image} />
 							<Text style={styleList.circleItemTitle}>{item.title}</Text>
-						</TouchableOpacity>
+						</Pressable>
 					)
 				})
 			}
@@ -104,7 +106,7 @@ export default class HTCompanyPage extends Component {
 				initScrollIndex={ 0 }
 				renderItem={({item, index}) => {
 					return (
-						<HTCompanyContentPage navigation={this.props.navigation} />
+						<HTCompanyContentPage ref={ref => item.ref = ref} navigation={this.props.navigation} />
 					)
 				}} 
 			/>
@@ -117,7 +119,7 @@ export default class HTCompanyPage extends Component {
 			<HTNavigationBar 
 				title={'创业'}
 			/>
-			<ScrollView style={CONTAINER} stickyHeaderIndices={[2]}>
+			<ScrollView style={CONTAINER} stickyHeaderIndices={[2]} onRefresh={() => this.forceUpdate()}>
 			{
 				this._renderBannerList()
 			}
@@ -140,6 +142,7 @@ export default class HTCompanyPage extends Component {
 const styleList = StyleSheet.create({
 	container: {
 		flex: 1,
+		paddingBottom: global.TAB_BAR_HEIGHT,
 		backgroundColor: 'white'
 	},
 	bannerBoxContainer: {
@@ -155,7 +158,7 @@ const styleList = StyleSheet.create({
 		height: 150,
 	},
 	bannerItemContainer: {
-		backgroundColor: '#54D693',
+		// backgroundColor: '#54D693',
 		height: '100%',
 		justifyContent: 'center',
 		alignItems: 'center',

@@ -1,31 +1,35 @@
 import React from 'react'
-import { StyleSheet, Text, View, Image } from 'react-native'
+import { StyleSheet, Text, View, Image, Pressable } from 'react-native'
 import { CompanyItem } from '../useJobDetail'
+import HTMapImageView from '~/common/view/HTMapImageView'
 
 interface CompanyInfoProps {
   company: CompanyItem
 }
 
 export default function CompanyInfo({
-  company: { logo, name, labels, address, coordinate },
+  navigation,
+  company: { id, logo, name, labels, address, coordinate },
 }: CompanyInfoProps) {
   const key = 'dd24ba9afebd6c9c303a2e79c0c3d7f2'
-  const { latitude, longitude } = coordinate
+  const [longitude, latitude] = coordinate
   const label = `公园,0,1,12,0x333333,0xFFFFFF:${longitude},${latitude}`
   const mapUri = `https://restapi.amap.com/v3/staticmap?location=${longitude},${latitude}&zoom=16&size=720*360&markers=mid,,A:${longitude},${latitude}&key=${key}`
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>公司信息</Text>
-      <View style={styles.meta}>
-        <Image
-          source={logo ? { uri: logo } : require('./company_default.png')}
+      <Pressable style={styles.meta} onPress={() => {
+      	// navigation.push('CompanyDetail', { id: id })
+      }}>
+        <CacheImage
+          source={global.AVATAR_IMAGE(logo, require('./company_default.png'))}
           style={styles.logo}
         />
         <Text style={styles.name}>{name}</Text>
         <Image style={styles.authn} source={require('./authn.png')} />
-        <Image style={styles.indicator} source={require('./indicator.png')} />
-      </View>
+        {/*<Image style={styles.indicator} source={require('./indicator.png')} />*/}
+      </Pressable>
       <View style={styles.labels}>
         {labels.map(label => (
           <Text key={label} style={styles.label}>
@@ -34,12 +38,7 @@ export default function CompanyInfo({
         ))}
       </View>
       <View style={styles.map}>
-        <Image
-          source={{
-            uri: mapUri,
-          }}
-          style={{ flex: 1 }}
-        />
+      	<HTMapImageView style={CONTAINER} coordinate={coordinate} />
       </View>
     </View>
   )

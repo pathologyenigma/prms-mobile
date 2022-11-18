@@ -45,14 +45,6 @@ global.SEPARATOR_HEIGHT = 1 / PixelRatio.get()
 
 
 import HTNavigationBar from '~/common/navigation/HTNavigationBar'
-HTNavigationBar.defaultProps = {
-	titleStyle: {
-		fontSize: 18,
-		fontWeight: 'bold',
-		color: '#333333'
-	},
-	backgroundColor: 'white'
-}
 
 global.STATUS_BAR_HEIGHT = HTNavigationBar.STATUS_BAR_HEIGHT
 global.HOME_BAR_HEIGHT = HTNavigationBar.HOME_BAR_HEIGHT
@@ -66,7 +58,12 @@ import FastImage from 'react-native-fast-image'
 global.CacheImage = Platform.OS == 'ios' ? FastImage : Image
 
 
+/*
+	Route
+*/
 
+import { HTRouteView } from 'react-native-route'
+global.HTRouteView = HTRouteView
 
 
 /*
@@ -77,5 +74,27 @@ import HTAPI from '~/common/request/HTAPI'
 global.HTAPI = HTAPI
 
 
+/*
+	业务
+*/
+
+import HTEmptyView from '~/common/view/HTEmptyView'
+
+global.BIND_EMPTY_VIEW = () => {
+	return {
+		ListEmptyComponent: <HTEmptyView />
+	}
+}
+
+global.TODO_TOAST = () => {
+	global.Toast.show('正在开发中敬请期待...')
+}
+
+global.AVATAR_IMAGE = (uri, placeholder) => {
+	if ((uri?.length ?? 0) > 0 && uri != 'default_hr_logo') {
+		return { uri }
+	}
+	return placeholder ?? require('~/assets/requestJobs/mine_avatar.png')
+}
 
 

@@ -15,14 +15,11 @@
 		6365532FFCB362523D8E9821 /* libPods-czzapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 394229B277C888E5021DE7A9 /* libPods-czzapp.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		84926B14269DCE85003CBC47 /* SystemModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 84926B12269DCE85003CBC47 /* SystemModule.m */; };
-		912A457227677E91005E79FA /* SplashModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 912A457127677E91005E79FA /* SplashModule.m */; };
-		912A457527678123005E79FA /* SplashWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 912A457427678123005E79FA /* SplashWindow.m */; };
 		912A457827679BE6005E79FA /* void.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912A457727679BE6005E79FA /* void.swift */; };
+		C241E651282BC86F00EA7330 /* MainReactModule.m in Sources */ = {isa = PBXBuildFile; fileRef = C241E650282BC86F00EA7330 /* MainReactModule.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* czzappTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = czzappTests.m; sourceTree = "<group>"; };
 		11B3D2C84A7C4B378054463B /* antoutline.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = antoutline.ttf; path = "../node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* czzapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = czzapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = czzapp/AppDelegate.h; sourceTree = "<group>"; };
@@ -38,12 +35,10 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = czzapp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		84926B12269DCE85003CBC47 /* SystemModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SystemModule.m; sourceTree = "<group>"; };
 		84926B13269DCE85003CBC47 /* SystemModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemModule.h; sourceTree = "<group>"; };
-		912A457027677E91005E79FA /* SplashModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SplashModule.h; sourceTree = "<group>"; };
-		912A457127677E91005E79FA /* SplashModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SplashModule.m; sourceTree = "<group>"; };
-		912A457327678123005E79FA /* SplashWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SplashWindow.h; sourceTree = "<group>"; };
-		912A457427678123005E79FA /* SplashWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SplashWindow.m; sourceTree = "<group>"; };
 		912A457627679BE5005E79FA /* czzapp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "czzapp-Bridging-Header.h"; sourceTree = "<group>"; };
 		912A457727679BE6005E79FA /* void.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = void.swift; sourceTree = "<group>"; };
+		C241E64F282BC86F00EA7330 /* MainReactModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainReactModule.h; path = czzapp/MainReactModule.h; sourceTree = "<group>"; };
+		C241E650282BC86F00EA7330 /* MainReactModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainReactModule.m; path = czzapp/MainReactModule.m; sourceTree = "<group>"; };
 		C5644585ACE6D93F3D737EAA /* Pods-czzapp-czzappTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-czzapp-czzappTests.debug.xcconfig"; path = "Target Support Files/Pods-czzapp-czzappTests/Pods-czzapp-czzappTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E3B5C1987CA36F2B54C7A6B6 /* Pods-czzapp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-czzapp.debug.xcconfig"; path = "Target Support Files/Pods-czzapp/Pods-czzapp.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -61,30 +56,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* czzappTests */ = {
-			isa = PBXGroup;
-			children = (
-				00E356F21AD99517003FC87E /* czzappTests.m */,
-				00E356F01AD99517003FC87E /* Supporting Files */,
-			);
-			path = czzappTests;
-			sourceTree = "<group>";
-		};
-		00E356F01AD99517003FC87E /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				00E356F11AD99517003FC87E /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		13B07FAE1A68108700A75B9A /* czzapp */ = {
 			isa = PBXGroup;
 			children = (
-				912A456F27677E6F005E79FA /* splash */,
 				84926B11269DCE85003CBC47 /* system */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
+				C241E64F282BC86F00EA7330 /* MainReactModule.h */,
+				C241E650282BC86F00EA7330 /* MainReactModule.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
@@ -137,7 +116,6 @@
 			children = (
 				13B07FAE1A68108700A75B9A /* czzapp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* czzappTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				28E5336F68A3F1D7A78D3FD2 /* Pods */,
@@ -165,17 +143,6 @@
 			path = system;
 			sourceTree = "<group>";
 		};
-		912A456F27677E6F005E79FA /* splash */ = {
-			isa = PBXGroup;
-			children = (
-				912A457027677E91005E79FA /* SplashModule.h */,
-				912A457127677E91005E79FA /* SplashModule.m */,
-				912A457327678123005E79FA /* SplashWindow.h */,
-				912A457427678123005E79FA /* SplashWindow.m */,
-			);
-			path = splash;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -188,8 +155,8 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				4FFCF1C85C25FA00FB846BA0 /* [CP] Embed Pods Frameworks */,
 				24EBF68E7E9F5D2322F17A04 /* [CP] Copy Pods Resources */,
+				C2307B87283CFB740085540D /* Bugly Script */,
 			);
 			buildRules = (
 			);
@@ -299,22 +266,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4FFCF1C85C25FA00FB846BA0 /* [CP] Embed Pods Frameworks */ = {
+		C2307B87283CFB740085540D /* Bugly Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-czzapp/Pods-czzapp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			inputPaths = (
+			);
+			name = "Bugly Script";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-czzapp/Pods-czzapp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-czzapp/Pods-czzapp-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "#!/bin/sh\n\n\nBUGLY_APP_ID=\"8ed69c67d6\"\nBUGLY_APP_KEY=\"94c8bfea-c0b3-4635-b925-353163d23143\"\n\nBUGLY_SYMBOL_JAR_PATH=\"$HOME/bin/buglySymboliOS.jar\"\n\nfunction infoPlistValue() {\n    VALUE=$(/usr/libexec/PlistBuddy -c \"Print $1\"  \"${INFOPLIST_FILE}\")\n    if [[ \"$VALUE\" =~ ^\\$.* ]]; then\n        VALUE=${VALUE//(/}\n        VALUE=${VALUE//)/}\n        VALUE=${VALUE//\\$/}\n        VALUE=${!VALUE}\n    fi\n    echo $VALUE\n}\n\n\nBUNDLE_VERSION=$(infoPlistValue CFBundleVersion)\nBUNDLE_SHORT_VERSION=$(infoPlistValue CFBundleShortVersionString)\nBUNDLE_IDENTIFIER=$(infoPlistValue CFBundleIdentifier)\n\necho \"😲\"\nif [ \"${CONFIGURATION=}\" == \"Debug\" ]; then\n    exit 0\nfi\n\nif [[ \"$TARGET_BUILD_DIR\" == *\"/Archive\"* ]]; then\n    echo \"\"\n    # agvtool next-version -all\n    # BUNDLE_VERSION=$(($BUNDLE_VERSION + 1))\n    # /usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $BUNDLE_VERSION\" \"$INFOPLIST_FILE\"\nelse\n    exit 0\nfi\n\n\nfor dsymFile in $(find \"$DWARF_DSYM_FOLDER_PATH\" -name '*.dSYM'); do\n    cd \"${DWARF_DSYM_FOLDER_PATH}\"\n    java -jar \"${BUGLY_SYMBOL_JAR_PATH}\" -appid \"${BUGLY_APP_ID}\" -appkey \"${BUGLY_APP_KEY}\" -bundleid \"${BUNDLE_IDENTIFIER}\" -version \"${BUNDLE_SHORT_VERSION}(${BUNDLE_VERSION})\" -platform IOS -inputSymbol \"${dsymFile}\"\ndone\necho \"😲\"\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -323,10 +291,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				912A457527678123005E79FA /* SplashWindow.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				84926B14269DCE85003CBC47 /* SystemModule.m in Sources */,
-				912A457227677E91005E79FA /* SplashModule.m in Sources */,
+				C241E651282BC86F00EA7330 /* MainReactModule.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				912A457827679BE6005E79FA /* void.swift in Sources */,
 			);
@@ -341,7 +308,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = L3292BNSB6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = czzapp/Info.plist;
@@ -370,7 +337,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = L3292BNSB6;
 				INFOPLIST_FILE = czzapp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, TextInput } from 'react-native'
 import styles from './styles/AttachedResumeRename.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import { greenColor } from '../../../utils/constant'
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import NetInfo from '@react-native-community/netinfo'
-import { Platform, AppState } from 'react-native'
+import { Platform } from 'react-native'
+import HTAppStateManager from '~/common/appstate/HTAppStateManager'
 
 
 export default class Socket {
@@ -15,8 +16,6 @@ export default class Socket {
 
 	appStateUnsubscribe = null
 
-	lastAppStateValue = 'active'
-
 	netInfoUnsubscribe = null
 
 	lastNetworkConnected = true
@@ -24,6 +23,8 @@ export default class Socket {
 	url = ''
 
 	procotolList = []
+
+	isDealloc = false
 
 	constructor(url, procotolList) {
 		this.url = url
@@ -48,12 +49,17 @@ export default class Socket {
 		console.log(`${Platform.OS} socket 主动 close 释放资源`)
 		clearInterval(this.timer)
 		this.timer = null
-		AppState.removeEventListener('change', this._handlerAppStateChange)
+		this?.appStateUnsubscribe?.remove()
 		this.netInfoUnsubscribe && this.netInfoUnsubscribe()
 		if (this?.webSocket) {
 			this.webSocket.close()
 			this.webSocket = null
 		}
+	}
+
+	dealloc = () => {
+		this.close()
+		this.isDealloc = true
 	}
 
 	loop = (complete) => {
@@ -63,16 +69,11 @@ export default class Socket {
 				this.connect(complete)
 			}
 		}, 10 * 1000)
-		this._handlerAppStateChange = (state) => {
-			if (state == this.lastAppStateValue) {
-				return
-			}
-			this.lastAppStateValue = state
-			if (state == 'active') {
+		this.appStateUnsubscribe = HTAppStateManager.addListener((isActive) => {
+			if (isActive) {
 				this.connect(complete)
 			}
-		}
-		AppState.addEventListener('change', this._handlerAppStateChange)
+		})
 		this.netInfoUnsubscribe = NetInfo.addEventListener(state => {
 			if (state?.isConnected == this.lastNetworkConnected) {
 				return
@@ -85,6 +86,9 @@ export default class Socket {
 	}
 
 	connect = (complete) => {
+		if (this.isDealloc) {
+			return
+		}
 		console.log(`${Platform.OS} socket 连接`)
 		this.loop(complete)
 		this.webSocket = new WebSocket(this.url, this.procotolList)
@@ -103,10 +107,13 @@ export default class Socket {
 					'Expected HTTP 101 response but was',
 					'未能完成该操作。连接被拒绝',
 					'未能完成该操作。网络已关闭',
-					'Stream end encountered'
+					'Stream end encountered',
+					'Failed to connect to '
 				].find(item => message.indexOf(item) != -1) == null
 			) {
-				this.connect(complete)
+				setTimeout(() => {
+					this.connect(complete)
+				}, 5000)
 			}
 		}
 		this.webSocket.onmessage = (message) => {

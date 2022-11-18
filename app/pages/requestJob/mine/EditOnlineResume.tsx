@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, StatusBar, RefreshControl } from 'react-native'
 import styles from './styles/EditOnlineResume.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import GradientButton from '../../components/GradientButton'
 import { greenColor } from '../../../utils/constant'
 import { reformDistanceYears, reformEducation, reformSalary, selectEducation } from '../../../utils/utils'
 import { format } from 'date-fns'
 import { AnyAction, bindActionCreators, Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import HTThrowPromise from '~/common/request/HTThrowPromise'
+import { stringForFullTime } from '~/recruitment/utils/JobHelper'
 
 type IProps = GenProps<'EditOnlineResume'> & ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>
@@ -41,33 +41,8 @@ export default class EditOnlineResume extends Component<IProps, IState> {
       projectExperienceRefresh: true,
       eduExperienceRefresh: true,
       workExperience: [],
-      expectJobs: [{
-        id: 1,
-        type: 'UI/界面设计',
-        salary: '15-20K',
-        location: '深圳',
-        status: '在职找工作·随时入职'
-      }],
-      // projectExperience: [{
-      //   id: 1,
-      //   project: '广东智慧网络公司官网',
-      //   role: '设计师',
-      //   beginTime: '2017.3',
-      //   endTime: '至今',
-      //   job: '网页设计师',
-      //   content: '内容：1、负责线上APP的改版功能，更新迭代；2、根据产品及产品需求，独立完成项目设计，建立产品的界面设计规范；3、根据原型图完成出色的设计稿,交付给开发人员使用',
-      //   performance: '优先二等奖'
-      // }],
-      educationExperience: [{
-        id: 1,
-        name: '广东白云学院',
-        beginTime: '2017',
-        endTime: '2019',
-        education: '本科',
-        fullTime: '全日制',
-        professional: '视觉传达',
-        schoolExperience: '内容：1、在校担任宣传部社长；获得XXXX荣誉称号'
-      }],
+      expectJobs: [],
+      educationExperience: [],
       personalGoods: '',
       personalSkills: [],
       projectExperience: [],
@@ -85,21 +60,23 @@ export default class EditOnlineResume extends Component<IProps, IState> {
       projectExperienceRefresh: true,
       eduExperienceRefresh: true
     }, () => {
-      HTThrowPromise.all([
+      Promise.all([
       	HTAPI.UserGetBasicInfo(),
+      	HTAPI.CandidateGetAllJobExpectations(),
       	HTAPI.CandidateGetWorkExps(),
       	HTAPI.CandidateGetOnlineResumeBasicInfo(null, { showError: false }),
       	HTAPI.CandidateGetProjectExps(),
       	HTAPI.CandidateGetEduExps()
       ]).then(([
       	userInfo, 
-      	{ data: workExperience }, 
+      	expectJobs = [],
+      	{ data: workExperience = [] }, 
       	baseInfo = {},
-      	{ data: projectExperience },
-      	{ data: educationExperience }
+      	{ data: projectExperience = [] },
+      	{ data: educationExperience = [] }
       ]) => {
       	this.setState({ 
-      		userInfo, workExperience, personalGoods: baseInfo?.personal_advantage, skills: baseInfo?.skills, projectExperience, educationExperience,
+      		userInfo, expectJobs, workExperience, personalGoods: baseInfo?.personal_advantage, personalSkills: baseInfo?.skills ?? [], projectExperience, educationExperience,
       		workExperienceRefresh: false,
       		basicInfoRefresh: false,
       		projectExperienceRefresh: false,
@@ -169,8 +146,8 @@ export default class EditOnlineResume extends Component<IProps, IState> {
   }
 
   renderIcon() {
-    const { userInfo, navigation } = this.state
-    const { isPreview } = this.state
+    const { userInfo, isPreview } = this.state
+    const { navigation } = this.props
     return (
       <View style={styles.iconView}>
         <View>
@@ -178,7 +155,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
             <Text style={styles.iconText}>{userInfo.username}</Text>
             {!isPreview && (
 
-              <NextTouchableOpacity
+              <NextPressable
                 onPress={() => {
                   navigation.push('UserInfo')
                 }}
@@ -186,7 +163,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
                 <Image style={styles.editNameIcon}
                   source={require('../../../assets/requestJobs/edit-gray.png')}
                 />
-              </NextTouchableOpacity>
+              </NextPressable>
             )}
           </View>
           <Text style={styles.userInfo}>
@@ -194,13 +171,13 @@ export default class EditOnlineResume extends Component<IProps, IState> {
           </Text>
         </View>
         <View>
-          <Image
-            source={require('../../../assets/requestJobs/icon-example.png')}
+          <CacheImage
+            source={global.AVATAR_IMAGE(this?.state?.userInfo?.image_url)}
             style={styles.iconStyle}
           />
           <Image
             style={styles.gender}
-            source={require('../../../assets/requestJobs/women-icon.png')}
+            source={userInfo.gender ? require('../../../assets/requestJobs/man-icon.png')  : require('../../../assets/requestJobs/women-icon.png') }
           />
         </View>
       </View>
@@ -216,7 +193,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
         borderBottomWidth: 1,
         paddingBottom: 12
       }]}>
-        <NextTouchableOpacity
+        <NextPressable
           disabled={isPreview}
           onPress={() => {
             navigation.push('JobExpectations')
@@ -229,10 +206,10 @@ export default class EditOnlineResume extends Component<IProps, IState> {
               source={require('../../../assets/requestJobs/add-gray.png')}
             />
           )}
-        </NextTouchableOpacity>
+        </NextPressable>
         {expectJobs.map((item: any, index: number) => {
           return (
-            <NextTouchableOpacity
+            <NextPressable
               key={index.toString()}
               disabled={isPreview}
               onPress={() => {
@@ -241,8 +218,8 @@ export default class EditOnlineResume extends Component<IProps, IState> {
               style={styles.expectJobsView}
             >
               <View>
-                <Text style={styles.expectJobsText}>{`${item.type}   ${reformSalary(item.salary)}`}</Text>
-                <Text style={styles.expectJobsLocation}>{`${item.location}   ${item.status}`}</Text>
+                <Text style={styles.expectJobsText}>{`${item.job_category}   ${reformSalary([item.min_salary_expectation, item.max_salary_expectation])}`}</Text>
+                <Text style={styles.expectJobsLocation}>{`${item.aimed_city}   ${stringForFullTime(item.full_time_job)}`}</Text>
               </View>
               {!isPreview && (
                 <Image
@@ -250,7 +227,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
                   style={styles.nextIcon}
                 />
               )}
-            </NextTouchableOpacity>
+            </NextPressable>
           )
         })}
       </View>
@@ -259,7 +236,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
 
   renderCell(title: string, detail: string, arrow: boolean, onPress?: () => {}) {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.cell}
         onPress={() => {
           if (onPress) {
@@ -277,7 +254,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
             />
           )}
         </View>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -289,7 +266,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
     }
     return (
       <View style={styles.cellView}>
-        <NextTouchableOpacity
+        <NextPressable
           disabled={isPreview}
           onPress={() => {
             navigation.push('EditWorkExperience', {
@@ -306,10 +283,10 @@ export default class EditOnlineResume extends Component<IProps, IState> {
               source={require('../../../assets/requestJobs/add-gray.png')}
             />
           )}
-        </NextTouchableOpacity>
+        </NextPressable>
         {workExperience.map((item: any, index: number) => {
           return (
-            <NextTouchableOpacity
+            <NextPressable
               key={index.toString()}
               disabled={isPreview}
               onPress={() => {
@@ -335,7 +312,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
                 <Text style={styles.workExperienceText}>{`${item.pos_name} ${item.department}`}</Text>
                 <Text numberOfLines={2} style={styles.workExperienceLocation}>{item.working_detail}</Text>
               </View>
-            </NextTouchableOpacity>
+            </NextPressable>
           )
         })}
       </View>
@@ -347,7 +324,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
     const { navigation } = this.props
     return (
       <View style={styles.cellView}>
-        <NextTouchableOpacity
+        <NextPressable
           disabled={isPreview}
           onPress={() => {
             navigation.push('EditProjectExperience', {
@@ -364,10 +341,10 @@ export default class EditOnlineResume extends Component<IProps, IState> {
               source={require('../../../assets/requestJobs/add-gray.png')}
             />
           )}
-        </NextTouchableOpacity>
+        </NextPressable>
         {projectExperience.map((item: any, index: number) => {
           return (
-            <NextTouchableOpacity
+            <NextPressable
               key={index.toString()}
               disabled={isPreview}
               onPress={() => {
@@ -397,7 +374,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
                 <Text style={styles.workExperienceText}>{item.role}</Text>
                 <Text numberOfLines={2} style={styles.workExperienceLocation}>{item.project_description}</Text>
               </View>
-            </NextTouchableOpacity>
+            </NextPressable>
           )
         })}
       </View>
@@ -409,7 +386,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
     const { navigation } = this.props
     return (
       <View style={styles.cellView}>
-        <NextTouchableOpacity
+        <NextPressable
           disabled={isPreview}
           onPress={() => {
             navigation.push('EditEducation', {
@@ -426,10 +403,10 @@ export default class EditOnlineResume extends Component<IProps, IState> {
               source={require('../../../assets/requestJobs/add-gray.png')}
             />
           )}
-        </NextTouchableOpacity>
+        </NextPressable>
         {educationExperience.map((item: any, index: number) => {
           return (
-            <NextTouchableOpacity
+            <NextPressable
               key={index.toString()}
               disabled={isPreview}
               onPress={() => {
@@ -456,7 +433,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
                 <Text style={styles.workExperienceText}>{`${selectEducation(item.education)}·${item.major}`}</Text>
                 <Text numberOfLines={2} style={styles.workExperienceLocation}>{item.exp_at_school}</Text>
               </View>
-            </NextTouchableOpacity>
+            </NextPressable>
           )
         })}
       </View>
@@ -472,7 +449,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
         borderBottomWidth: 1,
         paddingBottom: 12
       }]}>
-        <NextTouchableOpacity
+        <NextPressable
           disabled={isPreview}
           onPress={() => {
             navigation.push('EditPersonalGoods', {
@@ -496,7 +473,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
               />
             )}
           </View>
-        </NextTouchableOpacity >
+        </NextPressable >
         <Text style={
           [styles.editPersonalDetail, personalGoods?.length === 0 && { color: '#999' }]}
         >{personalGoods || '如: 自信、爱心、责任感、强迫症'}</Text>
@@ -514,7 +491,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
         paddingBottom: 12,
         minHeight: 60,
       }]}>
-        <NextTouchableOpacity
+        <NextPressable
           disabled={isPreview}
           onPress={() => {
             navigation.push('EditPersonalSkills', {
@@ -535,7 +512,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
               />
             </View>
           )}
-        </NextTouchableOpacity>
+        </NextPressable>
         <View style={styles.jobInfoTagView}>
           {personalSkills && personalSkills.map((e: any, index: number) => {
             return (
@@ -546,22 +523,6 @@ export default class EditOnlineResume extends Component<IProps, IState> {
           })}
         </View>
       </View>
-    )
-  }
-
-  renderRefresh() {
-    const {
-      workExperienceRefresh,
-      basicInfoRefresh,
-      projectExperienceRefresh,
-      eduExperienceRefresh
-    } = this.state
-    return (
-      <RefreshControl
-        refreshing={workExperienceRefresh || basicInfoRefresh || projectExperienceRefresh || eduExperienceRefresh}
-        onRefresh={() => this.loadOnlineResumeInfo()
-        }
-      />
     )
   }
 
@@ -578,7 +539,7 @@ export default class EditOnlineResume extends Component<IProps, IState> {
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={{ paddingBottom: 20 }}
-          refreshControl={this.renderRefresh()}
+          onRefresh={() => this.loadOnlineResumeInfo()}
         >
           {this.renderIcon()}
           {this.renderRequestJobs()}

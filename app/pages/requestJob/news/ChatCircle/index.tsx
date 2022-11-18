@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ImageSourcePropType, DeviceEventEmitter } from 'react-native'
 import styles from './styles'
-import { GenProps } from '../../../../navigator/requestJob/stack'
+import { GenProps } from '../../../../utils/StackProps'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
-import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
+import NextPressable from '../../../components/NextPressable'
 import LinearGradient from 'react-native-linear-gradient'
 import ChatCircleCell from '../ChatCircleCell'
 
@@ -87,7 +87,7 @@ export default class ChatCircle extends Component<TProps, IState> {
     const { selectType } = this.state
     return (
       <View style={styles.tabs}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.selectTypeBtn}
           onPress={() => {
             if (selectType !== 0) {
@@ -99,8 +99,8 @@ export default class ChatCircle extends Component<TProps, IState> {
           }}
         >
           <Text style={[styles.selectTypeText, selectType === 0 && { fontWeight: 'bold' }]}>全新</Text>
-        </NextTouchableOpacity>
-        <NextTouchableOpacity
+        </NextPressable>
+        <NextPressable
           style={styles.selectTypeBtn}
           onPress={() => {
             if (selectType !== 1) {
@@ -112,8 +112,8 @@ export default class ChatCircle extends Component<TProps, IState> {
           }}
         >
           <Text style={[styles.selectTypeText, selectType === 1 && { fontWeight: 'bold' }]}>最新</Text>
-        </NextTouchableOpacity>
-        <NextTouchableOpacity
+        </NextPressable>
+        <NextPressable
           style={styles.selectTypeBtn}
           onPress={() => {
             if (selectType !== 2) {
@@ -125,7 +125,7 @@ export default class ChatCircle extends Component<TProps, IState> {
           }}
         >
           <Text style={[styles.selectTypeText, selectType === 2 && { fontWeight: 'bold' }]}>热门</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import styles from './styles/JinbiTradeRecordDetail.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { Text, View, Image, StatusBar } from 'react-native'
 
 type IProps = GenProps<'JinbiTradeRecordDetail'> & {

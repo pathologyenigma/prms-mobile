@@ -1,5 +1,5 @@
 import { StackNavigationProp } from '@react-navigation/stack'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, Component } from 'react'
 import { Animated, View, StyleSheet } from 'react-native'
 import PagerView from 'react-native-pager-view'
 import FilterButton from '../../components/FilterButton'
@@ -8,6 +8,7 @@ import RadioLabel from '../../components/RadioLabel'
 import usePagerView from '../../hooks/usePagerView'
 import { TalentParamList } from '../typings'
 import TalentPage from './TalentPage'
+import { HTPageHeaderView } from 'react-native-selected-page'
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
@@ -34,64 +35,72 @@ interface TalentPagerProps {
   keyword?: string
 }
 
-export default function TalentPager({ navigation, jobName, jobCategory, keyword }: TalentPagerProps) {
-  const [sortByUpdatedTime, setSortByUpdatedTime] = useState(false)
-  const ref = useRef<PagerView>(null)
-  const { selectedIndex, onPageSelected, onPageScroll } = usePagerView()
+export default class TalentPager extends Component {
 
-  const [filterConfig, setFilterConfig] = useState({})
+	constructor(props) {
+		super(props)
+		this.state = {
+			itemList: [
+				{ title: '推荐', onPress: () => {
+					this.state.filterConfig.sortByUpdatedTime = false
+				} },
+				{ title: '最新', onPress: () => {
+					this.state.filterConfig.sortByUpdatedTime = false
+				} },
+			],
+			filterConfig: {
+				keyword: this.props.keyword ?? undefined,
+				category: this.props.jobCategory ?? undefined
+			}
+		}
+	}
 
-  useEffect(() => {
-    ref.current?.setPageWithoutAnimation(sortByUpdatedTime ? 1 : 0)
-  }, [sortByUpdatedTime])
+	shouldComponentUpdate(nextProps, nextState) {
+		this.state.filterConfig.keyword = nextProps.keyword
+		this.state.filterConfig.category = nextProps.jobCategory
+		return true
+	}
 
-  return (
-    <>
-      <View style={styles.filterbar}>
-        <RadioGroup
-          value={sortByUpdatedTime}
-          onValueChecked={value => setSortByUpdatedTime(value)}>
-          <View style={styles.labelGroup}>
-            {sorts.map(({ label, value }) => (
-              <RadioLabel
-                key={label}
-                label={label}
-                value={value}
-                style={styles.labelStyle}
-                checkedStyle={styles.checkedLabelStyle}
-              />
-            ))}
-          </View>
-        </RadioGroup>
-        <FilterButton
-          text={'筛选'}
-          style={styles.filterButton}
-          onPress={() => navigation.push('CandidateFilter', { callback: (result) => {
-          	setFilterConfig(result)
-          }})}
-        />
-      </View>
-      <AnimatedPagerView
-        ref={ref}
-        style={styles.container}
-        scrollEnabled={false}
-        initialPage={selectedIndex}
-        onPageScroll={onPageScroll}
-        onPageSelected={onPageSelected}>
-        {sorts.map((status: SortItem, index: number) => (
-          <TalentPage
-            key={status.label}
-            jobName={jobName}
-            jobCategory={jobCategory}
-            keyword={keyword}
-            filterConfig={filterConfig}
-            sortByUpdatedTime={status.value}
-            navigation={navigation}
-          />
-        ))}
-      </AnimatedPagerView>
-    </>
-  )
+	render() {
+		return (
+			<View style={styles.container}>
+			   <View style={styles.filterbar}>
+			       <HTPageHeaderView
+						style={{ flex: 1, height: 40 }}
+						data={this.state.itemList}
+						titleFromItem={item => item.title}
+						initScrollIndex={0}
+						itemContainerStyle={{ paddingHorizontal: 10 }}
+						itemTitleStyle={{ fontSize: 13, fontWeight: '500' }}
+						itemTitleNormalStyle={{ color: '#666' }}
+						itemTitleSelectedStyle= {{ color: '#7DDBA3' }}
+						onSelectedPageIndex={(pageIndex) => {
+							this.state.itemList[pageIndex].onPress()
+							this.setState(this.state, () => {
+								this.contentPage._onRefresh(true, true)
+							})
+						}}
+						cursorStyle={{ width: null, transform: [{ scaleX: 0.4 }], height: 2, backgroundColor: 'transparent' }}
+					/>
+					<FilterButton
+			          text={'筛选'}
+			          style={styles.filterButton}
+			          onPress={() => this.props.navigation.push('CandidateFilter', { callback: (result) => {
+			          	this.setState({ filterConfig: { ...this.state.filterConfig, ...result } }, () => {
+			          		this.contentPage._onRefresh(true, true)
+			          	})
+			          }})}
+			        />
+				</View>
+				<TalentPage
+					ref={ref => this.contentPage = ref}
+		            filterConfig={this.state.filterConfig}
+		            navigation={this.props.navigation}
+		        />
+		    </View>
+		)
+	}
+
 }
 
 const styles = StyleSheet.create({
@@ -102,7 +111,7 @@ const styles = StyleSheet.create({
     marginRight: 11,
   },
   filterbar: {
-    height: 40,
+    // height: 40,
     flexDirection: 'row',
     alignItems: 'stretch',
     backgroundColor: '#FFFFFF',

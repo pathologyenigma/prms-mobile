@@ -12,11 +12,9 @@ import {
 import { StackNavigationProp } from '@react-navigation/stack'
 import IconButton from '../../components/IconButton'
 import Hotline from '../Hotline'
-import { useNavigation } from '@react-navigation/native'
 import NavBar from '../../components/NavBar'
 
-export default function CompanyAuthenticationMethod() {
-  const navigation = useNavigation<StackNavigationProp<any>>()
+export default function CompanyAuthenticationMethod({ navigation }) {
 
   return (
     <View style={styles.container}>

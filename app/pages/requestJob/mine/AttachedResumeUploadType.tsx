@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView } from 'react-native'
 import styles from './styles/AttachedResumeUploadType.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import SystemHelper from '../../../utils/system'
 import LinearGradient from 'react-native-linear-gradient'
 import { BoxShadow } from 'react-native-shadow'
@@ -77,7 +77,7 @@ export default class AttachedResumeUploadType extends Component<IProps, IState> 
     return (
       <View style={{ marginTop: 30 }}>
         <BoxShadow setting={shadowOpt}>
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.uploadView}
             onPress={() => {
               const { navigation } = this.props
@@ -94,7 +94,7 @@ export default class AttachedResumeUploadType extends Component<IProps, IState> 
               style={styles.nextIcon}
               source={require('../../../assets/requestJobs/next-gray.png')}
             />
-          </NextTouchableOpacity>
+          </NextPressable>
         </BoxShadow>
       </View>
     )
@@ -114,7 +114,7 @@ export default class AttachedResumeUploadType extends Component<IProps, IState> 
     return (
       <View style={{ marginTop: 30 }}>
         <BoxShadow setting={shadowOpt}>
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.uploadView}
             onPress={() => {
               const { navigation } = this.props
@@ -131,7 +131,7 @@ export default class AttachedResumeUploadType extends Component<IProps, IState> 
               style={styles.nextIcon}
               source={require('../../../assets/requestJobs/next-gray.png')}
             />
-          </NextTouchableOpacity>
+          </NextPressable>
         </BoxShadow>
       </View>
     )
@@ -141,10 +141,10 @@ export default class AttachedResumeUploadType extends Component<IProps, IState> 
     const start = { x: 0, y: 1 }
     const end = { x: 0, y: 0 }
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={{ marginTop: 30 }}
         onPress={() => {
-          Toast.show('敬请期待')
+          global.TODO_TOAST()
         }}
       >
         <LinearGradient
@@ -167,7 +167,7 @@ export default class AttachedResumeUploadType extends Component<IProps, IState> 
             source={require('../../../assets/requestJobs/next-gray.png')}
           />
         </LinearGradient>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -176,30 +176,30 @@ export default class AttachedResumeUploadType extends Component<IProps, IState> 
       <View style={styles.selectTypeView}>
         <Text style={styles.selectTypeTitle}>将此文件作为附件上传到趁早找？</Text>
         <Text style={styles.selectTypeDetail}>确认附件类型</Text>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.selectTypeBtn}
           onPress={() => {
             this.setState({ selectTypeVisible: false })
           }}
         >
           <Text style={styles.selectTypeBtnText}>简历附件</Text>
-        </NextTouchableOpacity>
-        <NextTouchableOpacity
+        </NextPressable>
+        <NextPressable
           style={styles.selectTypeBtn}
           onPress={() => {
             this.setState({ selectTypeVisible: false })
           }}
         >
           <Text style={styles.selectTypeBtnText}>作品集附件</Text>
-        </NextTouchableOpacity>
-        <NextTouchableOpacity
+        </NextPressable>
+        <NextPressable
           style={styles.selectTypeBtn}
           onPress={() => {
             this.setState({ selectTypeVisible: false })
           }}
         >
           <Text style={styles.cancelText}>取消</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }

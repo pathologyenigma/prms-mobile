@@ -113,9 +113,11 @@ export default StyleSheet.create({
     marginRight: 8
   },
   locationText: {
+  	flex: 1,
     color: '#333333',
     fontSize: 13,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    lineHeight: 17,
   },
   interviewerView: {
     flexDirection: 'row',
@@ -225,7 +227,7 @@ export default StyleSheet.create({
   companyIcon: {
     width: 50,
     height: 50,
-    backgroundColor: greenColor,
+    // backgroundColor: greenColor,
     borderRadius: 4
   },
   companyName: {
@@ -249,11 +251,20 @@ export default StyleSheet.create({
     color: '#666666',
     fontSize: 13
   },
-  map: {
-    marginTop: 17,
+  mapWrapper: {
+  	marginTop: 17,
     height: 180,
-    backgroundColor: greenColor,
-    borderRadius: 8
+    width: '100%',
+    borderRadius: 7,
+    overflow: 'hidden',
+  },
+  map: {
+    flex: 1,
+  },
+  mapMarkerBox: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   listView: {
     flex: 1,

@@ -7,7 +7,7 @@ import {
   ViewStyle,
   StyleProp,
   ImageStyle,
-  TouchableOpacity,
+  Pressable,
   ImageSourcePropType,
   Platform,
 } from 'react-native'
@@ -181,7 +181,7 @@ export default function ImagePicker({
 
   return (
     <>
-      <TouchableOpacity
+      <Pressable
         onPress={handlePress}
         activeOpacity={0.75}
         style={[styles.container, style]}>
@@ -192,7 +192,7 @@ export default function ImagePicker({
             resizeMode="cover"
           />
         </View>
-      </TouchableOpacity>
+      </Pressable>
       <ActionSheet
         visible={showsActionSheet}
         onDismiss={() => setShowsActionSheet(false)}

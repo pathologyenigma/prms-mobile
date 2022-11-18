@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Image, Pressable } from 'react-native'
 import HTShadowView from '~/common/view/HTShadowView'
 
 const imageList = [
@@ -12,10 +12,27 @@ const imageList = [
 
 export default class HTCompanyContentPage extends Component {
 
+	constructor(props) {
+		super(props)
+		this.state = {
+			itemList: []
+		}
+	}
+
+	componentDidMount() {
+		if (this?.props?.initData) {
+			this._onRefresh()
+		}
+	}
+
+	_onRefresh = () => {
+		this.setState({ itemList: new Array(10).fill(0) })
+	}
+
 	_renderItem = (item, index) => {
 		let imageUrl = imageList[index % imageList.length]
 		return (
-			<TouchableOpacity key={index} onPress={() => this.props.navigation.push('HTCompanyProjectDetailPage')}>
+			<Pressable key={index} onPress={() => this.props.navigation.push('HTCompanyProjectDetailPage')}>
 				<HTShadowView style={styleList.itemContainer}>
 					<CacheImage style={styleList.itemImage} source={{ uri: imageUrl }} />
 					<View style={styleList.itemContent}>
@@ -26,16 +43,15 @@ export default class HTCompanyContentPage extends Component {
 						<Text style={styleList.itemPriceDetail}>融资轮次: 天使轮</Text>
 					</View>
 				</HTShadowView>
-			</TouchableOpacity>
+			</Pressable>
 		)
 	}
 
 	render() {
-		let itemList = new Array(10).fill(0)
 		return (
 			<View style={styleList.container}>
 			{
-				itemList.map((item, index) => {
+				this.state.itemList.map((item, index) => {
 					return this._renderItem(item, index)
 				})
 			}
@@ -63,7 +79,7 @@ const styleList = StyleSheet.create({
 		width: 120,
 		borderRadius: 5,
 		height: '100%',
-		backgroundColor: '#54D693'
+		// backgroundColor: '#54D693'
 	},
 	itemContent: {
 		flex: 1,
@@ -83,6 +99,7 @@ const styleList = StyleSheet.create({
 	itemDescription: {
 		marginTop: 10,
 		fontSize: 12,
+		lineHeight: 14,
 		color: '#666',
 	},
 	itemPriceTitle: {

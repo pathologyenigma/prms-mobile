@@ -43,7 +43,7 @@ export default StyleSheet.create({
     paddingBottom: 20,
   },
   cell: {
-    minHeight: 80,
+    // minHeight: 80,
     paddingHorizontal: 11,
     borderBottomWidth: 1,
     borderBottomColor: '#ECECEC',
@@ -52,12 +52,16 @@ export default StyleSheet.create({
   cellTitle: {
     color: '#666666',
     fontSize: 15,
+    marginTop: 10,
   },
   cellInput: {
     color: '#333',
     fontSize: 15,
     fontWeight: 'bold',
     padding: 0,
+    paddingTop: 15,
+    paddingBottom: 15,
+    marginBottom: 10,
     marginTop: 10,
   },
   durationView: {
@@ -67,7 +71,14 @@ export default StyleSheet.create({
   beginTime: {
     color: '#CCCCCC',
     fontSize: 15,
+    paddingVertical: 15,
     fontWeight: 'bold',
+  },
+  timeTips: {
+    color: '#333333',
+    fontSize: 15,
+    fontWeight: 'bold',
+    paddingVertical: 15,
   },
   inputView: {
     borderRadius: 8,
@@ -80,7 +91,11 @@ export default StyleSheet.create({
   },
   contentInput: {
     width: '100%',
+    height: '100%',
+    color: '#666666',
     fontSize: 14,
+    paddingTop: 15,
+    paddingBottom: 15,
     textAlignVertical: 'top'
   },
   contentAmount: {
@@ -97,7 +112,8 @@ export default StyleSheet.create({
   },
   footerView: {
     flexDirection: 'row',
-    height: SystemHelper.safeBottom + 51,
+    height: 51,
+    marginBottom: HOME_BAR_HEIGHT + 15,
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 21,

@@ -10,6 +10,8 @@ import {
 import GeoLocationManager from '~/common/location/geolocation'
 import useAsyncFn from './useAsyncFn'
 
+import HTAppStateManager from '~/common/appstate/HTAppStateManager'
+
 type Callback<T> = (() => Promise<T>) | (() => T)
 
 export class GeoLocationPermissionError extends Error {
@@ -103,14 +105,12 @@ export function useGeoLocation() {
   }, [error])
 
   useEffect(() => {
-    const hanleAppActive = (state: AppStateStatus) => {
-      if (!value && state === 'active') {
-        fn()
-      }
-    }
-
-    AppState.addEventListener('change', hanleAppActive)
-    return () => AppState.removeEventListener('change', hanleAppActive)
+  	const appStateUnsubscribe = HTAppStateManager.addListener((isActive) => {
+  		if (!value && isActive) {
+  			fn()
+  		}
+  	})
+    return () => appStateUnsubscribe.remove()
   }, [value, fn])
 
   return value

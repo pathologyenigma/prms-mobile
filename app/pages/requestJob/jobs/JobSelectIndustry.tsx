@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter } from 'react-native'
 import styles from './styles/JobSelectIndustry.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import SearchTextinput from '../../components/SearchTextinput'
 // @ts-ignore
@@ -114,7 +114,7 @@ export default class JobSelectIndustry extends Component<IProps, IState> {
         >
           {selectedIndustry.map((e: any, index: number) => {
             return (
-              <NextTouchableOpacity
+              <NextPressable
                 key={index.toString()}
                 style={styles.selectIndustryBtn}
                 onPress={() => {
@@ -130,7 +130,7 @@ export default class JobSelectIndustry extends Component<IProps, IState> {
                   style={styles.deleteImage}
                   source={require('../../../assets/requestJobs/close-green.png')}
                 />
-              </NextTouchableOpacity>
+              </NextPressable>
             )
           })}
         </ScrollView>
@@ -154,7 +154,7 @@ export default class JobSelectIndustry extends Component<IProps, IState> {
         <ScrollView style={styles.detailSecondView}>
           {dataSource.map((e: any, index: number) => {
             return (
-              <NextTouchableOpacity
+              <NextPressable
               	hitSlop={{top: 20, bottom: 20}}
                 style={[styles.detailSecondBtn,
                 selectItem.id === e.id && {
@@ -170,7 +170,7 @@ export default class JobSelectIndustry extends Component<IProps, IState> {
                 }}
               >
                 <Text style={[styles.detailSecondText, selectItem.id === e.id && { color: greenColor, fontWeight: 'bold' }]}>{e.title}</Text>
-              </NextTouchableOpacity>
+              </NextPressable>
             )
           })}
         </ScrollView>
@@ -178,7 +178,7 @@ export default class JobSelectIndustry extends Component<IProps, IState> {
           {selectItemSecond.map((e: any, index: number) => {
             const isSelected = selectedIndustry.filter((item: any) => item.title === e.title).length > 0
             return (
-              <NextTouchableOpacity
+              <NextPressable
               	hitSlop={{top: 20, bottom: 20}}
                 style={styles.detailThirdBtn}
                 key={index.toString()}
@@ -202,7 +202,7 @@ export default class JobSelectIndustry extends Component<IProps, IState> {
                     source={require('../../../assets/requestJobs/green-check.png')}
                   />
                 ) : null}
-              </NextTouchableOpacity>
+              </NextPressable>
             )
           })}
         </ScrollView>

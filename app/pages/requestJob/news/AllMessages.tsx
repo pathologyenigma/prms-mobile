@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, StatusBar, SectionList } from 'react-native'
 import styles from './styles/AllMessages.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { Tabs } from '@ant-design/react-native'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
@@ -171,7 +171,7 @@ export default class AllMessages extends Component<IProps, IState> {
           {
             tabs.map((e, i) => {
               return (
-                <NextTouchableOpacity
+                <NextPressable
                   style={styles.tabsBtn}
                   key={i.toString()}
                   onPress={() => {
@@ -191,7 +191,7 @@ export default class AllMessages extends Component<IProps, IState> {
                       />
                     )}
                   </>
-                </NextTouchableOpacity>
+                </NextPressable>
               )
             })
           }

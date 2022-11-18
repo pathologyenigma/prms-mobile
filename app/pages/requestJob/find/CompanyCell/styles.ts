@@ -33,13 +33,14 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 2,
-    height: 13,
+    // height: 13,
     paddingHorizontal: 3,
     marginLeft: 11
   },
   text: {
     color: '#FFFFFF',
     fontSize: 10,
+    paddingVertical: 2,
     fontWeight: 'bold',
   },
   isBestEmployer: {
@@ -49,8 +50,8 @@ export default StyleSheet.create({
     borderRadius: 2,
     color: '#E5B531',
     fontSize: 8,
-    height: 13,
-    lineHeight: 13,
+    // height: 13,
+    paddingVertical: 3,
     marginLeft: 7
   },
   companyTagView: {
@@ -90,7 +91,7 @@ export default StyleSheet.create({
   basicInfoView: {
     flexDirection: 'row',
     width: SystemHelper.width - 65,
-    overflow: 'hidden',
+    // overflow: 'hidden',
     marginTop: 10,
   },
   basicItem: {

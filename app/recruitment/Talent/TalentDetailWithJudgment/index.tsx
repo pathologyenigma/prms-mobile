@@ -10,7 +10,7 @@ import { useState } from 'react'
 import GhostButton from '../../components/GhostButton'
 import NavBar from '../../components/NavBar'
 
-export default function TalentDetailWithJudgment() {
+export default function TalentDetailWithJudgment(props) {
   const [alertVisible, setAlertVisible] = useState(false)
   const [noFit, setNoFit] = useState(false)
 
@@ -43,7 +43,7 @@ export default function TalentDetailWithJudgment() {
           </View>
         )}
       />
-      <TalentDetailView renderBottomBar={renderBottomBar} />
+      <TalentDetailView id={props.route.params['id']} renderBottomBar={renderBottomBar} />
       <AlertModal
         visible={alertVisible}
         title="确认操作"

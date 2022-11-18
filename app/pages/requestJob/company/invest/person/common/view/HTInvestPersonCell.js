@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Image, Pressable } from 'react-native'
 
 let imageList = [
 	require('~/assets/debug/avatar_1.png'),
@@ -16,7 +16,7 @@ export default class HTInvestPersonCell extends Component {
 		const { item, index, showChat } = this.props
 		let imageUrl = imageList[index % imageList.length]
 		return (
-			<TouchableOpacity style={styleList.itemContainer} onPress={() => {
+			<Pressable style={styleList.itemContainer} onPress={() => {
 				this.props.navigation.push(showChat ? 'HTInvestPersonDetailPage' : 'HTInvestEnterpriseDetailPage')
 			}}>
 				<CacheImage style={styleList.itemImage} source={imageUrl} />
@@ -39,7 +39,7 @@ export default class HTInvestPersonCell extends Component {
 					{
 						new Array(4).fill(0).map((item, index) => {
 							return (
-								<View style={styleList.tagItemContainer}>
+								<View key={index} style={styleList.tagItemContainer}>
 									<Text style={styleList.tagItemTitle}>企业服务</Text>
 								</View>
 							)
@@ -52,7 +52,7 @@ export default class HTInvestPersonCell extends Component {
 						<Text style={styleList.itemChatTitle}>在线沟通</Text>
 					)
 				}
-			</TouchableOpacity>
+			</Pressable>
 		)
 	}
 
@@ -66,6 +66,8 @@ const styleList = StyleSheet.create({
 		borderRadius: 10,
 		backgroundColor: 'white',
 		flexDirection: 'row',
+		borderBottomWidth: SEPARATOR_HEIGHT,
+		borderBottomColor: '#ddd'
 	},
 	itemImage: {
 		width: 50,

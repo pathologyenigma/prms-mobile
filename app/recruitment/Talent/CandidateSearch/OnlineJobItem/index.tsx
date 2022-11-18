@@ -10,16 +10,18 @@ import {
   ScrollView,
 } from 'react-native'
 
+import { stringForEducation } from '~/recruitment/utils/JobHelper'
+
 interface OnlineJobItemProps {}
 
-export default function OnlineJobItem() {
+export default function OnlineJobItem({ item }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.position}>产品经理</Text>
+      <Text style={styles.position}>{item.category[item.category.length - 1]}</Text>
       <View style={styles.row}>
-        <Text style={styles.meta}>深圳市</Text>
+        <Text style={styles.meta}>{item?.address_description?.[4]}</Text>
         <View style={styles.divider}></View>
-        <Text style={styles.meta}>学历不限</Text>
+        <Text style={styles.meta}>{stringForEducation(item.min_education)}</Text>
       </View>
     </View>
   )

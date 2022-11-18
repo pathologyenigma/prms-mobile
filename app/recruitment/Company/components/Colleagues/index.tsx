@@ -38,7 +38,7 @@ export default function Colleagues({ style }: ColleaguesProps) {
       <View style={styles.item} key={index}>
         <Image
           style={styles.avatar}
-          source={require('../../../assets/avatar_default.png')}
+          source={global.AVATAR_IMAGE()}
         />
         <View style={styles.meta}>
           <Text style={styles.name}>{name}</Text>

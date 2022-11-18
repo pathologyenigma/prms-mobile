@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import { SafeAreaView, StatusBar, ImageBackground, Image, ScrollView, View, Text, RefreshControl } from 'react-native'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import styles from './styles/HrPersonalInfo.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import CompanyJobCell from './CompanyJobCell'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import ShareModal from '../../components/ShareModal'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
+import HTShadowView from '~/common/view/HTShadowView'
 
 type IProps = GenProps<'HrPersonalInfo'> & ReturnType<typeof mapDispatchToProps>
 
@@ -102,22 +103,22 @@ class HrPersonalInfo extends Component<IProps, IState> {
       logo } = hrInfo
     return (
       <View style={styles.iconView}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.avatar}
           onPress={() => {
-            const { navigation } = this.props
-            navigation.push('UserInfo')
+            // const { navigation } = this.props
+            // navigation.push('UserInfo')
           }}
         >
-          <Image
+          <CacheImage
             style={styles.hrIcon}
-            source={require('../../../assets/requestJobs/icon-example.png')}
+            source={global.AVATAR_IMAGE(logo)}
           />
-          <Image
+          {/*<Image
             style={styles.gender}
             source={require('../../../assets/requestJobs/women-icon.png')}
-          />
-        </NextTouchableOpacity>
+          />*/}
+        </NextPressable>
         <View style={styles.nameView}>
           <View style={styles.hrNameView}>
             <Text style={styles.nameTitle}>
@@ -127,11 +128,11 @@ class HrPersonalInfo extends Component<IProps, IState> {
               source={require('../../../assets/requestJobs/hr-renzheng.png')}
               style={styles.hrRenzheng}
             />
-            {/* <NextTouchableOpacity
+            {/* <NextPressable
               style={styles.hrFocusBtn}
             >
               <Text style={styles.hrFocusText}>+关注</Text>
-            </NextTouchableOpacity> */}
+            </NextPressable> */}
           </View>
           <Text style={styles.detailInfo}>
             {`${pos}${last_log_out_time ? `·${last_log_out_time}` : ''}`}
@@ -148,7 +149,7 @@ class HrPersonalInfo extends Component<IProps, IState> {
     const { navigation } = this.props
     return (
       <View style={styles.navBar}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.backBtn}
           onPress={() => {
             navigation.goBack()
@@ -158,27 +159,27 @@ class HrPersonalInfo extends Component<IProps, IState> {
             style={styles.backImage}
             source={require('../../../assets/requestJobs/white-back.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
         {/* <View
         // v1版本适配
           style={styles.rightView}
         >
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.rightItem}
             onPress={() => {
               navigation.push('ReportComplaints')
             }}
           >
             <Image resizeMode="center" style={styles.jubao} source={require('../../../assets/requestJobs/jubao-white.png')} />
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
+          </NextPressable>
+          <NextPressable
             style={styles.rightItem}
             onPress={() => {
               this.setState({ shareVisible: true })
             }}
           >
             <Image resizeMode="center" style={styles.fenxiang} source={require('../../../assets/requestJobs/fenxiang-white.png')} />
-          </NextTouchableOpacity>
+          </NextPressable>
         </View> */}
       </View>
     )
@@ -205,7 +206,7 @@ class HrPersonalInfo extends Component<IProps, IState> {
     }
     console.log('matchJobsList:1 ', matchJobsList)
     return (
-      <View style={styles.matchJobView}>
+      <HTShadowView style={styles.matchJobView}>
         <Text style={styles.matchTitle}>
           匹配职位
         </Text>
@@ -213,7 +214,7 @@ class HrPersonalInfo extends Component<IProps, IState> {
           style={styles.hrMessageBg}
           source={require('../../../assets/requestJobs/hr-message-bg.png')}
         >
-          <Image resizeMode="center" style={styles.hrMessageIcon} source={require('../../../assets/requestJobs/icon-example.png')} />
+          <CacheImage style={styles.hrMessageIcon} source={global.AVATAR_IMAGE(this?.state?.hrInfo?.logo)} />
           <Text style={styles.hrMessageText}>
             我有一个职位适合你，快来聊聊吧～
           </Text>
@@ -230,7 +231,7 @@ class HrPersonalInfo extends Component<IProps, IState> {
               cellStyle={styles.matchJobCell}
               cellItem={item}
               onDeliveryPress={() => {
-                Toast.show('投递')
+              	this.props.navigation.push('JobDetail', { jobid: item.id })
               }}
               onPress={() => {
 
@@ -238,7 +239,7 @@ class HrPersonalInfo extends Component<IProps, IState> {
             />
           )
         })}
-      </View>
+      </HTShadowView>
     )
   }
 
@@ -254,7 +255,7 @@ class HrPersonalInfo extends Component<IProps, IState> {
           onDeliveryStyle={{ bottom: 20, }}
           cellItem={item}
           onDeliveryPress={() => {
-            Toast.show('投递')
+            this.props.navigation.push('JobDetail', { jobid: item.id })
           }}
           onPress={() => {
 
@@ -323,13 +324,7 @@ class HrPersonalInfo extends Component<IProps, IState> {
         <View
           style={styles.scrollview}
         // contentContainerStyle={styles.contentContainerStyle}
-        // refreshControl={(
-        //   <RefreshControl
-        //     refreshing={refreshing}
-        //     onRefresh={() => this.onRefresh()
-        //     }
-        //   />
-        // )}
+        // onRefresh={() => this.onRefresh()}}
         >
           {this.renderNavBar()}
           {this.renderList()}

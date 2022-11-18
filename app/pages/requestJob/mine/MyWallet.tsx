@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList } from 'react-native'
 import styles from './styles/MyWallet.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
@@ -9,7 +9,7 @@ import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import GradientButton from '../../components/GradientButton'
 import ListEmptyComponent from '../../components/ListEmptyComponent'
 import { differenceInHours, format, formatDistance } from 'date-fns'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import SystemHelper from '../../../utils/system'
 import { calculateTime } from '../../../utils/utils'
 
@@ -74,7 +74,7 @@ export default class MyWallet extends Component<IProps, IState> {
         >
           <Text style={styles.itemTitle}>余额（元）</Text>
           <Text style={styles.itemValue}>99.90</Text>
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.itemBtn}
             onPress={() => {
               navigation.push('BalanceWithdrawal')
@@ -91,7 +91,7 @@ export default class MyWallet extends Component<IProps, IState> {
             />
             <Text style={styles.itemBtnText}>提现</Text>
             {/* </ImageBackground> */}
-          </NextTouchableOpacity>
+          </NextPressable>
         </ImageBackground>
         <ImageBackground
           source={require('../../../assets/requestJobs/wallet-jinbi.png')}
@@ -102,7 +102,7 @@ export default class MyWallet extends Component<IProps, IState> {
             <Text style={styles.qiandaoTips}>签到领金币</Text>
           </View>
           <Text style={styles.itemValue}>10</Text>
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.itemBtn}
             onPress={() => {
               navigation.push('JinbiRecharge')
@@ -119,7 +119,7 @@ export default class MyWallet extends Component<IProps, IState> {
             />
             <Text style={styles.itemBtnText}>充值</Text>
             {/* </ImageBackground> */}
-          </NextTouchableOpacity>
+          </NextPressable>
         </ImageBackground>
       </View>
     )

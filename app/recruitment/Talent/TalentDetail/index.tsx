@@ -7,10 +7,6 @@ import NavBar from '../../components/NavBar'
 
 export default class TalentDetail extends Component {
 
-	componentDidMount() {
-		
-	}
-
 	render() {
 		return (
 			<View style={styles.container}>
@@ -22,7 +18,7 @@ export default class TalentDetail extends Component {
 		          </View>
 		        )}
 		      />
-		      <TalentDetailView />
+		      <TalentDetailView id={this.props.route.params['id']} navigation={this.props.navigation} />
 		    </View>
 		)
 	}

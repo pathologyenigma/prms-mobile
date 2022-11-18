@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ImageSourcePropType, ImageStyle, TouchableOpacity } from 'react-native'
+import { ImageSourcePropType, ImageStyle, Pressable } from 'react-native'
 import {
   ViewStyle,
   StyleProp,
@@ -28,12 +28,12 @@ export default function IconLabelButton({
   onPress,
 }: IconLabelButtonProps) {
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.5}>
+    <Pressable onPress={onPress} activeOpacity={0.5}>
       <View style={[styles.container, style]}>
         <Image source={icon} style={[styles.icon, iconStyle]} />
         <Text style={[styles.label, labelStyle]}>{label}</Text>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   )
 }
 

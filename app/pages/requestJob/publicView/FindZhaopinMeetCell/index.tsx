@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 'react-native'
-import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
+import NextPressable from '../../../components/NextPressable'
 
 import styles from './styles'
 
@@ -73,7 +73,7 @@ export default class FindZhaopinMeetCell extends PureComponent<ICell> {
       return null
     }
     return (
-      <NextTouchableOpacity
+      <NextPressable
         key={cellItem.id.toString()}
         style={[styles.cellView, cellStyle]}
         onPress={() => {
@@ -121,7 +121,7 @@ export default class FindZhaopinMeetCell extends PureComponent<ICell> {
             {cellItem.location}
           </Text>
         </View>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 }

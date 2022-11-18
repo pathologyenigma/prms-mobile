@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  TouchableOpacity,
+  Pressable,
   ViewProps,
   StyleProp,
   Text,
@@ -27,14 +27,14 @@ export default function GhostButton({
   disabled,
 }: GhostButtonProps) {
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={onPress}
       style={[styles.button, style]}
       activeOpacity={0.75}
       disabled={disabled}
       hitSlop={{ left: 8, right: 8, top: 8, bottom: 8, ...hitSlop }}>
       <Text style={[styles.text, textStyle]}>{title}</Text>
-    </TouchableOpacity>
+    </Pressable>
   )
 }
 

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, StatusBar, SectionList } from 'react-native'
 import styles from './styles/FindSearch.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import SearchTextinput from '../../components/SearchTextinput'
 // @ts-ignore
@@ -71,14 +71,14 @@ export default class FindSearch extends Component<IProps, IState> {
             this.setState({ searchValue: value })
           }}
         />
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.cancelBtn}
           onPress={() => {
             navigation.goBack()
           }}
         >
           <Text style={styles.cancelText}>取消</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }
@@ -88,7 +88,7 @@ export default class FindSearch extends Component<IProps, IState> {
       return (
         <View style={styles.searchHeader}>
           <Text style={styles.searchHeaderTitle}>{section.title}</Text>
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.deleteHistory}
             onPress={() => {
 
@@ -98,7 +98,7 @@ export default class FindSearch extends Component<IProps, IState> {
               source={require('../../../assets/requestJobs/delete-icon.png')}
               style={styles.deleteHistoryIcon}
             />
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
       )
     }
@@ -118,7 +118,7 @@ export default class FindSearch extends Component<IProps, IState> {
     const { selectItem, dataSource } = this.state
     const { navigation } = this.props
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={[styles.tagBtn,
           // selectItem && selectItem.id === item.id && { backgroundColor: '#E2FFF0', }
         ]}
@@ -138,7 +138,7 @@ export default class FindSearch extends Component<IProps, IState> {
           )}
           {item.label}
         </Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

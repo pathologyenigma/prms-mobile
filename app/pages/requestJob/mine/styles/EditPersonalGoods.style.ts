@@ -32,9 +32,13 @@ export default StyleSheet.create({
   detailInput: {
     width: '100%',
     color: '#333333',
-    fontSize: 13,
+    fontSize: 14,
+    lineHeight: 20,
     textAlignVertical: 'top',
-    paddingHorizontal: 12
+    paddingHorizontal: 15,
+    paddingTop: 15,
+    paddingBottom: 15,
+    height: 200,
   },
   detailView: {
     marginTop: 37,

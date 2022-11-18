@@ -2,11 +2,9 @@ import React from 'react'
 import { View, Text, Image, StyleSheet } from 'react-native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import GradientButton from '../../components/GradientButton'
-import { useNavigation } from '@react-navigation/core'
 import NavBar from '../../components/NavBar'
 
-export default function PostJobSuccess() {
-  const navigation = useNavigation<StackNavigationProp<any>>()
+export default function PostJobSuccess({ navigation }) {
   const handlePress = () => {
     console.log('完成')
     navigation.goBack()

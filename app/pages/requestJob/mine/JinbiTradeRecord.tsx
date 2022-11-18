@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styles from './styles/JinbiTradeRecord.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import { GenProps } from '../../../utils/StackProps'
+import NextPressable from '../../components/NextPressable'
 import { Text, View, Image, StatusBar, SectionList, RefreshControl } from 'react-native'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import SystemHelper from '../../../utils/system'
@@ -217,7 +217,7 @@ export default class JinbiTradeRecord extends Component<IProps, IState> {
 
   renderIncomeCell(item: any) {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.incomeCell}
         onPress={() => {
           const { navigation } = this.props
@@ -242,18 +242,7 @@ export default class JinbiTradeRecord extends Component<IProps, IState> {
           style={styles.jinbiIcon}
           source={require('../../../assets/requestJobs/qiandao-jinbi.png')}
         />
-      </NextTouchableOpacity>
-    )
-  }
-
-  renderIncomeRefresh() {
-    const { incomeRefreshState } = this.state
-    return (
-      <RefreshControl
-        refreshing={incomeRefreshState}
-        onRefresh={() => this.loadData()
-        }
-      />
+      </NextPressable>
     )
   }
 
@@ -282,10 +271,9 @@ export default class JinbiTradeRecord extends Component<IProps, IState> {
             />
           ) : null
         }
-        onEndReachedThreshold={0.1}
         stickySectionHeadersEnabled={false}
         onEndReached={() => this.loadMore()}
-        refreshControl={this.renderIncomeRefresh()}
+        onRefresh={() => this.loadData()}
         renderSectionHeader={({ section }) => this.renderIncomeMonth(section)}
         renderItem={({ item }: any) => this.renderIncomeCell(item)}
         keyExtractor={item => item.id.toString()}
@@ -307,10 +295,7 @@ export default class JinbiTradeRecord extends Component<IProps, IState> {
         {this.renderIncomeList()}
         <DatePickerModal
           visible={datePickVisible}
-          currentDate={localDateOfBirth
-            ? new Date(Date.parse(localDateOfBirth))
-            : new Date()
-          }
+          currentDate={localDateOfBirth}
           leftPress={() => {
             this.setState({ datePickVisible: false })
           }}

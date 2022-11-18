@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import { FlatList, ListRenderItem, StyleSheet, Pressable } from 'react-native'
 import LoadingAndError from '../../components/LoadingAndError'
 import NoMoreFooter from './NoMoreFooter'
 import TalentListItem from './TalentListItem'
 import UpgradeFeature from './UpgradeFeature'
+
+import HTRefreshManager from '~/common/refresh/HTRefreshManager'
 
 interface TalentPageProps {
   jobName?: string
@@ -32,115 +34,98 @@ function educationDesc(education: Education | null) {
   }
 }
 
-// export default class TalentPage extends Component {
+export default class TalentPage extends Component {
 
-// 	constructor(props) {
-// 		super(props)
-// 		this.state = {
-// 			itemList: 
-// 			page: 0
-// 		}
-// 	}
-
-// 	render() {
-
-// 	}
-
-// }
-
-export default function TalentPage({
-  jobName,
-  jobCategory,
-  keyword,
-  sortByUpdatedTime,
-  navigation,
-  filterConfig
-}: TalentPageProps) {
-
-  const [ page, setPage ] = useState(0)
-
-  const [itemList, setItemList] = useState()
-
-  useEffect(() => {
-	HTAPI.ENTSearchCandidates({
-		filter: {
-			keyword: keyword,
-			category: jobCategory,
-			...filterConfig
-		},
-		pageSize: 10,
-		page: page
-	}).then(response => {
-		let reloadItemList = response.data.map(item => {
-		const {
-			id,
-			name,
-			salary,
-			personal_advantage,
-			education,
-			experience,
-			job_expectation,
-			skills,
-			gender,
-			resume_data
-		} = item
-		const firstExpectation = job_expectation[0]
-		return {
-			id,
-			name,
-			online: true,
-			onlineDesc: '1 小时前在线',
-			advantage: resume_data?.personal_advantage || '暂无描述',
-			experience: `工作 ${experience || 0} 年`,
-			education: educationDesc(education),
-			salary: `${firstExpectation.min_salary_expectation / 1000}-${firstExpectation.max_salary_expectation / 1000}K`,
-			job: `期望：${firstExpectation.industry_involved.join('/')}`,
-			skills: `${resume_data.skills.join('·')}`,
-			gender: gender ? 'male' : 'female',
-			avatar: '',
+	constructor(props) {
+		super(props)
+		this.refreshManager = new HTRefreshManager()
+		this.refreshManager.pageCount = 20
+		this.state = {
+			itemList: []
 		}
-		})
-		reloadItemList = page == 0 ? reloadItemList : itemList.concat(reloadItemList)
-		setItemList(reloadItemList)
-	})
-  }, [sortByUpdatedTime, jobName, jobCategory, keyword, page, filterConfig])
+	}
 
-  const renderItem: ListRenderItem<CandidateItem> = ({ item }) => {
-    return (
-    	<Pressable onPress={() => {
-    		navigation.push('TalentDetail')
-    	}}>
-    		<TalentListItem {...item} />
-    	</Pressable>
-    )
-  }
+	componentDidMount() {
+		this._onRefresh()
+	}
 
-  return (
-    <LoadingAndError
-      loading={false}
-      style={StyleSheet.absoluteFillObject}
-      collapsable={false}>
-      <FlatList
-        style={styles.container}
-        contentContainerStyle={styles.content}
-        data={itemList}
-        keyExtractor={item => String(item.id)}
-        renderItem={renderItem}
-        ListHeaderComponent={UpgradeFeature}
-        ListFooterComponent={NoMoreFooter}
-        onRefresh={(endRefresh) => {
-        	setPage(0)
-        	endRefresh()
-        }}
-        onEndReached={() => setPage(page + 1)}
-      />
-    </LoadingAndError>
-  )
+	_onRefresh = (isHeaderRefresh = true, showLoading = true) => {
+		if (this.refreshManager.cantHandlerRefresh(isHeaderRefresh)) {
+			return
+		}
+		HTAPI.ENTSearchCandidates({
+			filter: this.props.filterConfig,
+			pageSize: this.refreshManager.pageCount,
+			page: this.refreshManager.reloadPageIndex(isHeaderRefresh)
+		}, { showLoading }).then(response => {
+			let reloadItemList = response.data.map(item => {
+			const {
+				id,
+				name,
+				salary,
+				personal_advantage,
+				education,
+				experience,
+				job_expectation,
+				skills,
+				gender,
+				resume_data
+			} = item
+			const firstExpectation = job_expectation[0]
+			return {
+				id,
+				name,
+				online: true,
+				onlineDesc: '1 小时前在线',
+				advantage: resume_data?.personal_advantage || '暂无描述',
+				experience: `工作 ${experience || 0} 年`,
+				education: educationDesc(education),
+				salary: `${firstExpectation.min_salary_expectation / 1000}-${firstExpectation.max_salary_expectation / 1000}K`,
+				job: `期望：${firstExpectation.industry_involved.join('/')}`,
+				skills: `${resume_data.skills.join('·')}`,
+				gender: gender ? 'male' : 'female',
+				avatar: '',
+			}
+			})
+			this.state.itemList = this.refreshManager.reloadItemList(reloadItemList, this.state.itemList, isHeaderRefresh)
+		}).finally(() => this.setState(this.state))
+	}
+
+	_renderItem = ({ item }) => {
+		return (
+	    	<Pressable onPress={() => {
+	    		this.props.navigation.push('TalentDetail', { id: item.id })
+	    	}}>
+	    		<TalentListItem {...item} />
+	    	</Pressable>
+	    )
+	}
+
+	render() {
+		return (
+			<FlatList
+				style={styles.container}
+				contentContainerStyle={styles.content}
+				data={this.state.itemList}
+				renderItem={this._renderItem}
+				// ListHeaderComponent={UpgradeFeature}
+				{...global.BIND_EMPTY_VIEW()}
+				onRefresh={(endRefresh) => {
+					this._onRefresh(true, false)
+				}}
+				refreshManager={this.refreshManager}
+				onEndReached={() => {
+					this._onRefresh(false, false)
+				}}
+			/>
+		  )
+	}
+
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   content: {
     backgroundColor: '#FFFFFF',

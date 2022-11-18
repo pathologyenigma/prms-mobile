@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 'react-native'
 import CommentStar from '../../../components/CommentStar'
-import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
+import NextPressable from '../../../components/NextPressable'
 import styles from './styles'
 import { format } from 'date-fns'
 
@@ -37,7 +37,7 @@ export default class CompanyCommentCell extends PureComponent<ICell> {
       return null
     }
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={[styles.cellView, cellStyle]}
         onPress={() => {
         }}
@@ -66,7 +66,7 @@ export default class CompanyCommentCell extends PureComponent<ICell> {
           <Text style={styles.cellTime}>
             {format(Number(cellItem.createdAt), 'yyyy年MM月dd日')}
           </Text>
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.likeView}
             onPress={() => {
               if (likePress) {
@@ -83,9 +83,9 @@ export default class CompanyCommentCell extends PureComponent<ICell> {
               }
             />
             <Text style={styles.cellTime}>{cellItem.thumbs || 0}</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 }

@@ -1,15 +1,17 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, StatusBar, SectionList } from 'react-native'
+import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, StatusBar, SectionList, Pressable } from 'react-native'
 import styles from './styles/JobSearch.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import SearchTextinput from '../../components/SearchTextinput'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { greenColor } from '../../../utils/constant'
 import GradientButton from '../../components/GradientButton'
+
+import HTHistoryManager from './model/HTHistoryManager'
 
 type IProps = GenProps<'JobSearch'> & {
 
@@ -29,11 +31,7 @@ export default class JobSearch extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
-      searchHistory: [
-        { id: 0, label: '项目经理' },
-        { id: 1, label: '德科科技有限公司' },
-        { id: 2, label: 'UI兼职' },
-      ],
+      searchHistory: [],
       searchGuess: [
         { id: 0, label: '网页设计师' },
         { id: 1, label: '富德生命人寿保险' },
@@ -51,7 +49,7 @@ export default class JobSearch extends Component<IProps, IState> {
       refreshState: RefreshState.HeaderRefreshing,
       selectItem: undefined,
       searchValue: '',
-      selectCity: '广州'
+      selectCity: '深圳'
     }
   }
 
@@ -59,8 +57,15 @@ export default class JobSearch extends Component<IProps, IState> {
     this.loadData()
   }
 
-  loadData() {
+  componentDidAppear({ isSecondAppear }) {
+  	if (isSecondAppear) {
+  		this.loadData()
+  	}
+  }
 
+  loadData = async () => {
+  	let valueList = await HTHistoryManager.readValueList()
+  	this.setState({ searchHistory: valueList.map((item, index) => ({ id: index, label: item })) })
   }
 
   renderNavBar() {
@@ -68,14 +73,14 @@ export default class JobSearch extends Component<IProps, IState> {
     const { selectCity, searchValue } = this.state
     return (
       <View style={styles.navBar}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.locationBtn}
           onPress={() => {
           	navigation.push('JobSelectCity', {
               mode: 1,
               selectJobCityCallback: (e: any) => {
                 console.log('eeeee: ', e)
-                this.setState({ selectCity: e[2].name })
+                this.setState({ selectCity: e[1].name })
               }
             })
           }}
@@ -85,10 +90,15 @@ export default class JobSearch extends Component<IProps, IState> {
             source={require('../../../assets/requestJobs/location-icon.png')}
           />
           <Text style={styles.locationText}>{selectCity}</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
+        <Pressable style={CONTAINER} onPress={() => {
+        	navigation.push('JobSearchResult')
+        }}>
         <SearchTextinput
           cellStyle={{ flex: 1, height: 33 }}
           inputProps={{
+          	pointerEvents: 'none',
+	        editable: false,
             value: searchValue,
             placeholder: '搜索职位/公司/商区',
             onSubmitEditing: () => {
@@ -99,14 +109,15 @@ export default class JobSearch extends Component<IProps, IState> {
             this.setState({ searchValue: value })
           }}
         />
-        <NextTouchableOpacity
+        </Pressable>
+        <NextPressable
           style={styles.cancelBtn}
           onPress={() => {
             navigation.goBack()
           }}
         >
           <Text style={styles.cancelText}>取消</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }
@@ -116,17 +127,18 @@ export default class JobSearch extends Component<IProps, IState> {
       return (
         <View style={styles.searchHeader}>
           <Text style={styles.searchHeaderTitle}>{section.title}</Text>
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.deleteHistory}
-            onPress={() => {
-
+            onPress={async () => {
+            	await HTHistoryManager.clearValueList()
+            	this.loadData()
             }}
           >
             <Image
               source={require('../../../assets/requestJobs/delete-icon.png')}
               style={styles.deleteHistoryIcon}
             />
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
       )
     }
@@ -141,7 +153,7 @@ export default class JobSearch extends Component<IProps, IState> {
     const { selectItem, dataSource } = this.state
     const { navigation } = this.props
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={[styles.tagBtn,
           // selectItem && selectItem.id === item.id && { backgroundColor: '#E2FFF0', }
         ]}
@@ -158,7 +170,7 @@ export default class JobSearch extends Component<IProps, IState> {
           ]}>
           {item.label}
         </Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

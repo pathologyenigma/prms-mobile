@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter } from 'react-native'
+import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, Pressable } from 'react-native'
 import styles from './styles/JobSelectCity.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import { connect } from 'react-redux'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import { greenColor } from '../../../utils/constant'
 
@@ -24,7 +24,38 @@ interface IState {
   selectZhen: any             // 选定的乡镇
 }
 
-class JobSelectCity extends Component<IProps, IState> {
+const ITEM_HEIGHT = 60
+
+export default class HTSelectedButton extends Component {
+
+	render() {
+		let selected = this.props.selected
+		let containerStyle = [
+			{ flexDirection: 'row', alignItems: 'center', height: ITEM_HEIGHT },
+			selected && { backgroundColor: '#E9F4EE' },
+			this.props.style,
+		]
+		let titleStyle = [
+			{ fontSize: 15, color: '#666666', flex: 1, textAlign: 'center' },
+			selected && { color: '#79D398', fontWeight: 'bold' },
+			this.props.titleStyle,
+		]
+		return (
+			<Pressable style={containerStyle} onPress={this.props.onPress}>
+				{
+					selected && this.props.showSeparator && <View style={{ width: 5, height: 15, backgroundColor: '#79D398' }}></View>
+				}
+				<Text style={titleStyle}>{this.props.text}</Text>
+				{
+					selected && this.props.showImage && <Image source={require('~/assets/requestJobs/green-check.png')} />
+				}
+			</Pressable>
+		)
+	}
+
+}
+
+export default class JobSelectCity extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
@@ -44,11 +75,33 @@ class JobSelectCity extends Component<IProps, IState> {
 
   loadData() {
     HTAPI.request('/preludeDatas/regions_simplified.json').then(response => {
+    	const selectItem = response.find(province => {
+    		const nameList = [province.name, this.props.navigation.getParam('province', '')]
+    		.map(province => province.replace(/(省|市)$/g, ''))
+    		if (nameList[0] == nameList[1]) {
+    			return province
+    		}
+    	}) ?? response[0]
+    	const selectedCity = selectItem.Cities.find(city => {
+    		const nameList = [city.name, this.props.navigation.getParam('city', '')]
+    		.map(city => city.replace(/(省|市)$/g, ''))
+    		if (nameList[0] == nameList[1]) {
+    			return city
+    		}
+    	})
+    	const provinceIndex = response.indexOf(selectItem)
+    	const cityIndex = selectItem.Cities.indexOf(selectedCity)
     	this.setState({
-          dataSource: response,
-          selectItem: response[0],
-          selectItemSecond: response[0].Cities,
-        })
+        dataSource: response,
+        selectItem: selectItem,
+        selectedCity: selectedCity,
+        selectItemSecond: selectItem.Cities,
+      }, () => {
+      	setTimeout(() => {
+      		this.provinceScrollView.scrollTo({ y: ITEM_HEIGHT * provinceIndex, animated: false })
+      		this.cityScrollView.scrollTo({ y: ITEM_HEIGHT * cityIndex, animated: false })
+      	}, 50)
+      })
     })
   }
 
@@ -105,54 +158,42 @@ class JobSelectCity extends Component<IProps, IState> {
     }
     return (
       <View style={styles.detailView}>
-        <ScrollView style={styles.detailSecondView}>
+        <ScrollView style={styles.detailSecondView} ref={ref => this.provinceScrollView = ref}>
           {dataSource.map((e: any, index: number) => {
             return (
-              <NextTouchableOpacity
-              	hitSlop={{top: 20, bottom: 20}}
-                style={[styles.detailSecondBtn,
-                selectItem?.province_id === e?.province_id && {
-                  borderLeftColor: greenColor,
-                }
-                ]}
-                key={index.toString()}
-                onPress={() => {
+              <HTSelectedButton
+              	selected={selectItem?.province_id === e?.province_id}
+              	key={index}
+              	text={e.name}
+              	showSeparator={true}
+              	onPress={() => {
                   this.setState({
                     selectItem: e,
                     selectItemSecond: e.Cities,
                   })
                 }}
-              >
-                <Text style={[styles.detailSecondText, selectItem.province_id === e.province_id && { color: greenColor, fontWeight: 'bold' }]}>{e.name}</Text>
-              </NextTouchableOpacity>
+              />
             )
           })}
         </ScrollView>
-        <ScrollView style={styles.detailThirdView}>
+        <ScrollView style={styles.detailThirdView} ref={ref => this.cityScrollView = ref}>
           {selectItemSecond.map((e: any, index: number) => {
             const isSelected = selectedCity && (selectedCity.city_id === e.city_id)
             return (
-              <NextTouchableOpacity
-              	hitSlop={{top: 20, bottom: 20}}
-                style={styles.detailThirdBtn}
-                key={index.toString()}
-                onPress={() => {
+              <HTSelectedButton
+              	selected={isSelected}
+              	key={index}
+              	text={e.name}
+              	style={{ paddingRight: 20 }}
+              	titleStyle={{ flex: 1, textAlign: 'left', marginLeft: 50 }}
+              	showImage={true}
+              	onPress={() => {
                   this.setState({
                     selectedCity: e,
                     selectZhen: e.Counties[0]
                   })
                 }}
-              >
-                <Text style={
-                  [styles.detailSecondText, isSelected && { color: greenColor, fontWeight: 'bold', flex: 1 }]
-                }>{e.name}</Text>
-                {isSelected ? (
-                  <Image
-                    style={styles.selectTag}
-                    source={require('../../../assets/requestJobs/green-check.png')}
-                  />
-                ) : null}
-              </NextTouchableOpacity>
+              />
             )
           })}
         </ScrollView>
@@ -191,53 +232,41 @@ class JobSelectCity extends Component<IProps, IState> {
         <ScrollView style={styles.detailSecondView}>
           {araeType.map((e: any, index: number) => {
             return (
-              <NextTouchableOpacity
-                style={[styles.detailSecondBtn,
-                selectedArea.id === e.id && {
-                  borderLeftColor: greenColor,
-                }
-                ]}
-                key={index.toString()}
-                onPress={() => {
+              <HTSelectedButton
+              	selected={selectedArea.id === e.id}
+              	key={index}
+              	text={e.title}
+              	style={{ paddingRight: 20 }}
+              	titleStyle={{ flex: 1, textAlign: 'left', marginLeft: 50 }}
+              	showSeparator={true}
+              	onPress={() => {
                   if (index > 0) {
-                    Toast.show('敬请期待')
+                    global.TODO_TOAST()
                   } else {
                     this.setState({
                       selectArea: e
                     })
                   }
                 }}
-              >
-                <Text style=
-                  {[styles.detailSecondText, selectedArea.id === e.id && { color: greenColor, fontWeight: 'bold' }]}>
-                  {e.title}
-                </Text>
-              </NextTouchableOpacity>
+              />
             )
           })}
         </ScrollView>
         <ScrollView style={styles.detailQuyuView}>
           {selectedCity.Counties.map((e: any, index: number) => {
             return (
-              <NextTouchableOpacity
-                style={[styles.detailSecondBtn,
-                { borderLeftColor: '#F8F8F8', }
-                ]}
-                key={index.toString()}
-                onPress={() => {
-                  console.log('selectedCity: ', selectedCity)
+              <HTSelectedButton
+              	selected={selectQu.county_id === e.county_id}
+              	key={index}
+              	text={e.name}
+              	style={{ paddingRight: 20 }}
+              	titleStyle={{ flex: 1, textAlign: 'center' }}
+              	onPress={() => {
                   this.setState({
                     selectQu: e,
                   }, this.loadTown)
                 }}
-              >
-                <Text
-                  style={[
-                    styles.detailSecondText,
-                    selectQu.county_id === e.county_id && { color: greenColor }]}>
-                  {e.name}
-                </Text>
-              </NextTouchableOpacity>
+              />
             )
           })}
         </ScrollView>
@@ -245,23 +274,16 @@ class JobSelectCity extends Component<IProps, IState> {
           {(selectQu?.Towns ?? []).map((e: any, index: number) => {
             const isSelected = selectZhen && selectZhen.town_id === e.town_id
             return (
-              <NextTouchableOpacity
-                style={[styles.detailThirdBtn, { borderLeftColor: '#F0F0F0', }]}
-                key={index.toString()}
-                onPress={() => {
+              <HTSelectedButton
+              	selected={isSelected}
+              	key={index}
+              	text={e.name}
+              	style={{ paddingRight: 20 }}
+              	titleStyle={{ flex: 1, textAlign: 'center' }}
+              	onPress={() => {
                   this.setState({ selectZhen: e })
                 }}
-              >
-                <Text style={
-                  [styles.detailSecondText, isSelected && { color: greenColor, fontWeight: 'bold', flex: 1 }]
-                }>{e.name}</Text>
-                {isSelected ? (
-                  <Image
-                    style={styles.selectTag}
-                    source={require('../../../assets/requestJobs/green-check.png')}
-                  />
-                ) : null}
-              </NextTouchableOpacity>
+              />
             )
           })}
         </ScrollView>
@@ -283,7 +305,7 @@ class JobSelectCity extends Component<IProps, IState> {
       selectZhen)
     return (
       <View style={styles.footerView}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.resetBtn}
           onPress={() => {
             this.setState({
@@ -295,7 +317,7 @@ class JobSelectCity extends Component<IProps, IState> {
           }}
         >
           <Text style={styles.resetText}>重置</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
         <GradientButton
           disabled={!selectedCity}
           textStyle={!selectedCity ? {
@@ -309,18 +331,18 @@ class JobSelectCity extends Component<IProps, IState> {
             const { navigation, route: { params: { selectJobCityCallback, mode } } } = this.props
             if (mode === 1) {
               // 选择城市级别
-              selectJobCityCallback([selectItem, selectedCity, selectedCity.name == '市辖区' ? selectItem : selectedCity])
+              selectJobCityCallback([selectItem, selectedCity.name == '市辖区' ? selectItem : selectedCity])
               navigation.goBack()
             } else if (isSelectDetailArea) {
               // 临时把名称返回,具体的等后述需求
-              selectJobCityCallback([selectItem, selectedCity, selectQu, selectZhen])
+              selectJobCityCallback([selectItem, selectedCity.name == '市辖区' ? selectItem : selectedCity, selectQu, selectZhen])
               navigation.goBack()
             } else {
-				this.setState({
-				    isSelectDetailArea: true,
-				    selectedCity: selectItem.Cities[0],
-				    selectQu: selectItem.Cities[0].Counties[0]
-				}, this.loadTown)
+							this.setState({
+							    isSelectDetailArea: true,
+							    selectedCity: selectedCity,
+							    selectQu: selectedCity.Counties[0]
+							}, this.loadTown)
             }
           }}
         />
@@ -350,5 +372,3 @@ class JobSelectCity extends Component<IProps, IState> {
     )
   }
 }
-
-export default JobSelectCity

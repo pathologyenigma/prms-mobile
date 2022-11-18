@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Image, TextInput } from 'react-native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import IconButton from '../../components/IconButton'
-import { useNavigation } from '@react-navigation/native'
 import CompanyAddressModal from '../CompanyAddressModal'
 import CompanyCategoryModal from '../CompanyCategoryModal'
 import { useState } from 'react'
@@ -13,8 +12,7 @@ import TitleAndDetail from '../TitleAndDetail'
 import Hint from './Hint'
 import NavBar from '../../components/NavBar'
 
-export default function CompanyAuthentication() {
-  const navigation = useNavigation<StackNavigationProp<any>>()
+export default function CompanyAuthentication({ navigation }) {
 
   const [addressModalVisible, setAddressModalVisible] = useState(false)
   const [categoryModalVisible, setCategoryModalVisible] = useState(false)

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, ScrollView, StatusBar, RefreshControl, Image } from 'react-native'
 import styles from './styles/InterviewEvaluation.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { Tabs } from '@ant-design/react-native'
 import GradientButton from '../../components/GradientButton'
 import CompanyJobCell from './CompanyJobCell'
@@ -280,17 +280,6 @@ export default class InterviewEvaluation extends Component<IProps, IState> {
     )
   }
 
-  renderRefresh() {
-    const { refreshing } = this.state
-    return (
-      <RefreshControl
-        refreshing={refreshing}
-        onRefresh={() => this.loadData()
-        }
-      />
-    )
-  }
-
   changeOffSet(i: number) {
     if (i < 3) {
       return 0
@@ -316,7 +305,7 @@ export default class InterviewEvaluation extends Component<IProps, IState> {
                 text={e.title}
               />
             ) : (
-              <NextTouchableOpacity
+              <NextPressable
                 style={styles.jobTypeBtn}
                 onPress={() => {
                   this.setState({ selectTabs: i }, () => {
@@ -327,7 +316,7 @@ export default class InterviewEvaluation extends Component<IProps, IState> {
                 }}
               >
                 <Text>{e.title}</Text>
-              </NextTouchableOpacity>
+              </NextPressable>
             )
           )
         })}
@@ -423,7 +412,7 @@ export default class InterviewEvaluation extends Component<IProps, IState> {
     })
     return (
       <ScrollView
-        refreshControl={this.renderRefresh()}
+        onRefresh={() => this.loadData()}
         contentContainerStyle={styles.scrollView}
       >
         <Tabs

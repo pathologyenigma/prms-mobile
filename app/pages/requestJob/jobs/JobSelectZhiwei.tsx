@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter } from 'react-native'
 import styles from './styles/JobSelectZhiwei.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import SearchTextinput from '../../components/SearchTextinput'
 // @ts-ignore
@@ -127,7 +127,7 @@ export default class JobSelectZhiwei extends Component<IProps, IState> {
     const { selectItem } = this.state
     console.log('item: ', item)
     return (
-      <NextTouchableOpacity
+      <NextPressable
       	hitSlop={{top: 20, bottom: 20}}
         style={[styles.cellView, selectItem.id === item.id && {
           borderLeftColor: greenColor
@@ -141,7 +141,7 @@ export default class JobSelectZhiwei extends Component<IProps, IState> {
         }}
       >
         <Text style={[styles.cellText, selectItem.id === item.id && { color: greenColor }]}>{item.title}</Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -152,7 +152,7 @@ export default class JobSelectZhiwei extends Component<IProps, IState> {
       <View
         style={styles.detailView}
       >
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.backBtn}
           onPress={() => {
             this.setState({
@@ -163,7 +163,7 @@ export default class JobSelectZhiwei extends Component<IProps, IState> {
         <ScrollView style={styles.detailSecondView}>
           {selectItem.sublist.map((e: any, index: number) => {
             return (
-              <NextTouchableOpacity
+              <NextPressable
               	hitSlop={{top: 20, bottom: 20}}
                 style={[styles.detailSecondBtn,
                 selectItemSecond.id === e.id && {
@@ -178,14 +178,14 @@ export default class JobSelectZhiwei extends Component<IProps, IState> {
                 }}
               >
                 <Text style={[styles.detailSecondText, selectItemSecond.id === e.id && { color: greenColor }]}>{e.title}</Text>
-              </NextTouchableOpacity>
+              </NextPressable>
             )
           })}
         </ScrollView>
         <ScrollView style={styles.detailThirdView}>
           {selectItemSecond.sublist.map((e: any, index: number) => {
             return (
-              <NextTouchableOpacity
+              <NextPressable
               	hitSlop={{top: 20, bottom: 20}}
                 style={styles.detailThirdBtn}
                 key={index.toString()}
@@ -202,7 +202,7 @@ export default class JobSelectZhiwei extends Component<IProps, IState> {
                     source={require('../../../assets/requestJobs/green-check.png')}
                   />
                 ) : null}
-              </NextTouchableOpacity>
+              </NextPressable>
             )
           })}
         </ScrollView>

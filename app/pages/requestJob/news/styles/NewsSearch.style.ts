@@ -44,7 +44,7 @@ export default StyleSheet.create({
     fontSize: 15
   },
   cellItem: {
-    height: 35,
+    // height: 35,
     // width: (SystemHelper.width - 64) / 3,
     alignItems: 'center',
     justifyContent: 'center',

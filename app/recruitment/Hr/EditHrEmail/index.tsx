@@ -17,7 +17,7 @@ export default function EditHrEmail({
   navigation,
   route,
 }: StackScreenProps<HrParamList, 'EditHrEmail'>) {
-  const { email } = route.params
+  const { email, callback } = route.params
   const [emailInput, setEmailInput] = useState(email || '')
   const emailValid = isValidEmail(emailInput)
 
@@ -79,7 +79,7 @@ export default function EditHrEmail({
               codeButtonDisabled ? styles.captchaTextDisabled : undefined,
             ]}
             onPress={() => {
-              HTAPI.StaticSendEmail({ email: emailInput }).then(response => {
+              HTAPI.StaticSendEmail({ email: emailInput }, { showLoading: true }).then(response => {
               	Toast.show('发送成功！')
               	startCountdown()
               })
@@ -95,7 +95,8 @@ export default function EditHrEmail({
           	HTAPI.UserEditEmail({ email: emailInput, code }).then(response => {
           		Hud.hidden()
           		Toast.show('邮箱修改成功!')
-          		navigation.navigate('HrProfile', { email: emailInput })
+          		navigation.pop()
+          		callback(navigation, emailInput)
           	})
           }}
         />

@@ -17,11 +17,11 @@ interface AuditProps {
 
 export default function Audit({ status }: AuditProps) {
   if (status === '审核中') {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.pendding}>工作人员急速审核中...</Text>
-      </View>
-    )
+    // return (
+    //   <View style={styles.container}>
+    //     <Text style={styles.pendding}>工作人员急速审核中...</Text>
+    //   </View>
+    // )
   }
 
   if (status === '已拒绝') {

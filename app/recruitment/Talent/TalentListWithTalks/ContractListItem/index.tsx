@@ -26,7 +26,7 @@ export default function ContractListItem({ item, onPress }: ItemProps) {
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.container}>
         <View style={styles.jobContainer}>
-          <Text style={styles.job}>沟通职位：{job}</Text>
+          {/*<Text style={styles.job}>沟通职位：{job}</Text>*/}
           <Text style={styles.time}>{time}</Text>
         </View>
         <Text style={styles.name}>{name}</Text>

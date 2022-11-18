@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ImageSourcePropType, DeviceEventEmitter } from 'react-native'
 import styles from './styles'
-import { GenProps } from '../../../../navigator/requestJob/stack'
+import { GenProps } from '../../../../utils/StackProps'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
-import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
+import NextPressable from '../../../components/NextPressable'
 import CompanyCell from '../CompanyCell'
 import JobfairCell from '../JobfairCell'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
@@ -117,7 +117,7 @@ class Jobfair extends Component<TProps, IState> {
     const { appointment } = this.state
     return (
       <View style={styles.tabs}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.selectTypeBtn}
           onPress={() => {
             this.setState({ appointment: false }, () => {
@@ -127,8 +127,8 @@ class Jobfair extends Component<TProps, IState> {
           }}
         >
           <Text style={[styles.selectTypeText, appointment === false && { fontWeight: 'bold' }]}>全部</Text>
-        </NextTouchableOpacity>
-        <NextTouchableOpacity
+        </NextPressable>
+        <NextPressable
           style={styles.selectTypeBtn}
           onPress={() => {
             this.setState({ appointment: true }, () => {
@@ -138,8 +138,8 @@ class Jobfair extends Component<TProps, IState> {
           }}
         >
           <Text style={[styles.selectTypeText, appointment === true && { fontWeight: 'bold' }]}>已预约</Text>
-        </NextTouchableOpacity>
-        {/* <NextTouchableOpacity
+        </NextPressable>
+        {/* <NextPressable
           style={styles.selectTypeBtn}
           onPress={() => {
             if (selectType !== 2) {
@@ -151,7 +151,7 @@ class Jobfair extends Component<TProps, IState> {
           }}
         >
           <Text style={[styles.selectTypeText, selectType === 2 && { fontWeight: 'bold' }]}>已结束</Text>
-        </NextTouchableOpacity> */}
+        </NextPressable> */}
       </View>
     )
   }
@@ -171,7 +171,6 @@ class Jobfair extends Component<TProps, IState> {
           renderItem={({ item }: any) => this.renderItem(item)}
           onFooterRefresh={() => this.handleEndReached()}
           keyExtractor={item => item && item.id && item.id.toString()}
-          onEndReachedThreshold={0.1}
           footerRefreshingText="加载更多"
           footerNoMoreDataText="没有更多了"
         />

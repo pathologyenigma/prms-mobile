@@ -4,7 +4,7 @@ import { TextInputProps } from '@ant-design/react-native/lib/textarea-item'
 
 const styles = StyleSheet.create({
   container: {
-    height: 35,
+    // height: 35,
     marginHorizontal: 21,
     flexDirection: 'row',
     flex: 1,
@@ -13,23 +13,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   downImg: {
-    width: 15,
-    height: 8,
+  	opacity: 0,
+    // width: 15,
+    // height: 8,
     marginLeft: 8,
-    marginRight: 18
+    marginRight: 10
   },
   textTitle: {
     color: '#323338',
     fontSize: 13,
-    height: 16,
+    // height: 16,
     lineHeight: 16,
   },
   input: {
     padding: 0,
-    height: 20,
-    lineHeight: 20,
+    // height: 20,
+    // lineHeight: 20,
     fontSize: 16,
     color: '#333333',
+    paddingVertical: 15,
     flex: 1
   },
   line: {

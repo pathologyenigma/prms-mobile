@@ -86,12 +86,12 @@ export default StyleSheet.create({
   },
   accountLoginInput: {
     padding: 0,
+    paddingVertical: 15,
     fontSize: 15,
     color: '#333333',
   },
   accountPasswordConatiner: {
     marginTop: 24,
-    height: 35,
     marginHorizontal: 21,
     borderBottomColor: '#DDDDDD',
     borderBottomWidth: 1,
@@ -102,6 +102,7 @@ export default StyleSheet.create({
   accountPasswordInput: {
     padding: 0,
     fontSize: 15,
+    paddingVertical: 15,
     color: '#333333',
     flex: 1,
   },
@@ -174,7 +175,7 @@ export default StyleSheet.create({
     borderRadius: 8
   },
   privacyModal: {
-    height: 185,
+    height: 185 + global.HOME_BAR_HEIGHT,
     width: SystemHelper.width,
   },
   privacyModalTitle: {

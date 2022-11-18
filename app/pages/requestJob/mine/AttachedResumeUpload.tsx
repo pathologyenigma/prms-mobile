@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, Image } from 'react-native'
 import styles from './styles/AttachedResumeUpload.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
 
 type IProps = GenProps<'AttachedResumeUpload'> & {

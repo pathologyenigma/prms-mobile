@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from 'react-native'
+import { View, Text, ScrollView, Pressable, StyleSheet, Image } from 'react-native'
 import HTNavigationBar from '~/common/navigation/HTNavigationBar'
 import { HTPageManager } from 'react-native-selected-page'
 import HTInvestPersonPage from '../../person/common/page/HTInvestPersonPage'
@@ -12,7 +12,9 @@ export default class HTCompanyInvestPage extends Component {
 		this.pageManager = new HTPageManager([
 			{ title: '自然人', pageClass: HTInvestPersonPage },
 			{ title: '企业/机构', pageClass: HTInvestEnterprisePage }
-		])
+		], (pageIndex) => {
+			this.pageManager.data[pageIndex]?.ref?._onRefresh()
+		})
 	}
 
 	_renderNavigationBar = () => {
@@ -20,9 +22,9 @@ export default class HTCompanyInvestPage extends Component {
 			<HTNavigationBar
 				title={'找投资'}
 				leftItemList={[
-					<TouchableOpacity style={{ height: '100%', justifyContent: 'center', paddingRight: 20 }} onPress={this.props.navigation.goBack}>
+					<Pressable style={{ height: '100%', justifyContent: 'center', paddingRight: 20 }} onPress={this.props.navigation.goBack}>
 						<Image source={require('~/assets/black_back.png')} />
-					</TouchableOpacity>
+					</Pressable>
 				]}
 			/>
 		)
@@ -52,7 +54,10 @@ export default class HTCompanyInvestPage extends Component {
 				renderItem={({item, index}) => {
 					let PageClass = item.pageClass
 					return (
-						<PageClass navigation={this.props.navigation} />
+						<PageClass 
+							ref={ref => item.ref = ref}
+							navigation={this.props.navigation} 
+						/>
 					)
 				}} 
 			/>

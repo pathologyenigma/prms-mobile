@@ -6,22 +6,22 @@ import {
   ScrollView,
   StatusBar,
   DeviceEventEmitter,
+  FlatList,
   Pressable
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import GradientButton from '../../components/GradientButton'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import styles from './styles/Jobs.style'
 import LinearGradient from 'react-native-linear-gradient'
 import {
   gradienViewRightGreenColor,
   greenColor,
 } from '../../../utils/constant'
-import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { Carousel } from '@ant-design/react-native'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import JobCell from '../../components/JobCell'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import { CommonActions } from '@react-navigation/native'
@@ -35,7 +35,10 @@ import {
 
 import HTBannerView from '~/common/view/HTBannerView'
 import HTPageControl from '~/common/view/HTPageControl'
+import { HTPageHeaderView } from 'react-native-selected-page'
 import HTRefreshManager from '~/common/refresh/HTRefreshManager'
+import geolocation from '~/common/location/geolocation'
+import HTPermissionManager from '~/common/permission/HTPermissionManager'
 
 type IProps = GenProps<'Jobs'> &
   ReturnType<typeof mapStateToProps> &
@@ -54,16 +57,23 @@ type IState = {
 class Jobs extends Component<IProps, IState> {
   constructor(props: any) {
     super(props)
+    this.refreshManager = new HTRefreshManager()
     this.state = {
       videoSource: [],
       listDataSource: [],
-      refreshState: RefreshState.Idle,
       selectCondition: 2, // 1:推荐; 2: 最新; 3:附近
       selectJobsArray: [],
       selectJobIndex: 0,
-      page: 0,
       filterConfig: {},
+      address: null,
     }
+  }
+
+  componentDidAppear({ isSecondAppear }) {
+    StatusBar.setBarStyle('light-content', true)
+    if (isSecondAppear) {
+  	  this.loadJobExpections()
+  	}
   }
 
   componentDidMount() {
@@ -72,9 +82,9 @@ class Jobs extends Component<IProps, IState> {
     // 注意:当前服务端不支持 subscription 和 其他接口同时调用,暂时修改为延迟获取
     
     StatusBar.setBarStyle('light-content', true)
-    this.props.navigation.addListener('focus', () => {
-      this.loadJobExpections()
-      StatusBar.setBarStyle('light-content', true)
+    this.loadJobExpections()
+    this._requestLocation(response => {
+    	this.setState({ address: response })
     })
   }
 
@@ -99,49 +109,83 @@ class Jobs extends Component<IProps, IState> {
       })
   }
 
-  componentWillUnmount() {
-    this.props.navigation.removeListener('focus', () => { })
-  }
-
   loadJobExpections() {
     // 加载个人职位类型
-    HTAPI.CandidateGetAllJobExpectations(null, { showError: false }).then(response => {
+    HTAPI.CandidateGetAllJobExpectations(null, { showLoading: true }).then((response = []) => {
+    	const reloadResponse = [{ job_category: ['全部', '全部', '全部'] }, ...response]
     	this.setState({
-          selectJobsArray: response
+          selectJobsArray: reloadResponse,
+          selectJobIndex: reloadResponse?.length <= this.state.selectJobIndex ? 0 : this.state.selectJobIndex,
         }, () => {
-          this.loadJobList()
+          this._onRefresh(true, true)
         })
-    }).catch(error => {
-    	if (error == 'need job expectation for this operation') {
-    		Toast.show('请先添加你的求职期望吧')
-    	}
     })
   }
 
-  loadJobList() {
-    // 根据个人类型加载列表
-    const { selectJobsArray, selectJobIndex, listDataSource, page } = this.state
+  _onRefresh = (isHeaderRefresh = true, showLoading = false) => {
+    if (this.refreshManager.cantHandlerRefresh(isHeaderRefresh)) {
+    	return
+    }
+    const { selectJobsArray, selectJobIndex } = this.state
     if ((selectJobsArray?.length ?? 0) <= 0) {
       // 没有筛选条件，直接展示空列表
       this.setState({
         listDataSource: [],
-        refreshState: 3,
       })
       return
     }
-    const filter = {
-      'category': selectJobsArray[selectJobIndex].job_category,
-      page,
+    const jobCategory = selectJobsArray[selectJobIndex].job_category
+    HTAPI.CandidateGetJobList({ filter: {
+      'category': jobCategory?.[0] == '全部' ? undefined : jobCategory,
       ...this.state.filterConfig,
-      pageSize: 10,
-      // 'salaryExpected': 
-    }
-    HTAPI.CandidateGetJobList({ filter }).then(response => {
-    	const originData = page === 0 ? [] : listDataSource
-    	this.setState({
-			listDataSource: originData.concat(response.data),
-			refreshState: response.data.length === 10 ? 0 : 3,
-        })
+      page: this.refreshManager.reloadPageIndex(isHeaderRefresh),
+      pageSize: this.refreshManager.pageCount,
+    }}, { showLoading }).then(response => {
+    	this.state.listDataSource = this.refreshManager.reloadItemList(response.data, this.state.listDataSource, isHeaderRefresh)
+    }).finally(() => this.setState(this.state))
+  }
+
+  _requestLocation = (complete) => {
+  	HTPermissionManager.request([
+  		HTPermissionManager.PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+			HTPermissionManager.PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
+			HTPermissionManager.PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+  	], (response) => {
+  		Hud.show()
+  		geolocation.getLocation().then(response => {
+  			complete(response)
+    	}).catch(e => {
+    		Toast.show('定位失败: ' + e)
+    	}).finally(() => {
+    		Hud.hidden()
+    	})
+  	})
+  }
+
+  _nearDidTouch = () => {
+  	this._requestLocation(response => {
+  		let latitude = response?.latitude
+			let longitude = response.longitude
+			if (latitude && longitude) {
+				this.state.filterConfig.sortWithDistance = [longitude, latitude]
+				this.setState({ selectCondition: 3 }, () => {
+    			this._onRefresh(true, true)
+    		})
+			}
+  	})
+  }
+
+  _addressDidTouch = () => {
+  	const { navigation } = this.props
+    navigation.push('JobSelectCity', {
+      mode: 1,
+      province: this?.state?.address?.province,
+      city: this?.state?.address?.city,
+      selectJobCityCallback: (e: any) => {
+        console.log('eeeee: ', e[1].name)
+        this.setState({ address: { city: e[1].name } })
+        // this.setState({ selectJobCity: e })
+      }
     })
   }
 
@@ -150,6 +194,12 @@ class Jobs extends Component<IProps, IState> {
     const end = { x: 1, y: 0.5 }
     const { navigation } = this.props
     const { selectJobsArray, selectJobIndex } = this.state
+    let padding = 10
+	if ((selectJobsArray?.length ?? 0) > 0) {
+		let item = selectJobsArray[0]
+		let title = item.job_category[item.job_category.length - 1]
+		padding += title.length * 3
+	}
     return (
       <LinearGradient
         start={start}
@@ -164,42 +214,25 @@ class Jobs extends Component<IProps, IState> {
           containerStyle={styles.statusBarStyle}
         /> */}
         <View style={styles.naviBarContainer}>
-          <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            ref={'barScrollView'}
-            style={styles.naviBarScrollview}>
-            {selectJobsArray &&
-              selectJobsArray.length > 0 &&
-              selectJobsArray.map((item: any, index: number) => {
-                return (
-                  <NextTouchableOpacity
-                    key={index.toString()}
-                    onPress={() => {
-                      this.setState(
-                        {
-                          selectJobIndex: index,
-                        },
-                        () => {
-                          this.handleRefresh()
-                        },
-                      )
-                    }}>
-                    <Text
-                      style={[
-                        styles.naviBarText,
-                        selectJobIndex === index && {
-                          fontSize: 20,
-                          fontWeight: '400',
-                        },
-                      ]}>
-                      {item.job_category[item.job_category.length - 1]}
-                    </Text>
-                  </NextTouchableOpacity>
-                )
-              })}
-          </ScrollView>
-          <NextTouchableOpacity
+          <HTPageHeaderView
+			style={{ flex: 1, height: 44 }}
+			data={selectJobsArray}
+			titleFromItem={item => item.job_category[item.job_category.length - 1]}
+			initScrollIndex={selectJobIndex}
+			itemContainerStyle={{ paddingHorizontal: padding }}
+			itemTitleStyle={{ fontSize: 16, fontWeight: '500' }}
+			itemTitleNormalStyle={{ color: 'rgba(255, 255, 255, 0.75)' }}
+			itemTitleSelectedStyle= {{ color: 'white', fontSize: 19 }}
+			onSelectedPageIndex={(pageIndex) => {
+				if (pageIndex == this.state.selectJobIndex) {
+					return
+				}
+				this.state.selectJobIndex = pageIndex
+				this._onRefresh(true, true)
+			}}
+			cursorStyle={{ width: null, transform: [{ scaleX: 0.4 }], height: 2, backgroundColor: 'translucent' }}
+		  />
+          <NextPressable
             style={{ marginLeft: 40, marginRight: 10 }}
             onPress={() => {
               navigation.push('JobExpectations')
@@ -208,8 +241,8 @@ class Jobs extends Component<IProps, IState> {
               style={styles.naviBarIcon}
               source={require('../../../assets/requestJobs/add.png')}
             />
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
+          </NextPressable>
+          <NextPressable
             onPress={() => {
               navigation.push('JobSearch')
             }}>
@@ -217,33 +250,9 @@ class Jobs extends Component<IProps, IState> {
               style={styles.naviBarIcon}
               source={require('../../../assets/requestJobs/search.png')}
             />
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
       </LinearGradient>
-    )
-  }
-
-  handleRefresh() {
-    this.setState(
-      {
-        page: 0,
-        refreshState: 1,
-      },
-      () => {
-        this.loadJobList()
-      },
-    )
-  }
-
-  handleEndReached() {
-    this.setState(
-      {
-        page: this.state.page + 1,
-        refreshState: 2,
-      },
-      () => {
-        this.loadJobList()
-      },
     )
   }
 
@@ -279,19 +288,19 @@ class Jobs extends Component<IProps, IState> {
 	let itemList = new Array(3).fill(0)
     return (
       <View style={styles.videoView}>
-        <View style={styles.videoHeaderView}>
+        <Pressable style={styles.videoHeaderView} onPress={global.TODO_TOAST}>
           <Text style={styles.videoTitle}>视频招聘</Text>
           <Text style={styles.videoDetail}>查看更多</Text>
           <Image
             style={styles.videoRightImg}
             source={require('../../../assets/requestJobs/next-gray.png')}
           />
-        </View>
+        </Pressable>
         <View style={styles.videoTopView}>
           {
           	itemList.map((item, index) => {
           		return (
-          			<NextTouchableOpacity key={index} style={styles.videoBtn}>
+          			<NextPressable key={index} style={styles.videoBtn} onPress={global.TODO_TOAST}>
           				<CacheImage style={[StyleSheet.absoluteFill]} source={{ uri: imageList[index] }} />
 						{this.renderVideoTag()}
 						<LinearGradient 
@@ -300,7 +309,7 @@ class Jobs extends Component<IProps, IState> {
 						>
 							<Text style={styles.videoText}>在招职场系列直播</Text>
 						</LinearGradient>
-					</NextTouchableOpacity>
+					</NextPressable>
           		)
           	})
           }
@@ -329,7 +338,7 @@ class Jobs extends Component<IProps, IState> {
     return (
       <View style={styles.conditionView}>
         <View style={styles.conditionLeftView}>
-          {/* <NextTouchableOpacity
+          {/* <NextPressable
             style={styles.conditionLeftBtn}
             onPress={() => {
               this.setState({ selectCondition: 1 })
@@ -340,11 +349,14 @@ class Jobs extends Component<IProps, IState> {
                 color: greenColor, fontWeight: '500'
               }]}
             >推荐</Text>
-          </NextTouchableOpacity> */}
-          <NextTouchableOpacity
+          </NextPressable> */}
+          <NextPressable
             style={styles.conditionLeftBtn}
             onPress={() => {
-              this.setState({ selectCondition: 2 })
+              this.state.filterConfig.sortWithDistance = null
+              this.setState({ selectCondition: 2 }, () => {
+              	this._onRefresh(true, true)
+              })
             }}>
             <Text
               style={[
@@ -356,11 +368,11 @@ class Jobs extends Component<IProps, IState> {
               ]}>
               最新
             </Text>
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
+          </NextPressable>
+          <NextPressable
             style={styles.conditionLeftBtn}
             onPress={() => {
-              this.setState({ selectCondition: 3 })
+            	this._nearDidTouch()
             }}>
             <Text
               style={[
@@ -372,33 +384,26 @@ class Jobs extends Component<IProps, IState> {
               ]}>
               附近
             </Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
         <View style={styles.conditionRightView}>
-          <NextTouchableOpacity style={styles.conditionRightBtn} onPress={() => {
-          	const { navigation } = this.props
-            navigation.push('JobSelectCity', {
-              mode: 1,
-              selectJobCityCallback: (e: any) => {
-                console.log('eeeee: ', e)
-                // this.setState({ selectJobCity: e })
-              }
-            })
+          <NextPressable style={styles.conditionRightBtn} onPress={() => {
+          	this._addressDidTouch()
           }}>
-            <Text style={styles.conditionRightText}>地点</Text>
+            <Text style={styles.conditionRightText}>{this?.state?.address?.city ?? '地点'}</Text>
             <Image
               style={styles.rightBottomImg}
               source={require('../../../assets/requestJobs/right-bootom-triangle.png')}
             />
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
+          </NextPressable>
+          <NextPressable
             style={[styles.conditionRightBtn, { marginLeft: 9 }]}
             onPress={() => {
               const { navigation } = this.props
               navigation.push('FilterView', {
                 filterMode: 0,
                 filterResultCallback: result => {
-                  this.setState({ filterConfig: result }, this.loadJobList)
+                  this.setState({ filterConfig: { ...this.state.filterConfig, ...result } }, () => this._onRefresh(true, true))
                 },
               })
             }}>
@@ -407,7 +412,7 @@ class Jobs extends Component<IProps, IState> {
               style={styles.rightBottomImg}
               source={require('../../../assets/requestJobs/right-bootom-triangle.png')}
             />
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
       </View>
     )
@@ -438,9 +443,9 @@ class Jobs extends Component<IProps, IState> {
 				}}
 				renderItem={({ item, index }) => {
 					return (
-						<View style={styles.bannerItemContainer}>
+						<Pressable style={styles.bannerItemContainer} onPress={global.TODO_TOAST}>
 							<CacheImage style={styles.bannerItemImage} source={{ uri: item.image }} />
-						</View>
+						</Pressable>
 					)
 				}}
 			/>
@@ -466,18 +471,16 @@ class Jobs extends Component<IProps, IState> {
   renderList() {
     const { refreshState, listDataSource } = this.state
     return (
-      <RefreshListView
+      <FlatList
         style={styles.listView}
-        onHeaderRefresh={() => this.handleRefresh()}
-        refreshState={refreshState}
+        onRefresh={() => this._onRefresh(true)}
+        onEndReached={() => this._onRefresh(false)}
         automaticallyAdjustContentInsets={false}
         data={listDataSource}
+        refreshManager={this.refreshManager}
+        {...BIND_EMPTY_VIEW()}
         ListHeaderComponent={this.renderHeader}
         renderItem={({ item, index }: any) => this.renderItem(item, index)}
-        onFooterRefresh={() => this.handleEndReached()}
-        keyExtractor={(item: any) => item.id.toString()}
-        footerRefreshingText="加载更多"
-        footerNoMoreDataText="没有更多了"
       />
     )
   }

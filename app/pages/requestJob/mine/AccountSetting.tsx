@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import styles from './styles/AccountSetting.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { Text, View, Image, StatusBar } from 'react-native'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { ActivityIndicator } from '@ant-design/react-native'
 import AlertContentModal from '../../components/AlertContentModal'
 import { CommonActions } from '@react-navigation/native'
@@ -22,29 +22,21 @@ export default class AccountSetting extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props)
     this.state = {
-      phone: undefined,
-      isVerified: undefined,
-      bindedEmail: undefined,
-      isBindWechat: undefined,
+      userInfo: null,
+      isVerified: false,
+      isBindWechat: false,
       cancelBindWechatVisible: false,
     }
   }
 
   componentDidMount() {
-    Hud.show()
     this.loadData()
   }
 
   loadData() {
-    setTimeout(() => {
-      Hud.hidden()
-      this.setState({
-        phone: '13951840000',
-        isVerified: false,
-        bindedEmail: '780178977@qq.com',
-        isBindWechat: true,
-      })
-    }, 1000)
+  	HTAPI.UserGetBasicInfo().then(response => {
+	  this.setState({ userInfo: response  })
+	})
   }
 
   renderNavBar() {
@@ -70,7 +62,7 @@ export default class AccountSetting extends Component<IProps, IState> {
 
   renderCell(title: string, detail: any, onpress: () => void) {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.cellView}
         onPress={() => {
           if (onpress) {
@@ -83,12 +75,12 @@ export default class AccountSetting extends Component<IProps, IState> {
           style={styles.nextIcon}
           source={require('../../../assets/requestJobs/next-gray.png')}
         />
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
   renderContent() {
-    const { phone, isVerified, bindedEmail, isBindWechat } = this.state
+    const { userInfo, isVerified, isBindWechat } = this.state
     const { navigation } = this.props
     let verifiedShow = ''
     let bindedEmailShow = ''
@@ -96,31 +88,37 @@ export default class AccountSetting extends Component<IProps, IState> {
     if (isVerified !== undefined) {
       verifiedShow = isVerified ? '已实名' : '未实名'
     }
-    if (bindedEmail !== undefined) {
-      bindedEmailShow = bindedEmail ? '已绑定' : '未绑定'
-    }
     if (isBindWechat !== undefined) {
       isBindWechatShow = isBindWechat ? '已绑定' : '未绑定'
     }
     return (
       <View style={styles.content}>
-        {this.renderCell('更换手机号', phone, () => {
-          navigation.push('ChangePhone')
+        {this.renderCell('更换手机号', userInfo?.phone_number, () => {
+          navigation.push('EditHrPhoneNumber', {
+	          phoneNumber: userInfo?.phone_number,
+	          callback: (_navigation, phoneNumber) => {
+	          	this.loadData()
+	          }
+	        })
         })}
         {this.renderCell('实名认证', verifiedShow, () => {
-          navigation.push('VerifySetting', {
+          global.TODO_TOAST()
+          {/*navigation.push('VerifySetting', {
             name: '',
             idNumber: '',
-          })
+          })*/}
         })}
         {this.renderCell('修改密码', '', () => {
-          navigation.push('ChangePassword')
+        	global.TODO_TOAST()
+          {/*navigation.push('ChangePassword')*/}
         })}
-        {this.renderCell('邮箱绑定', bindedEmailShow, () => {
-          navigation.push('EmailBinding', { email: bindedEmail || '' })
+        {this.renderCell('邮箱绑定', userInfo?.email, () => {
+          navigation.push('EditHrEmail', { email: userInfo?.email, callback: (_navigation, email) => {
+          	this.loadData()
+          } })
         })}
         {/* {this.renderCell('微信绑定', '', () => {
-          Toast.show('暂未开放')
+          global.TODO_TOAST()
           // if (isBindWechat) {
           //   this.setState({ cancelBindWechatVisible: true })
           // } else {

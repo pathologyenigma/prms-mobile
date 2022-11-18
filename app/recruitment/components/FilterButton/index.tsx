@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  TouchableOpacity,
+  Pressable,
   View,
   Text,
   Image,
@@ -28,7 +28,7 @@ export default function FilterButton({
   onPress,
 }: FilterButtonProps) {
   return (
-    <TouchableOpacity
+    <Pressable
       hitSlop={{ top: 8, bottom: 8, left: 0, right: 0 }}
       style={[styles.touchable, style]}
       activeOpacity={0.8}
@@ -56,7 +56,7 @@ export default function FilterButton({
           ]}
         />
       </View>
-    </TouchableOpacity>
+    </Pressable>
   )
 }
 

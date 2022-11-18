@@ -238,7 +238,7 @@ export default StyleSheet.create({
   },
   compayRulesView: {
     width: SystemHelper.width,
-    backgroundColor: 'red',
+    // backgroundColor: 'red',
   },
   rulesContainer: {
     flexDirection: 'row',

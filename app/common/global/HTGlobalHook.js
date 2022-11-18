@@ -36,7 +36,7 @@ const hook = (component, defaultProps, reloadPropsFunction) => {
 }
 
 import React from 'react'
-import { Text, Image, TextInput, ScrollView, FlatList, SectionList, Platform } from 'react-native'
+import { View, Text, Image, TextInput, ScrollView, VirtualizedList, Platform, ActivityIndicator } from 'react-native'
 
 hook(Image, { fadeDuration: 0 })
 
@@ -53,43 +53,60 @@ const TEXT_DEFAULT_PROPS = {
 	padding: 0
 }
 
-hook(Text, TEXT_DEFAULT_PROPS)
+const TEXT_RELOAD_PROPS = (props) => {
+	let fontSize = StyleSheet.flatten(props?.style)?.fontSize ?? 12
+	fontSize += 1
+	let lineHeight = StyleSheet.flatten(props?.style)?.lineHeight
+	if (lineHeight) {
+		lineHeight += 2
+	}
+	return { style: { fontSize, lineHeight } }
+}
 
-hook(TextInput, TEXT_DEFAULT_PROPS)
+hook(Text, TEXT_DEFAULT_PROPS, TEXT_RELOAD_PROPS)
+
+hook(TextInput, TEXT_DEFAULT_PROPS, TEXT_RELOAD_PROPS)
 
 import { SmartRefreshControl, MJRefreshHeader, SwipeRefreshHeader } from 'react-native-smartrefreshlayout'
 
-const SCROLL_RENDER_PROPS_FUNCTION = (props) => {
-	let onRefresh = props?.onRefresh
-	if (onRefresh == null) {
-		return {}
+const SCROLL_RELOAD_PROPS = (props) => {
+	const onRefresh = props?.onRefresh
+	let children = props?.children ?? []
+	if (props?.onEndReachedThreshold != 0.1 && props?.onEndReached && (props?.data ?? props.sections ?? []).length > 0) {
+		let allLoaded = (props?.allLoaded ?? props?.refreshManager?.allLoaded) ?? false
+		children.push((
+			<View key={'_ht_footer'} style={{ height: 50, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+				{
+					!allLoaded && <ActivityIndicator style={{ marginRight: 15 }} size={'small'} color={'#888'} />
+				}
+				<Text style={{ fontSize: 14, color: '#555' }}>{allLoaded ? '已加载全部数据' : '数据加载中请稍后…'}</Text>
+			</View>
+		))
 	}
-	let refreshControl = null
-	if (Platform.OS == 'ios') {
-		refreshControl = (
-			<MJRefreshHeader
-				onRefresh={onRefresh}
-			/>
-		)
-	} else if (Platform.OS == 'android') {
-		refreshControl = (
-			<SwipeRefreshHeader 
-				colors={['#FF6249', '#FE4261']}
-				onRefresh={onRefresh}
-			/>
-		)
+	return { 
+		refreshControl: onRefresh && Platform.select({
+			ios: (
+				<MJRefreshHeader
+					onRefresh={onRefresh}
+				/>
+			),
+			android: (
+				<SwipeRefreshHeader 
+					colors={['#FF6249', '#FE4261']}
+					onRefresh={onRefresh}
+				/>
+			)
+		}),
+		children: children
 	}
-	return { refreshControl }
 }
 
 hook(ScrollView, {
 	overScrollMode: 'always', 
 	keyboardDismissMode: 'on-drag', 
 	keyboardShouldPersistTaps: 'handled',
-	keyExtractor: (item, index) => `${index}`, 
 	removeClippedSubviews: Platform.OS == 'ios' ? null : false
-}, SCROLL_RENDER_PROPS_FUNCTION)
+}, SCROLL_RELOAD_PROPS)
 
-hook(FlatList, { refreshing: false })
-hook(SectionList, { refreshing: false })
+hook(VirtualizedList, { refreshing: false, keyExtractor: (item, index) => `${index}`, onEndReachedThreshold: 0 })
 

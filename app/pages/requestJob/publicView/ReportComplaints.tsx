@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, StatusBar } from 'react-native'
 import styles from './styles/ReportComplaints.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 
 type IProps = GenProps<'ReportComplaints'> & {
 
@@ -85,7 +85,7 @@ export default class JobDetail extends Component<IProps, IState> {
       <View style={[styles.listView]}>
         {dataSource.map((item: any, index: number) => {
           return (
-            <NextTouchableOpacity
+            <NextPressable
               key={index.toString()}
               style={styles.cell}
               onPress={() => {
@@ -102,7 +102,7 @@ export default class JobDetail extends Component<IProps, IState> {
                 style={styles.nextIcon}
                 source={require('../../../assets/requestJobs/next-gray.png')}
               />
-            </NextTouchableOpacity>
+            </NextPressable>
           )
         })}
       </View>

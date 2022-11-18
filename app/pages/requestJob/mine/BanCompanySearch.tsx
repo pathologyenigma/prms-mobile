@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, StatusBar, SectionList } from 'react-native'
 import styles from './styles/BanCompanySearch.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import SearchTextinput from '../../components/SearchTextinput'
 // @ts-ignore
@@ -65,14 +65,14 @@ export default class BanCompanySearch extends Component<IProps, IState> {
             })
           }}
         />
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.cancelBtn}
           onPress={() => {
             navigation.goBack()
           }}
         >
           <Text style={styles.cancelText}>取消</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }
@@ -84,7 +84,7 @@ export default class BanCompanySearch extends Component<IProps, IState> {
       selectIcon = require('../../../assets/requestJobs/pingbi-xuanzhong.png')
     }
     return (
-      <NextTouchableOpacity
+      <NextPressable
         key={item.id.toString()}
         style={styles.tagBtn}
         onPress={() => {
@@ -116,7 +116,7 @@ export default class BanCompanySearch extends Component<IProps, IState> {
           ]}>
           {item.name}
         </Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -168,7 +168,7 @@ export default class BanCompanySearch extends Component<IProps, IState> {
     const selectItems = dataSource.filter((e: any) => e.selected === true)
     return (
       <View style={styles.footerView}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.checkAll}
           onPress={() => {
             this.setState({ allConnect: !allConnect })
@@ -182,7 +182,7 @@ export default class BanCompanySearch extends Component<IProps, IState> {
             resizeMode="center"
           />
           <Text style={styles.resetText}>所有与【深圳智慧网络有限公司】相关的公司</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
         <GradientButton
           disabled={selectItems.length === 0}
           containerStyle={styles.confirmBtn}

@@ -9,7 +9,7 @@ import { JobParamList } from '../typings'
 type Props = StackScreenProps<JobParamList, 'EditJobName'>
 
 export default function EditJobName({ navigation, route }: Props) {
-  const { initialName } = route.params
+  const { initialName, callback } = route.params
   const [name, setName] = useState(initialName || '')
 
   return (
@@ -19,7 +19,10 @@ export default function EditJobName({ navigation, route }: Props) {
         headerRight={() => (
           <TextButton
             title="保存"
-            onPress={() => navigation.navigate('PostJob', { jobName: name })}
+            onPress={() => {
+            	callback(navigation, name)
+            	navigation.pop()
+            }}
           />
         )}
       />
@@ -30,7 +33,7 @@ export default function EditJobName({ navigation, route }: Props) {
         onChangeText={setName}
         placeholderTextColor="#CCCCCC"
         maxLength={30}
-        autoFocus={true}
+        autoFocus={false}
         multiline={false}
         autoCapitalize="none"
         autoCompleteType="off"
@@ -47,8 +50,9 @@ const styles = StyleSheet.create({
   },
   input: {
     marginTop: 16,
-    height: 42,
-    paddingVertical: 0,
+    // height: 42,
+    fontSize: 14,
+    paddingVertical: 15,
     paddingHorizontal: 16,
     borderBottomColor: '#ECECEC',
     borderBottomWidth: StyleSheet.hairlineWidth,

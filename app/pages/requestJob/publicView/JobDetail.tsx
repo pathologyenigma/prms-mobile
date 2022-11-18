@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList, StatusBar, RefreshControl } from 'react-native'
 import styles from './styles/JobDetail.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
@@ -16,7 +16,10 @@ import SystemHelper from '../../../utils/system'
 import InterviewerFooter from '../../components/InterviewerFooter'
 import ShareModal from '../../components/ShareModal'
 import { reformFullTime, reformCompanySize, reformSalary } from '../../../utils/utils'
+import { stringForEducation } from '~/recruitment/utils/JobHelper'
+import { stringForEnterpriseNature } from '~/recruitment/utils/JobHelper'
 import HTAuthManager from '~/common/auth/common/model/HTAuthManager'
+import HTMapImageView from '~/common/view/HTMapImageView'
 
 type IProps = GenProps<'JobDetail'> & ReturnType<typeof mapDispatchToProps>
 
@@ -29,143 +32,7 @@ interface IState {
   refreshing: boolean
 }
 
-const recommendListData = [
-  {
-    id: 1,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '李女士·产品线HRBP'
-  }, {
-    id: 2,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
-  }, {
-    id: 3,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
-  }, {
-    id: 4,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
-  },
-  {
-    id: 5,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '李女士·产品线HRBP'
-  }, {
-    id: 6,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
-  }, {
-    id: 7,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
-  }, {
-    id: 8,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
-  },
-  {
-    id: 9,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '李女士·产品线HRBP'
-  }, {
-    id: 10,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
-  }, {
-    id: 11,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
-  }, {
-    id: 12,
-    name: '项目经理',
-    company: '深圳市酷魅科技有限公司',
-    financing: '融资未公开',
-    staffAmount: '1-49人',
-    experience: '3-4年',
-    education: '大专及以上',
-    location: '深圳·宝安区',
-    salary: '15K-30K',
-    interviewer: '陈先生·技术总监'
-  },
-]
+
 
 class JobDetail extends Component<IProps, IState> {
   constructor(props: IProps) {
@@ -200,23 +67,22 @@ class JobDetail extends Component<IProps, IState> {
   _chatDidTouch = () => {
   	HTAPI.CandidateGetHRIdByWorkerId({
   		id: this?.state?.dataSource?.hr?.id
-  	}).then(response => {
-  		let messageItem = {
-			messageType: 'Normal',
-			messageContent: '你好啊，请问这份工作还在招人吗',
-			to: response,
-			jobId: this?.state?.jobid
-		}
+  	}).then(hrUserId => {
+		let jobId = this?.state?.jobid
 		HTAPI.UserSendMessage({
-			info: messageItem
-		}, { showLoading: false }).then(response => {
+			info: {
+				messageType: 'Other',
+				messageContent: JSON.stringify({ type: 'job', 'value': jobId, info: { title: this?.state?.dataSource?.job?.title } }),
+				to: hrUserId,
+				jobId: jobId
+			}
+		}).then(() => {
 			this.props.navigation.push('MessagePage', {
 				targetItem: {
-					...messageItem,
-					...this.state.dataSource.hr,
-					id: messageItem.to,
-					ent: this.state.dataSource.company.name,
-					job: { id: this.state.jobid, title: this.state.dataSource.job.title }
+					pos: this.state.dataSource.hr.pos,
+					name: this.state.dataSource.hr.name,
+					id: hrUserId,
+					ent: this.state.dataSource.company.name
 				}
 			})
 		})
@@ -227,7 +93,7 @@ class JobDetail extends Component<IProps, IState> {
     const { navigation } = this.props
     return (
       <View style={styles.navBar}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.backBtn}
           onPress={() => {
             navigation.goBack()
@@ -237,28 +103,29 @@ class JobDetail extends Component<IProps, IState> {
             style={styles.backImage}
             source={require('../../../assets/requestJobs/navbar-back.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
         <View
           style={styles.rightView}
         >
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.rightItem}
             onPress={() => {
-              Toast.show('收藏')
+              global.TODO_TOAST()
             }}
           >
             <Image resizeMode="center" style={styles.shoucang} source={require('../../../assets/requestJobs/shoucang.png')} />
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
+          </NextPressable>
+          <NextPressable
             style={styles.rightItem}
             onPress={() => {
               // Toast.show('举报')
-              navigation.push('ReportComplaints')
+              // navigation.push('ReportComplaints')
+              global.TODO_TOAST()
             }}
           >
             <Image resizeMode="center" style={styles.jubao} source={require('../../../assets/requestJobs/jubao.png')} />
-          </NextTouchableOpacity>
-          {/* <NextTouchableOpacity
+          </NextPressable>
+          {/* <NextPressable
           // v1版本适配
             style={styles.rightItem}
             onPress={() => {
@@ -266,7 +133,7 @@ class JobDetail extends Component<IProps, IState> {
             }}
           >
             <Image resizeMode="center" style={styles.fenxiang} source={require('../../../assets/requestJobs/job-fenxiang.png')} />
-          </NextTouchableOpacity> */}
+          </NextPressable> */}
         </View>
       </View>
     )
@@ -311,11 +178,9 @@ class JobDetail extends Component<IProps, IState> {
           <Text style={styles.headerCompany}>
             {`${experience}年及以上`}
           </Text>
-          {education && (
-            <Text style={styles.headerCompany}>
-              {`${education}及以上`}
-            </Text>
-          )}
+          <Text style={styles.headerCompany}>
+          	{`${stringForEducation(education, true)}`}
+          </Text>
         </View>
         <View style={styles.headerJobView}>
           <Image
@@ -324,7 +189,7 @@ class JobDetail extends Component<IProps, IState> {
             resizeMode="center"
           />
           <Text style={styles.locationText}>
-            {`${address_description[0] || ''} ${address_description[1] || ''} ${address_description[2] || ''}`}
+            {address_description.slice(3).join('·')}
           </Text>
         </View>
       </View>
@@ -341,14 +206,14 @@ class JobDetail extends Component<IProps, IState> {
         logo,
       } } } = this.state
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.interviewerView}
         onPress={() => {
           const { navigation } = this.props
           navigation.push('HrPersonalInfo', { hrId: id, })
         }}
       >
-        <View style={styles.interviewerIcon} />
+        <CacheImage style={styles.interviewerIcon} source={global.AVATAR_IMAGE(logo)} />
         <View style={styles.interviewerInfo}>
           <View style={styles.interviewerTitleView}>
             <Text style={styles.interviewerTitle}>
@@ -369,7 +234,7 @@ class JobDetail extends Component<IProps, IState> {
           style={styles.nextBtn}
           source={require('../../../assets/requestJobs/next-gray.png')}
         />
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -406,13 +271,13 @@ class JobDetail extends Component<IProps, IState> {
         <Text style={styles.jobInfoDetail}>
           {showMoreDetail ? detail : detail.substring(0, 199)}
           {detail.length > 200 && !showMoreDetail && (
-            <NextTouchableOpacity
+            <NextPressable
               onPress={() => {
                 this.setState({ showMoreDetail: true })
               }}
             >
               <Text style={styles.showMoreText}> ...查看全部</Text>
-            </NextTouchableOpacity>
+            </NextPressable>
           )}
         </Text>
         {/* <Text style={styles.jobInfoDetail}>岗位职责</Text>
@@ -425,7 +290,7 @@ class JobDetail extends Component<IProps, IState> {
             <Text style={styles.jobContent}>{dataSource.jobAddPoints}</Text>
           </View>
         ) : (
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.addScoreBtn}
             onPress={() => {
               this.setState({ showMoreDetail: true })
@@ -433,7 +298,7 @@ class JobDetail extends Component<IProps, IState> {
           >
             <Text style={styles.addScoreText}>加分项</Text>
             <Text style={styles.showMoreDetailText}>...查看全部</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         )} */}
       </View>
     )
@@ -457,13 +322,13 @@ class JobDetail extends Component<IProps, IState> {
         style={styles.headerView}
       >
         <Text style={styles.jobInfoTitle}>公司信息</Text>
-        <NextTouchableOpacity
+        <NextPressable
           onPress={() => {
             const { navigation } = this.props
             navigation.push('CompanyDetail', { id: id })
           }}
           style={styles.companyInfo}>
-          <View style={styles.companyIcon} />
+          <CacheImage style={styles.companyIcon} source={global.AVATAR_IMAGE(enterprise_logo, require('~/recruitment/Job/JobDetail/CompanyInfo/company_default.png'))} />
           <View style={styles.companyTitle}>
             <Text style={styles.companyName}>{name}</Text>
             <Image style={styles.jobRenzheng}
@@ -474,10 +339,10 @@ class JobDetail extends Component<IProps, IState> {
             style={styles.nextBtn}
             source={require('../../../assets/requestJobs/next-gray.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
         <View style={styles.companyTag}>
           <Text style={styles.companyTagItem}>
-            {business_nature}
+            {stringForEnterpriseNature(business_nature)}
           </Text>
           <Text style={styles.companyTagItem}>
             {reformCompanySize(enterprise_size) || ''}
@@ -486,7 +351,9 @@ class JobDetail extends Component<IProps, IState> {
             {industry_involved || ''}
           </Text>
         </View>
-        <View style={styles.map} />
+        <View style={styles.mapWrapper}>
+          <HTMapImageView style={styles.map} coordinate={address_coordinates} />
+        </View>
       </View>
     )
   }
@@ -617,17 +484,20 @@ class JobDetail extends Component<IProps, IState> {
       <InterviewerFooter
         name={name}
         job={pos}
+        logo={logo}
         clickChat={() => {
           // Toast.show('聊一聊')
           this._chatDidTouch()
         }}
         clickDelivery={() => {
-        	// HTAPI.CandidateSendResume({
-        	// 	resumeId: '',
-		      	// targetUser: '',
-        	// }).then(response => {
-
-        	// })    
+        	// global.TODO_TOAST()
+        	HTAPI.CandidateSendResume({
+        		'jobId': this.state.dataSource.job.id,
+						'hrId': this.state.dataSource.hr.id,
+						'compId': this.state.dataSource.company.id
+        	}).then(response => {
+        		Toast.show('投递成功')
+        	})    
         }}
       />
     )
@@ -647,13 +517,7 @@ class JobDetail extends Component<IProps, IState> {
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={{ paddingBottom: 20 }}
-          refreshControl={(
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={() => this.loadData()
-              }
-            />
-          )}
+          onRefresh={() => this.loadData()}
         >
           {dataSource ? (
             <View style={{ flex: 1, }}>

@@ -4,7 +4,7 @@ import styles from './styles'
 import SystemHelper from '../../../utils/system'
 import BottomContentModal from '../BottomContentModal'
 import { ScrollView } from 'react-native-gesture-handler'
-import NextTouchableOpacity from '../NextTouchableOpacity'
+import NextPressable from '../NextPressable'
 
 export interface IShareModalProps {
   visible: boolean,
@@ -50,7 +50,7 @@ export default class ShareModal extends Component<IShareModalProps, IShareModalS
           contentContainerStyle={styles.containerScrollView}
         >
           {shareWechat && (
-            <NextTouchableOpacity
+            <NextPressable
               style={styles.shareBtn}
               onPress={() => {
                 this.share(1)
@@ -61,10 +61,10 @@ export default class ShareModal extends Component<IShareModalProps, IShareModalS
                 source={require('../../../assets/requestJobs/share-wechat.png')}
               />
               <Text style={styles.shareText}>微信好友</Text>
-            </NextTouchableOpacity>
+            </NextPressable>
           )}
           {shareWechatLine && (
-            <NextTouchableOpacity
+            <NextPressable
               style={styles.shareBtn}
               onPress={() => {
                 this.share(2)
@@ -75,10 +75,10 @@ export default class ShareModal extends Component<IShareModalProps, IShareModalS
                 source={require('../../../assets/requestJobs/share-wechatline.png')}
               />
               <Text style={styles.shareText}>微信朋友圈</Text>
-            </NextTouchableOpacity>
+            </NextPressable>
           )}
           {shareLink && (
-            <NextTouchableOpacity
+            <NextPressable
               style={styles.shareBtn}
               onPress={() => {
                 this.share(3)
@@ -89,10 +89,10 @@ export default class ShareModal extends Component<IShareModalProps, IShareModalS
                 source={require('../../../assets/requestJobs/share-link.png')}
               />
               <Text style={styles.shareText}>复制链接</Text>
-            </NextTouchableOpacity>
+            </NextPressable>
           )}
         </ScrollView>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.cancleBtn}
           onPress={() => {
             if (cancelOnpress) {
@@ -101,7 +101,7 @@ export default class ShareModal extends Component<IShareModalProps, IShareModalS
           }}
         >
           <Text style={styles.cancleText}>取消</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }

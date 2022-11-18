@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 'react-native'
-import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
+import NextPressable from '../../../components/NextPressable'
 import styles from './styles'
 import LinearGradient from 'react-native-linear-gradient'
 
@@ -106,7 +106,7 @@ export default class CompanyCell extends PureComponent<ICell> {
   render() {
     const { onPress, cellStyle } = this.props
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={[styles.cell, cellStyle]}
         onPress={() => {
           if (onPress) {
@@ -114,11 +114,12 @@ export default class CompanyCell extends PureComponent<ICell> {
           }
         }}
       >
-        <View
+        <CacheImage
           style={styles.icon}
+          source={global.AVATAR_IMAGE(this?.props?.cellItem?.logo, require('~/recruitment/Job/JobDetail/CompanyInfo/company_default.png'))}
         />
         {this.renderDetail()}
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  TouchableOpacity,
+  Pressable,
   Image,
   ImageSourcePropType,
   ViewProps,
@@ -30,12 +30,12 @@ export default function IconButton({
   iconStyle,
 }: IconButtonProps) {
   return (
-    <TouchableOpacity
+    <Pressable
       style={style}
       onPress={onPress}
       hitSlop={hitSlop}
       activeOpacity={0.5}>
       <Image source={icon} style={iconStyle} resizeMode="center" />
-    </TouchableOpacity>
+    </Pressable>
   )
 }

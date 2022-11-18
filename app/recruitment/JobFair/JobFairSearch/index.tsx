@@ -5,14 +5,13 @@ import {
   View,
   Image,
   ScrollView,
-  TouchableOpacity,
+  Pressable,
   FlatList,
 } from 'react-native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { headerHeight, navigationBarHeight, statusBarHeight } from '../../theme'
 import SearchTextinput from '~/pages/components/SearchTextinput'
 import TextButton from '../../components/TextButton'
-import { useNavigation } from '@react-navigation/native'
 import NavBar from '../../components/NavBar'
 import IconButton from '../../components/IconButton'
 import { ListRenderItem } from 'react-native'
@@ -22,15 +21,13 @@ const histories = ['500强招聘', '暨南山智园人才招聘会']
 const hots = ['2021年青年人才招聘会', '欢聚人才招聘会', '小鹅通专场招聘会']
 const results = ['a', 'b']
 
-export default function JobFairSearch() {
+export default function JobFairSearch({ navigation }) {
   const [text, setText] = useState<string>('')
   const [showsSearchResult, setShowsSearchResult] = useState(false)
 
   useEffect(() => {
     setShowsSearchResult(text !== '')
   }, [text])
-
-  const navigation = useNavigation<StackNavigationProp<any>>()
 
   const renderTags = () => {
     if (showsSearchResult) {
@@ -71,12 +68,12 @@ export default function JobFairSearch() {
           </View>
           <View style={styles.tags}>
             {hots.map((v, index) => (
-              <TouchableOpacity key={v} style={styles.tag} activeOpacity={0.5}>
+              <Pressable key={v} style={styles.tag} activeOpacity={0.5}>
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.rank}>{index + 1}</Text>
                   <Text style={styles.tagText}>{v}</Text>
                 </View>
-              </TouchableOpacity>
+              </Pressable>
             ))}
           </View>
         </View>

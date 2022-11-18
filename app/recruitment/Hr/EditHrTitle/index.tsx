@@ -9,7 +9,7 @@ export default function EditHrTitle({
   navigation,
   route,
 }: StackScreenProps<HrParamList, 'EditHrTitle'>) {
-  const { title } = route.params
+  const { title, callback } = route.params
 
   return (
     <View style={styles.container}>
@@ -27,7 +27,8 @@ export default function EditHrTitle({
               HTAPI.ENTEditAccountInfo({ pos: title }).then(response => {
               	Hud.hidden()
               	Toast.show('职位修改成功')
-              	navigation.navigate('HrProfile', { title })
+              	navigation.pop()
+              	callback && callback(navigation, title)
               })
             }}
           />

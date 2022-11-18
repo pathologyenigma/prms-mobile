@@ -30,6 +30,8 @@ export const experienceLabels = [
 ]
 export const experienceValues = [undefined, 0, 1, 3, 5, 10]
 
+export const experienceValueList = [undefined, [0, 1], [1, 3], [3, 5], [5, 10], [10, 0]]
+
 export function stringForExperience(experience?: number, prefix = true) {
   if (experience === undefined) {
     return '不限'
@@ -122,6 +124,9 @@ export const yearEndSalaryValues = nrange(12, 24, 1)
 
 export function stirngForSalary(salary: number[]) {
   if (salary.length === 2) {
+  	if (salary[0] == 0 && salary[1] == 0) {
+  		return '面议'
+  	}
     return `${salary[0] / 1000}-${salary[1] / 1000}k`
   } else {
     if (salary[2] > 12) {
@@ -164,6 +169,23 @@ export function stringForJobStatus(jobStatus: ResumeJobStatus) {
 }
 
 export function stringForEnterpriseNature(nature: EnterpriseNature) {
+  switch(nature) {
+  	case 'ForeignVentures': {
+  		return '外企'
+  	}
+  	case 'ForeignFundedEnterprises': {
+  		return '外资企业'
+  	}
+  	case 'PrivateEnterprise': {
+  		return '个人企业'
+  	}
+  	case 'StateOwnedEnterprises': {
+  		return '国有企业'
+  	}
+  	case 'Extra': {
+  		return '子公司'
+  	}
+  }
   return '创业公司'
 }
 

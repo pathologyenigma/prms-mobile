@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, StatusBar, SectionList } from 'react-native'
 import styles from './styles/NewsSearch.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import SearchTextinput from '../../components/SearchTextinput'
 // @ts-ignore
@@ -82,14 +82,14 @@ export default class NewsSearch extends Component<IProps, IState> {
             this.setState({ searchValue: value })
           }}
         />
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.cancelBtn}
           onPress={() => {
             navigation.goBack()
           }}
         >
           <Text style={styles.cancelText}>取消</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }
@@ -99,7 +99,7 @@ export default class NewsSearch extends Component<IProps, IState> {
       return (
         <View style={styles.searchHeader}>
           <Text style={styles.searchHeaderTitle}>{section.title}</Text>
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.deleteHistory}
             onPress={() => {
 
@@ -109,7 +109,7 @@ export default class NewsSearch extends Component<IProps, IState> {
               source={require('../../../assets/requestJobs/delete-icon.png')}
               style={styles.deleteHistoryIcon}
             />
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
       )
     }
@@ -128,7 +128,7 @@ export default class NewsSearch extends Component<IProps, IState> {
     const { selectItem, dataSource } = this.state
     const { navigation } = this.props
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.cellItem}
         onPress={() => {
           this.setState({ searchValue: item.label }, () => {
@@ -145,7 +145,7 @@ export default class NewsSearch extends Component<IProps, IState> {
           style={styles.tagText}>
           {item.label}
         </Text>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.deleteHistory}
           onPress={() => {
 
@@ -155,8 +155,8 @@ export default class NewsSearch extends Component<IProps, IState> {
             source={require('../../../assets/requestJobs/delete-icon.png')}
             style={styles.deleteHistoryIcon}
           />
-        </NextTouchableOpacity>
-      </NextTouchableOpacity>
+        </NextPressable>
+      </NextPressable>
     )
   }
 
@@ -170,14 +170,14 @@ export default class NewsSearch extends Component<IProps, IState> {
 
   renderFooterView() {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.clearAllBtn}
         onPress={() => {
 
         }}
       >
         <Text style={styles.clearAllText}>清空历史记录</Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -228,7 +228,7 @@ export default class NewsSearch extends Component<IProps, IState> {
           justifyContent: 'flex-end',
           backgroundColor: '#f5f5f6',
         }}>
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.setTop}
             onPress={() => {
               if (this.openKey) {
@@ -238,8 +238,8 @@ export default class NewsSearch extends Component<IProps, IState> {
             }}
           >
             <Text style={styles.hideBtnText}>置顶</Text>
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
+          </NextPressable>
+          <NextPressable
             style={[styles.setTop, {
               backgroundColor: '#FF7777',
             }]}
@@ -251,7 +251,7 @@ export default class NewsSearch extends Component<IProps, IState> {
             }}
           >
             <Text style={styles.hideBtnText}>删除</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
         <MessageCell
           cellItem={item.item}

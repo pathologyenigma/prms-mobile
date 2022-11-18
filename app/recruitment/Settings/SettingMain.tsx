@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import {
   StyleSheet,
   Text,
@@ -11,58 +11,60 @@ import {
 import { StackNavigationProp } from '@react-navigation/stack'
 import NavBar from '../components/NavBar'
 import PrimaryButton from '../components/PrimaryButton'
-import { useNavigation } from '@react-navigation/native'
 import HTAuthManager from '~/common/auth/common/model/HTAuthManager'
 
-export default function SettingMain() {
-  const navigation = useNavigation<StackNavigationProp<any>>()
+export default class SettingMain extends Component {
 
-  return (
-    <View style={styles.container}>
-      <NavBar title="设置" />
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.content}>
-        <SettingItem
-          title="接收消息推送"
-          renderDetail={() => <Switch style={styles.switch} value={true} />}
-        />
-        <SettingItem
-          title="支付提醒"
-          renderDetail={() => <Switch style={styles.switch} />}
-        />
-        <SettingItem
-          title="定位权限"
-          renderDetail={() => <Switch style={styles.switch} />}
-        />
-        <SettingItem
-          title="招呼语设置"
-          onPress={() => navigation.navigate('GreetingSetting')}
-        />
-        <SettingItem
-          title="清除缓存"
-          renderDetail={() => <Text style={styles.detailText}>12.76M</Text>}
-          onPress={() => console.log('设置')}
-        />
-        <PrimaryButton
-          style={styles.logout}
-          title="退出登录"
-          onPress={() => {
-          	global.Alert.open({
-          		title: '确定要退出登录吗',
-          		itemList: [
-          			{ title: '确认', onPress: () => {
-          				global.Alert.close()
-          				HTAuthManager.clearLoginInfo()
-          			} },
-          			{ title: '取消' }
-          		]
-          	})
-          }}
-        />
-      </ScrollView>
-    </View>
-  )
+	render() {
+		const { navigation } = this.props
+		return (
+	    <View style={styles.container}>
+	      <NavBar title="设置" />
+	      <ScrollView
+	        style={styles.container}
+	        contentContainerStyle={styles.content}>
+	        <SettingItem
+	          title="接收消息推送"
+	          renderDetail={() => <Switch style={styles.switch} value={true} />}
+	        />
+	        <SettingItem
+	          title="支付提醒"
+	          renderDetail={() => <Switch style={styles.switch} />}
+	        />
+	        <SettingItem
+	          title="定位权限"
+	          renderDetail={() => <Switch style={styles.switch} />}
+	        />
+	        <SettingItem
+	          title="招呼语设置"
+	          onPress={() => navigation.navigate('GreetingSetting')}
+	        />
+	        <SettingItem
+	          title="清除缓存"
+	          renderDetail={() => <Text style={styles.detailText}>12.76M</Text>}
+	          onPress={() => console.log('设置')}
+	        />
+	        <PrimaryButton
+	          style={styles.logout}
+	          title="退出登录"
+	          onPress={() => {
+	          	global.Alert.open({
+	          		title: '确定要退出登录吗',
+	          		itemList: [
+	          			{ title: '确认', onPress: () => {
+	          				global.Alert.close()
+	          				HTAuthManager.clearLoginInfo()
+	          			} },
+	          			{ title: '取消' }
+	          		]
+	          	})
+	          }}
+	        />
+	      </ScrollView>
+	    </View>
+	  )
+	}
+
 }
 
 interface SettingItemProps {

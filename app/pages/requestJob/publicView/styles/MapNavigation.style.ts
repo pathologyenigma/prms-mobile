@@ -23,10 +23,23 @@ export default StyleSheet.create({
     width: SystemHelper.width,
     height: SystemHelper.safeBottom + 54,
     marginHorizontal: 22,
-    paddingTop: 7
+    paddingTop: 20
   },
   btnContainer: {
     width: SystemHelper.width - 44,
     height: 40,
-  }
+  },
+  mapWrapper: {
+  	marginTop: 17,
+    flex: 0.7,
+    width: '100%',
+  },
+  map: {
+    flex: 1,
+  },
+  mapMarkerBox: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
 })

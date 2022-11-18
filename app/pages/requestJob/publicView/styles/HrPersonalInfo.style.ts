@@ -107,8 +107,9 @@ export default StyleSheet.create({
     marginLeft: 11,
   },
   hrIcon: {
-    width: 71,
-    height: 70
+    width: 70,
+    height: 70,
+    borderRadius: 70 / 2.0,
   },
   gender: {
     position: 'absolute',
@@ -157,16 +158,19 @@ export default StyleSheet.create({
     marginTop: 5,
   },
   matchJobView: {
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     // marginHorizontal: 11,
-    borderRadius: 8,
+    // borderRadius: 8,
+    borderRadius: 12,
+    // overflow: 'hidden',
     justifyContent: 'space-between',
     paddingHorizontal: 11,
     paddingVertical: 21,
-    paddingTop: 16,
-    elevation: 3,
-    shadowRadius: 5,
-    shadowOpacity: 0.5,
+    paddingTop: 15,
+    // elevation: 3,
+    shadowRadius: 15,
+    shadowOpacity: 0.1,
+    shadowColor: 'black',
     shadowOffset: { width: 0, height: 3 },
     marginBottom: 15,
   },
@@ -184,6 +188,7 @@ export default StyleSheet.create({
   hrMessageIcon: {
     width: 27,
     height: 27,
+    borderRadius: 27 / 2.0,
     marginTop: 4,
     marginLeft: 8,
   },
@@ -215,14 +220,14 @@ export default StyleSheet.create({
     paddingBottom: 0,
     minHeight: 50,
     marginHorizontal: 0,
+    marginBottom: 15,
     paddingTop: 0,
   },
   moreJobView: {
     marginTop: 14,
     marginHorizontal: 11,
-    borderRadius: 12,
     flex: 1,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
   },
   moreJobTitle: {
     paddingLeft: 10,
@@ -248,10 +253,11 @@ export default StyleSheet.create({
   },
   listView: {
     flex: 1,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-    marginTop: -30,
+    // borderTopLeftRadius: 12,
+    // borderTopRightRadius: 12,
+    // marginTop: 15,
+    // marginTop: -30,
     // paddingHorizontal: 11,
-    backgroundColor: '#F9F9F9',
+    // backgroundColor: '#F9F9F9',
   }
 })

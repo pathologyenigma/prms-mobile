@@ -35,5 +35,15 @@ allprojects {
         jcenter()
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
+        exclusiveContent {
+        	filter {
+        		includeGroup "com.facebook.react"
+        	}
+        	forRepository {
+        		maven {
+        			url "$rootDir/../node_modules/react-native/android"
+        		}
+        	}
+        }
     }
 }

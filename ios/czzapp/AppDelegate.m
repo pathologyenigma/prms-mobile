@@ -28,56 +28,51 @@ static void InitializeFlipper(UIApplication *application) {
 }
 #endif
 
+#import <RNReactNativeRoute/HTRouteBridgeManager.h>
+#import "MainReactModule.h"
+#import <Bugly/Bugly.h>
+#import <CodePush/CodePush.h>
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 #ifdef FB_SONARKIT_ENABLED
-    InitializeFlipper(application);
+//    InitializeFlipper(application);
 #endif
+
+	BOOL isDebug = false;
+	#ifdef DEBUG
+		isDebug = true;
+	#endif
+	if (!isDebug) {
+		BuglyConfig *config = [[BuglyConfig alloc] init];
+		config.reportLogLevel = BuglyLogLevelInfo;
+		[Bugly startWithAppId:@"8ed69c67d6" developmentDevice:isDebug config:config];
+	}
     
     [AMapServices sharedServices].enableHTTPS = YES;
     [AMapServices sharedServices].apiKey = @"c18f86cde7df6e0700b1d061d96dd008";
+
+    [HTRouteBridgeManager loadBridgeWithURL:[self sourceURLForBridge:nil] moduleName:@"czzapp" launchOptions:launchOptions];
     
     
-    RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
-    RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
-                                                     moduleName:@"czzapp"
-                                              initialProperties:nil];
-#if RCT_DEV
-    [bridge moduleForClass:[RCTDevLoadingView class]];
-#endif
-    
-    if (@available(iOS 13.0, *)) {
-        rootView.backgroundColor = [UIColor systemBackgroundColor];
-    } else {
-        rootView.backgroundColor = [UIColor whiteColor];
-    }
-    
+    UIViewController *rootViewController = [[UIViewController alloc] init];
+    rootViewController.view.backgroundColor = [UIColor whiteColor];
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    UIViewController *rootViewController = [UIViewController new];
-    rootViewController.view = rootView;
     self.window.rootViewController = rootViewController;
-    self.splashWindow = [[SplashWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    [self.splashWindow show];
+    [self.window makeKeyAndVisible];
+    [[[HTRouteBridgeManager shareManager].bridge moduleForName:NSStringFromClass([MainReactModule class]) lazilyLoadIfNecessary:YES] setLaunchScreenContentView];
     return YES;
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {
 #if DEBUG
-    return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+  return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 #else
-    return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  return [CodePush bundleURL];
 #endif
-}
-
-- (void)hideSplash {
-    if (self.splashWindow != nil) {
-        [self.splashWindow hide:^(BOOL finished) {
-            self.splashWindow = nil;
-        }];
-    }
 }
 
 @end

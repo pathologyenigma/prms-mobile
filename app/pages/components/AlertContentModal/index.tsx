@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { StyleProp, Image, TextStyle, Text, View, ImageSourcePropType, ImageStyle } from 'react-native'
 import styles from './styles'
 import WhiteContentModal from '../WhiteContentModal'
-import NextTouchableOpacity from '../NextTouchableOpacity'
+import NextPressable from '../NextPressable'
 
 interface IButton {
   act: () => void,
@@ -36,24 +36,24 @@ export default class AlertContentModal extends Component<IProps> {
     return (
       <View style={[styles.btnView, bottomStyle]}>
         {leftBtn ? (
-          <NextTouchableOpacity
+          <NextPressable
             style={[styles.button, leftBtn.buttonStyle]}
             onPress={leftBtn.act}
           >
             <Text style={[styles.leftText, leftBtn.buttonTextStyle]}>
               {leftBtn.title}
             </Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         ) : null}
         {rightBtn ? (
-          <NextTouchableOpacity
+          <NextPressable
             style={[styles.button, { borderLeftWidth: 1, borderLeftColor: '#DDDDDD' }, rightBtn.buttonStyle]}
             onPress={rightBtn.act}
           >
             <Text style={[styles.rightText, rightBtn.buttonTextStyle]}>
               {rightBtn.title}
             </Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         ) : null}
       </View>
     )

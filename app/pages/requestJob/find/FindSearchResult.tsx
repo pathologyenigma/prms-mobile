@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, StatusBar, SectionList } from 'react-native'
 import styles from './styles/FindSearchResult.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { Tabs } from '@ant-design/react-native'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import SearchTextinput from '../../components/SearchTextinput'
@@ -139,14 +139,14 @@ export default class FindSearchResult extends Component<IProps, IState> {
     const { selectCity, searchValue } = this.state
     return (
       <View style={styles.navBar}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.locationBtn}
         >
           <Image
             style={styles.locationIcon}
             source={require('../../../assets/requestJobs/navbar-back.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
         <SearchTextinput
           cellStyle={{ flex: 1, height: 33 }}
           inputProps={{
@@ -157,14 +157,14 @@ export default class FindSearchResult extends Component<IProps, IState> {
             this.setState({ searchValue: value })
           }}
         />
-        {/* <NextTouchableOpacity
+        {/* <NextPressable
           style={styles.cancelBtn}
           onPress={() => {
             navigation.goBack()
           }}
         >
           <Text style={styles.cancelText}>取消</Text>
-        </NextTouchableOpacity> */}
+        </NextPressable> */}
       </View>
     )
   }
@@ -219,7 +219,7 @@ export default class FindSearchResult extends Component<IProps, IState> {
 
   renderSectionFooter(section: any) {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.moreJobsBtn}
       >
         <Text style={styles.moreJobsText}>
@@ -229,7 +229,7 @@ export default class FindSearchResult extends Component<IProps, IState> {
           style={styles.moreJobsImage}
           source={require('../../../assets/requestJobs/next-green.png')}
         />
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -246,7 +246,7 @@ export default class FindSearchResult extends Component<IProps, IState> {
           {
             tabs.map((e, i) => {
               return (
-                <NextTouchableOpacity
+                <NextPressable
                   style={styles.tabsBtn}
                   key={i.toString()}
                   onPress={() => {
@@ -258,13 +258,13 @@ export default class FindSearchResult extends Component<IProps, IState> {
                       {e.title}
                     </Text>
                   </>
-                </NextTouchableOpacity>
+                </NextPressable>
               )
             })
           }
         </View>
         <View style={styles.conditionRightView}>
-          <NextTouchableOpacity style={styles.conditionRightBtn}>
+          <NextPressable style={styles.conditionRightBtn}>
             <Text style={styles.conditionRightText}>
               地点
             </Text>
@@ -272,8 +272,8 @@ export default class FindSearchResult extends Component<IProps, IState> {
               style={styles.rightBottomImg}
               source={require('../../../assets/requestJobs/right-bootom-triangle.png')}
             />
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
+          </NextPressable>
+          <NextPressable
             style={[styles.conditionRightBtn, { marginLeft: 9 }]}
             onPress={() => {
               const { navigation } = this.props
@@ -292,7 +292,7 @@ export default class FindSearchResult extends Component<IProps, IState> {
               style={styles.rightBottomImg}
               source={require('../../../assets/requestJobs/right-bootom-triangle.png')}
             />
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
       </View>
     )
@@ -368,7 +368,7 @@ export default class FindSearchResult extends Component<IProps, IState> {
         }}
         cellItem={item}
         onPress={() => {
-          Toast.show('敬请期待')
+          global.TODO_TOAST()
         }}
       />
     )
@@ -385,7 +385,7 @@ export default class FindSearchResult extends Component<IProps, IState> {
         }}
         cellItem={item}
         onPress={() => {
-          Toast.show('敬请期待')
+          global.TODO_TOAST()
         }}
       />
     )

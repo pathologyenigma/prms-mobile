@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList } from 'react-native'
 import styles from './styles/InterviewAll.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
@@ -9,7 +9,7 @@ import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import GradientButton from '../../components/GradientButton'
 import ListEmptyComponent from '../../components/ListEmptyComponent'
 import { format } from 'date-fns'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { reformSalary } from '../../../utils/utils'
 
 type IProps = GenProps<'InterviewAll'> & {
@@ -180,9 +180,9 @@ export default class InterviewAll extends Component<IProps, IState> {
       <View style={styles.cellStyle}>
         <Text style={styles.timeDate}>{format(new Date(item.time), 'MM月dd日')}</Text>
         <View style={styles.interviewInfoView}>
-          <Image
+          <CacheImage
             style={styles.companyIcon}
-            source={require('../../../assets/requestJobs/icon-example.png')}
+            source={global.AVATAR_IMAGE()}
           />
           <View style={styles.companyInfo}>
             <View style={styles.cellCompanyDetail}>

@@ -11,7 +11,7 @@ export default function QandA() {
         <View style={styles.quizzer}>
           <Image
             style={styles.avatar}
-            source={require('../../../assets/avatar_default.png')}
+            source={global.AVATAR_IMAGE()}
           />
           <View style={styles.quizzerMeta}>
             <Text style={styles.name}>莫纯婷</Text>
@@ -25,7 +25,7 @@ export default function QandA() {
           <View style={styles.replier}>
             <Image
               style={styles.smallAvatar}
-              source={require('../../../assets/avatar_default.png')}
+              source={global.AVATAR_IMAGE()}
             />
             <Text style={styles.nameAndTitle}>梁晓梦·招聘经理</Text>
           </View>

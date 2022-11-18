@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import styles from './styles/NotificationSetting.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { Text, View, StatusBar } from 'react-native'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { ActivityIndicator } from '@ant-design/react-native'
 import SwitchComponent from '../../components/SwitchComponent'
+import Switch from 'react-native-switch-pro'
 
 type IProps = GenProps<'NotificationSetting'> & {
 
@@ -43,7 +44,7 @@ export default class NotificationSetting extends Component<IProps, IState> {
         wechatNotification: false,
         alipayNotification: true,
       })
-    }, 1000);
+    }, 0);
   }
 
   renderNavBar() {
@@ -77,13 +78,10 @@ export default class NotificationSetting extends Component<IProps, IState> {
             color="#888888"
           />
         ) : (
-          <SwitchComponent
+          <Switch
             value={detail}
-            switchPress={() => {
-              if (onpress) {
-                onpress()
-              }
-            }}
+            width={46}
+            height={24}
           />
         )}
       </View>
@@ -102,7 +100,7 @@ export default class NotificationSetting extends Component<IProps, IState> {
               color="#888888"
             />
           ) : (
-            <NextTouchableOpacity
+            <NextPressable
               style={[styles.receiveMessageBtn, receiveMessage && { backgroundColor: 'red', }]}
               onPress={() => {
                 this.setState({ receiveMessage: !receiveMessage })
@@ -111,7 +109,7 @@ export default class NotificationSetting extends Component<IProps, IState> {
               <Text style={styles.receiveMessageText}>
                 {receiveMessage ? '去关闭' : '去打开'}
               </Text>
-            </NextTouchableOpacity>
+            </NextPressable>
           )}
         </View>
         {this.renderCell('接收推荐', receiveRecommend, () => {

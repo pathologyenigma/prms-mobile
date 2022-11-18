@@ -13,7 +13,7 @@ export default function Avatar({ url }) {
     <View style={styles.container}>
       <Image style={styles.back} source={require('./back.png')} />
       <View style={styles.outline}>
-        <CacheImage style={styles.avatar} source={ url ? { uri: url } : require('./default.png') } />
+        <CacheImage style={styles.avatar} source={global.AVATAR_IMAGE(url)} />
       </View>
       <Image style={styles.front} source={require('./front.png')} />
     </View>

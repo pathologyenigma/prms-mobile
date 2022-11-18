@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ImageSourcePropType, DeviceEventEmitter } from 'react-native'
 import styles from './styles'
-import { GenProps } from '../../../../navigator/requestJob/stack'
+import { GenProps } from '../../../../utils/StackProps'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
-import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
+import NextPressable from '../../../components/NextPressable'
 import MessageCell from '../MessageCell'
 import LinearGradient from 'react-native-linear-gradient'
 import SearchTextinput from '../../../components/SearchTextinput'
@@ -15,6 +15,7 @@ import ListEmptyComponent from '../../../components/ListEmptyComponent'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import { connect } from 'react-redux'
 import HTAuthManager from '~/common/auth/common/model/HTAuthManager'
+import HTAppStateManager from '~/common/appstate/HTAppStateManager'
 
 type TProps = GenProps<'News'> & ReturnType<typeof mapDispatchToProps>
 
@@ -128,9 +129,15 @@ class NewsChat extends Component<TProps, IState> {
     this.newMessageListner = DeviceEventEmitter.addListener(HTAuthManager.kHTSocketMessageDidReceiveNotice, () => {
     	this.loadData()
     })
+    this.appStateListener = HTAppStateManager.addListener((isActive) => {
+    	if (isActive) {
+    		this.loadData()
+    	}
+    })
   }
 
   componentWillUnmount() {
+  	this.appStateListener.remove()
     this.newMessageListner && this.newMessageListner.remove()
   }
 
@@ -176,7 +183,7 @@ class NewsChat extends Component<TProps, IState> {
         justifyContent: 'flex-end',
         backgroundColor: '#f5f5f6',
       }}>
-        <NextTouchableOpacity
+        <NextPressable
           style={{
             zIndex: 200,
             height: 73,
@@ -196,8 +203,8 @@ class NewsChat extends Component<TProps, IState> {
           }}
         >
           <Text>置顶</Text>
-        </NextTouchableOpacity>
-        <NextTouchableOpacity
+        </NextPressable>
+        <NextPressable
           style={{
             zIndex: 200,
             height: 73,
@@ -217,7 +224,7 @@ class NewsChat extends Component<TProps, IState> {
           }}
         >
           <Text>删除</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }
@@ -340,7 +347,7 @@ class NewsChat extends Component<TProps, IState> {
     return (
       <SwipeRow
         key={`${item.item.id.toString}_${item?.item?.job?.id}`}
-        rightOpenValue={-150}
+        rightOpenValue={-75}
         recalculateHiddenLayout
         closeOnRowPress
         disableRightSwipe
@@ -352,7 +359,7 @@ class NewsChat extends Component<TProps, IState> {
           justifyContent: 'flex-end',
           backgroundColor: '#f5f5f6',
         }}>
-          <NextTouchableOpacity
+          {/*<NextPressable
             style={styles.setTop}
             onPress={() => {
               if (this.openKey) {
@@ -362,8 +369,8 @@ class NewsChat extends Component<TProps, IState> {
             }}
           >
             <Text style={styles.hideBtnText}>置顶</Text>
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
+          </NextPressable>*/}
+          <NextPressable
             style={[styles.setTop, {
               backgroundColor: '#FF7777',
             }]}
@@ -371,11 +378,12 @@ class NewsChat extends Component<TProps, IState> {
               if (this.openKey) {
                 rowMap[this.openKey].closeRow()
               }
-              Toast.show('消息删除')
+              this.state.dataSource.splice(item.index, 1)
+              this.setState(this.state)
             }}
           >
             <Text style={styles.hideBtnText}>删除</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
         <MessageCell
           cellItem={item.item}
@@ -394,7 +402,7 @@ class NewsChat extends Component<TProps, IState> {
     return null
     return (
       <View style={styles.tabs}>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.selectTypeBtn}
           onPress={() => {
             if (selectType !== 0) {
@@ -406,8 +414,8 @@ class NewsChat extends Component<TProps, IState> {
           }}
         >
           <Text style={[styles.selectTypeText, tabProps.activeTab === 0 && { fontWeight: 'bold' }]}>消息</Text>
-        </NextTouchableOpacity>
-        <NextTouchableOpacity
+        </NextPressable>
+        <NextPressable
           style={styles.selectTypeBtn}
           onPress={() => {
             if (selectType !== 1) {
@@ -419,12 +427,12 @@ class NewsChat extends Component<TProps, IState> {
           }}
         >
           <Text style={[styles.selectTypeText, tabProps.activeTab === 1 && { fontWeight: 'bold' }]}>通知</Text>
-        </NextTouchableOpacity>
-        <NextTouchableOpacity
+        </NextPressable>
+        <NextPressable
           style={styles.selectTypeBtn}
           onPress={() => {
             if (selectType !== 2) {
-              Toast.show('暂未开放')
+              global.TODO_TOAST()
               // this.setState({ selectType: 2 }, () => {
               //   // 刷新数据
               //   this.handleRefresh()
@@ -433,8 +441,8 @@ class NewsChat extends Component<TProps, IState> {
           }}
         >
           <Text style={[styles.selectTypeText, tabProps.activeTab === 2 && { fontWeight: 'bold' }]}>谁看了我</Text>
-        </NextTouchableOpacity>
-        <NextTouchableOpacity
+        </NextPressable>
+        <NextPressable
           style={styles.allReadBtn}
           onPress={() => {
             // const { navigation } = this.props
@@ -446,7 +454,7 @@ class NewsChat extends Component<TProps, IState> {
             source={require('../../../../assets/requestJobs/all-read.png')}
           />
           <Text style={styles.allReadText}>全部已读</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }
@@ -454,20 +462,23 @@ class NewsChat extends Component<TProps, IState> {
   renderMessageTips() {
     const start = { x: 0, y: 0.5 }
     const end = { x: 1, y: 0.5 }
-    if (!this.props.showNotificationTips) {
-      return
-    }
+    // if (!this.props.showNotificationTips) {
+    //   return
+    // }
     return (
       <View style={styles.tongzhiTips}>
         <View style={styles.leftView}>
+          <NextPressable onPress={global.TODO_TOAST}>
           <Image
             style={styles.closeImg}
             source={require('../../../../assets/requestJobs/guanbi.png')}
           />
+          </NextPressable>
           <Text style={styles.openNoficationTips}>
             害怕错过重要联系人的消息？开启通知
           </Text>
         </View>
+        <NextPressable onPress={global.TODO_TOAST}>
         <LinearGradient
           start={start}
           end={end}
@@ -478,6 +489,7 @@ class NewsChat extends Component<TProps, IState> {
             开启
           </Text>
         </LinearGradient>
+        </NextPressable>
       </View>
     )
   }
@@ -486,10 +498,11 @@ class NewsChat extends Component<TProps, IState> {
     const { selectType } = this.state
     if (selectType === 0) {
       return (
-        <NextTouchableOpacity
+        <NextPressable
           onPress={() => {
             const { navigation } = this.props
-            navigation.push('NewsSearch')
+            global.TODO_TOAST()
+            // navigation.push('NewsSearch')
           }}
         >
           <SearchTextinput
@@ -507,7 +520,7 @@ class NewsChat extends Component<TProps, IState> {
               this.setState({ searchStr: value })
             }}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
       )
     }
     return null
@@ -549,7 +562,7 @@ class NewsChat extends Component<TProps, IState> {
         removeClippedSubviews={false}
         showsVerticalScrollIndicator
         previewOpenValue={0.3}
-        ListEmptyComponent={() => this.renderEmptyListImage()}
+        {...global.BIND_EMPTY_VIEW()}
         renderItem={(item, rowMap) => this.renderItem(item, rowMap, dataSource)}
       // ItemSeparatorComponent={() => this.renderSeparatorLine()}
       />

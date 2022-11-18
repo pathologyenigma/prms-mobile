@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList } from 'react-native'
 import styles from './styles/BalanceWithdrawal.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
@@ -9,7 +9,7 @@ import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import GradientButton from '../../components/GradientButton'
 import ListEmptyComponent from '../../components/ListEmptyComponent'
 import { differenceInHours, format, formatDistance } from 'date-fns'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import SystemHelper from '../../../utils/system'
 import { calculateTime } from '../../../utils/utils'
 import LinearGradient from 'react-native-linear-gradient'
@@ -118,13 +118,13 @@ export default class BalanceWithdrawal extends Component<IProps, IState> {
               this.setState({ balance: value })
             }}
           />
-          <NextTouchableOpacity
+          <NextPressable
             onPress={() => {
 
             }}
           >
             <Text style={styles.balanceAllText}>全部</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
         {bindAlipayPhone ? (
           <View style={styles.bindView}>
@@ -242,7 +242,7 @@ export default class BalanceWithdrawal extends Component<IProps, IState> {
                 this.setState({ verificationCode: value })
               }}
             />
-            <NextTouchableOpacity>
+            <NextPressable>
               {countTime === 60 ? (
                 <GradientButton
                   text="重新发送"
@@ -257,7 +257,7 @@ export default class BalanceWithdrawal extends Component<IProps, IState> {
                   {`${countTime}S后重新发送`}
                 </Text>
               )}
-            </NextTouchableOpacity>
+            </NextPressable>
           </View>
         }
       />

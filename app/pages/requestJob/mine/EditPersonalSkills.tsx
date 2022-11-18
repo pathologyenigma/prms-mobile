@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, StatusBar, Platform } from 'react-native'
 import styles from './styles/EditPersonalSkills.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { TextInput } from 'react-native-gesture-handler'
 // import ImagePicker from 'react-native-image-picker'
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
@@ -25,7 +25,7 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
     super(props)
     const { route: { params: { personalSkills } } } = props
     this.state = {
-      selectedSkills: personalSkills || [],
+      selectedSkills: [...(personalSkills || [])],
       optionalTags: [],
       addModalVisible: false,
       addText: ''
@@ -69,9 +69,7 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
         if (personalSkillsCallback) {
           personalSkillsCallback()
         }
-        setTimeout(() => {
-          navigation.goBack()
-        }, 1000)
+        navigation.goBack()
     })
   }
 
@@ -104,7 +102,7 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
                 <Text style={styles.selectedTagText}>
                   {e}
                 </Text>
-                <NextTouchableOpacity
+                <NextPressable
                   style={styles.closeTagBtn}
                   onPress={() => {
                     // 删除标签
@@ -119,7 +117,7 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
                   }}
                 >
                   <Text style={styles.closeTagText}>x</Text>
-                </NextTouchableOpacity>
+                </NextPressable>
               </View>
             )
           })
@@ -137,7 +135,7 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
         <View style={styles.optionalView}>
           {optionalTags.map((e: any, i: number) => {
             return (
-              <NextTouchableOpacity
+              <NextPressable
                 style={styles.optionalViewBtn}
                 key={i.toString()}
                 onPress={() => {
@@ -147,11 +145,11 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
                 }}
               >
                 <Text style={styles.optionalViewText}>{e}</Text>
-              </NextTouchableOpacity>
+              </NextPressable>
             )
           })}
         </View> */}
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.customBtn}
           onPress={() => {
             this.setState({
@@ -160,7 +158,7 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
           }}
         >
           <Text style={styles.customText}>+ 自定义</Text>
-        </NextTouchableOpacity>
+        </NextPressable>
       </ScrollView>
     )
   }
@@ -183,15 +181,18 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
           onChangeText={(value) => this.setState({ addText: value })}
         />
         <View style={styles.modalFooterView}>
-          <NextTouchableOpacity
+          <NextPressable
             onPress={() => {
               this.setState({ addModalVisible: false })
             }}
             style={styles.modalCancelBtn}>
             <Text style={styles.modalCancelText}>取消</Text>
-          </NextTouchableOpacity>
-          <NextTouchableOpacity
+          </NextPressable>
+          <NextPressable
             onPress={() => {
+            	if ((addText?.length ?? 0) <= 0) {
+            		return
+            	}
               if (selectedSkills.includes(addText)) {
                 this.setState({
                   addModalVisible: false,
@@ -199,7 +200,7 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
                   Toast.show('请勿添加重复的标签')
                 })
               } else {
-                selectedSkills.push(addText)
+                this.state.selectedSkills.push(addText)
                 this.setState({
                   addText: '',
                   addModalVisible: false,
@@ -209,7 +210,7 @@ export default class EditPersonalSkills extends Component<IProps, IState> {
             }}
             style={styles.modalConfirmBtn}>
             <Text style={styles.modalConfirmText}>确认</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
       </View>
     )

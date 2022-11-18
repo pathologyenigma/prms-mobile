@@ -19,11 +19,10 @@ import QandA from './QandA'
 import DetailWebView from './DetailWebView'
 import GradientButton from '../../components/GradientButton'
 import { getBottomSpace, isIphoneX } from 'react-native-iphone-x-helper'
-import { useNavigation } from '@react-navigation/native'
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
-export default function JobFairDetail() {
+export default function JobFairDetail({ navigation }) {
   const tabs = ['招聘会详情', '参与企业', '招聘会问答']
   const pagerRef = useRef<PagerView>()
 
@@ -34,8 +33,6 @@ export default function JobFairDetail() {
     onPageScroll,
     onPageSelected,
   } = usePagerView(0)
-
-  const navigation = useNavigation<StackNavigationProp<any>>()
 
   const renderHeader = () => {
     return (

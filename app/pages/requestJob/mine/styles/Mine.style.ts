@@ -11,7 +11,7 @@ export default StyleSheet.create({
     flex: 1,
   },
   scrollViewContent: {
-  	paddingBottom: 100
+  	paddingBottom: TAB_BAR_HEIGHT + 100
   },
   statusBarStyle: {
     height: SystemHelper.safeTop,
@@ -76,8 +76,8 @@ export default StyleSheet.create({
   },
   gender: {
     position: 'absolute',
-    right: -0.5,
-    bottom: -0.5,
+    top: 50,
+    right: 3,
   },
   nameView: {
     marginLeft: 21,
@@ -170,7 +170,7 @@ export default StyleSheet.create({
     marginTop: 20,
     height: 94,
     borderRadius: 8,
-    backgroundColor: greenColor,
+    // backgroundColor: greenColor,
     marginHorizontal: 15,
   },
   myStudyContainer: {
@@ -202,7 +202,7 @@ export default StyleSheet.create({
   studyItem: {
     width: 139,
     height: 80,
-    backgroundColor: greenColor,
+    // backgroundColor: greenColor,
     borderRadius: 8,
     marginRight: 11
   },

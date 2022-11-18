@@ -17,8 +17,6 @@ import RadioLabel from '../../components/RadioLabel'
 import { HrParamList } from '../typings'
 import LoadingAndError from '../../components/LoadingAndError'
 
-import HTThrowPromise from '~/common/request/HTThrowPromise'
-
 interface HrProfileItemProps {
   title: string
   detail: string
@@ -47,13 +45,15 @@ export default function HrProfile({
 }: StackScreenProps<HrParamList, 'HrProfile'>) {
   const { avatar, username, gender, company, title, phoneNumber, email } =
     route.params || {}
+  console.log('🤯', avatar, route.params.avatar, navigation.getParam('avatar'))
 
   useEffect(() => {
-  	HTThrowPromise.all([
+  	Promise.all([
   		HTAPI.UserGetBasicInfo(),
   		HTAPI.UserGetEnterpriseDetail_EntInfo(),
   		HTAPI.ENTGetAccountInfo()
   	]).then(([userInfo, companyInfo, identityInfo]) => {
+  		console.log('😎', userInfo.image_url)
   		navigation.setParams({
   			...companyInfo,
   			...identityInfo,
@@ -91,25 +91,26 @@ export default function HrProfile({
               <Text style={styles.detail}>头像</Text>
               <TouchableWithoutFeedback
                 onPress={() =>
-                  navigation.navigate('AvatarViewer', {
-                    avatar: avatar,
-                    targetRouteName: 'HrProfile',
+                  navigation.push('AvatarViewer', {
+                    uri: avatar,
+                    callback: (_navigation, logo) => {
+                    	navigation.setParams({ avatar: logo })
+                    	_navigation.navigate('HrProfile')
+                    }
                   })
                 }>
                 <CacheImage
                   style={styles.avatar}
-                  source={
-                    avatar
-                      ? { uri: avatar }
-                      : require('../../assets/avatar_default.png')
-                  }
+                  source={global.AVATAR_IMAGE(avatar)}
                 />
               </TouchableWithoutFeedback>
             </View>
             <HrProfileItem
               title="姓名"
               detail={username || '请完善'}
-              onPress={() => navigation.navigate('EditHrName', { username })}
+              onPress={() => navigation.push('EditHrName', { username, callback: (_navigation, username) => {
+              	navigation.setParams({ username })
+              } })}
             />
             <View style={styles.gender}>
               <Text style={styles.genderTitle}>性别</Text>
@@ -138,21 +139,28 @@ export default function HrProfile({
             <HrProfileItem
               title="职位"
               detail={title || '请完善'}
-              onPress={() => navigation.navigate('EditHrTitle', { title })}
+              onPress={() => navigation.push('EditHrTitle', { title, callback: (_navigation, title) => {
+              	navigation.setParams({ title })
+              } })}
             />
             <HrProfileItem
               title="手机号码"
               detail={phoneNumber || '请完善'}
               onPress={() =>
-                navigation.navigate('EditHrPhoneNumber', {
+                navigation.push('EditHrPhoneNumber', {
                   phoneNumber,
+                  callback: (_navigation, phoneNumber) => {
+                  	navigation.setParams({ phoneNumber })
+                  }
                 })
               }
             />
             <HrProfileItem
               title="邮箱"
               detail={email || '请完善'}
-              onPress={() => navigation.navigate('EditHrEmail', { email })}
+              onPress={() => navigation.push('EditHrEmail', { email, callback: (_navigation, email) => {
+              	navigation.setParams({ email })
+              } })}
             />
             <GradientButton
               title="保存"

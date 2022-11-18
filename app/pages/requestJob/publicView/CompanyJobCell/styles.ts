@@ -40,12 +40,14 @@ export default StyleSheet.create({
   },
   cellJobView: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     marginTop: 8,
+    marginRight: 10
   },
   cellExperience: {
     marginRight: 25,
-    height: 15,
-    lineHeight: 15,
+    // height: 15,
+    lineHeight: 20,
     fontSize: 12,
     color: '#333333',
   },

@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Text, View, Image, } from 'react-native'
 import styles from './styles/FeedbackAndHelp.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import LinearGradient from 'react-native-linear-gradient'
 
 type IProps = GenProps<'FeedbackAndHelp'> & {
@@ -112,7 +112,7 @@ export default class FeedbackAndHelp extends Component<IProps, IState> {
 
   renderHeader() {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.headerView}
         onPress={() => {
           const { navigation } = this.props
@@ -130,7 +130,7 @@ export default class FeedbackAndHelp extends Component<IProps, IState> {
           style={styles.nextImage}
           source={require('../../../assets/requestJobs/next-gray.png')}
         />
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 
@@ -144,7 +144,7 @@ export default class FeedbackAndHelp extends Component<IProps, IState> {
 
   renderItem(item: any) {
     return (
-      <NextTouchableOpacity
+      <NextPressable
         key={item.id.toString()}
         style={styles.cellStyle}
         onPress={() => {
@@ -159,7 +159,7 @@ export default class FeedbackAndHelp extends Component<IProps, IState> {
           style={styles.nextImage}
           source={require('../../../assets/requestJobs/next-gray.png')}
         />
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

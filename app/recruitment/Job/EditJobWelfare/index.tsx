@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Pressable } from 'react-native'
 import TextButton from '../../components/TextButton'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+// import { Pressable } from 'react-native-gesture-handler'
 import AlertModalWithTextInput from '../../components/AlertModalWithTextInput'
 import NavBar from '../../components/NavBar'
 import { StackScreenProps } from '@react-navigation/stack'
@@ -16,7 +16,7 @@ export default function EditJobWelfare({
   navigation,
   route,
 }: StackScreenProps<JobParamList, 'EditJobWelfare'>) {
-  const { initialTags = [] } = route.params || {}
+  const { initialTags = [], callback } = route.params || {}
   console.log('----------render EditJobWelfare---------------------')
 
   const [checkedLabels, setChackedLabels] = useState(initialTags)
@@ -59,11 +59,12 @@ export default function EditJobWelfare({
         headerRight={() => (
           <TextButton
             title="保存"
-            onPress={() =>
-              navigation.navigate('PostJob', {
+            onPress={() => {
+              callback(navigation, {
                 tags: checkedLabels,
               })
-            }
+              navigation.pop()
+            }}
           />
         )}
       />
@@ -84,11 +85,11 @@ export default function EditJobWelfare({
           </GridView>
         </CheckGroup>
         <Text style={styles.custom}>自定义标签</Text>
-        <TouchableOpacity onPress={handleAddLabel} activeOpacity={0.7}>
+        <Pressable onPress={handleAddLabel} activeOpacity={0.7}>
           <Text suppressHighlighting style={styles.add}>
-            + 自定义标签，最多8个字哦～
+          	+ 自定义标签，最多8个字哦～
           </Text>
-        </TouchableOpacity>
+        </Pressable>
         <AlertModalWithTextInput
           visible={modalVisible}
           placeholder="自定义标签，最多8个字哦～"

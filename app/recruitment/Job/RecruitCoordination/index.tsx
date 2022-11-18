@@ -48,7 +48,7 @@ export default function RecruitCoordination() {
         <View style={styles.hrRow}>
           <Image
             style={styles.hrAvatar}
-            source={require('../../assets/avatar_default.png')}
+            source={global.AVATAR_IMAGE()}
           />
           <Text style={styles.hrMeta}>彭女士·UI设计师</Text>
         </View>

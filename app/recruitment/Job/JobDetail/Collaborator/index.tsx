@@ -16,7 +16,7 @@ interface CollaboratorProps {
   coAvatars?: ImageSourcePropType[]
 }
 
-// require('../../../assets/avatar_default.png')
+
 
 export default function Collaborator({ coAvatars = [] }: CollaboratorProps) {
   const [modalVisible, setModalVisible] = useState(false)

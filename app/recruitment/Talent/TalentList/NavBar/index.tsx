@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { View, StyleSheet, ScrollView } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import IconButton from '../../../components/IconButton'
@@ -6,6 +6,7 @@ import { headerHeight, navigationBarHeight } from '../../../theme'
 import LinearGradientMaskedView from '../../../components/LinearGradientMaskedView'
 import RadioGroup from '../../../components/RadioGroup'
 import RadioLabel from '../../../components/RadioLabel'
+import { HTPageHeaderView } from 'react-native-selected-page'
 
 export interface JobItem {
   jobId: number
@@ -16,59 +17,60 @@ interface NavBarProps {
   onSearchPress?: () => void
   onPlusPress?: () => void
   jobs: JobItem[]
-  checkedJobId?: number
+  selectedIndex?: number
   onJobItemChecked: (jobId: number) => void
 }
 
-export default function NavBar({
-  onSearchPress,
-  onPlusPress,
-  jobs,
-  checkedJobId,
-  onJobItemChecked,
-}: NavBarProps) {
-  return (
-    <LinearGradient
-      style={styles.header}
-      colors={['#79D398', '#83E4AE']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}>
-      <View style={styles.navBar}>
-        <LinearGradientMaskedView>
-          <ScrollView
-            style={styles.scrollview}
-            horizontal
-            showsHorizontalScrollIndicator={false}>
-            <RadioGroup
-              value={checkedJobId}
-              onValueChecked={value => onJobItemChecked(value)}>
-              <View style={styles.labelGroup}>
-                {jobs.map((job, index) => (
-                  <RadioLabel
-                    key={job.job_id}
-                    label={job.title}
-                    value={job.job_id}
-                    style={[
-                      styles.labelStyle,
-                      { marginLeft: index !== 0 ? 20 : 0 },
-                    ]}
-                    checkedStyle={styles.checkedLabelStyle}
-                  />
-                ))}
-              </View>
-            </RadioGroup>
-          </ScrollView>
-        </LinearGradientMaskedView>
-        <IconButton icon={require('./guanli.png')} onPress={onPlusPress} />
-        <IconButton
-          icon={require('./sousuo.png')}
-          style={{ marginRight: 8 }}
-          iconStyle={styles.iconStyle}
-          onPress={onSearchPress}
-        />
-      </View>
-    </LinearGradient>
-  )
+export default class NavBar extends Component {
+
+	render() {
+		console.log('render')
+		const {
+			onSearchPress,
+			onPlusPress,
+			jobs = [],
+			selectedIndex,
+			onJobItemChecked,
+		} = this.props
+		let padding = 0
+		if ((jobs?.length ?? 0) > 0) {
+			padding += (jobs?.[0]?.title?.length ?? 0) * 3.5
+		}
+		return (
+			<LinearGradient
+		      style={styles.header}
+		      colors={['#79D398', '#83E4AE']}
+		      start={{ x: 0, y: 0 }}
+		      end={{ x: 1, y: 0 }}>
+		      <View style={styles.navBar}>
+		        <LinearGradientMaskedView>
+		          <HTPageHeaderView
+					style={{ flex: 1, height: 44 }}
+					data={jobs}
+					titleFromItem={item => item.title}
+					initScrollIndex={selectedIndex}
+					itemContainerStyle={{ paddingHorizontal: padding }}
+					itemTitleStyle={{ fontSize: 16, fontWeight: '500' }}
+					itemTitleNormalStyle={{ color: 'white' }}
+					itemTitleSelectedStyle= {{ color: 'white', fontSize: 19 }}
+					onSelectedPageIndex={(pageIndex) => {
+						onJobItemChecked(pageIndex)
+					}}
+					cursorStyle={{ width: null, transform: [{ scaleX: 0.4 }], height: 2, backgroundColor: 'transparent' }}
+				  />
+		        </LinearGradientMaskedView>
+		        <IconButton icon={require('./guanli.png')} onPress={onPlusPress} />
+		        <IconButton
+		          icon={require('./sousuo.png')}
+		          style={{ marginRight: 8 }}
+		          iconStyle={styles.iconStyle}
+		          onPress={onSearchPress}
+		        />
+		      </View>
+		    </LinearGradient>
+		)
+	}
+
 }
 
 const styles = StyleSheet.create({

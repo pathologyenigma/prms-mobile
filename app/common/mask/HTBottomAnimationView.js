@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, Image, TouchableOpacity, FlatList, DeviceEventEmitter } from 'react-native'
+import { View, Text, Image, Pressable, FlatList, DeviceEventEmitter } from 'react-native'
 import Animated from 'react-native-reanimated'
 import HTMaskView from '~/common/mask/HTMaskView'
 

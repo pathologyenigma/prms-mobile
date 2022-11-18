@@ -16,27 +16,39 @@ export default class TalentList extends Component {
 		super(props)
 		this.state = {
 			jobItems: [],
-			checkedJobId: 0,
+			selectedIndex: 0,
+		}
+	}
+
+	componentDidAppear({ isSecondAppear }) {
+		if (isSecondAppear) {
+			this._onRefresh()
 		}
 	}
 
 	componentDidMount() {
-		HTAPI.UserGetJobListByEntId({ pageSize: 20 }).then(response => {
-			let checkedJobId = response.data[0].job_id
+		this._onRefresh()
+	}
+
+	_onRefresh = () => {
+		HTAPI.UserGetJobListByEntId({ status: 'InRecruitment', pageSize: 30 }).then(response => {
 	  		this.setState({ 
 	  			jobItems: response.data, 
-	  			checkedJobId 
+	  			selectedIndex: response?.data?.length <= this.state.selectedIndex ? 0 : this.state.selectedIndex
+	  		}, () => {
+	  			setTimeout(() => {
+	  				this?.page?.contentPage?._onRefresh(true, true)
+	  			}, 5000)
 	  		})
 	  	})
 	}
 
 	render() {
-	  const { jobItems, checkedJobId } = this.state
+	  const { jobItems, selectedIndex } = this.state
 	  const { navigation } = this.props
 
-	  const jobItem = jobItems?.find(job => job.job_id === checkedJobId)
-	  const jobName = jobItem?.title
-	  const jobCategory = jobItem?.category
+	  const jobItem = jobItems[selectedIndex]
+	  const jobCategory = jobItem?.category ?? []
 
 	  if ((jobItems?.length ?? 0) <= 0) {
 	    return (
@@ -44,9 +56,9 @@ export default class TalentList extends Component {
 	        loadingStyle={{ paddingTop: headerHeight() + 40 }}
 	        loading={false}
 	        error={null}>
-	        <FocusAwareStatusBar barStyle={'dark-content'} />
+	        {/*<FocusAwareStatusBar barStyle={'dark-content'} />*/}
 	        <TalentListEmpty
-	          onPublishPress={() => navigation.navigate('PostJob')}
+	          onPublishPress={() => navigation.push('PostJob')}
 	        />
 	      </LoadingAndError>
 	    )
@@ -54,17 +66,19 @@ export default class TalentList extends Component {
 
 	  return (
 	    <View style={styles.container}>
-	      <FocusAwareStatusBar barStyle={'light-content'} />
+	      {/*<FocusAwareStatusBar barStyle={'light-content'} />*/}
 	      <NavBar
 	        jobs={jobItems}
-	        checkedJobId={checkedJobId}
-	        onJobItemChecked={(value) => {
-	        	this.setState({ checkedJobId: value })
+	        selectedIndex={selectedIndex}
+	        onJobItemChecked={(index) => {
+	        	this.setState({ selectedIndex: index }, () => {
+	        		this?.page?.contentPage?._onRefresh(true, true)
+	        	})
 	        }}
 	        onPlusPress={() => navigation.navigate('JobAdmin')}
 	        onSearchPress={() => navigation.navigate('CandidateSearch')}
 	      />
-	      <TalentPager navigation={navigation} jobName={jobName} jobCategory={jobCategory} />
+	      <TalentPager ref={ref => this.page = ref} navigation={navigation} jobCategory={jobCategory} />
 	    </View>
 	  )
 	}
@@ -73,5 +87,6 @@ export default class TalentList extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingBottom: global.TAB_BAR_HEIGHT
   },
 })

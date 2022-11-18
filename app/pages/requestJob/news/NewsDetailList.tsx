@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, StatusBar } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import GradientButton from '../../components/GradientButton'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import styles from './styles/NewsDetailList.style'
 import LinearGradient from 'react-native-linear-gradient'
 import { gradienViewRightGreenColor, greenColor } from '../../../utils/constant'
@@ -10,7 +10,7 @@ import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { Carousel } from '@ant-design/react-native'
 import NavBar, { EButtonType } from '../../components/NavBar'
 import JobCell from '../../components/JobCell'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 
 type IProps = GenProps<'NewsDetailList'> & {
 

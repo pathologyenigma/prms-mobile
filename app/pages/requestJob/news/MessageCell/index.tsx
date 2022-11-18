@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react'
 import { StyleProp, Text, ViewStyle, View, Image, ImageSourcePropType } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { greenColor } from '../../../../utils/constant'
-import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
+import NextPressable from '../../../components/NextPressable'
 import styles from './styles'
 
 interface ICell {
@@ -51,8 +51,17 @@ export default class MessageCell extends PureComponent<ICell> {
 
   render() {
     const { onPress, cellItem } = this.props
+    let content = cellItem.last_msg
+    try {
+    	let data = JSON.parse(content)
+    	if (data.type && data.type == 'job') {
+    		content = `切换了职位: ${data?.info?.title}`
+    	}
+    } catch(e) {
+
+    }
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={styles.cell}
         activeOpacity={1}
         onPress={() => {
@@ -61,15 +70,10 @@ export default class MessageCell extends PureComponent<ICell> {
           }
         }}
       >
-        {cellItem.logo ? (
-          <CacheImage
-            source={typeof (cellItem.logo) === 'string'
-              ? { uri: cellItem.logo }
-              : cellItem.logo
-            }
-            style={styles.icon}
-          />
-        ) : <View style={[styles.icon, { backgroundColor: greenColor, }]} />}
+        <CacheImage
+	        source={global.AVATAR_IMAGE(cellItem.logo)}
+	        style={styles.icon}
+	    />
         <View style={styles.titleView}>
           <View style={styles.contactInfo}>
             <View style={styles.contactDetail}>
@@ -87,9 +91,9 @@ export default class MessageCell extends PureComponent<ICell> {
           <Text
             style={styles.messageText}
             numberOfLines={1}
-          >{cellItem.last_msg}</Text>
+          >{content}</Text>
         </View>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 }

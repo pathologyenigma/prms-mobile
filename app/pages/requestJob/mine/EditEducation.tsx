@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, StatusBar, BackHandler } from 'react-native'
 import styles from './styles/EditEducation.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { TextInput } from 'react-native-gesture-handler'
 import JobStatusModal from '../jobs/JobStatusModal'
 import { AnyMxRecord } from 'dns'
@@ -11,6 +11,8 @@ import GradientButton from '../../components/GradientButton'
 import AlertContentModal from '../../components/AlertContentModal'
 import SystemHelper from '../../../utils/system'
 import { selectEducation } from '../../../utils/utils'
+import DatePickerModal from '../../components/DatePickerModal'
+import { format, parse } from 'date-fns'
 
 type IProps = GenProps<'EditEducation'> & {
 
@@ -27,8 +29,6 @@ interface IState {
   endTime: string,
   schoolExperience: string,
   beginTimeVisible: boolean,
-  beginTimeArray: any,
-  beginDateArray: any,
   educationLevel: any,
   educationAllDay: any,
   deleteVisible: boolean,
@@ -49,38 +49,11 @@ export default class EditEducation extends Component<IProps, IState> {
       beginTime: (educationItem && educationItem.time && educationItem.time.split('-')[0]) || '',
       endTime: (educationItem && educationItem.time.split('-') && educationItem.time.split('-').length > 1 && educationItem.time.split('-')[1]) || '',
       schoolExperience: (educationItem && educationItem.exp_at_school) || '',
-      beginTimeVisible: false,
       educationVisible: false,
+      beginTimeVisible: false,
+      endTimeVisible: false,
       deleteVisible: false,
       giveUpSaveVisible: false,
-      beginTimeArray: [
-        { label: '2021', value: '2021' },
-        { label: '2020', value: '2020' },
-        { label: '2019', value: '2019' },
-        { label: '2018', value: '2018' },
-        { label: '2017', value: '2017' },
-        { label: '2016', value: '2016' },
-        { label: '2015', value: '2015' },
-        { label: '2014', value: '2014' },
-        { label: '2013', value: '2013' },
-        { label: '2012', value: '2012' },
-        { label: '2011', value: '2011' },
-        { label: '2010', value: '2010' },
-      ],
-      beginDateArray: [
-        { label: '2021', value: '2021' },
-        { label: '2020', value: '2020' },
-        { label: '2019', value: '2019' },
-        { label: '2018', value: '2018' },
-        { label: '2017', value: '2017' },
-        { label: '2016', value: '2016' },
-        { label: '2015', value: '2015' },
-        { label: '2014', value: '2014' },
-        { label: '2013', value: '2013' },
-        { label: '2012', value: '2012' },
-        { label: '2011', value: '2011' },
-        { label: '2010', value: '2010' },
-      ],
       educationLevel: [
         { label: '初中', value: 'Junior' },
         { label: '高中', value: 'High' },
@@ -245,19 +218,27 @@ export default class EditEducation extends Component<IProps, IState> {
       <View style={styles.cell}>
         <Text style={styles.cellTitle}>时间段</Text>
         <View style={styles.durationView}>
-          <NextTouchableOpacity
-            style={{ flex: 1 }}
+          <NextPressable
+            style={{ flex: 1, }}
             onPress={() => {
               this.setState({ beginTimeVisible: true })
             }}
           >
             <Text style={[styles.beginTime, beginTime.length !== 0 && { color: '#333333' }]}>
-              {(beginTime && endTime)
-                ? `${beginTime}-${endTime}`
-                : '请选择'
-              }
+              {beginTime && format(new Date(beginTime), 'yyyy') || '入校时间'}
             </Text>
-          </NextTouchableOpacity>
+          </NextPressable>
+          <Text style={styles.timeTips}>至</Text>
+          <NextPressable
+            style={{ flex: 1, }}
+            onPress={() => {
+              this.setState({ endTimeVisible: true })
+            }}
+          >
+            <Text style={[styles.beginTime, { textAlign: 'right' }, endTime.length !== 0 && { color: '#333333' }]}>
+              {endTime && format(new Date(endTime), 'yyyy') || '毕业时间'}
+            </Text>
+          </NextPressable>
         </View>
       </View>
     )
@@ -269,7 +250,7 @@ export default class EditEducation extends Component<IProps, IState> {
       <View style={styles.cell}>
         <Text style={styles.cellTitle}>学历</Text>
         <View style={styles.durationView}>
-          <NextTouchableOpacity
+          <NextPressable
             style={{ flex: 1, }}
             onPress={() => {
               this.setState({ educationVisible: true })
@@ -281,7 +262,7 @@ export default class EditEducation extends Component<IProps, IState> {
                 : '请选择'
               }
             </Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
       </View>
     )
@@ -323,14 +304,14 @@ export default class EditEducation extends Component<IProps, IState> {
     return (
       <View style={styles.footerView}>
         {educationItem && (
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.resetBtn}
             onPress={() => {
               this.setState({ deleteVisible: true })
             }}
           >
             <Text style={styles.resetText}>删除</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         )}
         <GradientButton
           disabled={!disableSave}
@@ -346,8 +327,8 @@ export default class EditEducation extends Component<IProps, IState> {
   }
 
   render() {
-    const { beginTimeVisible, educationVisible, educationLevel, fullTime,
-      educationAllDay, beginTimeArray, beginDateArray, beginTime, education,
+    const { beginTimeVisible, endTimeVisible, beginTime, endTime, educationVisible, educationLevel, fullTime,
+      educationAllDay, education,
       deleteVisible, giveUpSaveVisible
     } = this.state
     const { navigation, route: { params: { educationItem, educationItemCallback } } } = this.props
@@ -371,20 +352,29 @@ export default class EditEducation extends Component<IProps, IState> {
           {this.renderSchoolExperience()}
         </ScrollView>
         {educationItem && this.renderFooterBtn()}
-        <JobStatusModal
-          title="时间段"
+        <DatePickerModal
           visible={beginTimeVisible}
-          currentDate={
-            beginTime ? `${new Date(beginTime).getFullYear()}-${new Date(beginTime).getMonth() + 1}`
-              : `${new Date().getFullYear()}-${new Date().getMonth() + 1}`
-          }
+          currentDate={format(beginTime.length > 0 ? new Date(beginTime) : new Date(), 'yyyy-MM-dd')}
           leftPress={() => {
             this.setState({ beginTimeVisible: false })
           }}
-          rightPress={(selectedDate) => {
+          rightPress={(newDate) => {
             this.setState({
-              beginTime: selectedDate,
-              beginTimeVisible: false,
+              beginTime: newDate.getFullYear() + '',
+              beginTimeVisible: false
+            })
+          }}
+        />
+        <DatePickerModal
+          visible={endTimeVisible}
+          currentDate={format(endTime.length > 0 ? new Date(endTime) : new Date(), 'yyyy-MM-dd')}
+          leftPress={() => {
+            this.setState({ endTimeVisible: false })
+          }}
+          rightPress={(newDate) => {
+            this.setState({
+              endTime: newDate.getFullYear() + '',
+              endTimeVisible: false
             })
           }}
         />
@@ -399,6 +389,7 @@ export default class EditEducation extends Component<IProps, IState> {
             this.setState({ educationVisible: false })
           }}
           rightPress={(selectedEducation, selectFullTime) => {
+          	console.log(selectedEducation, selectFullTime)
             this.setState({
               education: selectedEducation,
               fullTime: selectFullTime,

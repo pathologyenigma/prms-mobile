@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter } from 'react-native'
 import styles from './styles/SetPassword.style'
-import { GenProps } from '../../navigator/router/stack'
+import { GenProps } from '../../utils/StackProps'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import LoginInputComponent from './LoginInputComponent'
-import NextTouchableOpacity from '../components/NextTouchableOpacity'
+import NextPressable from '../components/NextPressable'
 import AlertContentModal from '../components/AlertContentModal'
 import WhiteContentModal from '../components/WhiteContentModal'
 import GradientButton from '../components/GradientButton'
@@ -121,7 +121,7 @@ class SetPassword extends Component<IProps, IState> {
   	const { navigation } = this.props
     const { operation, phone, confirmPassword, password } = this.state
     return (
-      <NextTouchableOpacity
+      <NextPressable
         style={[styles.finishBtn, (!confirmPassword || !password) && { opacity: 0.6 }]}
         disabled={!confirmPassword || !password}
         onPress={() => {
@@ -147,6 +147,7 @@ class SetPassword extends Component<IProps, IState> {
 	            	navigation.push('ChooseRole')
 			    })
           	} else {
+          		// 忘记密码，去登录页面
           		HTAPI.UserResetPassword({
 	          		info: {
 	          			phoneNumber: phone,
@@ -155,8 +156,6 @@ class SetPassword extends Component<IProps, IState> {
 	          		}
 	          	}).then(response => {
 	          		ActionToast.show()
-	          		// 密码重置/设置操作,将用户信息存储下来即可选择角色
-	                // TODO:此处需要将用户角色信息存储下来
 	          		navigation.navigate('LoginScreen')
 	          	})
           	}
@@ -168,7 +167,7 @@ class SetPassword extends Component<IProps, IState> {
         >
           提交确认
         </Text>
-      </NextTouchableOpacity>
+      </NextPressable>
     )
   }
 

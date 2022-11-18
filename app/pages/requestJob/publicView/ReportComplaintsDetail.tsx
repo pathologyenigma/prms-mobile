@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, StatusBar, Platform } from 'react-native'
 import styles from './styles/ReportComplaintsDetail.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar, { EButtonType } from '../../components/NavBar'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import { TextInput } from 'react-native-gesture-handler'
 // import ImagePicker from 'react-native-image-picker'
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
@@ -161,7 +161,7 @@ export default class ReportComplaintsDetail extends Component<IProps, IState> {
           {selectImage.map((e: any, index: number) => {
             return (
               e.uri ? (
-                <NextTouchableOpacity
+                <NextPressable
                   onPress={() => {
                     this.selectPhotoTapped(index)
                   }}
@@ -170,12 +170,12 @@ export default class ReportComplaintsDetail extends Component<IProps, IState> {
                     style={styles.selectPhoto}
                     source={{ uri: e.uri }}
                   />
-                </NextTouchableOpacity>
+                </NextPressable>
               ) : null
             )
           })}
           {selectImage.length < 3 && (
-            <NextTouchableOpacity
+            <NextPressable
               onPress={() => {
                 this.selectPhotoTapped()
               }}
@@ -184,7 +184,7 @@ export default class ReportComplaintsDetail extends Component<IProps, IState> {
                 style={styles.selectPhoto}
                 source={require('../../../assets/requestJobs/select-photo.png')}
               />
-            </NextTouchableOpacity>
+            </NextPressable>
           )}
         </View>
       </View>
@@ -207,15 +207,15 @@ export default class ReportComplaintsDetail extends Component<IProps, IState> {
           <Text style={styles.tipsText}>
             点击“提交”即表示您愿意遵守
           </Text>
-          <NextTouchableOpacity>
+          <NextPressable>
             <Text style={styles.tipsPrivacy}>《用户协议》</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
           <Text style={styles.tipsText}>
             和
           </Text>
-          <NextTouchableOpacity>
+          <NextPressable>
             <Text style={styles.tipsPrivacy}>《个人信息保护政策》</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
           <Text style={styles.tipsText}>
             并同意
           </Text>

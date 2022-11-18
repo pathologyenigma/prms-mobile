@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { Text, View } from 'react-native'
 import styles from './styles'
-import NextTouchableOpacity from '../NextTouchableOpacity'
-// import DatePicker from 'react-native-date-picker'
+import NextPressable from '../NextPressable'
+import DatePicker from 'react-native-date-picker'
 import BottomContentModal from '../BottomContentModal'
-import { DatePicker } from 'react-native-common-date-picker'
+import { parse } from 'date-fns'
+// import { DatePicker } from 'react-native-common-date-picker'
 
 interface IProps {
   title?: string,
@@ -17,6 +18,7 @@ interface IProps {
 }
 
 export default class DatePickerModal extends Component<IProps> {
+
   render() {
     const {
       title = '选择时间',
@@ -25,49 +27,50 @@ export default class DatePickerModal extends Component<IProps> {
       leftPress,
       rightTitle = '确定',
       rightPress,
-      currentDate = new Date(),
+      currentDate,
     } = this.props
-    let selectDate = currentDate
+    let selectDate = currentDate ? parse(currentDate, 'yyyy-MM-dd', new Date()) : new Date()
     return (
       <BottomContentModal
         visible={visible}
       >
         <View style={styles.btnView}>
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.leftBtn}
             onPress={leftPress}
           >
             <Text style={styles.leftText}>
               {leftTitle}
             </Text>
-          </NextTouchableOpacity>
+          </NextPressable>
           <Text style={styles.title}>
             {title}
           </Text>
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.rightBtn}
             onPress={() => rightPress(selectDate)}
           >
             <Text style={styles.rightText}>
               {rightTitle}
             </Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
-        <DatePicker
+        {/*<DatePicker
           confirm={date => {
             console.warn(date)
           }}
-        />
-        {/* <DatePicker
+        />*/}
+        <DatePicker
           style={styles.datePicker}
           mode="date"
           maximumDate={new Date()}
           dividerHeight={1}
-          date={currentDate}
-          locale="zh_HK"
+          date={selectDate}
           androidVariant="iosClone"
-          onDateChange={(Date) => { selectDate = Date }}
-        /> */}
+          onDateChange={(date) => {
+          	selectDate = date
+          }}
+        />
       </BottomContentModal >
     )
   }

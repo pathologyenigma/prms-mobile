@@ -17,19 +17,20 @@ import {
 } from '../../utils/ImageHelper'
 import AlertModal from '../../components/AlertModal'
 import { openSettings } from 'react-native-permissions'
+import HTNavigationBar from '~/common/navigation/HTNavigationBar'
 
 export default function AvatarViewer({
   navigation,
   route,
 }: StackScreenProps<HrParamList, 'AvatarViewer'>) {
   const [modalVisible, setModalVisible] = useState(false)
-  const { avatar, targetRouteName } = route.params || {}
+  const { uri } = route.params || {}
 
   const [error, setError] = useState<Error | null>(null)
 
   const hanleResult = (uri: string | null) => {
     if (uri !== null) {
-      navigation.navigate('AvatarCropper', { uri, targetRouteName })
+      navigation.push('AvatarCropper', { ...route?.params, uri })
     }
   }
 
@@ -39,12 +40,15 @@ export default function AvatarViewer({
 
   return (
     <View style={styles.container}>
-      <FocusAwareStatusBar barStyle="light-content" />
+      {/*<FocusAwareStatusBar barStyle="light-content" />*/}
+      <HTNavigationBar float={true} backgroundColor={'transparent'} leftItemList={[
+      	<HTRouteView style={{ height: '100%', paddingRight: 20 }} routeData={navigation.createRouteData('pop')}>
+      		<Image source={require('~/assets/requestJobs/white-back.png')} />
+      	</HTRouteView>
+      ]} />
       <CacheImage
         style={styles.viewer}
-        source={{
-          uri: avatar,
-        }}
+        source={global.AVATAR_IMAGE(uri)}
       />
       <SecondaryButton
         style={styles.button}

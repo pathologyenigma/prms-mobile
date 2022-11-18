@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, StatusBar } from 'react-native'
 import { Tabs } from '@ant-design/react-native'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import NavBar from '../../components/NavBar'
 import styles from './styles/Learn.style'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 import LinearGradient from 'react-native-linear-gradient'
 import FindCourse from './findCourse'
 import Jobfair from './jobfair'
@@ -24,14 +24,12 @@ export default class Learn extends Component<TProps, IState> {
     }
   }
 
-  componentDidMount() {
-    this.props.navigation.addListener('focus', () => {
-      StatusBar.setBarStyle('dark-content', true)
-    })
+  componentDidAppear() {
+  	StatusBar.setBarStyle('dark-content', true)
   }
 
-  componentWillUnmount() {
-    this.props.navigation.removeListener('focus', () => { })
+  componentDidMount() {
+    
   }
 
   renderNavBar() {
@@ -58,7 +56,7 @@ export default class Learn extends Component<TProps, IState> {
           {
             tabs.map((e, i) => {
               return (
-                <NextTouchableOpacity
+                <NextPressable
                   style={styles.tabsBtn}
                   key={i.toString()}
                   onPress={() => {
@@ -68,16 +66,15 @@ export default class Learn extends Component<TProps, IState> {
                   <Text style={[styles.tabsTitle, tabProps.activeTab === i && styles.selectedTitle]}>
                   	{e.title}
                   </Text>
-                </NextTouchableOpacity>
+                </NextPressable>
               )
             })
           }
         </View>
-        <NextTouchableOpacity
+        <NextPressable
           style={styles.searchBtn}
           onPress={() => {
-            const { navigation } = this.props
-            navigation.goBack()
+            global.TODO_TOAST()
           }}
         >
           <Image
@@ -85,7 +82,7 @@ export default class Learn extends Component<TProps, IState> {
             resizeMode="center"
             source={require('../../../assets/requestJobs/find-search.png')}
           />
-        </NextTouchableOpacity>
+        </NextPressable>
       </View>
     )
   }

@@ -2,6 +2,7 @@ import ImageEditor from '@react-native-community/image-editor'
 import React, { useState, useEffect } from 'react'
 import { Animated, View, Dimensions, StyleSheet } from 'react-native'
 import {
+  GestureHandlerRootView,
   State,
   PinchGestureHandler,
   PanGestureHandler,
@@ -336,6 +337,7 @@ const Crop = (props: CropProps): JSX.Element => {
     cropShape === 'circle' ? Math.max(cropArea.height, cropArea.width) : 0
 
   return (
+  	<GestureHandlerRootView>
     <PanGestureHandler
       minPointers={1}
       maxPointers={1}
@@ -404,6 +406,7 @@ const Crop = (props: CropProps): JSX.Element => {
         </View>
       </PinchGestureHandler>
     </PanGestureHandler>
+    </GestureHandlerRootView>
   )
 }
 

@@ -24,31 +24,31 @@ export default StyleSheet.create({
   },
   detailSecondView: {
     backgroundColor: '#FFF',
-    width: SystemHelper.width * 0.275,
-    paddingTop: 25,
+    width: '35%'
   },
   detailSecondBtn: {
-    marginBottom: 45,
+    paddingVertical: 20,
     alignItems: 'center',
     justifyContent: 'center',
     borderLeftWidth: 5,
-    borderLeftColor: '#FFF'
+    borderLeftColor: '#FFF',
   },
   detailSecondText: {
-    color: '#666666'
+    color: '#666666',
+    fontSize: 15,
   },
   detailThirdView: {
     backgroundColor: '#F8F8F8',
-    width: SystemHelper.width * 0.725,
-    paddingTop: 25,
+    width: '65%'
   },
   detailThirdBtn: {
     paddingLeft: 20,
-    marginBottom: 45,
+    // marginBottom: 45,
     alignItems: 'center',
     borderLeftWidth: 5,
     borderLeftColor: '#F8F8F8',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    paddingVertical: 20,
   },
   selectTag: {
     width: 15,
@@ -88,18 +88,20 @@ export default StyleSheet.create({
   },
   footerView: {
     flexDirection: 'row',
-    height: SystemHelper.safeBottom + 51,
+    height: HOME_BAR_HEIGHT + 65,
+    paddingTop: 10,
+    paddingBottom: HOME_BAR_HEIGHT + 15,
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 21,
   },
   resetBtn: {
     width: SystemHelper.width * 0.28,
-    height: 34,
+    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#F0F0F0',
-    borderRadius: 4
+    borderRadius: 4,
   },
   resetText: {
     color: '#666',
@@ -108,7 +110,7 @@ export default StyleSheet.create({
   confirmBtn: {
     marginLeft: 9,
     flex: 1,
-    height: 34,
+    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#F0F0F0',
@@ -121,11 +123,9 @@ export default StyleSheet.create({
   detailQuyuView: {
     backgroundColor: '#F8F8F8',
     width: SystemHelper.width * 0.36,
-    paddingTop: 25,
   },
   detailZhenView: {
     backgroundColor: '#F0F0F0',
     width: SystemHelper.width * 0.365,
-    paddingTop: 25,
   },
 })

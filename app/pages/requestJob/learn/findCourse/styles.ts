@@ -12,6 +12,7 @@ export default StyleSheet.create({
     paddingHorizontal: 15,
   },
   contentStyle: {
+  	paddingBottom: global.TAB_BAR_HEIGHT + 50
   },
   tipsView: {
     width: SystemHelper.width,
@@ -47,7 +48,7 @@ export default StyleSheet.create({
 		height: 110,
 	},
 	bannerItemContainer: {
-		backgroundColor: '#54D693',
+		// backgroundColor: '#54D693',
 		height: '100%',
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -95,6 +96,9 @@ export default StyleSheet.create({
     marginBottom: 20,
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  itemCourseTypeContainer: {
+  	alignItems: 'center'
   },
   courseTypeImage: {
     // width: 52,

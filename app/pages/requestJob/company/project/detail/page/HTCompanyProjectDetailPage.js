@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native'
+import { View, Text, Pressable, StyleSheet, Image, ScrollView } from 'react-native'
 import HTNavigationBar from '~/common/navigation/HTNavigationBar'
 import HTShadowView from '~/common/view/HTShadowView'
 
@@ -25,14 +25,14 @@ export default class HTCompanyProjectDetailPage extends Component {
 				}}
 				backgroundColor={'#54D693'}
 				leftItemList={[
-					<TouchableOpacity style={{ height: '100%', justifyContent: 'center', paddingRight: 20 }} onPress={this.props.navigation.goBack}>
+					<Pressable style={{ height: '100%', justifyContent: 'center', paddingRight: 20 }} onPress={this.props.navigation.goBack}>
 						<Image source={require('~/assets/requestJobs/white-back.png')} />
-					</TouchableOpacity>
+					</Pressable>
 				]}
 				rightItemList={[
-					<TouchableOpacity>
+					<Pressable onPress={global.TODO_TOAST}>
 						<Text style={styleList.navigationItemTitle}>更多</Text>
-					</TouchableOpacity>
+					</Pressable>
 				]}
 			/>
 		)
@@ -59,7 +59,7 @@ export default class HTCompanyProjectDetailPage extends Component {
 						{
 							[{'title': '2021年'}, {'title': '江西南昌'}].map((item, index) => {
 								return (
-									<View style={styleList.headerCenterItemContainer}>
+									<View key={index} style={styleList.headerCenterItemContainer}>
 										<Text style={styleList.headerCenterItemTitle}>{item.title}</Text>
 									</View>
 								)
@@ -70,7 +70,7 @@ export default class HTCompanyProjectDetailPage extends Component {
 						{
 							[{'title': '上轮融资情况', detail: 'A轮 6000万'}, {'title': '热度值(近一周)', detail: '35 23%'}].map((item, index) => {
 								return (
-									<View style={[styleList.headerNumberItemContainer, index != 0 && { paddingLeft: 15, borderLeftWidth: 1, borderLeftColor: '#eee' }]}>
+									<View key={index} style={[styleList.headerNumberItemContainer, index != 0 && { paddingLeft: 15, borderLeftWidth: 1, borderLeftColor: '#eee' }]}>
 										<Text style={styleList.headerNumberItemTitle}>{item.title}</Text>
 										<Text style={styleList.headerNumberItemDetail}>{item.detail}</Text>
 									</View>
@@ -81,9 +81,9 @@ export default class HTCompanyProjectDetailPage extends Component {
 					</View>
 					<View style={styleList.headerRightContainer}>
 						<CacheImage style={styleList.headerImage} source={imageList[0]} />
-						<View style={styleList.headerSureContainer}>
+						<Pressable style={styleList.headerSureContainer} onPress={global.TODO_TOAST}>
 							<Text style={styleList.headerSureTitle}>认领</Text>
-						</View>
+						</Pressable>
 					</View>
 				</View>
 				<View style={styleList.headerBottomContainer}>
@@ -115,7 +115,9 @@ export default class HTCompanyProjectDetailPage extends Component {
 		return (
 			<View style={styleList.centerContainer}>
 				<Text style={styleList.centerTitle}>基本信息</Text>
-				<Text style={styleList.centerDetail}>纠错</Text>
+				<Pressable onPress={global.TODO_TOAST}>
+					<Text style={styleList.centerDetail}>纠错</Text>
+				</Pressable>
 			</View>
 		)
 	}
@@ -145,9 +147,9 @@ export default class HTCompanyProjectDetailPage extends Component {
 					</View>
 					<Text style={styleList.teamItemInfo}>美国哈佛商学院经济学博士，联合创始人</Text>
 				</View>
-				<View>
+				<Pressable onPress={global.TODO_TOAST}>
 					<Text style={styleList.teamItemChat}>在线沟通</Text>
-				</View>
+				</Pressable>
 			</View>
 		)
 	}
@@ -162,7 +164,7 @@ export default class HTCompanyProjectDetailPage extends Component {
 			{
 				itemList.map((item, index) => {
 					return (
-						<HTShadowView style={styleList.moneyItemContainer}>
+						<HTShadowView key={index} style={styleList.moneyItemContainer}>
 							<View style={styleList.moneyItemLeftContainer}>
 								<View style={styleList.moneyItemLeftMain}>
 									<Text style={styleList.moneyItemTitle}>{item.title}</Text>
@@ -175,9 +177,9 @@ export default class HTCompanyProjectDetailPage extends Component {
 								item.book && (
 									<View style={styleList.moneyItemRightContainer}>
 										<Text style={styleList.moneyItemBookTitle}>{item.book}</Text>
-										<View style={styleList.moneyItemButtonContainer}>
+										<Pressable style={styleList.moneyItemButtonContainer} onPress={global.TODO_TOAST}>
 											<Text style={styleList.moneyItemButtonTitle}>立即申请</Text>
-										</View>
+										</Pressable>
 									</View>
 								)
 							}
@@ -200,9 +202,11 @@ export default class HTCompanyProjectDetailPage extends Component {
 			{
 				itemList.map((item, index) => {
 					return (
-						<View style={[styleList.toolItemContainer, { flex: item.flex,  backgroundColor: item.backgroundColor }]}>
+						<Pressable key={index} style={[styleList.toolItemContainer, { flex: item.flex,  backgroundColor: item.backgroundColor }]} onPress={() => {
+							global.TODO_TOAST()
+						}}>
 							<Text style={[styleList.toolItemTitle, { color: item.color }]}>{item.title}</Text>
-						</View>
+						</Pressable>
 					)
 				})
 			}

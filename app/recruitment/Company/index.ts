@@ -18,7 +18,7 @@ const screens = {
   CompanyAuthenticationByColleagueWithSmsInput,
   CompanyAuthenticationByLicense,
   CompanyAuditResult,
-  CompanyDetail,
+  EmployerCompanyDetail: CompanyDetail,
   ChangeCompany,
 }
 

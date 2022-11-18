@@ -19,7 +19,6 @@ import IconButton from '../../components/IconButton'
 import MaskedView from '@react-native-community/masked-view'
 import LinearGradient from 'react-native-linear-gradient'
 import Pending from './Pending'
-import { useNavigation } from '@react-navigation/native'
 
 interface Time {
   icon: ImageSourcePropType
@@ -85,25 +84,21 @@ interface Recruiter {
 
 const recruiters: Recruiter[] = [
   {
-    avatar: require('../../assets/avatar_default.png'),
     name: '江良华',
     title: '技术总监',
   },
   {
-    avatar: require('../../assets/avatar_default.png'),
     name: '徐海燕',
     title: '运营总监兼人事总监',
   },
   {
-    avatar: require('../../assets/avatar_default.png'),
     name: '黄小军',
     title: '招聘专员',
   },
 ]
 
-export default function CompanyDetail() {
+export default function CompanyDetail({ navigation }) {
   const isPending = false
-  const navigation = useNavigation<StackNavigationProp<any>>()
   const [detailInfo, setDetailInfo] = useState()
 
   useEffect(() => {
@@ -145,7 +140,7 @@ export default function CompanyDetail() {
             </View>
             <Image
               style={styles.companyLogo}
-              source={require('./assets/company_default.png')}
+              source={global.AVATAR_IMAGE(null, require('./assets/company_default.png'))}
             />
           </View>
           <View style={styles.companyWorkTime}>
@@ -234,16 +229,16 @@ export default function CompanyDetail() {
               contentContainerStyle={styles.recruitersContent}
               horizontal
               showsHorizontalScrollIndicator={false}>
-              {recruiters.map(({ name, title }, index) => (
+              {recruiters.map(({ name, title, avatar }, index) => (
                 <View
                   key={name}
                   style={[
                     styles.recruiter,
                     { marginLeft: index !== 0 ? 20 : 0 },
                   ]}>
-                  <Image
+                  <CacheImage
                     style={styles.recruiterAvatar}
-                    source={require('../../assets/avatar_default.png')}
+                    source={global.AVATAR_IMAGE(avatar)}
                   />
                   <Text style={styles.recruiterName}>{name}</Text>
                   <Text

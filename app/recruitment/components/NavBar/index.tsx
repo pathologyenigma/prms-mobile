@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import React, { PropsWithChildren } from 'react'
 import {
@@ -6,13 +5,14 @@ import {
   StyleProp,
   Text,
   View,
-  TouchableOpacity,
+  Pressable,
   ViewStyle,
   StatusBarProps,
 } from 'react-native'
 import { headerHeight, navigationBarHeight, statusBarHeight } from '../../theme'
 import BackImage from '../BackImage'
 import FocusAwareStatusBar from '../FocusAwareStatusBar'
+import { HTRouteManager } from 'react-native-route'
 
 interface NavBarProps {
   headerLeft?: () => React.ReactNode
@@ -30,19 +30,19 @@ export default function NavBar({
   style,
   barStyle = 'dark-content',
 }: PropsWithChildren<NavBarProps>) {
-  const navigation = useNavigation<StackNavigationProp<any>>()
 
   const renderHeaderLeft = (renderBackButtonIfNeeded = true) => {
     if (headerLeft) {
       return headerLeft()
     }
-    if (renderBackButtonIfNeeded && navigation.canGoBack()) {
+    if (renderBackButtonIfNeeded) {
       return (
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={() => navigation.goBack()}>
+        <Pressable
+          activeOpacity={1}
+          hotSlop={{ left: 10, top: 10, bottom: 10, right: 10 }}
+          onPress={() => HTRouteManager.defaultNavigation.goBack()}>
           <BackImage barStyle={barStyle} />
-        </TouchableOpacity>
+        </Pressable>
       )
     }
     return null
@@ -84,7 +84,7 @@ export default function NavBar({
 
   return (
     <View style={[styles.header, style]}>
-      <FocusAwareStatusBar barStyle={barStyle} />
+      {/*<FocusAwareStatusBar barStyle={barStyle} />*/}
       {renderNavBar()}
     </View>
   )

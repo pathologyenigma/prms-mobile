@@ -1,13 +1,14 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image } from 'react-native'
 import { JobItem } from '../useJobDetail'
+import moment from 'moment'
 
 interface JobMetaProps {
   job: JobItem
 }
 
 export default function JobMeta({
-  job: { title, salary, jobNature, headcount, experience, education, address },
+  job: { title, salary, jobNature, headcount, experience, education, address, updated_at  },
 }: JobMetaProps) {
   return (
     <View style={styles.container}>
@@ -25,24 +26,28 @@ export default function JobMeta({
         <Image style={styles.addressIcon} source={require('./dizhi.png')} />
         <Text style={styles.address}>{address}</Text>
       </View>
+      <View style={styles.addressRow}>
+      <Text style={styles.address}>最后更新时间: {moment(updated_at).format('YYYY-MM-DD HH:mm')}</Text>
+      </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: 110,
+    // height: 110,
     marginHorizontal: 11,
     marginBottom: 12,
     backgroundColor: '#FFFFFF',
     borderRadius: 8,
     paddingHorizontal: 11,
+    paddingVertical: 20,
   },
   titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 18,
+    // marginTop: 18,
   },
   title: {
     color: '#333333',
@@ -73,8 +78,10 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   address: {
+  	flex: 1,
     color: '#333333',
     fontWeight: 'bold',
     fontSize: 13,
+    lineHeight: 18,
   },
 })

@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ImageSourcePropType, DeviceEventEmitter } from 'react-native'
 import styles from './styles'
-import { GenProps } from '../../../../navigator/requestJob/stack'
+import { GenProps } from '../../../../utils/StackProps'
 // @ts-ignore
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { Carousel } from '@ant-design/react-native'
-import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
+import NextPressable from '../../../components/NextPressable'
 import CourseCell from '../CourseCell'
 import LinearGradient from 'react-native-linear-gradient'
 import HTBannerView from '~/common/view/HTBannerView'
@@ -81,7 +81,7 @@ export default class FindCourse extends Component<TProps, IState> {
         cellItem={item}
         index={index}
         onPress={() => {
-          Toast.show('click company')
+          global.TODO_TOAST()
         }}
       />
     )
@@ -113,9 +113,9 @@ export default class FindCourse extends Component<TProps, IState> {
 					}}
 					renderItem={({ item, index }) => {
 						return (
-							<View style={styles.bannerItemContainer}>
+							<NextPressable style={styles.bannerItemContainer} onPress={global.TODO_TOAST}>
 								<CacheImage style={styles.bannerItemImage} source={{ uri: item.image }} />
-							</View>
+							</NextPressable>
 						)
 					}}
 				/>
@@ -152,15 +152,17 @@ export default class FindCourse extends Component<TProps, IState> {
       <View style={styles.courseType}>
         {typeArray.map((e, i) => {
           return (
-            <NextTouchableOpacity
+            <NextPressable
               key={e.name}
+              style={styles.itemCourseTypeContainer}
+              onPress={global.TODO_TOAST}
             >
               <Image
                 source={e.image}
                 style={styles.courseTypeImage}
               />
               <Text style={styles.courseTypeText}>{e.name}</Text>
-            </NextTouchableOpacity>
+            </NextPressable>
           )
         })}
       </View>
@@ -182,7 +184,7 @@ export default class FindCourse extends Component<TProps, IState> {
           {
             tabs.map((e, i) => {
               return (
-                <NextTouchableOpacity
+                <NextPressable
                   style={styles.tabsBtn}
                   key={i.toString()}
                   onPress={() => {
@@ -202,7 +204,7 @@ export default class FindCourse extends Component<TProps, IState> {
                       />
                     )}
                   </>
-                </NextTouchableOpacity>
+                </NextPressable>
               )
             })
           }

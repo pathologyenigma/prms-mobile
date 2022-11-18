@@ -9,26 +9,73 @@ data = requests.post('http://be.chenzaozhao.com:4000/graphql', headers={'content
 data = data.text
 data = json.loads(data)
 data = data['data']['__schema']['types']
-data = filter(lambda x: x['kind'] in ['OBJECT', 'INPUT_OBJECT'], data)
 
-apiList = open('../app/common/request/HTAPI.js').read()
+METHOD_NAME_LIST = ['Query', 'Mutation', 'Subscription']
 
-for section in data:
-	if section['name'] in ['Query', 'Mutation', 'Subscription']:
-		pass
-		# for item in section['fields']:
-		# 	name = item['name']
-		# 	if name in apiList or 'Admin' in name:
-		# 		continue
-		# 	if name in ['StaticGetProvinces', 'StaticGetCities', 'StaticGetCounties', 'StaticGetHotJobs', 'TestShowDatas']:
-		# 		continue
-		# 	if name in ['CommonGetResume']:
-		# 		continue
-		# 	print('%s %s' % (section['name'], item['name']))
-	else:
-		if section['name'] == 'TalentListFilter':
-			for item in section['inputFields']:
-				name = item['type']['name']
-				if name == None:
-					name = '[' + item['type']['ofType']['name'] + ']'
-				print('%s %s' % (item['name'], name))
+# apiList = open('../app/common/request/HTAPI.js').read()
+
+def argTypeName(x):
+	if x['kind'] == 'NON_NULL':
+		return '%s!' % (argTypeName(x['ofType']))
+	if x['kind'] == 'LIST':
+		return '[%s]' % (argTypeName(x['ofType']))
+	return x['name']
+
+def insideType(x):
+	if x['kind'] == 'NON_NULL' or x['kind'] == 'LIST':
+		return insideType(x['ofType'])
+	return x
+
+def returnList(x, tabIndex = 2, showComment = False):
+	insideName = insideType(x)['name']
+	for section in data:
+		if insideName != section['name']:
+			continue
+		def returnItemList(itemList):
+			valueList = ("\n%s" % ("\t" * tabIndex)).join(list(map(lambda x: '%s %s' % (x['name'], returnList(x['type'], tabIndex + 1, showComment)), itemList)))
+			return '{\n%s%s\n%s}' % ("\t" * tabIndex, valueList, "\t" * (tabIndex - 1))
+		if 'fields' in section and section['fields'] != None:
+			return returnItemList(section['fields'])
+		elif 'inputFields' in section and section['inputFields'] != None:
+			return returnItemList(section['inputFields'])
+		elif 'possibleTypes' in section and section['possibleTypes'] != None:
+			valueList = ("\n%s" % ("\t" * tabIndex)).join(list(map(lambda x: '... on %s %s' % (x['name'], returnList(x, tabIndex + 1)), section['possibleTypes'])))
+			return '{\n%s%s\n%s}' % ("\t" * tabIndex, valueList, "\t" * (tabIndex - 1))
+		elif section['description'] != None and section['description'].startswith('enum') and showComment:
+			return section['description']
+	return argTypeName(x) if showComment else ''
+
+def printMethodList():
+	for section in data:
+		if section['name'] not in METHOD_NAME_LIST:
+			continue
+		for item in section['fields']:
+			value = '''
+/* 
+
+%s%s
+
+*/ 
+`
+%s %s(%s) {
+	%s(%s) %s
+}
+`,''' % (
+		item['description'] if item['description'] != None else item['name'], 
+		'\n\n{\n\t%s\n}' % (', \n\t'.join(list(map(lambda x: '%s: %s' % (x['name'], returnList(x['type'], 2, True)), item['args'])))) if len(item['args']) > 0 else '',
+		section['name'].lower(), 
+		item['name'],
+		', '.join(list(map(lambda x: '$%s: %s' % (x['name'], argTypeName(x['type'])), item['args']))),
+		item['name'],
+		', '.join(list(map(lambda x: '%s: $%s' % (x['name'], x['name']), item['args']))),
+		returnList(item['type'])
+	)
+			value = value.replace('()', '')
+			print(value)
+
+
+if __name__ == '__main__':
+	printMethodList()
+
+
+

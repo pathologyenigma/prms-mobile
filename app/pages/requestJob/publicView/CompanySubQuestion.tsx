@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { Text, View, Image, ScrollView, ImageBackground, Platform, TextInput, DeviceEventEmitter, SectionList } from 'react-native'
 import styles from './styles/CompanySubQuestion.style'
-import { GenProps } from '../../../navigator/requestJob/stack'
+import { GenProps } from '../../../utils/StackProps'
 import { bindActionCreators, Dispatch, AnyAction } from 'redux'
 import NavBar, { EButtonType } from '../../components/NavBar'
 // @ts-ignore
 import GradientButton from '../../components/GradientButton'
 import CompanyQuestionCell from './CompanyQuestionCell'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import NextPressable from '../../components/NextPressable'
 
 type IProps = GenProps<'CompanySubQuestion'> & {
 
@@ -79,14 +79,14 @@ export default class CompanySubQuestion extends Component<IProps, IState> {
               containerStyle={styles.yuangongStyle}
             />
           ) : (
-            <NextTouchableOpacity
+            <NextPressable
               style={[styles.reviewerBtn, { width: 100, marginRight: 15 }]}
               onPress={() => {
                 this.setState({ askObject: 1 })
               }}
             >
               <Text style={styles.reviewerText}>该公司员工</Text>
-            </NextTouchableOpacity>
+            </NextPressable>
           )}
           {askObject === 2 ? (
             <GradientButton
@@ -95,14 +95,14 @@ export default class CompanySubQuestion extends Component<IProps, IState> {
               containerStyle={styles.mianshiStyle}
             />
           ) : (
-            <NextTouchableOpacity
+            <NextPressable
               style={styles.reviewerBtn}
               onPress={() => {
                 this.setState({ askObject: 2 })
               }}
             >
               <Text style={styles.reviewerText}>面试者</Text>
-            </NextTouchableOpacity>
+            </NextPressable>
           )}
         </View>
       </View>
@@ -175,7 +175,7 @@ export default class CompanySubQuestion extends Component<IProps, IState> {
         <View style={styles.tipsView}>
           <View style={styles.tipsTextView}>
             <Text style={styles.tipsText}>你的回答需遵守</Text>
-            <NextTouchableOpacity
+            <NextPressable
               onPress={() => {
                 Toast.show('趁早找社区管理规范')
               }}
@@ -183,9 +183,9 @@ export default class CompanySubQuestion extends Component<IProps, IState> {
               <Text style={styles.tipsGuifan}>
                 《趁早找社区管理规范》
               </Text>
-            </NextTouchableOpacity>
+            </NextPressable>
           </View>
-          <NextTouchableOpacity
+          <NextPressable
             style={styles.checkBtn}
             onPress={() => {
               this.setState({ anonymous: !anonymous })
@@ -201,7 +201,7 @@ export default class CompanySubQuestion extends Component<IProps, IState> {
               )}
             </View>
             <Text style={styles.anonymousText}>匿名</Text>
-          </NextTouchableOpacity>
+          </NextPressable>
         </View>
       </View>
     )
