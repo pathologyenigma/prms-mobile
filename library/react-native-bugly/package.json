@@ -1,0 +1,28 @@
+
+{
+  "name": "react-native-bugly",
+  "version": "0.1.0",
+  "description": "bugly for react-native,支持统计，android支持升级",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "react-native"
+  ],
+  "author": "yz131",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yz1311/rn-bugly/issues"
+  },
+  "homepage": "https://github.com/yz1311/rn-bugly#readme",
+  "peerDependencies": {
+    "react-native": "^0.41.2",
+    "react-native-windows": "0.41.0-rc.1",
+    "stacktrace-js": "^1.1.0"
+  }
+}
