@@ -1,12 +1,12 @@
 workflows:
     react-native-ios:
-        name: React Native iOS
+        name: czzapp
         max_build_duration: 120
         instance_type: mac_pro
         environment:
             vars:
-                XCODE_WORKSPACE: "ios/ios_simulator_build.xcworkspace" # <-- Put the name of your Xcode workspace here
-                XCODE_SCHEME: "ios_simulator_build" # <-- Put the name of your Xcode scheme here
+                XCODE_WORKSPACE: "ios/czzapp.xcworkspace" # <-- Put the name of your Xcode workspace here
+                XCODE_SCHEME: "czzapp" # <-- Put the name of your Xcode scheme here
             node: v16.11.1
             xcode: 13.0
             cocoapods: default
